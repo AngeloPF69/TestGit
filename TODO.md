@@ -4,7 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
 - [ ] up([Blocks=1]) moves the turtle up blocks, until it hits something.
 - [ ] down([Blocks=1]) moves the turtle down blocks, until it hits something.
 - [ ] goLeft([Blocks=1]) rotates turtle to the left, and moves blocks forward, until it hits something.
@@ -57,6 +56,8 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
-- [ ] forward([Blocks=1]) moves the turtle forward blocks, until it hits something.
+- [ ] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
 
 ### done
+
+- [x] forward([Blocks=1]) moves the turtle forward blocks, until it hits something.
