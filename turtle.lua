@@ -24,3 +24,12 @@ local function up(Blocks)
   end
   return true
 end
+
+local function down(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 1, Blocks do
+      if not turtle.down() then return false end
+  end
+  return true
+end
