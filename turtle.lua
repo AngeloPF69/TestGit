@@ -66,7 +66,7 @@ local function goBack(Blocks)
 end
 
 local function turn(sDir)
-  sDir =sDir or "back"
+  sDir = sDir or "back"
   
   if sDir == "back" then
     turtle.turnRight()
