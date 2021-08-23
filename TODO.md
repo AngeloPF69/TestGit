@@ -45,6 +45,16 @@ improving commands in lua for computer craft turtle
 - [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
 - [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
 - [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
+- [ ] attackLeft([Side]) rotate left and attack the entity in front.
+- [ ] attackRight([Side]) rotate right and attack the entity in front.
+- [ ] attackBack([Side]) rotate back and attack the entity in front.
+- [ ] suckLeft([count]) rotate left and sucks count items in front of turtle.
+- [ ] suckRight([count]) rotate left and sucks count items in front of turtle.
+- [ ] suckBack([count]) rotate back and sucks count items in front of turtle.
+- [ ] inspectLeft() rotate left and inspect block in front of turtle.
+- [ ] inspectRight() rotate right and inspect block in front of turtle.
+- [ ] inspectBack() rotate back and inspect block in front of turtle.
+- [ ] getItemName([Slot=Selected slot]) gets the item name from Slot.
 
 ### in progress
 
