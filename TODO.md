@@ -38,6 +38,13 @@ improving commands in lua for computer craft turtle
 - [ ] detectRight([Blocks=1]) rotate turtle right and detects if there is no blocks in a strait line forward, stops when there is.
 - [ ] detectAbove([Blocks=1]) detects if above the turtle is no blocks in a strait line forward, stops when there is.
 - [ ] detectBelow([Blocks=1]) detects if below is no blocks in a strait line forward, stops when there is.
+- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
+- [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
+- [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
+- [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
+- [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
+- [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
+- [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
 
 ### in progress
 
