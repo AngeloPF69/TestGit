@@ -84,11 +84,11 @@ local function turn(sDir)
   return true
 end
 
-local function dig(Blocks, Side)
+local function dig(Blocks)
   Blocks = Blocks or 1
   
   for i = 1, Blocks do
-    if not turtle.dig(Side) then return false end
+    if not turtle.dig() then return false end
     if not forward() then return false end
   end
   return true
