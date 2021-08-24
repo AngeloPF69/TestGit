@@ -127,3 +127,23 @@ local function digDown(Blocks)
   end
   return true
 end
+
+local function digAbove(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 1, Blocks do
+    if not turtle.digUp() then return false end
+    if not turtle.forward() then return false end
+  end
+  return true
+end
+
+local function digBelow(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 1, Blocks do
+    if not turtle.digDown() then return false end
+    if not turtle.forward() then return false end
+  end
+  return true
+end
