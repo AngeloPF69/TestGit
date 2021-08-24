@@ -37,6 +37,7 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
+- [ ] placeDir(sDir) places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
 - [ ] place([Blocks=1]) places inventory selected Blocks in a strait line forward.
 - [ ] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward.
 - [ ] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward.
