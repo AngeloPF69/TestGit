@@ -4,11 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] place([Blocks=1]) places inventory selected Blocks in a strait line forward.
-- [ ] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward.
-- [ ] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward.
-- [ ] placeLeft([Blocks=1]) rotates turtle left, places inventory selected Blocks in a strait line forward.
-- [ ] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward.
 - [ ] drop([Blocks=all]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
 - [ ] dropUp([Blocks=all]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
 - [ ] dropDown([Blocks=all]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
@@ -42,10 +37,15 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
-- [ ] digBack([Blocks=1]) rotates turtle back and dig Blocks, and rotates turtle again forward.
+- [ ] place([Blocks=1]) places inventory selected Blocks in a strait line forward.
+- [ ] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward.
+- [ ] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward.
+- [ ] placeLeft([Blocks=1]) rotates turtle left, places inventory selected Blocks in a strait line forward.
+- [ ] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward.
 
 ### done
 
+- [x] digBack([Blocks=1]) rotates turtle back and dig Blocks, and rotates turtle again forward.
 - [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward.
 - [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward.
 - [x] digUp([Blocks=1]) dig Blocks upwards.
