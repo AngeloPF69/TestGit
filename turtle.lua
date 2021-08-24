@@ -54,14 +54,19 @@ local function goRight(Blocks)
   return true
 end
 
+local function turnBack()
+  turtle.turnRight()
+  turtle.turnRight()
+end
+
 local function goBack(Blocks)
   Blocks = Blocks or 1
   
-  turtle.turnRight()
-  turtle.turnRight()
+  turnBack()
   for i = 1, Blocks do
     if not turtle.forward() then return false end
   end
+  turnBack()
   return true
 end
 
@@ -69,11 +74,10 @@ local function turn(sDir)
   sDir = sDir or "back"
   
   if sDir == "back" then
-    turtle.turnRight()
-    turtle.turnRight()
-  else if sDir == "left" then
+    turnBack()
+  elseif sDir == "left" then
     turtle.turnLeft()
-  else if sDir == "right" then
+  elseif sDir == "right" then
     turtle.turnRight()
   else return false
   end
