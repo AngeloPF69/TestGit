@@ -164,9 +164,13 @@ local function place(Blocks)
   Blocks = Blocks or 1
   
   for i = 1, Blocks do
+    if turtle.detect() then return false end --there is a block already
     if i == Blocks then
-      if not turtle.place() then return false end
-    
+      return turtle.place()
+    else
+      if not turtle.forward() then return false end
+      
+    end
   end
   return true
 end  
