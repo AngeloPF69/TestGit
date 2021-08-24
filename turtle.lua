@@ -89,7 +89,21 @@ local function dig(Blocks)
   
   for i = 1, Blocks do
     if not turtle.dig() then return false end
-    if not forward() then return false end
+    if not turtle.forward() then return false end
   end
   return true
+end
+
+local function digLeft(Blocks)
+  Blocks = Blocks or 1
+  
+  turtle.turnLeft()
+  return dig(Blocks)
+end
+
+local function digRight(Blocks)
+  Blocks = Blocks or 1
+  
+  turtle.turnRight()
+  return dig(Blocks)
 end
