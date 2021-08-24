@@ -216,9 +216,13 @@ local function place(Blocks)
   for i = 1, Blocks do
     if turtle.detect() then return false end --there is a block already
     if i == Blocks then
-      return turtle.place()
+      return placeDir(sPlaceDir)
     else
-      if not turtle.forward() then return false end
+      if not go(sMoveDir, 2) then
+        back()
+        return turtle.place()
+      else turn()
+      end
       
     end
   end
