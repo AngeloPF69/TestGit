@@ -207,6 +207,24 @@ local function digBack(Blocks)
   return true
 end
 
+--place([Blocks=1]) places inventory selected Blocks in a strait line forward.
+local function place(Blocks)
+  Blocks = Blocks or 1
+  sPlaceDir = "forward"
+  sMoveDir = "forward"
+  
+  for i = 1, Blocks do
+    if turtle.detect() then return false end --there is a block already
+    if i == Blocks then
+      return turtle.place()
+    else
+      if not turtle.forward() then return false end
+      
+    end
+  end
+  return true
+end  
+  
 --placeDir(sDir) places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
 local function placeDir(sDir)
   if sDir == "forward" then
@@ -227,24 +245,6 @@ local function placeDir(sDir)
   end
   return false
 end
-    
---place([Blocks=1]) places inventory selected Blocks in a strait line forward.
-local function place(Blocks)
-  Blocks = Blocks or 1
-  sPlaceDir = "forward"
-  sMoveDir = "forward"
-  
-  for i = 1, Blocks do
-    if turtle.detect() then return false end --there is a block already
-    if i == Blocks then
-      return turtle.place()
-    else
-      if not turtle.forward() then return false end
-      
-    end
-  end
-  return true
-end  
 
 --placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward.
 --placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward.
