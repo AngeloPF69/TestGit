@@ -158,3 +158,20 @@ local function digBack(Blocks)
   end
   return true
 end
+
+--place([Blocks=1]) places inventory selected Blocks in a strait line forward.
+local function place(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 1, Blocks do
+    if i == Blocks then
+      if not turtle.place() then return false end
+    
+  end
+  return true
+end  
+
+--placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward.
+--placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward.
+--placeLeft([Blocks=1]) rotates turtle left, places inventory selected Blocks in a strait line forward.
+--placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward.
