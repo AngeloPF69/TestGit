@@ -147,3 +147,14 @@ local function digBelow(Blocks)
   end
   return true
 end
+
+local function digBack(Blocks)
+  Blocks = Blocks or 1
+  
+  turnBack()
+  for i = 1, Blocks do
+    if not turtle.dig() then return false end
+    if not turtle.forward() then return false end
+  end
+  return true
+end
