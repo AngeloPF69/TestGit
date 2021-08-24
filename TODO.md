@@ -4,8 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] dig([Blocks=1]) dig Blocks forward.
-- [ ] digLeft([Blocks=1]) rotates turtle left and dig Blocks forward.
 - [ ] digRight([Blocks=1]) rotates turtle Right and dig Blocks forward.
 - [ ] digUp([Blocks=1]) dig Blocks upwards.
 - [ ] digDown([Blocks=1]) dig Blocks downwards.
@@ -50,10 +48,12 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
-- [ ] turn([Direction="back"]) rotates turtle back, left or right.
+- [ ] digLeft([Blocks=1]) rotates turtle left and dig Blocks forward.
 
 ### done
 
+- [x] dig([Blocks=1]) dig Blocks forward with tool.
+- [X] turn([Direction="back"]) rotates turtle back, left or right.
 - [x] turnBack() new function
 - [x] goBack([Blocks=1]) rotates turtle back, and moves blocks forward, until it hits something.
 - [x] goRight([Blocks=1]) rotates turtle to the right, and moves blocks forward, until it hits something.
