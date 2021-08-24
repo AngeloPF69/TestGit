@@ -30,4 +30,5 @@ Avilable functions:
     digLeft([Blocks=1]) Rotates turtle left and dig Blocks forward.
     digAbove([Blocks=1]) Dig Blocks, 1 block above the turtle, and forward.
     digBelow([Blocks=1]) Dig Blocks, 1 block below the turtle, and forward.
-    
+    digBack([Blocks=1]) rotates turtle back and dig Blocks.
+
