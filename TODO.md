@@ -45,7 +45,7 @@ improving commands in lua for computer craft turtle
 
 ### done
 
-- [x] digBack([Blocks=1]) rotates turtle back and dig Blocks, and rotates turtle again forward.
+- [x] digBack([Blocks=1]) rotates turtle back and dig Blocks.
 - [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward.
 - [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward.
 - [x] digUp([Blocks=1]) dig Blocks upwards.
