@@ -34,6 +34,11 @@ local function down(Blocks)
   return true
 end
 
+--go(sDir, Blocks) the turtle advances in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+local function go(sDir, Blocks)
+  
+end
+
 local function goLeft(Blocks)
   Blocks = Blocks or 1
   
@@ -159,9 +164,32 @@ local function digBack(Blocks)
   return true
 end
 
+--placeDir(sDir) places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+local function placeDir(sDir)
+  if sDir == "forward" then
+    return turtle.place()
+  elseif sDir == "right" then
+    turtle.turnRight()
+    return turtle.place()
+  elseif sDir == "back" then
+    turnBack()
+    return turtle.place()
+  elseif sDir == "left" then
+    turtle.turnLeft()
+    return turtle.place()
+  elseif sDir == "up" then
+    return turtle.placeUp()
+  elseif sDir == "down" then
+    return turtle.placeDown()
+  end
+  return false
+end
+    
 --place([Blocks=1]) places inventory selected Blocks in a strait line forward.
 local function place(Blocks)
   Blocks = Blocks or 1
+  sPlaceDir = "forward"
+  sMoveDir = "forward"
   
   for i = 1, Blocks do
     if turtle.detect() then return false end --there is a block already
