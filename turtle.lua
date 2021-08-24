@@ -107,3 +107,23 @@ local function digRight(Blocks)
   turtle.turnRight()
   return dig(Blocks)
 end
+
+local function digUp(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 1, Blocks do
+    if not turtle.digUp() then return false end
+    if not turtle.up() then return false end
+  end
+  return true
+end
+
+local function digDown(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 1, Blocks do
+    if not turtle.digDown() then return false end
+    if not turtle.up() then return false end
+  end
+  return true
+end
