@@ -34,9 +34,41 @@ local function down(Blocks)
   return true
 end
 
---go(sDir, Blocks) the turtle advances in sDir direction { "forward", "right", "back", "left", "up", "down" }.
-local function go(sDir, Blocks)
+--getParam(sParam, ...) returns parameters ordered by type (string, number), 1st parameter nil if no parameters.
+local function getParam(sParam, ...)
+  if not sParam then return nil end
   
+  Args={...}
+  retParam = {}
+  
+  function addParam(sType)
+    for i = 1, #Args do
+      if type(Args[i]) == sType then
+        table.insert(retParam, Args[i])
+        table.remove(Args, i)
+        return
+      end
+    end
+  end
+  
+  for i = 1, #sParam do
+    if sParam[i] == "s" then addParam("string")
+    elseif sParam[i] == "n" then addParam("number")
+    end
+  end
+  
+  retStr = ""
+  for i = 1, #retParam do
+      retStr = retStr .. retParam[i]
+      if i ~= #retParam then retStr = retStr .. ","
+  end
+    
+  return load(retStr)
+end
+  
+--go([sDir="forward", [Blocks=1]) the turtle advances in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+local function go(sDir, Blocks)
+  sDir, Blocks = getParam("sn", sDir, Blocks)
 end
 
 local function goLeft(Blocks)
