@@ -3,6 +3,10 @@ Repository to teste Git.
 
 Avilable functions:
 
+  General:
+
+    getParam(sParamOrder, ...) orders parameters by type, ex: getParam("snsn", 10, 20, "left", "right") output: left, 10, right, 20.
+
   Rotations:
   
     turnBack() The turtle turns back.
@@ -14,6 +18,7 @@ Avilable functions:
     up([Blocks=1]) Moves the turtle up blocks, until it hits something.
     back([Blocks=1]) Moves the turtle backwards blocks, until it hits something.
     forward([Blocks=1]) Moves the turtle forward blocks, until it hits something.
+    go([sDir="forward", [Blocks=1]) the turtle advances in sDir direction { "forward", "right", "back", "left", "up", "down" } until it hits something.
   
   Rotations and Moving:
   
@@ -32,3 +37,6 @@ Avilable functions:
     digBelow([Blocks=1]) Dig Blocks, 1 block below the turtle, and forward.
     digBack([Blocks=1]) Rotates turtle back and dig Blocks.
 
+  Place:
+
+    placeDir([sDir="forward"]) places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.

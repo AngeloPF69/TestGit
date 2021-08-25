@@ -34,54 +34,34 @@ local function down(Blocks)
   return true
 end
 
---getParam(sParamOrder, ...) returns parameters ordered by type (string, number), 1st parameter nil if no parameters.
 local function getParam(sParamOrder, ...)
-  if not sParam then return nil end
+  if not sParamOrder then return nil end
   
-  Args={...}
-  retParam = {}
-  
-  function addParam(sType) --adds parameter to returning table
+  local Args={...}
+  local retTable = {}
+  local checked={}
+
+  function addParam(sType)
     for i = 1, #Args do
       if type(Args[i]) == sType then
-        table.insert(retParam, Args[i])
-        table.remove(Args, i)
-        return
+        if not checked[i] then
+          checked[i]=true
+          table.insert(retTable, Args[i])
+          return
+        end
       end
     end
   end
   
-  for i = 1, #sParamOrder do --checks parameter type to order, and request to add
-    if sParamOrder[i] == "s" then addParam("string")
-    elseif sParamOrder[i] == "n" then addParam("number")
+  for i = 1, #sParamOrder do --checlks parameter type to order, and request to add
+    if sParamOrder:sub(i,i) == "s" then addParam("string")
+    elseif sParamOrder:sub(i,i) == "n" then addParam("number")
     end
   end
   
-  retStr = "" --build string to return from return parameters table
-  for i = 1, #retParam do
-      retStr = retStr .. retParam[i]
-      if i ~= #retParam then retStr = retStr .. ","
-  end
-    
-  return load("return ".. retStr)
+  return table.unpack(retTable);
 end
   
---go([sDir="forward", [Blocks=1]) the turtle advances in sDir direction { "forward", "right", "back", "left", "up", "down" }.
-local function go(sDir, Blocks)
-  sDir, Blocks = getParam("sn", sDir, Blocks)
-  sDir = sDir or "forward"
-  Blocks = Blocks or 1
-    
-  if sDir == "forward" then return forward(Blocks)
-  elseif sDir == "right" then return goRight(Blocks)
-  elseif sDir == "back" then return goBack(Blocks)
-  elseif sDir == "left" then return goLeft(Blocks)
-  elseif sDir == "up" then return up(Blocks)
-  elseif sDir == "down" then return down(Blocks)
-  end
-  return false
-end
-
 local function goLeft(Blocks)
   Blocks = Blocks or 1
   
@@ -114,8 +94,22 @@ local function goBack(Blocks)
   for i = 1, Blocks do
     if not turtle.forward() then return false end
   end
-  turnBack()
   return true
+end
+
+local function go(sDir, Blocks)
+  sDir, Blocks = getParam("sn", sDir, Blocks)
+  sDir = sDir or "forward"
+  Blocks = Blocks or 1
+    
+  if sDir == "forward" then return forward(Blocks)
+  elseif sDir == "right" then return goRight(Blocks)
+  elseif sDir == "back" then return goBack(Blocks)
+  elseif sDir == "left" then return goLeft(Blocks)
+  elseif sDir == "up" then return up(Blocks)
+  elseif sDir == "down" then return down(Blocks)
+  end
+  return false
 end
 
 local function turn(sDir)
@@ -229,8 +223,9 @@ local function place(Blocks)
   return true
 end  
   
---placeDir(sDir) places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
 local function placeDir(sDir)
+  sDir = sDir or "forward"
+
   if sDir == "forward" then
     return turtle.place()
   elseif sDir == "right" then
@@ -256,3 +251,7 @@ end
 --placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward.
 --placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward.
 --placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward.
+
+------ TESTE AREA ------
+--local function placeDir(sDir)
+down()
