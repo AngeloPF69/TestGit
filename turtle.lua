@@ -34,6 +34,34 @@ local function down(Blocks)
   return true
 end
 
+local function getParam(sParamOrder, ...)
+  if not sParamOrder then return nil end
+  
+  local Args={...}
+  local retTable = {}
+  local checked={}
+
+  function addParam(sType)
+    for i = 1, #Args do
+      if type(Args[i]) == sType then
+        if not checked[i] then
+          checked[i]=true
+          table.insert(retTable, Args[i])
+          return
+        end
+      end
+    end
+  end
+  
+  for i = 1, #sParamOrder do
+    if sParamOrder:sub(i,i) == "s" then addParam("string")
+    elseif sParamOrder:sub(i,i) == "n" then addParam("number")
+    end
+  end
+  
+  return table.unpack(retTable);
+end
+  
 local function goLeft(Blocks)
   Blocks = Blocks or 1
   
@@ -66,8 +94,22 @@ local function goBack(Blocks)
   for i = 1, Blocks do
     if not turtle.forward() then return false end
   end
-  turnBack()
   return true
+end
+
+local function go(sDir, Blocks)
+  sDir, Blocks = getParam("sn", sDir, Blocks)
+  sDir = sDir or "forward"
+  Blocks = Blocks or 1
+    
+  if sDir == "forward" then return forward(Blocks)
+  elseif sDir == "right" then return goRight(Blocks)
+  elseif sDir == "back" then return goBack(Blocks)
+  elseif sDir == "left" then return goLeft(Blocks)
+  elseif sDir == "up" then return up(Blocks)
+  elseif sDir == "down" then return down(Blocks)
+  end
+  return false
 end
 
 local function turn(sDir)
@@ -155,6 +197,160 @@ local function digBack(Blocks)
   for i = 1, Blocks do
     if not turtle.dig() then return false end
     if not turtle.forward() then return false end
+  end
+  return true
+end
+
+local function placeDir(sDir)
+  sDir = sDir or "forward"
+
+  if sDir == "forward" then
+    return turtle.place()
+  elseif sDir == "right" then
+    turtle.turnRight()
+    return turtle.place()
+  elseif sDir == "back" then
+    turnBack()
+    return turtle.place()
+  elseif sDir == "left" then
+    turtle.turnLeft()
+    return turtle.place()
+  elseif sDir == "up" then
+    return turtle.placeUp()
+  elseif sDir == "down" then
+    return turtle.placeDown()
+  end
+  return false
+end
+
+local function place(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 2, Blocks do
+    if not turtle.forward() then
+      Blocks=i-2
+      back()
+      break
+    end
+  end
+
+  for i = 1, Blocks do
+    turtle.place()
+    if i ~= Blocks then
+      if not turtle.back() then return false end
+    end
+  end
+  return true
+end
+
+local function placeUp(Blocks)
+    Blocks = Blocks or 1
+    
+    for i = 2, Blocks do
+      if not turtle.up() then
+        Blocks=i
+        down()
+        break
+      end
+    end
+
+    for i = 1, Blocks do
+      turtle.placeUp()
+      if i ~= Blocks then
+        if not turtle.down() then return false end
+      end
+    end
+    return true
+end
+  
+local function placeDown(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 2, Blocks do
+    if not turtle.down() then
+      Blocks=i
+      up()
+      break
+    end
+  end
+
+  for i = 1, Blocks do
+    turtle.placeDown()
+    if i ~= Blocks then
+      if not turtle.up() then return false end
+    end
+  end
+  return true
+end
+  
+local function placeLeft(Blocks)
+    turtle.turnLeft()
+    return place(Blocks)
+end
+  
+local function placeRight(Blocks)
+    turtle.turnRight()
+    return place(Blocks)
+end
+  
+local function placeAbove(Blocks)
+    Blocks = Blocks or 1
+    
+    for i = 2, Blocks do --goto last pos to place
+      if i == 2 then
+        if not turtle.up() then
+          Blocks=1
+          break
+        end
+      elseif not turtle.forward() then
+        Blocks = i-1
+        break
+      end
+    end
+    
+    for i = 1, Blocks do --place backwards
+      if i == Blocks then
+        if i ~= 1 then
+          if not turtle.down() then return false end
+        end
+        if not turtle.placeUp() then return false end
+      else
+        turtle.place()
+        if (i ~= (Blocks-1)) then
+          if not turtle.back() then return false end
+        end
+      end
+    end
+    return true
+end
+
+local function placeBelow(Blocks)
+  Blocks = Blocks or 1
+  
+  for i = 2, Blocks do --goto last pos to place
+    if i == 2 then
+      if not turtle.down() then
+        Blocks=1
+        break
+      end
+    elseif not turtle.forward() then
+      Blocks = i-1
+      break
+    end
+  end
+  
+  for i = 1, Blocks do --place backwards
+    if i == Blocks then
+      if i ~= 1 then
+        if not turtle.up() then return false end
+      end
+      if not turtle.placeDown() then return false end
+    else
+      turtle.place()
+      if (i ~= (Blocks-1)) then
+        if not turtle.back() then return false end
+      end
+    end
   end
   return true
 end
