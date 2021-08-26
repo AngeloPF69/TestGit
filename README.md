@@ -5,7 +5,7 @@ Avilable functions:
 
   General:
 
-    getParam(sParamOrder, ...) orders parameters by type, ex: getParam("snsn", 10, 20, "left", "right") output: left, 10, right, 20.
+    getParam(sParamOrder, ...) sorts parameters by type, ex: getParam("sns", 10, "left", "right") output: left, 10, right.
 
   Rotations:
   
@@ -18,7 +18,8 @@ Avilable functions:
     up([Blocks=1]) Moves the turtle up blocks, until it hits something.
     back([Blocks=1]) Moves the turtle backwards blocks, until it hits something.
     forward([Blocks=1]) Moves the turtle forward blocks, until it hits something.
-    go([sDir="forward", [Blocks=1]) the turtle advances in sDir direction { "forward", "right", "back", "left", "up", "down" } until it hits something.
+    go([sDir="forward", [Blocks=1]) Turtle advances in sDir { "forward", "right", "back", "left", "up", "down" }
+      until it hits something.
   
   Rotations and Moving:
   
