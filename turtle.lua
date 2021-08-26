@@ -325,4 +325,29 @@ local function placeAbove(Blocks)
       end
     end
 end
+
 --placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward.
+local function placeBelow(Blocks)
+    Blocks = Blocks or 1
+    
+    for i = 2, Blocks do --goto last pos to place
+      if i == 2 then
+        if not turtle.down() return false end
+      elseif not turtle.forward() then
+        Blocks = i
+        break end
+      end
+    end
+    
+    for i = 1, Blocks do --place backwards
+      if i == Blocks then
+        if not turtle.up() then return false end
+        if not turtle.placeDown() then return false end
+      else
+        if not turtle.place() then return false end
+        if (i ~= (Blocks-1)) then
+          if not turtle.back() then return false end
+        end
+      end
+    end
+end
