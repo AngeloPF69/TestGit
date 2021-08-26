@@ -5,7 +5,7 @@ Avilable functions:
 
   General:
 
-    getParam(sParamOrder, ...) sorts parameters by type, ex: getParam("sns", 10, "left", "right") output: left, 10, right.
+    getParam(sParamOrder, ...) Sorts parameters by type, ex: getParam("sns", 10, "left", "right") output: left, 10, right.
 
   Rotations:
   
@@ -18,8 +18,7 @@ Avilable functions:
     up([Blocks=1]) Moves the turtle up blocks, until it hits something.
     back([Blocks=1]) Moves the turtle backwards blocks, until it hits something.
     forward([Blocks=1]) Moves the turtle forward blocks, until it hits something.
-    go([sDir="forward", [Blocks=1]) Turtle advances in sDir { "forward", "right", "back", "left", "up", "down" }
-      until it hits something.
+    go([sDir="forward", [Blocks=1]) Turtle advances in sDir { "forward", "right", "back", "left", "up", "down" } until blocked.
   
   Rotations and Moving:
   
@@ -40,11 +39,11 @@ Avilable functions:
 
   Place:
 
-    placeDir([sDir="forward"]) places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
-    place([Blocks=1]) places inventory selected Blocks in a strait line forward, and returns to initial position.
-    placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward, and returns to initial position.
-    placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward, and returns to initial position.
-    placeLeft([Blocks=1]) rotates turtle left, places inventory selected Blocks in a strait line forward, and returns to initial position.
-    placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
-    placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
-    placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
+    placeDir([sDir="forward"]) Places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+    place([Blocks=1]) Places inventory selected Blocks in a strait line forward, and returns to initial position.
+    placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward, and returns to initial position.
+    placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward, and returns to initial position.
+    placeLeft([Blocks=1]) Rotates turtle left, places inventory selected Blocks in a strait line forward, and returns to initial position.
+    placeRight([Blocks=1]) Rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
+    placeAbove([Blocks=1]) Places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
+    placeBelow([Blocks=1]) Places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
