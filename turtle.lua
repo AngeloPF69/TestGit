@@ -315,7 +315,9 @@ local function placeAbove(Blocks)
     
     for i = 1, Blocks do --place backwards
       if i == Blocks then
-        if not turtle.down() then return false end
+        if i ~= 1 then
+          if not turtle.down() then return false end
+        end
         if not turtle.placeUp() then return false end
       else
         if not turtle.place() then return false end
@@ -341,7 +343,9 @@ local function placeBelow(Blocks)
     
     for i = 1, Blocks do --place backwards
       if i == Blocks then
-        if not turtle.up() then return false end
+        if i ~= 1 then
+          if not turtle.up() then return false end
+        end
         if not turtle.placeDown() then return false end
       else
         if not turtle.place() then return false end
