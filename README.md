@@ -39,11 +39,11 @@ Avilable functions:
 
   Place:
 
-    placeDir([sDir="forward"]) Places inventory selected Block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+    placeDir([sDir="forward"]) Places inventory selected Block in sDir { "forward", "right", "back", "left", "up", "down" }.
     place([Blocks=1]) Places inventory selected Blocks in a strait line forward, and returns to initial position.
     placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward, and returns to initial position.
     placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward, and returns to initial position.
-    placeLeft([Blocks=1]) Rotates turtle left, places inventory selected Blocks in a strait line forward, and returns to initial position.
-    placeRight([Blocks=1]) Rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
-    placeAbove([Blocks=1]) Places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
-    placeBelow([Blocks=1]) Places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
+    placeLeft([Blocks=1]) Rotates turtle left, places inventory selected Blocks forward, and returns to initial position.
+    placeRight([Blocks=1]) Rotates turtle Right, places inventory selected Blocks forward, and returns to initial position.
+    placeAbove([Blocks=1]) Places selected slot Blocks, 1 block above the turtle, and returns to initial position.
+    placeBelow([Blocks=1]) Places selected slot Blocks, 1 block below the turtle, and returns to initial position.
