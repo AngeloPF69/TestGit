@@ -246,12 +246,107 @@ local function placeDir(sDir)
 end
 
 --placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward.
+local function placeUp(Blocks)
+    Blocks = Blocks or 1
+    
+    --go to last position to place block
+      --if it stopped before get there back 1
+    if not up(Blocks-1) then down() end
+      
+    --1:place block
+      --if this not the last block back 1 goto 1
+    for i = Blocks, 1, -1 do
+      if not turtle.placeUp() then return false end
+      if not turtle.down() then return false end
+    end
+    return true
+end
+  
 --placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward.
+local function placeDown(Blocks)
+    Blocks = Blocks or 1
+    
+    --go to last position to place block
+      --if it stopped before get there back 1
+    if not down(Blocks-1) then up() end
+      
+    --1:place block
+      --if this not the last block back 1 goto 1
+    for i = Blocks, 1, -1 do
+      if not turtle.placeDown() then return false end
+      if not turtle.up() then return false end
+    end
+    return true
+end
+  
 --placeLeft([Blocks=1]) rotates turtle left, places inventory selected Blocks in a strait line forward.
+local function placeLeft(Blocks)
+    Blocks = Blocks or 1
+    
+    turtle.turnLeft()
+    return place(Blocks)
+end
+  
 --placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward.
+local function placeRight(Blocks)
+    Blocks = Blocks or 1
+    
+    turtle.turnRight()
+    return place(Blocks)
+end
+  
 --placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward.
---placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward.
+local function placeAbove(Blocks)
+    Blocks = Blocks or 1
+    
+    for i = 2, Blocks do --goto last pos to place
+      if i == 2 then
+        if not turtle.up() return false end
+      elseif not turtle.forward() then
+        Blocks = i
+        break end
+      end
+    end
+    
+    for i = 1, Blocks do --place backwards
+      if i == Blocks then
+        if i ~= 1 then
+          if not turtle.down() then return false end
+        end
+        if not turtle.placeUp() then return false end
+      else
+        if not turtle.place() then return false end
+        if (i ~= (Blocks-1)) then
+          if not turtle.back() then return false end
+        end
+      end
+    end
+end
 
------- TESTE AREA ------
---local function placeDir(sDir)
-down()
+--placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward.
+local function placeBelow(Blocks)
+    Blocks = Blocks or 1
+    
+    for i = 2, Blocks do --goto last pos to place
+      if i == 2 then
+        if not turtle.down() return false end
+      elseif not turtle.forward() then
+        Blocks = i
+        break end
+      end
+    end
+    
+    for i = 1, Blocks do --place backwards
+      if i == Blocks then
+        if i ~= 1 then
+          if not turtle.up() then return false end
+        end
+        if not turtle.placeDown() then return false end
+      else
+        if not turtle.place() then return false end
+        if (i ~= (Blocks-1)) then
+          if not turtle.back() then return false end
+        end
+      end
+    end
+end
