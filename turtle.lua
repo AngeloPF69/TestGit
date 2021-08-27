@@ -143,7 +143,11 @@ local function go(sDir, Blocks) --[[Turtle goes in sDir Blocks until blocked.
   return false
 end
 
-local function turn(sDir)
+local function turn(sDir) --[[Turtle turns  to sDir direction.
+27/08/2021  Returns:  true if sDir is a valid direction.
+                      false if sDir is not a valid direction.
+            sintax: turn([sDir="back"]) - sDir {"right", "back", "left"}
+            ex: turn("back") or turn() - Turns the turtle back.]]
   sDir = sDir or "back"
   
   if sDir == "back" then
@@ -232,7 +236,11 @@ local function digBack(Blocks)
   return true
 end
 
-local function placeDir(sDir)
+local function placeDir(sDir) --[[Places one selected block in sDir direction.
+27/08/2021  Returns:  true if turtle places the selected block.
+                      false if turtle doesn't place the selected block.
+            sintax: placeDir([sDir="forward"]) - sDir {"forward", "right", "back", "left", "up", "down"}
+            ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
   sDir = sDir or "forward"
 
   if sDir == "forward" then
@@ -254,7 +262,11 @@ local function placeDir(sDir)
   return false
 end
 
-local function place(Blocks)
+local function place(Blocks) --[[Turtle places Blocks in a strait line forward, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back.
+            sintax: place([Blocks=1])
+            ex: place(1) or place() - Places 1 Block in front of turtle.]]
   Blocks = Blocks or 1
   
   for i = 2, Blocks do
@@ -274,7 +286,11 @@ local function place(Blocks)
   return true
 end
 
-local function placeUp(Blocks)
+local function placeUp(Blocks) --[[Turtle places Blocks in a strait line upwards, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back.
+            sintax: placeUp([Blocks=1])
+            ex: placeUp(1) or placeUp() - Places 1 Block up.]]
     Blocks = Blocks or 1
     
     for i = 2, Blocks do
@@ -294,7 +310,11 @@ local function placeUp(Blocks)
     return true
 end
   
-local function placeDown(Blocks)
+local function placeDown(Blocks) --[[Turtle places Blocks in a strait line downwards, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back.
+            sintax: placeDown([Blocks=1])
+            ex: placeDown(1) or placeDown() - Places 1 Block Down.]]
   Blocks = Blocks or 1
   
   for i = 2, Blocks do
@@ -314,17 +334,29 @@ local function placeDown(Blocks)
   return true
 end
   
-local function placeLeft(Blocks)
+local function placeLeft(Blocks) --[[Turtle places Blocks in a strait line to the left, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back.
+            sintax: placeLeft([Blocks=1])
+            ex: placeLeft(1) or placeLeft() - Places one Block in front of turtle.]]
     turtle.turnLeft()
     return place(Blocks)
 end
   
-local function placeRight(Blocks)
+local function placeRight(Blocks) --[[Turtle places Blocks in a strait line to the right, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back.
+            sintax: placeRight([Blocks=1])
+            ex: placeRight(1) or placeLeft() - Places 1 Block on the right.]]
     turtle.turnRight()
     return place(Blocks)
 end
   
-local function placeAbove(Blocks)
+local function placeAbove(Blocks) --[[Places Blocks in a strait line, 1 block above the turtle, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back, or couldn't place block.
+            sintax: placeAbove([Blocks=1])
+            ex: placeAbove(1) or placeAbove() - Places one Block above turtle.]]
     Blocks = Blocks or 1
     
     for i = 2, Blocks do --goto last pos to place
@@ -355,10 +387,14 @@ local function placeAbove(Blocks)
     return true
 end
 
-local function placeBelow(Blocks)
+local function placeBelow(Blocks) --[[Places Blocks in a strait line, 1 block below the turtle, and returns to starting point.
+27/08/2021  Returns:  true.
+                      false if turtle was blocked, on the way back, or couldn't place block.
+            sintax: placeBelow([Blocks=1])
+            ex: placeBelow(1) or placeBelow() - Places one Block below turtle.]]
   Blocks = Blocks or 1
   
-  for i = 2, Blocks do --goto last pos to place
+  for i = 2, Blocks do
     if i == 2 then
       if not turtle.down() then
         Blocks=1
@@ -370,7 +406,7 @@ local function placeBelow(Blocks)
     end
   end
   
-  for i = 1, Blocks do --place backwards
+  for i = 1, Blocks do
     if i == Blocks then
       if i ~= 1 then
         if not turtle.up() then return false end
@@ -386,6 +422,6 @@ local function placeBelow(Blocks)
   return true
 end
 
---drop([Blocks=all]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
---dropUp([Blocks=all]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
---dropDown([Blocks=all]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
+--drop([Blocks="all"]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+--dropUp([Blocks="all"]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+--dropDown([Blocks="all"]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
