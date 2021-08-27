@@ -47,6 +47,9 @@ local function down(Blocks) --[[Moves down Blocks, until blocked.
   return true
 end
 
+
+------ GENERAL FUNCTIONS ------
+
 local function getParam(sParamOrder, ...) --[[ Sorts parameters by type.
 27/08/2021  Returns: Parameters sorted by type.
             ex: getParam("sns", number, string, string) - Outputs: string, number, string.
@@ -77,7 +80,38 @@ local function getParam(sParamOrder, ...) --[[ Sorts parameters by type.
   
   return table.unpack(retTable);
 end
+
+
+------ ROTATING FUNCTIONS ------  
+
+local function turnBack() --[[Turtle turns back.
+27/08/2021  Returns:  true.]]
+  turtle.turnRight()
+  turtle.turnRight()
+  return true
+end
+
+local function turn(sDir) --[[Turtle turns  to sDir direction.
+27/08/2021  Returns:  true if sDir is a valid direction.
+                      false if sDir is not a valid direction.
+            sintax: turn([sDir="back"]) - sDir {"right", "back", "left"}
+            ex: turn("back") or turn() - Turns the turtle back.]]
+  sDir = sDir or "back"
   
+  if sDir == "back" then
+    turnBack()
+  elseif sDir == "left" then
+    turtle.turnLeft()
+  elseif sDir == "right" then
+    turtle.turnRight()
+  else return false
+  end
+  return true
+end
+
+
+------ MOVING AND ROTATING FUNCTIONS ------
+
 local function goLeft(Blocks) --[[Turns left and advances Blocks until blocked.
 27/08/2021  Returns:  true if turtle goes all way.
                       false if bllocked.
@@ -101,13 +135,6 @@ local function goRight(Blocks) --[[Turns right and advances Blocks until blocked
   for i= 1, Blocks do
     if not turtle.forward() then return false end
   end
-  return true
-end
-
-local function turnBack() --[[Turtle turns back.
-27/08/2021  Returns:  true.]]
-  turtle.turnRight()
-  turtle.turnRight()
   return true
 end
 
@@ -143,23 +170,8 @@ local function go(sDir, Blocks) --[[Turtle goes in sDir Blocks until blocked.
   return false
 end
 
-local function turn(sDir) --[[Turtle turns  to sDir direction.
-27/08/2021  Returns:  true if sDir is a valid direction.
-                      false if sDir is not a valid direction.
-            sintax: turn([sDir="back"]) - sDir {"right", "back", "left"}
-            ex: turn("back") or turn() - Turns the turtle back.]]
-  sDir = sDir or "back"
-  
-  if sDir == "back" then
-    turnBack()
-  elseif sDir == "left" then
-    turtle.turnLeft()
-  elseif sDir == "right" then
-    turtle.turnRight()
-  else return false
-  end
-  return true
-end
+
+------ DIG FUNCTIONS ------  
 
 local function dig(Blocks)
   Blocks = Blocks or 1
@@ -235,6 +247,9 @@ local function digBack(Blocks)
   end
   return true
 end
+
+
+------ PLACE FUNCTIONS ------  
 
 local function placeDir(sDir) --[[Places one selected block in sDir direction.
 27/08/2021  Returns:  true if turtle places the selected block.
@@ -421,6 +436,9 @@ local function placeBelow(Blocks) --[[Places Blocks in a strait line, 1 block be
   end
   return true
 end
+
+
+------ DROP FUNCTIONS ------  
 
 --drop([Blocks="all"]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
 local function drop(Blocks) --[[Drops Blocks in a inventory or in the world in front of turtle.
