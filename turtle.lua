@@ -78,7 +78,10 @@ local function getParam(sParamOrder, ...) --[[ Sorts parameters by type.
   return table.unpack(retTable);
 end
   
-local function goLeft(Blocks)
+local function goLeft(Blocks) --[[Turns left and advances Blocks until blocked.
+27/08/2021  Returns:  true if turtle goes all way.
+                      false if bllocked.
+            ex: goLeft(3) - Moves 3 Blocks to the left.]]
   Blocks = Blocks or 1
   
   turtle.turnLeft()
@@ -88,7 +91,10 @@ local function goLeft(Blocks)
   return true
 end
 
-local function goRight(Blocks)
+local function goRight(Blocks) --[[Turns right and advances Blocks until blocked.
+27/08/2021  Returns:  true if turtle goes all way.
+                      false if bllocked.
+            ex: goRight(3) - Moves 3 Blocks to the right.]]
   Blocks = Blocks or 1
   
   turtle.turnRight()
@@ -98,12 +104,17 @@ local function goRight(Blocks)
   return true
 end
 
-local function turnBack()
+local function turnBack() --[[Turtle turns back.
+27/08/2021  Returns:  true.]]
   turtle.turnRight()
   turtle.turnRight()
+  return true
 end
 
-local function goBack(Blocks)
+local function goBack(Blocks) --[[Turns back and advances Blocks until blocked.
+27/08/2021  Returns:  true if turtle goes all way.
+                      false if bllocked.
+            ex: goBack(3) - Moves 3 Blocks back.]]
   Blocks = Blocks or 1
   
   turnBack()
@@ -113,10 +124,14 @@ local function goBack(Blocks)
   return true
 end
 
-local function go(sDir, Blocks)
-  sDir, Blocks = getParam("sn", sDir, Blocks)
+local function go(sDir, Blocks) --[[Turtle goes in sDir Blocks until blocked.
+27/08/2021  Returns:  true if turtle goes all way.
+                      false if bllocked.
+            sintax: go([sDir="forward"], [Blocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
+            ex: go("left", 3) or go(3, "left") - Moves 3 Blocks to the left.]]
   sDir = sDir or "forward"
   Blocks = Blocks or 1
+  sDir, Blocks = getParam("sn", sDir, Blocks)
     
   if sDir == "forward" then return forward(Blocks)
   elseif sDir == "right" then return goRight(Blocks)
