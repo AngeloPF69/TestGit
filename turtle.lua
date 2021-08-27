@@ -1,4 +1,8 @@
-local function forward(Blocks)
+------ MOVING FUNCTIONS ------
+local function forward(Blocks) --[[Moves forward Blocks, until blocked.
+27/08/2021 -  Returns: true - If turtle goes all way.
+                       false - If turtle was blocked.
+              ex: forward(3) - Moves 3 blocks forward.]] 
   Blocks = Blocks or 1
   
   for i = 1, Blocks do
@@ -7,7 +11,10 @@ local function forward(Blocks)
   return true
 end
 
-local function back(Blocks)
+local function back(Blocks) --[[Moves back Blocks, until blocked.
+27/08/2021 -  Returns: true - If turtle goes all way.
+                       false - If turtle was blocked.
+              ex: back(3) - Moves 3 blocks backwards.]]
   Blocks = Blocks or 1
   
   for i = 1, Blocks do
@@ -16,7 +23,10 @@ local function back(Blocks)
   return true
 end
 
-local function up(Blocks)
+local function up(Blocks) --[[Moves up Blocks, until blocked.
+27/08/2021 -  Returns: true - If turtle goes all way.
+                       false - If turtle was blocked.
+              ex: forward(3) - Moves 3 blocks up.]]
   Blocks = Blocks or 1
   
   for i = 1, Blocks do
@@ -25,7 +35,10 @@ local function up(Blocks)
   return true
 end
 
-local function down(Blocks)
+local function down(Blocks) --[[Moves down Blocks, until blocked.
+27/08/2021 -  Returns: true - If turtle goes all way.
+                       false - If turtle was blocked.
+              ex: down(3) - Moves 3 blocks down.]]
   Blocks = Blocks or 1
   
   for i = 1, Blocks do
@@ -34,7 +47,10 @@ local function down(Blocks)
   return true
 end
 
-local function getParam(sParamOrder, ...)
+local function getParam(sParamOrder, ...) --[[ Sorts parameters by type.
+27/08/2021  Returns: Parameters sorted by type.
+            ex: getParam("sns", number, string, string) - Outputs: string, number, string.
+            Note: Just two parameters type (string, number)]]
   if not sParamOrder then return nil end
   
   local Args={...}
@@ -354,3 +370,7 @@ local function placeBelow(Blocks)
   end
   return true
 end
+
+--drop([Blocks=all]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+--dropUp([Blocks=all]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+--dropDown([Blocks=all]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
