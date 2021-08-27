@@ -423,5 +423,31 @@ local function placeBelow(Blocks) --[[Places Blocks in a strait line, 1 block be
 end
 
 --drop([Blocks="all"]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+local function drop(Blocks) --[[Drops Blocks in a inventory or in the world in front of turtle.
+27/08/2021  Returns:  true.
+                      false.
+            sintax: drop([Blocks="all"])
+            ex: drop("all") or placeBelow(198) - Drops all blocks, or 197 like the one on selected slot.]]
+  Blocks = Blocks or "all"
+  
+end
+
 --dropUp([Blocks="all"]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+local function dropUp(Blocks) --[[Drops Blocks in a inventory or in the world upwards.
+27/08/2021  Returns:  true.
+                      false.
+            sintax: dropUp([Blocks="all"])
+            ex: dropUp("all") or dropUp(198) - Drops all blocks, or 197 like the one on selected slot, upwards.]]
+  Blocks = Blocks or "all"
+  
+end
+
 --dropDown([Blocks="all"]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
+local function dropDown(Blocks) --[[Drops Blocks in a inventory or in the world downwards.
+27/08/2021  Returns:  true.
+                      false.
+            sintax: dropDown([Blocks="all"])
+            ex: dropDown("all") or dropDown(198) - Drops all blocks, or 197 like the one on selected slot, downwards.]]
+  Blocks = Blocks or "all"
+  
+end
