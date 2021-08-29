@@ -34,12 +34,12 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
-- [ ] drop([Blocks="all"]) drops all blocks from selected slot, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
-- [ ] dropUp([Blocks="all"]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
-- [ ] dropDown([Blocks="all"]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
 
 ### done
 
+- [x] dropUp([Blocks]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
+- [x] dropDown([Blocks]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
+- [x] drop([Blocks]) drops all blocks from selected slot, or from inventory.
 - [x] placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
 - [x] placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
 - [x] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
