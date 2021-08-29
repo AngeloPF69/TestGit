@@ -622,7 +622,27 @@ function invSearch(sItemName, nStartSlot) --[[ Search inventory for ItemName, st
   return false
 end
 
-
+function select(value) --[[ Select slot value or select slot with itemName = value. 
+  29/08/2021  returns:  The selected slot.
+                        False - if the item was not found
+                              - if nStartSlot is not a number or a string.
+                              - if value is a number and ( < 1 or > 16 )
+              Note: if executed select() is the same as turtle.getSelectedSlot()
+              sintax: select([value/Item Name])
+              ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  if not value then return turtle.getSelectedSlot() end
+  if type(value) == "number" then
+    if (value < 1) or (value > 16) then return false end
+    if turtle.select(value) then return value end
+  end
+  if type(value) ~= "string" then return false end
+  slot = invSearch(value)
+  if slot then
+    turtle.select(slot)
+    return slot
+  end
+  return false
+end
 ------ DROP FUNCTIONS ------  
 
 function dropDir(sDir, nBlocks) --[[Drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
@@ -700,5 +720,6 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
   return dropDir("down", nBlocks)
 end
 
-
+------ TEST AREA -----
+print(select(17))
 

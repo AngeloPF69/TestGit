@@ -59,4 +59,5 @@ Avilable functions:
 
   Inventory:
 
+    select(value) Select slot value or select slot with itemName = value. 
     invSearch(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot. 
