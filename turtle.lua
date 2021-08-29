@@ -719,7 +719,3 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
                   dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
   return dropDir("down", nBlocks)
 end
-
------- TEST AREA -----
-print(select(17))
-
