@@ -5,7 +5,7 @@ Avilable functions:
 
   General:
 
-    getParam(sParamOrder, ...) Sorts parameters by type, ex: getParam("sns", 10, "left", "right") output: left, 10, right.
+    getParam(sParamOrder, tDefault, ...) Sorts parameters by type, ex: getParam("sns", {"forward", 1}, 10, "left") output: left, 10, forward.
     isInTable(value, t) Verifies if value is in table t, value can be a table too.
     sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
 
