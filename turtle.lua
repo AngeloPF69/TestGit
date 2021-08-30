@@ -1,7 +1,58 @@
 
+--1. Function return rule - if invalid parameter, function must return nil.
+
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
 
------- DETECTING FUNCTIONS ------
+------ DETECT FUNCTIONS ------
+--detectDir([sDir="forward")
+function detectDir(sDir)
+	if type(sDir) ~= "string" then return nil end
+	if sDir == "up" then return turtle.detectUp()
+	elseif sDir == "down" then return turtle.detectDown()
+	elseif sDir == "right" then	turtle.turnRight()
+	elseif sDir == "back" then turnBack()
+	elseif sDir == "left" then turtle.turnLeft()
+	end
+	return turtle.detect()
+end
+
+--detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
+function detect(nBlocks)
+	blockDir = "forward"
+	movDir = "up"
+	while (nBlocks>0) do
+		if not detectDir(blockDir) then return false end
+		nBlocks = nBlocks - 1
+		if nBlocks > 0 then
+			
+		end
+	end
+end
+
+--detectUp([Blocks=1]) detects if there is blocks in a strait line upwards, stops when there isn't.
+function detectUP(nBlocks)
+end
+
+--detectDown([Blocks=1]) detects if there is blocks in a strait line downwards, stops when there isn't.
+function detectDown(nBlocks)
+end
+
+--detectLeft([Blocks=1]) rotate turtle left and detects if there is blocks in a strait line forward, stops when there isn't.
+function detectRight(nBlocks)
+end
+
+--detectRight([Blocks=1]) rotate turtle right and detects if there is blocks in a strait line forward, stops when there isn't.
+function detectRight(nBlocks)
+end
+
+--detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
+function detectAbove(nBlocks)
+end
+
+--detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
+function detectBelow(nBlocks)
+end
+
 
 ------ MOVING FUNCTIONS ------
 
