@@ -1,6 +1,7 @@
 
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
 
+------ DETECTING FUNCTIONS ------
 
 ------ MOVING FUNCTIONS ------
 
