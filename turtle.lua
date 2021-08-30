@@ -592,6 +592,11 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
+--getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
+function getItemSpace(value)
+	
+end
+
 function invSearch(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
