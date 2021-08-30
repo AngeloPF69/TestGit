@@ -59,5 +59,7 @@ Avilable functions:
 
   Inventory:
 
+    itemCount(nSlot) Counts items in inventory.
     select(value) Select slot value or select slot with itemName = value. 
-    invSearch(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot. 
+    Search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot. 
+    

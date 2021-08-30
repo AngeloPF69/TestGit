@@ -592,14 +592,43 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
-function invSearch(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
+function itemCount(nSlot) --[[ Counts items in inventory
+  27/08/2021  Returns: number of items counted.
+                      false - if nSlot <0 or > 16.
+                            - if nSlot is neither a string nor a number.
+              sintax: ItemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
+              ex: itemCount() counts items in selected slot.
+                  itemCount("inventory") - counts items in inventory.
+                  itemCount("minecraft:cobblestone") - counts cbblestone in inventory.]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+  totItems = 0
+
+  if type(nSlot) == "number" then
+    if (nSlot < 1) or (nSlot > 16) then return false end
+    tData = turtle.getItemDetail(nSlot)
+    if tData then totItems = tData.count end
+  else
+    if type(nSlot) ~= "string" then return false end
+    for i = 1, 16 do
+      tData = turtle.getItemDetail(i)
+      if tData then
+        if nSlot == "inventory" then totItems = totItems + tData.count
+        elseif nSlot == tData.name then totItems = totItems + tData.count
+        end
+      end
+    end
+  end
+  return totItems
+end
+
+function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
                               - if sItemName not supplied.
                               - if nStartSlot is not a number.
               Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
                     if not supplied nStartSlot, default is the selected slot.
-              sintax: invSearch(sItemName [, nStartSlot=turtle.getSelectedSlot()])]]
+              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()])]]
 	if not sItemName then return false end
 	sItemName, nStartSlot = getParam("sn", {turtle.getSelectedSlot()}, sItemName, nStartSlot)
   if type(nStartSlot) ~= "number" then return false end
@@ -719,3 +748,7 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
                   dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
   return dropDir("down", nBlocks)
 end
+
+---- TEST AREA ------
+--function getItemCount(nSlot)
+print(getItemCount("minecraft:dirt"))
