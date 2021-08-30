@@ -1,5 +1,66 @@
 
+--1. Function return rule - if invalid parameter, function must return nil.
+
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
+tTurtle = {["x"] = 0, ["y"] = 0, ["z"] = 0} --coords for turtle
+
+
+------ TURTLE STATUS FUNCTIONS ----
+
+function getCoods()
+	return unpack(tTurtle)
+end
+
+------ DETECT FUNCTIONS ------
+
+--detectDir([sDir="forward")
+function detectDir(sDir)
+	if type(sDir) ~= "string" then return nil end
+	if sDir == "up" then return turtle.detectUp()
+	elseif sDir == "down" then return turtle.detectDown()
+	elseif sDir == "right" then	turtle.turnRight()
+	elseif sDir == "back" then turnBack()
+	elseif sDir == "left" then turtle.turnLeft()
+	end
+	return turtle.detect()
+end
+
+--detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
+function detect(nBlocks)
+	blockDir = "forward"
+	movDir = "up"
+	while (nBlocks>0) do
+		if not detectDir(blockDir) then return false end
+		nBlocks = nBlocks - 1
+		if nBlocks > 0 then
+			
+		end
+	end
+end
+
+--detectUp([Blocks=1]) detects if there is blocks in a strait line upwards, stops when there isn't.
+function detectUP(nBlocks)
+end
+
+--detectDown([Blocks=1]) detects if there is blocks in a strait line downwards, stops when there isn't.
+function detectDown(nBlocks)
+end
+
+--detectLeft([Blocks=1]) rotate turtle left and detects if there is blocks in a strait line forward, stops when there isn't.
+function detectRight(nBlocks)
+end
+
+--detectRight([Blocks=1]) rotate turtle right and detects if there is blocks in a strait line forward, stops when there isn't.
+function detectRight(nBlocks)
+end
+
+--detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
+function detectAbove(nBlocks)
+end
+
+--detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
+function detectBelow(nBlocks)
+end
 
 
 ------ MOVING FUNCTIONS ------
@@ -64,15 +125,26 @@ function down(nBlocks) --[[Moves nBlocks down or up, until blocked.
   return true
 end
 
+function goto(x,y,z)
+	if not checkType("nnn", x, y ,z) then return false end
+	
+end
 
 ------ GENERAL FUNCTIONS ------
+
+function checkType(sType, ...)
+	Args = { ... }
+	for i = 1, #sType do
+		if sType[i] ~= Args[1]:sub(1,1) then return false end
+	end
+	return true
+end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   27/08/2021  Returns: Parameters sorted by type, nil if no parameters.
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
               Note: Only sorts two parameters type (string, number).
-                    The default table is returned when no parameter is supplied.
-              ]]
+                    The default table is returned when no parameter is supplied.]]
   if not sParamOrder then return nil end
   
   local Args={...}
@@ -592,6 +664,7 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
+<<<<<<< HEAD
 function itemCount(nSlot) --[[ Counts items in inventory
   27/08/2021  Returns: number of items counted.
                       false - if nSlot <0 or > 16.
@@ -619,6 +692,11 @@ function itemCount(nSlot) --[[ Counts items in inventory
     end
   end
   return totItems
+end
+
+--getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
+function getItemSpace(value)
+	
 end
 
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
