@@ -7,13 +7,6 @@ improving commands in lua for computer craft turtle
 - [ ] select(Slot/Item Name) selects slot [1..16] or first item with Item Name.
 - [ ] getItemCount(selected slot/slot/inventory) count the item in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
 
-- [ ] detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
-- [ ] detectUp([Blocks=1]) detects if there is blocks in a strait line upwards, stops when there isn't.
-- [ ] detectDown([Blocks=1]) detects if there is blocks in a strait line downwards, stops when there isn't.
-- [ ] detectLeft([Blocks=1]) rotate turtle left and detects if there is blocks in a strait line forward, stops when there isn't.
-- [ ] detectRight([Blocks=1]) rotate turtle right and detects if there is blocks in a strait line forward, stops when there isn't.
-- [ ] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
-- [ ] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
 - [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
 - [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
 - [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
@@ -34,6 +27,13 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
+- [ ] detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
+- [ ] detectUp([Blocks=1]) detects if there is blocks in a strait line upwards, stops when there isn't.
+- [ ] detectDown([Blocks=1]) detects if there is blocks in a strait line downwards, stops when there isn't.
+- [ ] detectLeft([Blocks=1]) rotate turtle left and detects if there is blocks in a strait line forward, stops when there isn't.
+- [ ] detectRight([Blocks=1]) rotate turtle right and detects if there is blocks in a strait line forward, stops when there isn't.
+- [ ] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
+- [ ] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
 - [ ] getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
 
 ### done
