@@ -2,8 +2,17 @@
 --1. Function return rule - if invalid parameter, function must return nil.
 
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
+tTurtle = {["x"] = 0, ["y"] = 0, ["z"] = 0} --coords for turtle
+
+
+------ TURTLE STATUS FUNCTIONS ----
+
+function getCoods()
+	return unpack(tTurtle)
+end
 
 ------ DETECT FUNCTIONS ------
+
 --detectDir([sDir="forward")
 function detectDir(sDir)
 	if type(sDir) ~= "string" then return nil end
@@ -116,15 +125,26 @@ function down(nBlocks) --[[Moves nBlocks down or up, until blocked.
   return true
 end
 
+function goto(x,y,z)
+	if not checkType("nnn", x, y ,z) then return false end
+	
+end
 
 ------ GENERAL FUNCTIONS ------
+
+function checkType(sType, ...)
+	Args = { ... }
+	for i = 1, #sType do
+		if sType[i] ~= Args[1]:sub(1,1) then return false end
+	end
+	return true
+end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   27/08/2021  Returns: Parameters sorted by type, nil if no parameters.
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
               Note: Only sorts two parameters type (string, number).
-                    The default table is returned when no parameter is supplied.
-              ]]
+                    The default table is returned when no parameter is supplied.]]
   if not sParamOrder then return nil end
   
   local Args={...}
