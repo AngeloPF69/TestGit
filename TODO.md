@@ -6,7 +6,7 @@ improving commands in lua for computer craft turtle
 
 - [ ] select(Slot/Item Name) selects slot [1..16] or first item with Item Name.
 - [ ] getItemCount(selected slot/slot/inventory) count the item in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
-- [ ] getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
+
 - [ ] detect([Blocks=1]) detects if there is no blocks in a strait line forward, stops when there is.
 - [ ] detectUp([Blocks=1]) detects if there is no blocks in a strait line upwards, stops when there is.
 - [ ] detectDown([Blocks=1]) detects if there is no blocks in a strait line downwards, stops when there is.
@@ -34,6 +34,7 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
+- [ ] getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
 
 ### done
 
