@@ -131,9 +131,13 @@ function goto(x,y,z)
 end
 
 ------ GENERAL FUNCTIONS ------
-
-function checkType(sType, ...)
+--checktype not tested
+function checkType(sType, ...) --[[ Checks if parameters are from sType.
+  30/08/2021  Returns: true if all parameters match the Stype.
+              ex: checkType("snt", "helo", number1, tTable) - Outputs: true, "helo" is a string,
+                  number1 is a number and tTable is a table.]]
 	Args = { ... }
+  if #Args ~= #sType then return false end
 	for i = 1, #sType do
 		if sType[i] ~= Args[1]:sub(1,1) then return false end
 	end
@@ -664,7 +668,6 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
-<<<<<<< HEAD
 function itemCount(nSlot) --[[ Counts items in inventory
   27/08/2021  Returns: number of items counted.
                       false - if nSlot <0 or > 16.
@@ -696,7 +699,7 @@ end
 
 --getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
 function getItemSpace(value)
-	
+
 end
 
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
@@ -828,5 +831,3 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
 end
 
 ---- TEST AREA ------
---function getItemCount(nSlot)
-print(getItemCount("minecraft:dirt"))
