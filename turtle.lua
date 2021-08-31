@@ -16,6 +16,12 @@ function getCoods()
 end
 
 
+------ MEASUREMENTS FUNCTIONS ------
+
+function getDistTo(x, y, z)
+	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
+end
+
 ------ DETECT FUNCTIONS ------
 
 --detectDir([sDir="forward")
@@ -40,7 +46,9 @@ function detect(nBlocks)
 		if not detectDir(blockDir) then return false end
 		nBlocks = nBlocks - 1
 		if nBlocks > 0 then
-			
+			for i = 1, #checkedDir do
+				
+			end
 		end
 	end
 end
@@ -134,7 +142,7 @@ end
 
 function goto(x,y,z)
 	if not checkType("nnn", x, y ,z) then return false end
-	
+	dx, dy, dz = getDistTo(x, y, z)
 end
 
 ------ GENERAL FUNCTIONS ------
