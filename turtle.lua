@@ -1,14 +1,25 @@
 
 --1. Function return rule - if invalid parameter, function must return nil.
 
+dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
-tTurtle = {["x"] = 0, ["y"] = 0, ["z"] = 0} --coords for turtle
+tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
 
 ------ TURTLE STATUS FUNCTIONS ----
 
+function setCoords(x,y,z)
+	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
+end
 function getCoods()
-	return unpack(tTurtle)
+	return tTurtle.x, tTurtle.y, tTurtle.z
+end
+
+
+------ MEASUREMENTS FUNCTIONS ------
+
+function getDistTo(x, y, z)
+	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
 ------ DETECT FUNCTIONS ------
@@ -18,7 +29,7 @@ function detectDir(sDir)
 	if type(sDir) ~= "string" then return nil end
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
-	elseif sDir == "right" then	turtle.turnRight()
+	elseif sDir == "right" then turtle.turnRight()
 	elseif sDir == "back" then turnBack()
 	elseif sDir == "left" then turtle.turnLeft()
 	end
@@ -27,13 +38,17 @@ end
 
 --detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
 function detect(nBlocks)
+	checkedDir = { ["up"]=false, ["right"]=false, ["down"]=false, ["left"]=false }
 	blockDir = "forward"
 	movDir = "up"
+	
 	while (nBlocks>0) do
 		if not detectDir(blockDir) then return false end
 		nBlocks = nBlocks - 1
 		if nBlocks > 0 then
-			
+			for i = 1, #checkedDir do
+				
+			end
 		end
 	end
 end
@@ -127,7 +142,7 @@ end
 
 function goto(x,y,z)
 	if not checkType("nnn", x, y ,z) then return false end
-	
+	dx, dy, dz = getDistTo(x, y, z)
 end
 
 ------ GENERAL FUNCTIONS ------
@@ -337,7 +352,8 @@ function digLeft(nBlocks) --[[Turtle digs nBlocks to the left or right, must hav
               ex: digLeft() or digLeft(1) - Dig 1 block left.]]
   nBlocks = nBlocks or 1
   
-  turtle.turnLeft()
+	if type(nBlocks) ~= "number" then return false end
+  if nBlocks > 0 then turtle.turnLeft() end
   return dig(nBlocks)
 end
 
@@ -349,7 +365,8 @@ function digRight(nBlocks) --[[Turtle digs nBlocks to the right or left, must ha
               ex: digRight() or digRight(1) - Dig 1 block right.]]
   nBlocks = nBlocks or 1
   
-  turtle.turnRight()
+	if type(nBlocks) ~= "number" then return false end
+  if nBlocks > 0 then turtle.turnRight() end
   return dig(nBlocks)
 end
 
@@ -565,8 +582,11 @@ function placeLeft(nBlocks) --[[Places Blocks to the left or right, and returns 
               Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
               ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
   
-  turtle.turnLeft()
-  return place(nBlocks)
+  if type(nBlocks) ~= "number" then return false end
+  if nBlocks < 0 then turtle.turnRight()
+	else turtle.turnLeft()
+	end
+  return place(math.abs(nBlocks))
 end
   
 function placeRight(nBlocks) --[[Places Blocks to the right or left, and returns to starting point.
@@ -577,8 +597,11 @@ function placeRight(nBlocks) --[[Places Blocks to the right or left, and returns
               sintax: placeRight([nBlocks=1])
               Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
               ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
-  turtle.turnRight()
-  return place(nBlocks)
+  if type(nBlocks) ~= "number" then return false end
+  if nBlocks < 0 then turtle.turnLeft()
+	else turtle.turnRight()
+	end
+  return place(math.abs(nBlocks))
 end
   
 function placeAbove(nBlocks) --[[Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
@@ -732,7 +755,7 @@ function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
   return false
 end
 
-function select(value) --[[ Select slot value or select slot with itemName = value. 
+function itemSelect(value) --[[ Select slot value or select slot with itemName = value. 
   29/08/2021  returns:  The selected slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
@@ -801,7 +824,7 @@ function drop(nBlocks) --[[Drops nBlocks from selected slot and inventory in the
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
                               - if nBlocks is not a number
-              Sintax: drop([nBlocks])
+              Sintax: drop([nBlocks=stack of items])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: drop() - Drops all blocks from selected slot, in front of the turtle.
                   drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
@@ -831,3 +854,5 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
 end
 
 ---- TEST AREA ------
+--function getItemCount(nSlot)
+print(getItemCount("minecraft:dirt"))
