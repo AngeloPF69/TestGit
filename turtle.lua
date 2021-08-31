@@ -1,15 +1,17 @@
 
 --1. Function return rule - if invalid parameter, function must return nil.
 
+dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 }
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
-tTurtle = {["x"] = 0, ["y"] = 0, ["z"] = 0} --coords for turtle
+tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
 
 ------ TURTLE STATUS FUNCTIONS ----
 
 function getCoods()
-	return unpack(tTurtle)
+	return tTurtle.x, tTurtle.y, tTurtle.z
 end
+
 
 ------ DETECT FUNCTIONS ------
 
@@ -18,7 +20,7 @@ function detectDir(sDir)
 	if type(sDir) ~= "string" then return nil end
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
-	elseif sDir == "right" then	turtle.turnRight()
+	elseif sDir == "right" then turtle.turnRight()
 	elseif sDir == "back" then turnBack()
 	elseif sDir == "left" then turtle.turnLeft()
 	end
@@ -27,6 +29,7 @@ end
 
 --detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
 function detect(nBlocks)
+	checkedDir = { ["up"]=false, ["right"]=false
 	blockDir = "forward"
 	movDir = "up"
 	while (nBlocks>0) do
