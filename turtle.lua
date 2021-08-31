@@ -1,13 +1,16 @@
 
 --1. Function return rule - if invalid parameter, function must return nil.
 
-dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 }
+dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
 lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
 
 ------ TURTLE STATUS FUNCTIONS ----
 
+function setCoords(x,y,z)
+	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
+end
 function getCoods()
 	return tTurtle.x, tTurtle.y, tTurtle.z
 end
