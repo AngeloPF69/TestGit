@@ -29,9 +29,10 @@ end
 
 --detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
 function detect(nBlocks)
-	checkedDir = { ["up"]=false, ["right"]=false
+	checkedDir = { ["up"]=false, ["right"]=false, ["down"]=false, ["left"]=false }
 	blockDir = "forward"
 	movDir = "up"
+	
 	while (nBlocks>0) do
 		if not detectDir(blockDir) then return false end
 		nBlocks = nBlocks - 1
