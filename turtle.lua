@@ -333,7 +333,8 @@ function digLeft(nBlocks) --[[Turtle digs nBlocks to the left or right, must hav
               ex: digLeft() or digLeft(1) - Dig 1 block left.]]
   nBlocks = nBlocks or 1
   
-  turtle.turnLeft()
+	if type(nBlocks) ~= "number" then return false end
+  if nBlocks > 0 then turtle.turnLeft() end
   return dig(nBlocks)
 end
 
@@ -345,7 +346,8 @@ function digRight(nBlocks) --[[Turtle digs nBlocks to the right or left, must ha
               ex: digRight() or digRight(1) - Dig 1 block right.]]
   nBlocks = nBlocks or 1
   
-  turtle.turnRight()
+	if type(nBlocks) ~= "number" then return false end
+  if nBlocks > 0 then turtle.turnRight() end
   return dig(nBlocks)
 end
 
@@ -561,8 +563,11 @@ function placeLeft(nBlocks) --[[Places Blocks to the left or right, and returns 
               Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
               ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
   
-  turtle.turnLeft()
-  return place(nBlocks)
+  if type(nBlocks) ~= "number" then return false end
+  if nBlocks < 0 then turtle.turnRight()
+	else turtle.turnLeft()
+	end
+  return place(math.abs(nBlocks))
 end
   
 function placeRight(nBlocks) --[[Places Blocks to the right or left, and returns to starting point.
@@ -573,8 +578,11 @@ function placeRight(nBlocks) --[[Places Blocks to the right or left, and returns
               sintax: placeRight([nBlocks=1])
               Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
               ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
-  turtle.turnRight()
-  return place(nBlocks)
+  if type(nBlocks) ~= "number" then return false end
+  if nBlocks < 0 then turtle.turnLeft()
+	else turtle.turnRight()
+	end
+  return place(math.abs(nBlocks))
 end
   
 function placeAbove(nBlocks) --[[Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
@@ -664,7 +672,6 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
-<<<<<<< HEAD
 function itemCount(nSlot) --[[ Counts items in inventory
   27/08/2021  Returns: number of items counted.
                       false - if nSlot <0 or > 16.
@@ -729,7 +736,7 @@ function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
   return false
 end
 
-function select(value) --[[ Select slot value or select slot with itemName = value. 
+function itemSelect(value) --[[ Select slot value or select slot with itemName = value. 
   29/08/2021  returns:  The selected slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
@@ -798,7 +805,7 @@ function drop(nBlocks) --[[Drops nBlocks from selected slot and inventory in the
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
                               - if nBlocks is not a number
-              Sintax: drop([nBlocks])
+              Sintax: drop([nBlocks=stack of items])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: drop() - Drops all blocks from selected slot, in front of the turtle.
                   drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
