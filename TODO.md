@@ -36,7 +36,7 @@ improving commands in lua for computer craft turtle
 ### done
 
 - [x] itemCount(selected slot/slot/inventory/item name) counts items in inventory.
-- [x] select(Slot/Item Name) selects slot [1..16] or first item with Item Name.
+- [x] itemSelect(Slot/Item Name) selects slot [1..16] or first item with Item Name.
 - [x] dropUp([Blocks]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
 - [x] dropDown([Blocks]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
 - [x] drop([Blocks]) drops all blocks from selected slot, or from inventory.
