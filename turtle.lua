@@ -24,8 +24,10 @@ end
 
 ------ DETECT FUNCTIONS ------
 
---detectDir([sDir="forward")
-function detectDir(sDir)
+function detectDir(sDir) --[[Detects if is a block in sDir direction {"forward", "right", "back", "up", "down" }.
+  27/08/2021  Returns:  true - If turtle detects a block.
+                        false - if turtle didn't detect a block.
+              ex: detectDir([sDir="forward"]) - Detect blocks forward.]] 
 	if type(sDir) ~= "string" then return nil end
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
