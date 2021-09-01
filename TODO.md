@@ -24,17 +24,13 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
-- [ ] itemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
-- [ ] detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
-- [ ] detectUp([Blocks=1]) detects if there is blocks in a strait line upwards, stops when there isn't.
-- [ ] detectDown([Blocks=1]) detects if there is blocks in a strait line downwards, stops when there isn't.
-- [ ] detectLeft([Blocks=1]) rotate turtle left and detects if there is blocks in a strait line forward, stops when there isn't.
-- [ ] detectRight([Blocks=1]) rotate turtle right and detects if there is blocks in a strait line forward, stops when there isn't.
-- [ ] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
-- [ ] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
+- [ ] itemSpace(selected slot/slot/itemName) get item space in selected slot, or slot from 1 to 16, or when specified itemName in all inventory.
+- [ ] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't or blocked.
+- [ ] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't, or blocked.
 
 ### done
 
+- [x] detectDir([sDir="forward"]) detects if there is a block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
 - [x] itemCount(selected slot/slot/inventory/item name) counts items in inventory.
 - [x] itemSelect(Slot/Item Name) selects slot [1..16] or first item with Item Name.
 - [x] dropUp([Blocks]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
