@@ -8,9 +8,12 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
 ------ TURTLE STATUS FUNCTIONS ----
 
+--setCoords() - Sets turtle coods.
 function setCoords(x,y,z)
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
 end
+
+--getCoods() - Get the turtle coods.
 function getCoods()
 	return tTurtle.x, tTurtle.y, tTurtle.z
 end
@@ -18,55 +21,35 @@ end
 
 ------ MEASUREMENTS FUNCTIONS ------
 
+--getDistTo(x, y, z) - Get the distance from turtle to x, y, z: distance x, distance y, distance z
 function getDistTo(x, y, z)
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
 ------ DETECT FUNCTIONS ------
 
---detectDir([sDir="forward")
-function detectDir(sDir)
-	if type(sDir) ~= "string" then return nil end
+function detectDir(sDir) --[[Detects a block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+1/09/2021  Returns: true - If there is a block.
+                    false - If there isn't a block.
+                    nil - If type(sDir) ~= "string"
+            Note: If a string doesn't match directions is considered as forward.
+            ex: detectDir("forward") - Detects a block forward.]]
+	sDir = sDir or "forward"
+
+  if type(sDir) ~= "string" then return nil end
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
-	elseif sDir == "right" then turtle.turnRight()
-	elseif sDir == "back" then turnBack()
-	elseif sDir == "left" then turtle.turnLeft()
+	elseif sDir == "right" then
+      turtle.turnRight()
+      sDir = "foward"
+	elseif sDir == "back" then
+    turnBack()
+    sDir = "foward"
+	elseif sDir == "left" then
+    turtle.turnLeft()
+    sDir = "foward"
 	end
-	return turtle.detect()
-end
-
---detect([Blocks=1]) detects if there is blocks in a strait line forward, stops when there isn't.
-function detect(nBlocks)
-	checkedDir = { ["up"]=false, ["right"]=false, ["down"]=false, ["left"]=false }
-	blockDir = "forward"
-	movDir = "up"
-	
-	while (nBlocks>0) do
-		if not detectDir(blockDir) then return false end
-		nBlocks = nBlocks - 1
-		if nBlocks > 0 then
-			for i = 1, #checkedDir do
-				
-			end
-		end
-	end
-end
-
---detectUp([Blocks=1]) detects if there is blocks in a strait line upwards, stops when there isn't.
-function detectUP(nBlocks)
-end
-
---detectDown([Blocks=1]) detects if there is blocks in a strait line downwards, stops when there isn't.
-function detectDown(nBlocks)
-end
-
---detectLeft([Blocks=1]) rotate turtle left and detects if there is blocks in a strait line forward, stops when there isn't.
-function detectRight(nBlocks)
-end
-
---detectRight([Blocks=1]) rotate turtle right and detects if there is blocks in a strait line forward, stops when there isn't.
-function detectRight(nBlocks)
+	if sDir = "foward" then return turtle.detect() end
 end
 
 --detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
@@ -692,10 +675,10 @@ end
 ------ INVENTORY FUNCTIONS ------
 
 function itemCount(nSlot) --[[ Counts items in inventory
-  27/08/2021  Returns: number of items counted.
+  31/08/2021  Returns: number of items counted.
                       false - if nSlot <0 or > 16.
                             - if nSlot is neither a string nor a number.
-              sintax: ItemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
+              sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
               ex: itemCount() counts items in selected slot.
                   itemCount("inventory") - counts items in inventory.
                   itemCount("minecraft:cobblestone") - counts cbblestone in inventory.]]
@@ -720,9 +703,11 @@ function itemCount(nSlot) --[[ Counts items in inventory
   return totItems
 end
 
---getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
-function getItemSpace(value)
+--itemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
+function itemSpace(nSlot)
+  nSlot = nSlot or turtle.getSelectedSlot()
 
+  
 end
 
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
@@ -854,5 +839,6 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
 end
 
 ---- TEST AREA ------
---function getItemCount(nSlot)
-print(getItemCount("minecraft:dirt"))
+--function detectDir(sDir)
+print(detectDir("back"))
+
