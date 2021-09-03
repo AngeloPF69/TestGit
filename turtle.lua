@@ -718,9 +718,40 @@ function itemCount(nSlot) --[[ Counts items in inventory
   return totItems
 end
 
---getItemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
-function getItemSpace(value)
+--ItemSpace(selected slot/slot/inventory/item Name) get item space in selected slot, in a slot from 1 to 16, when specified "inventory" in all inventory, or the space for a specified item.
+function ItemSpace(nSlot)
+	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
+	local endSlot = nSlot --from nSlot to endSlot get the sum of space in each slot.
+	local cond = ""
 	
+	if type(nSlot) == "string" then --is it "inventory" or "minecraft:cobblestone" for example.
+		if nSlot = "inventory" then
+			cond = nSlot
+			endSlot = bit.band(nSlot-1, 15) --endSlot [0..15]
+			nSlot = 1 --nSlot is the start slot [1..16]
+		else
+			cond = nSlot
+			nSlot = Search(nSlot) --is mSlot a item name get the slot with this item
+			if not nSlot then return nil end --not found.
+			endSlot=bit band(nSlot-1, 15) ----endSlot [0..15]
+		end
+	end
+	
+	nSlot = bit.band(nSlot-1, 15) --nSlot, the start slot [0..15]
+	totSpace = 0
+	repeat
+		tData = turtle.getItemSpace(nSlot)
+		if tData then
+			if cond == "inventory" then totSpace = totSpace + tData.count
+			elseif cond ~= "" then
+				if tData.name == cond then totSpace = totSpace + tData.count end
+				nSlot = Search(cond)
+			else totSpace = totSpace + tData.count
+			end
+		end
+		nSlot = bit.band(nSlot+1, 15)
+	until (nSlot == endSlot)
+	return totSpace
 end
 
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
