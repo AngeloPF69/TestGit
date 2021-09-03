@@ -4,13 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
-- [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
-- [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
-- [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
-- [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
-- [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
-- [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
 - [ ] attackLeft([Side]) rotate left and attack the entity in front.
 - [ ] attackRight([Side]) rotate right and attack the entity in front.
 - [ ] attackBack([Side]) rotate back and attack the entity in front.
@@ -22,16 +15,31 @@ improving commands in lua for computer craft turtle
 - [ ] inspectBack() rotate back and inspect block in front of turtle.
 - [ ] getItemName([Slot=Selected slot]) gets the item name from Slot.
 
+### POSTPONED
+
+- [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectRight([Blocks=1]) detects if on the right of the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectBack([Blocks=1]) detects if on the turtle backs are blocks in a strait line, stops when there isn't or blocked.
+- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
+- [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
+- [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
+- [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
+- [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
+
 ### in progress
 
-- [ ] itemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
-- [ ] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
-- [ ] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
+- [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
+- [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
 
 ### done
 
-- [x] detectDir([sDir="forward"]) detects a block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
-- [x] itemCount([Slot=turtle.getSelectedSlot()/"inventory"/item name]) counts items in inventory.
+- [x] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't or blocked.
+- [x] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't, or blocked.
+- [x] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
+- [x] detectDir([sDir="forward"]) detects if there is a block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
+- [x] itemCount(selected slot/slot/inventory/item name) counts items in inventory.
 - [x] itemSelect(Slot/Item Name) selects slot [1..16] or first item with Item Name.
 - [x] dropUp([Blocks]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
 - [x] dropDown([Blocks]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.

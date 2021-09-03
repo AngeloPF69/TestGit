@@ -28,15 +28,11 @@ end
 
 ------ DETECT FUNCTIONS ------
 
-function detectDir(sDir) --[[Detects a block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
-1/09/2021  Returns: true - If there is a block.
-                    false - If there isn't a block.
-                    nil - If type(sDir) ~= "string"
-            Note: If a string doesn't match directions is considered as forward.
-            ex: detectDir("forward") - Detects a block forward.]]
-	sDir = sDir or "forward"
-
-  if type(sDir) ~= "string" then return nil end
+function detectDir(sDir) --[[Detects if is a block in sDir direction {"forward", "right", "back", "up", "down" }.
+  27/08/2021  Returns:  true - If turtle detects a block.
+                        false - if turtle didn't detect a block.
+              ex: detectDir([sDir="forward"]) - Detect blocks forward.]] 
+	if type(sDir) ~= "string" then return nil end
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
 	elseif sDir == "right" then
@@ -52,14 +48,47 @@ function detectDir(sDir) --[[Detects a block in sDir direction { "forward", "rig
 	if sDir = "foward" then return turtle.detect() end
 end
 
---detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't.
-function detectAbove(nBlocks)
+------- not tested -----
+function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block above the turtle.
+  03/09/2021  Returns:  true if turtle detects a line of nBlocks above it.
+                        false if blocked, empty space.
+												nil if invalid parameter.
+              sintax: digAbove([nBlocks=1])
+              Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+              ex: ddetectAbove() or detectAbove(1) - Detects 1 block up.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  for i = 1, math.abs(nBlocks) do
+    if not turtle.detectUp() then return false end
+    if nBlocks ~= i then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
 end
 
 --detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
-function detectBelow(nBlocks)
+function detectBelow(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block below the turtle.
+  03/09/2021  Returns:  true - if turtle detects a line of nBlocks below.
+                        false - if blocked, empty space.
+												nil - if invalid parameter
+              sintax: detectBelow([nBlocks=1])
+              Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+              ex: detectBelow() or detectBelow(1) - Detect 1 block down.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  for i = 1, nBlocks do
+    if not turtle.detectDown() then return false end
+    if i ~= nBlocks then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
 end
-
 
 ------ MOVING FUNCTIONS ------
 
@@ -322,7 +351,9 @@ function dig(nBlocks) --[[Turtle digs nBlocks forward or turns back and digs nBl
   if nBlocks < 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false end
-    if not turtle.forward() then return false end
+    if i~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
@@ -365,7 +396,9 @@ function digUp(nBlocks) --[[Turtle digs nBlocks upwards or downwards, must have 
   if nBlocks < 0 then return digDown(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.digUp() then return false end
-    if not turtle.up() then return false end
+    if i ~= nBlocks then
+			if not turtle.up() then return false end
+		end
   end
   return true
 end
@@ -382,7 +415,9 @@ function digDown(nBlocks) --[[Turtle digs nBlocks downwards or upwards, must hav
   if nBlocks < 0 then return digUp(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.digDown() then return false end
-    if not turtle.down() then return false end
+    if i ~= nBlocks then
+			if not turtle.down() then return false end
+		end
   end
   return true
 end
@@ -392,14 +427,16 @@ function digAbove(nBlocks) --[[Digs nBlocks forwards or backwards, 1 block above
                         false if blocked, empty space, or invalid parameter.
               sintax: digAbove([nBlocks=1])
               Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-              ex: digAbove() or digAbove(1) - Dig 1 block up, and advances 1 block forward.]]
+              ex: digAbove() or digAbove(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.digUp() then return false end
-    if not turtle.forward() then return false end
+    if i~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
@@ -409,14 +446,16 @@ function digBelow(nBlocks) --[[Digs nBlocks forwards or backwards, 1 block below
                         false if blocked, empty space, or invalid parameter.
               sintax: digBelow([nBlocks=1])
               Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-              ex: digBelow() or digBelow(1) - Dig 1 block down, and advances 1 block forward.]]
+              ex: digBelow() or digBelow(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then turnBack() end
   for i = 1, nBlocks do
     if not turtle.digDown() then return false end
-    if not turtle.forward() then return false end
+    if i~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
@@ -426,14 +465,16 @@ function digBack(nBlocks) --[[Turns back or not and digs Blocks forward, must ha
                         false if bllocked, empty space, or invalid parameter.
               sintax: digBack([nBlocks=1])
               Note: nBlocks < 0 digs forward, nBlocks > 0 digs backwards.
-              ex: digBack() or digBack(1) - Turns back and dig 1 block forward, and advances 1 block forward.]]
+              ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks > 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false end
-    if not turtle.forward() then return false end
+    if i ~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
@@ -703,11 +744,40 @@ function itemCount(nSlot) --[[ Counts items in inventory
   return totItems
 end
 
---itemSpace(selected slot/slot/inventory) get the item space in selected slot, in a slot from 1 to 16, or when specified "inventory" in all inventory.
+--itemSpace(selected slot/slot/inventory/item Name) get item space in selected slot, in a slot from 1 to 16, when specified "inventory" in all inventory, or the space for a specified item.
 function itemSpace(nSlot)
-  nSlot = nSlot or turtle.getSelectedSlot()
-
-  
+	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
+	local endSlot = nSlot --from nSlot to endSlot get the sum of space in each slot.
+	local cond = ""
+	
+	if type(nSlot) == "string" then --is it "inventory" or "minecraft:cobblestone" for example.
+		if nSlot = "inventory" then
+			cond = nSlot
+			endSlot = bit.band(nSlot-1, 15) --endSlot [0..15]
+			nSlot = 1 --nSlot is the start slot [1..16]
+		else
+			cond = nSlot
+			nSlot = Search(nSlot) --is mSlot a item name get the slot with this item
+			if not nSlot then return nil end --not found.
+			endSlot=bit band(nSlot-1, 15) ----endSlot [0..15]
+		end
+	end
+	
+	nSlot = bit.band(nSlot-1, 15) --nSlot, the start slot [0..15]
+	totSpace = 0
+	repeat
+		tData = turtle.getItemSpace(nSlot)
+		if tData then
+			if cond == "inventory" then totSpace = totSpace + tData.count
+			elseif cond ~= "" then
+				if tData.name == cond then totSpace = totSpace + tData.count end
+				nSlot = Search(cond)
+			else totSpace = totSpace + tData.count
+			end
+		end
+		nSlot = bit.band(nSlot+1, 15)
+	until (nSlot == endSlot)
+	return totSpace
 end
 
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
