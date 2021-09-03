@@ -24,11 +24,11 @@ improving commands in lua for computer craft turtle
 
 ### in progress
 
-- [ ] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't or blocked.
-- [ ] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't, or blocked.
 
 ### done
 
+- [x] detectAbove([Blocks=1]) detects if above the turtle is blocks in a strait line forward, stops when there isn't or blocked.
+- [x] detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't, or blocked.
 - [x] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
 - [x] detectDir([sDir="forward"]) detects if there is a block in sDir direction { "forward", "right", "back", "left", "up", "down" }.
 - [x] itemCount(selected slot/slot/inventory/item name) counts items in inventory.
