@@ -73,7 +73,7 @@ end
 
 ------- not tested -----
 function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block above the turtle.
-  27/08/2021  Returns:  true if turtle detects a line of nBlocks above it.
+  03/09/2021  Returns:  true if turtle detects a line of nBlocks above it.
                         false if blocked, empty space.
 												nil if invalid parameter.
               sintax: digAbove([nBlocks=1])
@@ -94,7 +94,7 @@ end
 
 --detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
 function detectBelow(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block below the turtle.
-  27/08/2021  Returns:  true - if turtle detects a line of nBlocks below.
+  03/09/2021  Returns:  true - if turtle detects a line of nBlocks below.
                         false - if blocked, empty space.
 												nil - if invalid parameter
               sintax: detectBelow([nBlocks=1])
