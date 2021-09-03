@@ -4,13 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
-- [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
-- [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
-- [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
-- [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
-- [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
-- [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
 - [ ] attackLeft([Side]) rotate left and attack the entity in front.
 - [ ] attackRight([Side]) rotate right and attack the entity in front.
 - [ ] attackBack([Side]) rotate back and attack the entity in front.
@@ -22,8 +15,23 @@ improving commands in lua for computer craft turtle
 - [ ] inspectBack() rotate back and inspect block in front of turtle.
 - [ ] getItemName([Slot=Selected slot]) gets the item name from Slot.
 
+### POSTPONED
+
+- [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectRight([Blocks=1]) detects if on the right of the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectBack([Blocks=1]) detects if on the turtle backs are blocks in a strait line, stops when there isn't or blocked.
+- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
+- [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
+- [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
+- [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
+- [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
+
 ### in progress
 
+- [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
+- [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
 
 ### done
 
