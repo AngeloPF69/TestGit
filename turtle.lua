@@ -8,47 +8,51 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
 ------ TURTLE STATUS FUNCTIONS ----
 
---setCoords() - Sets turtle coods.
-function setCoords(x,y,z)
+function setCoords(x,y,z) --[[Set coords x, y, z for turtle.
+  03/09/2021  Returns:  true.
+              ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
+  return true
 end
 
---getCoods() - Get the turtle coods.
-function getCoods()
+function getCoords() --[[Gets coords from turtle.
+  03/09/2021  Returns: the three componente
+              ex: getCoords() - Returns 3 values.]] 
 	return tTurtle.x, tTurtle.y, tTurtle.z
 end
 
 
 ------ MEASUREMENTS FUNCTIONS ------
 
---getDistTo(x, y, z) - Get the distance from turtle to x, y, z: distance x, distance y, distance z
-function getDistTo(x, y, z)
+function getDistTo(x, y, z) --[[Gets the three components of the distance from the turtle to point.
+  03/09/2021  Returns:  the coords of the turtle.
+              Note: returns a negative value if turtle is further away than the point from 0, 0, 0.
+              ex: getDistTo(1, 10, 34) - Returns 3 values.]] 
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
 ------ DETECT FUNCTIONS ------
 
 function detectDir(sDir) --[[Detects if is a block in sDir direction {"forward", "right", "back", "up", "down" }.
-  27/08/2021  Returns:  true - If turtle detects a block.
+  03/09/2021  Returns:  true - If turtle detects a block.
                         false - if turtle didn't detect a block.
-              ex: detectDir([sDir="forward"]) - Detect blocks forward.]] 
+              ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
 	if type(sDir) ~= "string" then return nil end
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
 	elseif sDir == "right" then
       turtle.turnRight()
-      sDir = "foward"
+      sDir = "forward"
 	elseif sDir == "back" then
     turnBack()
-    sDir = "foward"
+    sDir = "forward"
 	elseif sDir == "left" then
     turtle.turnLeft()
-    sDir = "foward"
+    sDir = "forward"
 	end
-	if sDir = "foward" then return turtle.detect() end
+	if sDir == "forward" then return turtle.detect() end
 end
 
-------- not tested -----
 function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block above the turtle.
   03/09/2021  Returns:  true if turtle detects a line of nBlocks above it.
                         false if blocked, empty space.
@@ -60,7 +64,9 @@ function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block
   
   if type(nBlocks) ~= "number" then return nil end
   if nBlocks < 0 then turnBack() end
-  for i = 1, math.abs(nBlocks) do
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
     if not turtle.detectUp() then return false end
     if nBlocks ~= i then
 			if not turtle.forward() then return false end
@@ -69,7 +75,6 @@ function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block
   return true
 end
 
---detectBelow([Blocks=1]) detects if below is blocks in a strait line forward, stops when there isn't.
 function detectBelow(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block below the turtle.
   03/09/2021  Returns:  true - if turtle detects a line of nBlocks below.
                         false - if blocked, empty space.
@@ -81,6 +86,8 @@ function detectBelow(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block
   
   if type(nBlocks) ~= "number" then return nil end
   if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
   for i = 1, nBlocks do
     if not turtle.detectDown() then return false end
     if i ~= nBlocks then
@@ -158,15 +165,15 @@ function goto(x,y,z)
 end
 
 ------ GENERAL FUNCTIONS ------
---checktype not tested
+
 function checkType(sType, ...) --[[ Checks if parameters are from sType.
-  30/08/2021  Returns: true if all parameters match the Stype.
-              ex: checkType("snt", "helo", number1, tTable) - Outputs: true, "helo" is a string,
-                  number1 is a number and tTable is a table.]]
+  03/09/2021  Returns: true if all parameters match the sType.
+              ex: checkType("snt", "hello", number1, tTable) - Outputs: true.]]
 	Args = { ... }
+  
   if #Args ~= #sType then return false end
 	for i = 1, #sType do
-		if sType[i] ~= Args[1]:sub(1,1) then return false end
+		if sType:sub(i,i) ~= type(Args[i]):sub(1,1) then return false end
 	end
 	return true
 end
@@ -751,7 +758,7 @@ function itemSpace(nSlot)
 	local cond = ""
 	
 	if type(nSlot) == "string" then --is it "inventory" or "minecraft:cobblestone" for example.
-		if nSlot = "inventory" then
+		if nSlot == "inventory" then
 			cond = nSlot
 			endSlot = bit.band(nSlot-1, 15) --endSlot [0..15]
 			nSlot = 1 --nSlot is the start slot [1..16]
@@ -766,7 +773,7 @@ function itemSpace(nSlot)
 	nSlot = bit.band(nSlot-1, 15) --nSlot, the start slot [0..15]
 	totSpace = 0
 	repeat
-		tData = turtle.getItemSpace(nSlot)
+		tData = turtle.getItemSpace(nSlot+1)
 		if tData then
 			if cond == "inventory" then totSpace = totSpace + tData.count
 			elseif cond ~= "" then
@@ -810,13 +817,13 @@ function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
   return false
 end
 
-function itemSelect(value) --[[ Select slot value or select slot with itemName = value. 
+function itemSelect(value) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
   29/08/2021  returns:  The selected slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
                               - if value is a number and ( < 1 or > 16 )
               Note: if executed select() is the same as turtle.getSelectedSlot()
-              sintax: select([value/Item Name])
+              sintax: select([Slot/Item Name])
               ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
   if not value then return turtle.getSelectedSlot() end
   if type(value) == "number" then
@@ -824,7 +831,7 @@ function itemSelect(value) --[[ Select slot value or select slot with itemName =
     if turtle.select(value) then return value end
   end
   if type(value) ~= "string" then return false end
-  slot = invSearch(value)
+  slot = Search(value)
   if slot then
     turtle.select(slot)
     return slot
@@ -909,6 +916,7 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
 end
 
 ---- TEST AREA ------
---function detectDir(sDir)
-print(detectDir("back"))
+--function itemSpace(nSlot)
+print(itemSpace())
+
 

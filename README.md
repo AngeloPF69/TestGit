@@ -1,10 +1,17 @@
 # TestGit
-Repository to teste Git.
+computercraft turtle lua improved commands.
 
 Avilable functions:
 
+  Turtle Status:
+
+    getDistTo(x, y, z) gets the three components of the distance from the turtle to point.
+    setCoords(x,y,z) sets coords x, y, z for turtle.
+    getCoords() gets coords from turtle.
+
   General:
 
+    checkType(sType, ...) Checks if parameters are from sType.
     getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
     isInTable(value, t) Verifies if value is in table t, value can be a table too.
     sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
@@ -57,9 +64,15 @@ Avilable functions:
     placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.
     placeBelow([Blocks=1]) Places selected Blocks forwards or backwards, 1 block below the turtle, and returns to initial position.
 
+  Detect:
+
+    detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "up", "down" }.
+    detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
+    detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
+
   Inventory:
 
     itemCount(nSlot) Counts items in inventory.
-    itemSelect(value) Select slot value or select slot with itemName = value. 
+    itemSelect(value) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
     Search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot. 
     
