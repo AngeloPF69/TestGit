@@ -4,12 +4,7 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] attackLeft([Side]) rotate left and attack the entity in front.
-- [ ] attackRight([Side]) rotate right and attack the entity in front.
-- [ ] attackBack([Side]) rotate back and attack the entity in front.
-- [ ] suckLeft([count]) rotate left and sucks count items in front of turtle.
-- [ ] suckRight([count]) rotate left and sucks count items in front of turtle.
-- [ ] suckBack([count]) rotate back and sucks count items in front of turtle.
+
 - [ ] inspectLeft() rotate left and inspect block in front of turtle.
 - [ ] inspectRight() rotate right and inspect block in front of turtle.
 - [ ] inspectBack() rotate back and inspect block in front of turtle.
@@ -27,6 +22,7 @@ improving commands in lua for computer craft turtle
 
 ### POSTPONED
 
+- [ ] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
 - [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
@@ -38,16 +34,24 @@ improving commands in lua for computer craft turtle
 - [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
 - [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
 
+
 ### IN PROGRESS
 
-- [ ] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot or inventory.
-- [ ] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot or inventory.
+- [ ] suckLeft([count]) rotate left and sucks count items in front of turtle.
+- [ ] suckRight([count]) rotate left and sucks count items in front of turtle.
+- [ ] suckBack([count]) rotate back and sucks count items in front of turtle.
+- [ ] suckDir([sDir="forward"]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
 
 ### DONE
 
+- [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+- [x] attackLeft([Side]) rotate left and attack the entity in front.
+- [x] attackRight([Side]) rotate right and attack the entity in front.
+- [x] attackBack([Side]) rotate back and attack the entity in front.
+- [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
+- [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 - [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
 - [x] detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
-- [x] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
 - [x] detectDir([Direction="forward"]) detects if there is a block in Direction { "forward", "right", "back", "left", "up", "down" }.
 - [x] itemCount([selected slot/slot/inventory/item name]) counts items in inventory.
 - [x] itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.

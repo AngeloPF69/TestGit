@@ -22,6 +22,51 @@ function getCoords() --[[Gets coords from turtle.
 end
 
 
+------ ATTACK FUCTIONS ------
+
+function attackLeft() --[[Turns left and attack.
+  05/09/2021  Returns:  true - if there was something to attack.
+                        false - if there was nothing to attack, or no weapon.
+              ex: attackLeft() - Attacks to the left.]]
+  turtle.turnLeft()
+  return turtle.attack()
+end
+
+function attackRight() --[[Turns right and attack.
+  05/09/2021  Returns:  true - if there was something to attack.
+                        false - if there was nothing to attack, or no weapon.
+              ex: attackRight() - Attacks to the right.]]
+  turtle.turnRight()
+  return turtle.attack()
+end
+
+function attackBack() --[[Turns back and attack.
+  05/09/2021  Returns:  true - if there was something to attack.
+                        false - if there was nothing to attack, or no weapon.
+              ex: attackBack() - Attacks to the back.]]
+  turnBack()
+  return turtle.attack()
+end
+
+function attackDir(sDir) --[[Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+  05/09/2021  Returns:  true if turtle attack something.
+                        false if nothing to attack, or no weapon.
+                        nil if invalid parameter.
+              sintax: attackDir([sDir="forward"]) - sDir {"forward", "right", "back", "left", "up", "down"}
+              ex: attack("left") - Rotates left and attacks. ]]
+  sDir = sDir or "forward"
+
+  if sDir == "forward" then return attack()
+  elseif sDir == "right" then return attackRight()
+  elseif sDir == "back" then return attackBack()
+  elseif sDir == "left" then return attackLeft()
+  elseif sDir == "up" then return turtle.attackUp()
+  elseif sDir == "down" then return turtle.attackDown()
+  end
+  return nil
+end
+
+
 ------ MEASUREMENTS FUNCTIONS ------
 
 function getDistTo(x, y, z) --[[Gets the three components of the distance from the turtle to point.
@@ -29,6 +74,53 @@ function getDistTo(x, y, z) --[[Gets the three components of the distance from t
               Note: returns a negative value if turtle is further away than the point from 0, 0, 0.
               ex: getDistTo(1, 10, 34) - Returns 3 values.]] 
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
+end
+
+
+------ COMPARE FUNCTIONS ------
+
+function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
+  04/09/2021  Returns:  true - if all the blocks are the same.
+                        false - if blocked, empty space, or found a diferent block.
+												nil if invalid parameter.
+              sintax: compareAbove([nBlocks=1])
+              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+              ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.compareUp() then return false end
+    if nBlocks ~= i then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
+end
+
+function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
+  04/09/2021  Returns:  true - if all the blocks are the same.
+                        false - if blocked, empty space, or found a diferent block.
+												nil if invalid parameter.
+              sintax: compareBelow([nBlocks=1])
+              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+              ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.compareDown() then return false end
+    if nBlocks ~= i then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
 end
 
 ------ DETECT FUNCTIONS ------
@@ -59,7 +151,7 @@ function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block
 												nil if invalid parameter.
               sintax: digAbove([nBlocks=1])
               Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-              ex: ddetectAbove() or detectAbove(1) - Detects 1 block up.]]
+              ex: detectAbove() or detectAbove(1) - Detects 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil end
@@ -751,42 +843,6 @@ function itemCount(nSlot) --[[ Counts items in inventory
   return totItems
 end
 
---itemSpace(selected slot/slot/inventory/item Name) get item space in selected slot, in a slot from 1 to 16, when specified "inventory" in all inventory, or the space for a specified item.
-function itemSpace(nSlot)
-	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
-	local endSlot = nSlot --from nSlot to endSlot get the sum of space in each slot.
-	local cond = ""
-	
-	if type(nSlot) == "string" then --is it "inventory" or "minecraft:cobblestone" for example.
-		if nSlot == "inventory" then
-			cond = nSlot
-			endSlot = bit.band(nSlot-1, 15) --endSlot [0..15]
-			nSlot = 1 --nSlot is the start slot [1..16]
-		else
-			cond = nSlot
-			nSlot = Search(nSlot) --is mSlot a item name get the slot with this item
-			if not nSlot then return nil end --not found.
-			endSlot=bit band(nSlot-1, 15) ----endSlot [0..15]
-		end
-	end
-	
-	nSlot = bit.band(nSlot-1, 15) --nSlot, the start slot [0..15]
-	totSpace = 0
-	repeat
-		tData = turtle.getItemSpace(nSlot+1)
-		if tData then
-			if cond == "inventory" then totSpace = totSpace + tData.count
-			elseif cond ~= "" then
-				if tData.name == cond then totSpace = totSpace + tData.count end
-				nSlot = Search(cond)
-			else totSpace = totSpace + tData.count
-			end
-		end
-		nSlot = bit.band(nSlot+1, 15)
-	until (nSlot == endSlot)
-	return totSpace
-end
-
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
@@ -794,7 +850,7 @@ function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
                               - if nStartSlot is not a number.
               Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
                     if not supplied nStartSlot, default is the selected slot.
-              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()])]]
+              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()]) ]]
 	if not sItemName then return false end
 	sItemName, nStartSlot = getParam("sn", {turtle.getSelectedSlot()}, sItemName, nStartSlot)
   if type(nStartSlot) ~= "number" then return false end
@@ -838,6 +894,14 @@ function itemSelect(value) --[[ Selects slot [1..16] or first item with Item Nam
   end
   return false
 end
+
+------ SUCK FUNCTIONS ------
+
+- [ ] suckLeft([count]) rotate left and sucks count items in front of turtle.
+- [ ] suckRight([count]) rotate left and sucks count items in front of turtle.
+- [ ] suckBack([count]) rotate back and sucks count items in front of turtle.
+- [ ] suckDir([sDir="forward"]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+
 ------ DROP FUNCTIONS ------  
 
 function dropDir(sDir, nBlocks) --[[Drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
@@ -916,7 +980,7 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
 end
 
 ---- TEST AREA ------
---function itemSpace(nSlot)
-print(itemSpace())
+--function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
+print(turtle.attack("right"))
 
 

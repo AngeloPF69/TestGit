@@ -16,6 +16,13 @@ Avilable functions:
     isInTable(value, t) Verifies if value is in table t, value can be a table too.
     sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
 
+  Attack:
+
+    attackLeft([Side]) rotate left and attack the entity in front.
+    attackRight([Side]) rotate right and attack the entity in front.
+    attackBack([Side]) rotate back and attack the entity in front.
+    attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
+
   Rotations:
   
     turnBack() The turtle turns back.
@@ -69,6 +76,11 @@ Avilable functions:
     detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "up", "down" }.
     detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
     detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
+
+  Compare:
+
+    compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
+    compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 
   Inventory:
 
