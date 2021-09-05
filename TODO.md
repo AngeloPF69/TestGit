@@ -5,20 +5,17 @@ improving commands in lua for computer craft turtle
 ### todo to version 0.1.0
 
 
-- [ ] inspectLeft() rotate left and inspect block in front of turtle.
-- [ ] inspectRight() rotate right and inspect block in front of turtle.
-- [ ] inspectBack() rotate back and inspect block in front of turtle.
-- [ ] getItemName([Slot=Selected slot]) gets the item name from Slot.
-
 ### OPTIONAL
 
-- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-- [x] isInTable(value, t) Verifies if value is in table t, value can be a table too.
-- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 - [x] checkType(sType, ...) Checks if parameters are from sType.
-- [x] getDistTo(x, y, z) gets the three components of the distance from the turtle to point.
-- [x] setCoords(x,y,z) sets coords x, y, z for turtle.
 - [x] getCoords() gets coords from turtle.
+- [x] getDistTo(x, y, z) gets the three components of the distance from the turtle to point.
+- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
+- [x] getValue(sKey, t) Returns the value indexed by sKey in a table.
+- [x] isInTable(value, t) Verifies if value is in table t, value can be a table too.
+- [x] setCoords(x,y,z) sets coords x, y, z for turtle.
+- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
+
 
 ### POSTPONED
 
@@ -37,13 +34,18 @@ improving commands in lua for computer craft turtle
 
 ### IN PROGRESS
 
-- [ ] suckLeft([count]) rotate left and sucks count items in front of turtle.
-- [ ] suckRight([count]) rotate left and sucks count items in front of turtle.
-- [ ] suckBack([count]) rotate back and sucks count items in front of turtle.
-- [ ] suckDir([sDir="forward"]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
 
 ### DONE
 
+- [x] itemName([Slot=Selected slot]) gets the item name from Slot.
+- [x] inspectLeft() rotate left and inspect block in front of turtle.
+- [x] inspectRight() rotate right and inspect block in front of turtle.
+- [x] inspectBack() rotate back and inspect block in front of turtle.
+- [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+- [x] suckLeft([count]) rotate left and sucks count items in front of turtle.
+- [x] suckRight([count]) rotate left and sucks count items in front of turtle.
+- [x] suckBack([count]) rotate back and sucks count items in front of turtle.
+- [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] attackLeft([Side]) rotate left and attack the entity in front.
 - [x] attackRight([Side]) rotate right and attack the entity in front.

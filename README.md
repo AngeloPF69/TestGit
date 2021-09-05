@@ -77,6 +77,13 @@ Avilable functions:
     detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
     detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
 
+  Inspect:
+
+    inspectLeft() rotate left and inspect block in front of turtle.
+    inspectRight() rotate right and inspect block in front of turtle.
+    inspectBack() rotate back and inspect block in front of turtle.
+    inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+
   Compare:
 
     compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
@@ -85,6 +92,7 @@ Avilable functions:
   Inventory:
 
     itemCount(nSlot) Counts items in inventory.
-    itemSelect(value) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
+    itemName([Slot=Selected slot]) Gets the item name from Slot.
+    itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
     Search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot. 
     

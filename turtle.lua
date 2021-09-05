@@ -129,7 +129,8 @@ function detectDir(sDir) --[[Detects if is a block in sDir direction {"forward",
   03/09/2021  Returns:  true - If turtle detects a block.
                         false - if turtle didn't detect a block.
               ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
-	if type(sDir) ~= "string" then return nil end
+	sDir = sDir or "forward"
+
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
 	elseif sDir == "right" then
@@ -143,6 +144,7 @@ function detectDir(sDir) --[[Detects if is a block in sDir direction {"forward",
     sDir = "forward"
 	end
 	if sDir == "forward" then return turtle.detect() end
+  return nil
 end
 
 function detectAbove(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block above the turtle.
@@ -188,6 +190,52 @@ function detectBelow(nBlocks) --[[Detects nBlocks forwards or backwards, 1 block
   end
   return true
 end
+
+
+------ INSPECT FUNCTIONS ------
+
+function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "up", "down" }.
+  05/09/2021  Returns:  true, table with data - If turtle detects a block.
+                        false, message - if turtle didn't detect a block.
+              ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
+	sDir = sDir or "forward"
+  tFunc = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect}
+
+	if sDir == "right" then
+      turtle.turnRight()
+      sDir = "forward"
+	elseif sDir == "back" then
+    turnBack()
+    sDir = "forward"
+	elseif sDir == "left" then
+    turtle.turnLeft()
+    sDir = "forward"
+	end
+	if (sDir == "up") or (sDir == "down") or (sDir == "forward") then return tFunc[sDir]() end
+  return false
+end
+
+function inspectLeft() --[[ Inspect a block to the left.
+  05/09/2021  Returns:  true, table with data - If turtle detects a block.
+                        false, message - if turtle didn't detect a block.
+              ex: inspectLeft() - Inspect a block in the left.]]
+  return inspectDir("left")
+end
+
+function inspectRight() --[[ Inspect a block to the right.
+  05/09/2021  Returns:  true, table with data - If turtle detects a block.
+                        false, message - if turtle didn't detect a block.
+              ex: inspectRight() - Inspect a block in the right.]]
+  return inspectDir("right")
+end
+
+function inspectBack() --[[ Rotates back and inspect a block forward.
+  05/09/2021  Returns:  true, table with data - If turtle detects a block.
+                        false, message - if turtle didn't detect a block.
+              ex: inspectBack() - Rotates and inspect a block forward.]]
+  return inspectDir("back")
+end
+
 
 ------ MOVING FUNCTIONS ------
 
@@ -268,6 +316,17 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 		if sType:sub(i,i) ~= type(Args[i]):sub(1,1) then return false end
 	end
 	return true
+end
+
+function getValue(sKey, t) --[[ Returns the value indexed by sKey in a table.
+  05/09/2021 Returns: false - if  key not found.
+                      nil - if t is not a table.
+             ex: getKey("forward", {["forward"] = 1, ["right"] = 2}) - Outputs 1. ]]
+  if type(t) ~= "table" then return nil end
+  for k,v in pairs(t) do
+    if k == sKey then return v end
+  end
+  return false
 end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
@@ -843,6 +902,17 @@ function itemCount(nSlot) --[[ Counts items in inventory
   return totItems
 end
 
+function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
+  05/09/2021  Returns: item name - if selected slot/slot is not empty.
+                        false - if selected slot/slot is empty. ]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+
+  if type(nSlot) ~= "number" then return nil end
+  local tData = turtle.getItemDetail(nSlot)
+  if not tData then return false end
+  return tData.name
+end
+
 function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
@@ -897,10 +967,60 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-- [ ] suckLeft([count]) rotate left and sucks count items in front of turtle.
-- [ ] suckRight([count]) rotate left and sucks count items in front of turtle.
-- [ ] suckBack([count]) rotate back and sucks count items in front of turtle.
-- [ ] suckDir([sDir="forward"]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+function suckLeft(nItems) --[[Turtle turns left and sucks nItems.
+  05/09/2021  Returns:  true if turtle collects some items.
+                        false if there are no items to take.
+              sintax: suckLeft([nItems=all the items])
+              ex: suckLeft() - Sucks all the items from the left side.]]
+  turn("left")
+  return turtle.suck(nItems)
+end
+
+function suckRight(nItems) --[[Turtle turns right and sucks nItems.
+  05/09/2021  Returns:  true if turtle collects some items.
+                        false if there are no items to take.
+              sintax: suckRight([nItems=all the items])
+              ex: suckRight() - Sucks all the items from the right side.]]
+  turn("right")
+  return turtle.suck(nItems)
+end
+
+function suckBack(nItems) --[[Turtle turns back and sucks nItems.
+  05/09/2021  Returns:  true if turtle collects some items.
+                        false if there are no items to take.
+              sintax: suckBack([nItems=all the items])
+              ex: suckBack() - Turtle turns back and sucks all the items.]]
+  turnBack()
+  return turtle.suck(nItems)
+end
+
+function suckDir(sDir, nItems) --[[ Sucks nItems from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+  05/09/2021  Returns:  true if turtle collects some items.
+                        false if there are no items to take.
+              sintax: suckDir([sDir="forward][,nItems=all the items])
+              ex: suckDir() - Turtle sucks all the items forward.]]
+  sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
+  
+  if type(sDir) ~= "string" then return false end
+
+  if sDir == "forward" then
+    return turtle.suck(nItems)
+  elseif sDir == "right" then
+    turtle.turnRight()
+    return turtle.suck(nItems)
+  elseif sDir == "back" then
+    turnBack()
+    return turtle.suck(nItems)
+  elseif sDir == "left" then
+    turtle.turnLeft()
+    return turtle.suck(nItems)
+  elseif sDir == "up" then
+    return turtle.suckUp(nItems)
+  elseif sDir == "down" then
+    return turtle.suckDown(nItems)
+  end
+  return false
+end
 
 ------ DROP FUNCTIONS ------  
 
@@ -980,7 +1100,7 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
 end
 
 ---- TEST AREA ------
---function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
-print(turtle.attack("right"))
+--function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
+print(getItemName(17))
 
 
