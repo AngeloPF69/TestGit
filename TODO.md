@@ -8,17 +8,16 @@ improving commands in lua for computer craft turtle
 ### OPTIONAL
 
 - [x] checkType(sType, ...) Checks if parameters are from sType.
-- [x] getCoords() gets coords from turtle.
-- [x] getDistTo(x, y, z) gets the three components of the distance from the turtle to point.
 - [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
-- [x] getValue(sKey, t) Returns the value indexed by sKey in a table.
-- [x] isInTable(value, t) Verifies if value is in table t, value can be a table too.
-- [x] setCoords(x,y,z) sets coords x, y, z for turtle.
+- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
 - [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
 
 
 ### POSTPONED
 
+- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
+- [x] getCoords() gets coords from turtle.
 - [ ] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
 - [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
@@ -38,18 +37,9 @@ improving commands in lua for computer craft turtle
 ### DONE
 
 - [x] itemName([Slot=Selected slot]) gets the item name from Slot.
-- [x] inspectLeft() rotate left and inspect block in front of turtle.
-- [x] inspectRight() rotate right and inspect block in front of turtle.
-- [x] inspectBack() rotate back and inspect block in front of turtle.
 - [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
-- [x] suckLeft([count]) rotate left and sucks count items in front of turtle.
-- [x] suckRight([count]) rotate left and sucks count items in front of turtle.
-- [x] suckBack([count]) rotate back and sucks count items in front of turtle.
 - [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
-- [x] attackLeft([Side]) rotate left and attack the entity in front.
-- [x] attackRight([Side]) rotate right and attack the entity in front.
-- [x] attackBack([Side]) rotate back and attack the entity in front.
 - [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
 - [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 - [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
@@ -58,9 +48,6 @@ improving commands in lua for computer craft turtle
 - [x] itemCount([selected slot/slot/inventory/item name]) counts items in inventory.
 - [x] itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
 - [x] Search([ItemName[, StartSlot=Selected Slot]]) Search inventory for ItemName, starting at StartSlot. 
-- [x] dropUp([Blocks]) drops all blocks from selected slot to inventory above, or in inventory ex: drop(197), drops 197 brocks of the same type from inventory.
-- [x] dropDown([Blocks]) drops all blocks from selected slot to inventory below, or in inventory ex: drop(205), drops 205 brocks of the same type from inventory.
-- [x] drop([Blocks]) drops all blocks from selected slot, or from inventory.
 - [x] placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
 - [x] placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
 - [x] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
@@ -69,19 +56,16 @@ improving commands in lua for computer craft turtle
 - [x] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward, and returns to initial position.
 - [x] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward, and returns to initial position.
 - [x] placeDir([Direction="forward"]) places inventory selected Block in Direction { "forward", "right", "back", "left", "up", "down" }.
-- [x] digBack([Blocks=1]) rotates turtle back and dig Blocks.
-- [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward.
-- [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward.
-- [x] digUp([Blocks=1]) dig Blocks upwards.
-- [x] digDown([Blocks=1]) dig Blocks downwards.
-- [x] digRight([Blocks=1]) rotates turtle Right and dig Blocks forward.
-- [X] digLeft([Blocks=1]) rotates turtle left and dig Blocks forward.
-- [x] dig([Blocks=1]) dig Blocks forward with tool.
-- [X] turn([Direction="back"]) rotates turtle back, left or right.
-- [x] turnBack() Turtle turns back.
-- [x] goBack([Blocks=1]) rotates turtle back, and moves blocks forward, until it hits something.
-- [x] goRight([Blocks=1]) rotates turtle to the right, and moves blocks forward, until it hits something.
-- [x] goLeft([Blocks=1]) rotates turtle to the left, and moves blocks forward, until it hits something.
+- [x] digBack([Blocks=1]) rotates turtle back or not and dig Blocks forward.
+- [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward or backwards.
+- [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward or backwards.
+- [x] digUp([Blocks=1]) dig Blocks upwards or downwards.
+- [x] digDown([Blocks=1]) dig Blocks downwards or upwards.
+- [x] digRight([Blocks=1]) rotates turtle Right or left and dig Blocks forward with tool.
+- [X] digLeft([Blocks=1]) rotates turtle left or right and dig Blocks forward with tool.
+- [x] dig([Blocks=1]) dig Blocks forward or backwards with tool.
+- [X] turnDir([Direction="back"]) rotates turtle back, left or right.
+- [x] goDir([Direction="forward][, nBlocks]) turtle goes in Direction { "forward", "right", "back", "left", "up", "down" } nBlocks until blocked.
 - [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
 - [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
 - [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.

@@ -3,17 +3,11 @@ computercraft turtle lua improved commands.
 
 Avilable functions:
 
-  Turtle Status:
-
-    getDistTo(x, y, z) gets the three components of the distance from the turtle to point.
-    setCoords(x,y,z) sets coords x, y, z for turtle.
-    getCoords() gets coords from turtle.
-
   General:
 
     checkType(sType, ...) Checks if parameters are from sType.
     getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
-    isInTable(value, t) Verifies if value is in table t, value can be a table too.
+    tableInTable(tSearch, t) Verifies if tSearch is in table t.
     sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
 
   Attack:
