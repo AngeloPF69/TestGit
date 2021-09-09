@@ -64,9 +64,17 @@ improving commands in lua for computer craft turtle
 - [x] digRight([Blocks=1]) rotates turtle Right or left and dig Blocks forward with tool.
 - [X] digLeft([Blocks=1]) rotates turtle left or right and dig Blocks forward with tool.
 - [x] dig([Blocks=1]) dig Blocks forward or backwards with tool.
+- [x] digDir([Direction="forward"][, Blocks=1]) turtle digs in Direction direction Blocks.
 - [X] turnDir([Direction="back"]) rotates turtle back, left or right.
 - [x] goDir([Direction="forward][, nBlocks]) turtle goes in Direction { "forward", "right", "back", "left", "up", "down" } nBlocks until blocked.
+- [x] goLeft(nBlocks) turns left or  right if nBlocks <0, and advances nBlocks until blocked.
+- [x] goRight(nBlocks) turns right or left if nBlocks < 0, and advances nBlocks until blocked.
+- [x] goBack(nBlocks) turns back or not if nBlocks < 0, and advances nBlocks until blocked.
 - [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
 - [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
 - [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
 - [x] forward([Blocks=1]) moves the turtle forward blocks, until it hits something.
+- [x] dropDir([sDir="forward"][, nBlocks=1]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
+- [x] drop(nBlocks) drops nBlocks from selected slot and inventory in the world in front of the turtle.
+- [x] dropUp(nBlocks) drops nBlocks from selected slot and inventory in the world upwards.
+- [x] dropDown(nBlocks) drops nBlocks from selected slot and inventory in the world downwards.

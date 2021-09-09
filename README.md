@@ -20,7 +20,7 @@ Avilable functions:
   Rotations:
   
     turnBack() The turtle turns back.
-    turn([Direction="back"]) Rotates turtle back, left or right.
+    turnDir([Direction="back"]) Rotates turtle back, left or right.
     
   Moving:
   
@@ -32,9 +32,9 @@ Avilable functions:
   Rotations and Moving:
   
     go([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" } until blocked.
-    goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward, until it hits something.
-    goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward, until it hits something.
-    goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward, until it hits something.
+    goBack(nBlocks) Rotates turtle back or not if Blocks < 0, and advances Blocks until blocked.
+    goRight([Blocks=1]) Rotates turtle to the right or left if Blocks < 0, and moves blocks forward, until it hits something.
+    goLeft([Blocks=1]) Rotates turtle to the left or right if Blocks < 0, and moves blocks forward, until it hits something.
 
   Dig:
   
