@@ -73,7 +73,7 @@ Avilable functions:
 
   Detect:
 
-    detectDir(sDir) detects if is a block in sDir direction {"forward", "right", "left", "back", "up", "down" }.
+    detectDir(sDir) detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
     detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
     detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
 
