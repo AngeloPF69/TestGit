@@ -94,5 +94,5 @@ Avilable functions:
     itemCount([nSlot=selected slot]) counts items in inventory.
     itemName([Slot=Selected slot]) Gets the item name from Slot.
     itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-    Search(sItemName, nStartSlot) search inventory for ItemName, starting at startSlot. 
+    search(sItemName, nStartSlot) search inventory for ItemName, starting at startSlot. 
     
