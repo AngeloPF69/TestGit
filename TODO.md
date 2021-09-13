@@ -4,6 +4,8 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
+- [ ] refuel([item Name/Slot=selected slot][, count=stack]) refuel the turtle with item name, item in slot, or item in selected slot.
+- [ ] equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
 
 ### OPTIONAL
 
