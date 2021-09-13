@@ -4,8 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] refuel([item Name/Slot=selected slot][, count=stack]) refuel the turtle with item name, item in slot, or item in selected slot.
-- [ ] equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
 
 ### OPTIONAL
 
@@ -68,15 +66,19 @@ improving commands in lua for computer craft turtle
 - [x] dig([Blocks=1]) dig Blocks forward or backwards with tool.
 - [x] digDir([Direction="forward"][, Blocks=1]) turtle digs in Direction direction Blocks.
 - [X] turnDir([Direction="back"]) rotates turtle back, left or right.
+- [x] turnBack() Turtle turns back.
 - [x] goDir([Direction="forward][, nBlocks]) turtle goes in Direction { "forward", "right", "back", "left", "up", "down" } nBlocks until blocked.
 - [x] goLeft(nBlocks) turns left or  right if nBlocks <0, and advances nBlocks until blocked.
 - [x] goRight(nBlocks) turns right or left if nBlocks < 0, and advances nBlocks until blocked.
 - [x] goBack(nBlocks) turns back or not if nBlocks < 0, and advances nBlocks until blocked.
 - [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
 - [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
-- [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
-- [x] forward([Blocks=1]) moves the turtle forward blocks, until it hits something.
-- [x] dropDir([sDir="forward"][, nBlocks=1]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
+- [x] back([Blocks=1]) Moves the turtle backwards or forward blocks, until blocked.
+- [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
+- [x] dropDir([sDir="forward"][, nBlocks=stack of items]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
 - [x] drop(nBlocks) drops nBlocks from selected slot and inventory in the world in front of the turtle.
 - [x] dropUp(nBlocks) drops nBlocks from selected slot and inventory in the world upwards.
 - [x] dropDown(nBlocks) drops nBlocks from selected slot and inventory in the world downwards.
+- [x] dropLeft(nBlocks) Rotate left and drops or sucks nBlocks forward.
+- [x] dropRight(nBlocks) Rotate right and drops or sucks nBlocks forward.
+- [x] dropBack(nBlocks) Rotate back and drops or sucks nBlocks forward.
