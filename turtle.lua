@@ -2,7 +2,7 @@
 --1. Function return rule - if invalid parameter, function must return nil.
 
 dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
-lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
+lookingType = { ["up"] = 16, ["forward"] = 1, ["down"] = 32} --where is the turtle looking, it can't look to the sides or back.
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
 
@@ -201,7 +201,7 @@ end
 
 ------ MOVING FUNCTIONS ------
 
-function forward(nBlocks) --[[Moves nBlocks forward or backwards, until blocked.
+function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
   27/08/2021  Returns:  true - if turtle goes all way.
                         false - if turtle was blocked.
               Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
@@ -357,6 +357,14 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction {"back", "right", "le
   return true
 end
 
+function turnBack() --[[ Turtle turns back.
+  11/09/2021  Returns:  true.
+              sintax: turnBack()
+              ex: turnBack() - Turns the turtle back.]]
+  turtle.turnRight()
+  turtle.turnRight()
+  return true
+end
 
 ------ MOVING AND ROTATING FUNCTIONS ------
 
@@ -879,7 +887,7 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   return tData.name
 end
 
-function Search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
+function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
                               - if sItemName not supplied.
@@ -963,31 +971,40 @@ end
 
 ------ DROP FUNCTIONS ------  
 
-function dropDir(sDir, nBlocks) --[[ Drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
+function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory in the world in front, up or down the turtle.
   29/08/2021  Returns:  number of dropped items.
+                        true - if suck some items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
-              Sintax: drop([sDir="forward"] [,nBlocks])
+                        nil - if invalid direction.
+              Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
               Note: if nBlocks not supplied, drops all items in selected slot.
               ex: dropDir() - Drops all blocks from selected slot, forward.
-                  dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
+                  dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
+                  drop(-5, "down") - Suck 5 items from down.]]
 
+  selectedSlot = turtle.getSelectedSlot() --save selected slot
   tData = turtle.getItemDetail() --check the selected slot for items
-  if not tData then return false end --no items                
 
-  sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --asign sDir and nBlocks
-  dropF = { ["up"]=turtle.dropUp, ["forward"]=turtle.drop, ["down"]=turtle.dropDown } --functions to drop
-  RotF = 
+  if not tData then return false, "Empty selected slot." end --no items                
 
-  if not dirType[sDir] then return false end --invalid direction
-  
-  
+  sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
+  dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --functions to drop
 
+  if not dirType[sDir] then return nil, "Invalid direction." end --invalid direction
+
+  if not lookingType[sDir] then
+    goDir(sDir, 0) --turn if it must
+    sDir = "forward"
+  end
+
+  print(sDir, nBlocks)  
   if not nBlocks then --drop all the stack from selected slot
 		dropF[sDir]()
 		return tData.count
-	end
+	else if type(nBlocks) ~= "number" then return nil end
+  end
 
+  if nBlocks < 0 then return suckDir(sDir, math.abs(nBlocks)) end
   nBlocks = math.abs(nBlocks) --nBlocks must be a positive number
 	local blocksDropped = 0 --total blocks dropped
 
@@ -1004,13 +1021,14 @@ function dropDir(sDir, nBlocks) --[[ Drops nBlocks from selected slot and invent
       end
     end
   end
+  turtle.select(selectedSlot) --restore selected slot
   return blocksDropped
 end
 
-function drop(nBlocks) --[[Drops nBlocks from selected slot and inventory in the world in front of the turtle.
+function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
+                        true - if suck some items.
               Sintax: drop([nBlocks])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: drop() - Drops all blocks from selected slot, in front of the turtle.
@@ -1018,10 +1036,10 @@ function drop(nBlocks) --[[Drops nBlocks from selected slot and inventory in the
   return dropDir("forward", nBlocks)
 end
 
-function dropUp(nBlocks) --[[Drops nBlocks from selected slot and inventory in the world upwards.
+function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
+                        true - if suck some items.
               Sintax: dropUp([nBlocks])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: dropUp() - Drops all blocks from selected slot, upwards.
@@ -1029,10 +1047,10 @@ function dropUp(nBlocks) --[[Drops nBlocks from selected slot and inventory in t
   return dropDir("up", nBlocks)
 end
 
-function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in the world downwards.
+function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
+                        true - if suck some items.          
               Sintax: dropDown([nBlocks])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: dropDown() - Drops all blocks from selected slot, downwards.
@@ -1040,7 +1058,48 @@ function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in
   return dropDir("down", nBlocks)
 end
 
+function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
+  11/09/2021  Returns:  number of dropped items.
+                        false - empty selected slot.
+                        true - if suck some items.
+              Sintax: dropLeft([nBlocks])
+              Note: if nBlocks not supplied, drops all items from selected slot.
+              ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
+                  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  return dropDir("left", nBlocks)
+end
+
+function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward.
+  11/09/2021  Returns:  number of dropped items.
+                        false - empty selected slot.
+                        true - if suck some items.
+              Sintax: dropRight([nBlocks])
+              Note: if nBlocks not supplied, drops all items from selected slot.
+              ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
+                  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  return dropDir("right", nBlocks)
+end
+
+function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
+  29/08/2021  Returns:  number of dropped items.
+                        false - empty selected slot.
+                        true - if suck some items.
+              Sintax: dropBack([nBlocks])
+              Note: if nBlocks not supplied, drops all items from selected slot.
+              ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
+                  dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  return dropDir("back", nBlocks)
+end
+
+
 ---- TEST AREA ------
+-- [x] checkType(sType, ...) Checks if parameters are from sType.
+-- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
+-- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
+-- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
+-- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+-- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
+-- [x] getCoords() gets coords from turtle.
 -- [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 -- [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 -- [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
@@ -1071,18 +1130,32 @@ end
 -- [x] dig([Blocks=1]) dig Blocks forward or backwards with tool.
 -- [x] digDir([Direction="forward"][, Blocks=1]) turtle digs in Direction direction Blocks.
 -- [X] turnDir([Direction="back"]) rotates turtle back, left or right.
+-- [x] turnBack() Turtle turns back.
+
 -- [x] goDir([Direction="forward][, nBlocks]) turtle goes in Direction { "forward", "right", "back", "left", "up", "down" } nBlocks until blocked.
 -- [x] goLeft(nBlocks) turns left or  right if nBlocks <0, and advances nBlocks until blocked.
 -- [x] goRight(nBlocks) turns right or left if nBlocks < 0, and advances nBlocks until blocked.
 -- [x] goBack(nBlocks) turns back or not if nBlocks < 0, and advances nBlocks until blocked.
+
+sleep(1)
+print(goDir("forward", 2))
+print(goBack(2))
+print(goLeft(2))
+print(goRight(2))
+
+
+------ TESTED ------
 -- [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
 -- [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
 -- [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
--- [x] forward([Blocks=1]) moves the turtle forward blocks, until it hits something.
--- [x] dropDir([sDir="forward"][, nBlocks=1]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
+-- [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
+-- [x] dropDir([sDir="forward"][, nBlocks=stack of items]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
 -- [x] drop(nBlocks) drops nBlocks from selected slot and inventory in the world in front of the turtle.
 -- [x] dropUp(nBlocks) drops nBlocks from selected slot and inventory in the world upwards.
 -- [x] dropDown(nBlocks) drops nBlocks from selected slot and inventory in the world downwards.
+-- [x] dropLeft(nBlocks) rotate left and drops or sucks nBlocks forward.
+-- [x] dropRight(nBlocks) rotate right and drops or sucks nBlocks forward.
+-- [x] dropBack(nBlocks) rotate back and drops or sucks nBlocks forward.
 
 
 

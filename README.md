@@ -26,7 +26,7 @@ Avilable functions:
   
     down([Blocks=1]) Moves the turtle down or up blocks, until it hits something.
     up([Blocks=1]) Moves the turtle up or down blocks, until it hits something.
-    back([Blocks=1]) Moves the turtle backwards or upwards blocks, until blocked.
+    back([Blocks=1]) Moves the turtle backwards or forward blocks, until blocked.
     forward([Blocks=1]) Moves the turtle forward or backwards blocks, until blocked.
   
   Rotations and Moving:
@@ -53,6 +53,9 @@ Avilable functions:
     drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.
     dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.
     dropDown([Blocks=stack]) Drops nBlocks from selected slot and inventory in the world downwards.
+    dropLeft([nBlocks=stack]) Rotate left and drops or sucks nBlocks forward.
+    dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.
+    dropBack([nBlocks=stack]) Rotate back and drops or sucks nBlocks forward.
 
   Place:
 
