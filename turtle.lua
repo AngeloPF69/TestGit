@@ -7,6 +7,18 @@ dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["dow
 lookingType = { ["up"] = 16, ["forward"] = 1, ["down"] = 32} --where is the turtle looking, it can't look to the sides or back.
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
 
+------ TODO ------
+--refuel([item Name/Slot=selected slot][, count=stack]) refuel the turtle with item name, item in slot, or item in selected slot.
+--equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
+--itemSpace([slot=selected slot/item Name]) get the how many items more you can store in inventory.
+--compareDir([sDir="forward"][, slot=selected slot]) compares item in slot with item in sDir direction.
+
+------ FUEL FUNCTIONS ------
+
+--refuel([item Name/Slot=selected slot][, count=stack]) refuel the turtle with item name, item in slot, or item in selected slot.
+function refuel(itemName, count)
+end
+
 
 ------ TURTLE STATUS FUNCTIONS ----
 
