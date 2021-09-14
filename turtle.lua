@@ -592,7 +592,7 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
-function invSearch(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
+function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
                               - if sItemName not supplied.
@@ -622,7 +622,7 @@ function invSearch(sItemName, nStartSlot) --[[ Search inventory for ItemName, st
   return false
 end
 
-function select(value) --[[ Select slot value or select slot with itemName = value. 
+function select(itemName) --[[ Select slot value or select slot with itemName = value. 
   29/08/2021  returns:  The selected slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
@@ -630,13 +630,13 @@ function select(value) --[[ Select slot value or select slot with itemName = val
               Note: if executed select() is the same as turtle.getSelectedSlot()
               sintax: select([value/Item Name])
               ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
-  if not value then return turtle.getSelectedSlot() end
-  if type(value) == "number" then
-    if (value < 1) or (value > 16) then return false end
-    if turtle.select(value) then return value end
+  if not itemName then return turtle.getSelectedSlot() end
+  if type(itemName) == "number" then
+    if (itemName < 1) or (itemName > 16) then return false end
+    if turtle.select(itemName) then return itemName end
   end
-  if type(value) ~= "string" then return false end
-  slot = invSearch(value)
+  if type(itemName) ~= "string" then return false end
+  slot = search(itemName)
   if slot then
     turtle.select(slot)
     return slot
