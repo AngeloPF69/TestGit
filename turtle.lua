@@ -1,12 +1,209 @@
 
-lookingType = { "up", "forward", "down"} --where is the turtle looking, it can't look to the sides or back.
+--1. Function return rule - if invalid parameter, function must return nil.
+
+dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
+lookingType = { ["up"] = 16, ["forward"] = 1, ["down"] = 32} --where is the turtle looking, it can't look to the sides or back.
+tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0 } --coords for turtle
+
+
+------ TURTLE STATUS FUNCTIONS ----
+
+function setCoords(x,y,z) --[[ Set coords x, y, z for turtle.
+  03/09/2021  Returns:  true.
+              ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
+	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
+  return true
+end
+
+function getCoords() --[[ Gets coords from turtle.
+  03/09/2021  Returns: the turtle coords x, y, z.
+              ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
+	return tTurtle.x, tTurtle.y, tTurtle.z
+end
+
+
+------ ATTACK FUCTIONS ------
+
+function attackDir(sDir) --[[ Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+  05/09/2021  Returns:  true if turtle attack something.
+                        false if there is nothing to attack, or no weapon.
+                        nil if invalid parameter.
+              sintax: attackDir([sDir="forward"]) - sDir {"forward", "right", "back", "left", "up", "down"}
+              ex: attackDir("left") - Rotates left and attacks. ]]
+  sDir = sDir or "forward"
+
+  if sDir == "forward" then return turtle.attack()
+  elseif sDir == "right" then
+    turn("right")
+    return attackRight()
+  elseif sDir == "back" then
+    turn("back")
+    return turtle.attack()
+  elseif sDir == "left" then
+    turn("left")
+    return turtle.attack()
+  elseif sDir == "up" then return turtle.attackUp()
+  elseif sDir == "down" then return turtle.attackDown()
+  end
+  return nil
+end
+
+
+------ MEASUREMENTS FUNCTIONS ------
+
+function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
+  03/09/2021  Returns:  the coords of the turtle.
+              Note: returns a negative value if turtle is further away than the point 0, 0, 0.
+              ex: distTo(1, 10, 34) - Returns 3 values.]] 
+	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
+end
+
+
+------ COMPARE FUNCTIONS ------
+
+function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
+  04/09/2021  Returns:  true - if all the blocks are the same.
+                        false - if blocked, empty space, or found a diferent block.
+												nil if invalid parameter.
+              sintax: compareAbove([nBlocks=1])
+              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+              ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.compareUp() then return false end
+    if nBlocks ~= i then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
+end
+
+function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
+  04/09/2021  Returns:  true - if all the blocks are the same.
+                        false - if blocked, empty space, or found a diferent block.
+												nil if invalid parameter.
+              sintax: compareBelow([nBlocks=1])
+              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+              ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.compareDown() then return false end
+    if nBlocks ~= i then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
+end
+
+
+------ DETECT FUNCTIONS ------
+
+function detectDir(sDir) --[[ Detects if is a block in sDir direction {"forward", "right", "back", "up", "down" }.
+  03/09/2021  Returns:  true - If turtle detects a block.
+                        false - if turtle didn't detect a block.
+              ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
+	sDir = sDir or "forward"
+
+	if sDir == "up" then return turtle.detectUp()
+	elseif sDir == "down" then return turtle.detectDown()
+	elseif sDir == "right" then
+      turn("right")
+      sDir = "forward"
+	elseif sDir == "back" then
+    turn("back")
+    sDir = "forward"
+	elseif sDir == "left" then
+    turn("left")
+    sDir = "forward"
+	end
+	if sDir == "forward" then return turtle.detect() end
+  return nil
+end
+
+function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block above the turtle.
+  03/09/2021  Returns:  true - if turtle detects a line of nBlocks above it.
+                        false - if blocked, empty space.
+												nil - if invalid parameter.
+              sintax: detectAbove([nBlocks=1])
+              Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+              ex: detectAbove() or detectAbove(1) - Detects 1 block up.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.detectUp() then return false end
+    if nBlocks ~= i then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
+end
+
+function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block below the turtle.
+  03/09/2021  Returns:  true - if turtle detects a line of nBlocks below.
+                        false - if blocked, empty space.
+												nil - if invalid parameter
+              sintax: detectBelow([nBlocks=1])
+              Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+              ex: detectBelow() or detectBelow(1) - Detect 1 block down.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.detectDown() then return false end
+    if i ~= nBlocks then
+			if not turtle.forward() then return false end
+		end
+  end
+  return true
+end
+
+
+------ INSPECT FUNCTIONS ------
+
+function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "up", "down" }.
+  05/09/2021  Returns:  true, table with data - If turtle detects a block.
+                        false, message - if turtle didn't detect a block.
+              ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
+	sDir = sDir or "forward"
+  tFunc = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect}
+
+	if sDir == "right" then
+      turtle.turnRight()
+      sDir = "forward"
+	elseif sDir == "back" then
+    turnBack()
+    sDir = "forward"
+	elseif sDir == "left" then
+    turtle.turnLeft()
+    sDir = "forward"
+	end
+	if (sDir == "up") or (sDir == "down") or (sDir == "forward") then return tFunc[sDir]() end
+  return false
+end
 
 
 ------ MOVING FUNCTIONS ------
 
-function forward(nBlocks) --[[Moves nBlocks forward or backwards, until blocked.
-  27/08/2021  Returns:  true - If turtle goes all way.
-                        false - If turtle was blocked.
+function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
+  27/08/2021  Returns:  true - if turtle goes all way.
+                        false - if turtle was blocked.
               Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
               ex: forward(3) - Moves 3 blocks forward.]] 
   nBlocks = nBlocks or 1
@@ -19,9 +216,9 @@ function forward(nBlocks) --[[Moves nBlocks forward or backwards, until blocked.
   return true
 end
 
-function back(nBlocks) --[[Moves nBlocks back or forward, until blocked.
-  27/08/2021 -  Returns:  true - If turtle goes all way.
-                          false - If turtle was blocked.
+function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
+  27/08/2021 -  Returns:  true - if turtle goes all way.
+                          false - if turtle was blocked.
                 Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
                 ex: back(-3) - Moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
@@ -34,9 +231,9 @@ function back(nBlocks) --[[Moves nBlocks back or forward, until blocked.
   return true
 end
 
-function up(nBlocks) --[[Moves nBlocks up or down, until blocked.
-  27/08/2021 -  Returns:  true - If turtle goes all way.
-                          false - If turtle was blocked.
+function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
+  27/08/2021 -  Returns:  true - if turtle goes all way.
+                          false - if turtle was blocked.
                 Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
                 ex: up(3) - Moves 3 blocks up.]]
   nBlocks = nBlocks or 1
@@ -49,9 +246,9 @@ function up(nBlocks) --[[Moves nBlocks up or down, until blocked.
   return true
 end
 
-function down(nBlocks) --[[Moves nBlocks down or up, until blocked.
-  27/08/2021 -  Returns:  true - If turtle goes all way.
-                          false - If turtle was blocked.
+function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
+  27/08/2021 -  Returns:  true - if turtle goes all way.
+                          false - if turtle was blocked.
                 Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
                 ex: down(3) - Moves 3 blocks down.]]
   nBlocks = nBlocks or 1
@@ -67,12 +264,23 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+function checkType(sType, ...) --[[ Checks if parameters are from sType.
+  03/09/2021  Returns: true - if all parameters match the sType.
+              ex: checkType("snt", "hello", number1, tTable) - Outputs: true.]]
+	Args = { ... }
+  
+  if #Args ~= #sType then return false end
+	for i = 1, #sType do
+		if sType:sub(i,i) ~= type(Args[i]):sub(1,1) then return false end
+	end
+	return true
+end
+
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   27/08/2021  Returns: Parameters sorted by type, nil if no parameters.
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
               Note: Only sorts two parameters type (string, number).
-                    The default table is returned when no parameter is supplied.
-              ]]
+                    The default table is returned when no parameter is supplied.]]
   if not sParamOrder then return nil end
   
   local Args={...}
@@ -105,23 +313,21 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   end
 end
 
-function isInTable(value, t) --[[ Verifies if value is in table t, value can be a table too.
-  27/08/2021  Returns:  true - value is in t.
-                        false - at the least one value is not in table t.
+function tableInTable(tSearch, t) --[[ Verifies if tSearch is in table t.
+  27/08/2021  Returns:  true - tSearch is in t.
+                        false - at the least one tSearch is not in table t.
               ex: isInTable("forward", lookingType) - outputs true.]]
+  if type(tSearch) ~= "table" then return nil end
+
   totMatch = 0
 
   for k1, v1 in pairs(t) do
-    if type(value) == "table" then
-      for k2, v2 in pairs (value) do
-        if v2 == v1 then totMatch = totMatch + 1 end
-      end
-    elseif v1 == value then return true
+    for k2, v2 in pairs (tSearch) do
+      if v2 == v1 then totMatch = totMatch + 1 end
     end
   end
-  if totMatch == 0 then return false
-  elseif #value ~= totMatch then return false
-  end
+
+  if #tSearch ~= totMatch then return false end
   return true
 end
 
@@ -135,14 +341,7 @@ end
 
 ------ ROTATING FUNCTIONS ------  
 
-function turnBack() --[[Turtle turns back.
-  27/08/2021  Returns:  true.]]
-  turtle.turnRight()
-  turtle.turnRight()
-  return true
-end
-
-function turn(sDir) --[[Turtle turns to sDir direction {"back", "right", "left"}.
+function turnDir(sDir) --[[ Turtle turns to sDir direction {"back", "right", "left"}.
   27/08/2021  Returns:  true if sDir is a valid direction.
                         false if sDir is not a valid direction.
               sintax: turn([sDir="back"]) - sDir {"right", "back", "left"}
@@ -150,20 +349,45 @@ function turn(sDir) --[[Turtle turns to sDir direction {"back", "right", "left"}
   sDir = sDir or "back"
   
   if sDir == "back" then
-    turnBack()
-  elseif sDir == "left" then
-    turtle.turnLeft()
-  elseif sDir == "right" then
     turtle.turnRight()
-  else return false
+    turtle.turnRight()
+  elseif sDir == "left" then turtle.turnLeft()
+  elseif sDir == "right" then turtle.turnRight()
   end
   return true
 end
 
+function turnBack() --[[ Turtle turns back.
+  11/09/2021  Returns:  true.
+              sintax: turnBack()
+              ex: turnBack() - Turns the turtle back.]]
+  turtle.turnRight()
+  turtle.turnRight()
+  return true
+end
 
 ------ MOVING AND ROTATING FUNCTIONS ------
 
-function goLeft(nBlocks) --[[Turns left or  right and advances nBlocks until blocked.
+function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
+  27/08/2021  Returns:  true if turtle goes all way.
+                        false if bllocked.
+              sintax: go([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
+              ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
+              ex: go() - Moves 1 block forward.
+              ex: go(-3, "up") - moves 3 blocks down.]]
+  sDir, nBlocks = getParam("sn", {"forward", 1}, sDir, nBlocks)
+
+  if sDir == "forward" then return forward(nBlocks)
+  elseif sDir == "right" then return goRight(nBlocks)
+  elseif sDir == "back" then return goBack(nBlocks)
+  elseif sDir == "left" then return goLeft(nBlocks)
+  elseif sDir == "up" then return up(nBlocks)
+  elseif sDir == "down" then return down(nBlocks)
+  end
+  return false
+end
+
+function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until blocked.
   27/08/2021  Returns:  true if turtle goes all way.
                         false if bllocked, or invalid parameter.
               Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
@@ -214,29 +438,40 @@ function goBack(nBlocks) --[[Turns back or not and advances nBlocks until blocke
   return true
 end
 
-function go(sDir, nBlocks) --[[Turtle goes in sDir nBlocks until blocked.
-  27/08/2021  Returns:  true if turtle goes all way.
-                        false if bllocked.
-              sintax: go([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
-              ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
-              ex: go() - Moves 1 block forward.
-              ex: go(-3, "up") - moves 3 blocks down.]]
-  sDir, nBlocks = getParam("sn", {"forward", 1}, sDir, nBlocks)
-
-  if sDir == "forward" then return forward(nBlocks)
-  elseif sDir == "right" then return goRight(nBlocks)
-  elseif sDir == "back" then return goBack(nBlocks)
-  elseif sDir == "left" then return goLeft(nBlocks)
-  elseif sDir == "up" then return up(nBlocks)
-  elseif sDir == "down" then return down(nBlocks)
-  end
-  return false
-end
-
-
 ------ DIG FUNCTIONS ------  
 
-function dig(nBlocks) --[[Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
+--- not testes ---
+function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
+  08/09/2021  Returns:  true if turtle digs all way.
+                      false if blocked, empty space.
+                      nil if invalid parameter
+              sintax: digDir([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
+              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
+              ex: digDir() - Digs 1 block forward.
+              ex: digDir(-3, "up") - Digs 3 blocks down.]]
+  sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
+  negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
+  digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.down}
+  movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down}
+  
+  if type(nBlocks) ~= "number" then return nil end
+  if nBlocks < 0 then
+    nBlocks = math.abs(nBlocks)
+    sDir = negOrient[sDir]
+  end
+
+  turnDir(sDir)
+  if (sDir == "left") or (sDir == "right") or (sDir == "back") then sDir = "forward" end
+  for i = 1, nBlocks do
+    if not digF[sDir]() then return false end
+    if i~= nBlocks then
+			if not movF[sDir]() then return false end
+		end
+  end
+  return true
+end
+
+function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: dig([nBlocks=1])
@@ -248,12 +483,14 @@ function dig(nBlocks) --[[Turtle digs nBlocks forward or turns back and digs nBl
   if nBlocks < 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false end
-    if not turtle.forward() then return false end
+    if i~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
 
-function digLeft(nBlocks) --[[Turtle digs nBlocks to the left or right, must have a tool equiped.
+function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digLeft([nBlocks=1])
@@ -261,11 +498,12 @@ function digLeft(nBlocks) --[[Turtle digs nBlocks to the left or right, must hav
               ex: digLeft() or digLeft(1) - Dig 1 block left.]]
   nBlocks = nBlocks or 1
   
-  turtle.turnLeft()
+	if type(nBlocks) ~= "number" then return false end
+  if nBlocks > 0 then turtle.turnLeft() end
   return dig(nBlocks)
 end
 
-function digRight(nBlocks) --[[Turtle digs nBlocks to the right or left, must have a tool equiped.
+function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digRight([nBlocks=1])
@@ -273,11 +511,12 @@ function digRight(nBlocks) --[[Turtle digs nBlocks to the right or left, must ha
               ex: digRight() or digRight(1) - Dig 1 block right.]]
   nBlocks = nBlocks or 1
   
-  turtle.turnRight()
+	if type(nBlocks) ~= "number" then return false end
+  if nBlocks > 0 then turtle.turnRight() end
   return dig(nBlocks)
 end
 
-function digUp(nBlocks) --[[Turtle digs nBlocks upwards or downwards, must have a tool equiped.
+function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digUp([nBlocks=1])
@@ -289,12 +528,14 @@ function digUp(nBlocks) --[[Turtle digs nBlocks upwards or downwards, must have 
   if nBlocks < 0 then return digDown(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.digUp() then return false end
-    if not turtle.up() then return false end
+    if i ~= nBlocks then
+			if not turtle.up() then return false end
+		end
   end
   return true
 end
 
-function digDown(nBlocks) --[[Turtle digs nBlocks downwards or upwards, must have a tool equiped.
+function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if bllocked, empty space, or invalid parameter.
               sintax: digDown([nBlocks=1])
@@ -306,58 +547,66 @@ function digDown(nBlocks) --[[Turtle digs nBlocks downwards or upwards, must hav
   if nBlocks < 0 then return digUp(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.digDown() then return false end
-    if not turtle.down() then return false end
+    if i ~= nBlocks then
+			if not turtle.down() then return false end
+		end
   end
   return true
 end
 
-function digAbove(nBlocks) --[[Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
+function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digAbove([nBlocks=1])
               Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-              ex: digAbove() or digAbove(1) - Dig 1 block up, and advances 1 block forward.]]
+              ex: digAbove() or digAbove(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.digUp() then return false end
-    if not turtle.forward() then return false end
+    if i~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
 
-function digBelow(nBlocks) --[[Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
+function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digBelow([nBlocks=1])
               Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-              ex: digBelow() or digBelow(1) - Dig 1 block down, and advances 1 block forward.]]
+              ex: digBelow() or digBelow(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then turnBack() end
   for i = 1, nBlocks do
     if not turtle.digDown() then return false end
-    if not turtle.forward() then return false end
+    if i~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
 
-function digBack(nBlocks) --[[Turns back or not and digs Blocks forward, must have a tool equiped.
+function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if bllocked, empty space, or invalid parameter.
               sintax: digBack([nBlocks=1])
               Note: nBlocks < 0 digs forward, nBlocks > 0 digs backwards.
-              ex: digBack() or digBack(1) - Turns back and dig 1 block forward, and advances 1 block forward.]]
+              ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks > 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false end
-    if not turtle.forward() then return false end
+    if i ~= nBlocks then
+			if not turtle.forward() then return false end
+		end
   end
   return true
 end
@@ -365,7 +614,7 @@ end
 
 ------ PLACE FUNCTIONS ------  
 
-function placeDir(sDir) --[[Places one selected block in sDir {"forward", "right", "back", "left", "up", "down"}.
+function placeDir(sDir) --[[ Places one selected block in sDir {"forward", "right", "back", "left", "up", "down"}.
   27/08/2021  Returns:  true if turtle places the selected block.
                         false if turtle doesn't place the selected block, or invalid parameter.
               sintax: placeDir([sDir="forward"])
@@ -392,7 +641,7 @@ function placeDir(sDir) --[[Places one selected block in sDir {"forward", "right
   return false
 end
 
-function place(nBlocks) --[[Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
+function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021  Returns:  number of blocks placed.
                         false - if turtle was blocked on the way back
                               - invalid parameter.
@@ -424,7 +673,7 @@ function place(nBlocks) --[[Turtle places nBlocks in a strait line forward or ba
   return nBlocks
 end
 
-function placeUp(nBlocks) --[[Places nBlocks upwards or downwards, and returns to starting point.
+function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns to starting point.
   27/08/2021  Returns:  number os blocks placed.
                         false - if turtle was blocked on the way back.
                               - invalid parameter.
@@ -452,7 +701,7 @@ function placeUp(nBlocks) --[[Places nBlocks upwards or downwards, and returns t
   return nBlocks
 end
   
-function placeDown(nBlocks) --[[Places nBlocks downwards or upwards, and returns to starting point.
+function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and returns to starting point.
   27/08/2021  Returns:  number of blocks placed.
                         false - if turtle was blocked on the way back.
                               - invalid parameter.
@@ -480,7 +729,7 @@ function placeDown(nBlocks) --[[Places nBlocks downwards or upwards, and returns
   return nBlocks
 end
   
-function placeLeft(nBlocks) --[[Places Blocks to the left or right, and returns to starting point.
+function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns to starting point.
   27/08/2021  Returns:  number of placed blocks.
                         false - if turtle was blocked on the way back.
                               - invalid parameter.
@@ -489,11 +738,14 @@ function placeLeft(nBlocks) --[[Places Blocks to the left or right, and returns 
               Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
               ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
   
-  turtle.turnLeft()
-  return place(nBlocks)
+  if type(nBlocks) ~= "number" then return false end
+  if nBlocks < 0 then turtle.turnRight()
+	else turtle.turnLeft()
+	end
+  return place(math.abs(nBlocks))
 end
   
-function placeRight(nBlocks) --[[Places Blocks to the right or left, and returns to starting point.
+function placeRight(nBlocks) --[[ Places Blocks to the right or left, and returns to starting point.
   27/08/2021  Returns:  true if turtle places all blocks all the way.
                         false - if turtle was blocked on the way back.
                               - invalid parameter.
@@ -501,11 +753,14 @@ function placeRight(nBlocks) --[[Places Blocks to the right or left, and returns
               sintax: placeRight([nBlocks=1])
               Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
               ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
-  turtle.turnRight()
-  return place(nBlocks)
+  if type(nBlocks) ~= "number" then return false end
+  if nBlocks < 0 then turtle.turnLeft()
+	else turtle.turnRight()
+	end
+  return place(math.abs(nBlocks))
 end
   
-function placeAbove(nBlocks) --[[Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
+function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
   27/08/2021  Returns:  number of blocks placed
                       false - if turtle was blocked on the way back.
                             - couldn't place block.
@@ -547,7 +802,7 @@ function placeAbove(nBlocks) --[[Places nBlocks forwards or backwards in a strai
     return nBlocks
 end
 
-function placeBelow(nBlocks) --[[Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
+function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
   27/08/2021  Returns:  number of placed blocks.
                       false - if turtle was blocked on the way back.
                             - couldn't place block.
@@ -592,6 +847,46 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
+function itemCount(nSlot) --[[ Counts items in inventory
+  31/08/2021  Returns: number of items counted.
+                      false - if nSlot <0 or > 16.
+                            - if nSlot is neither a string nor a number.
+              sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
+              ex: itemCount() counts items in selected slot.
+                  itemCount("inventory") - counts items in inventory.
+                  itemCount("minecraft:cobblestone") - counts cbblestone in inventory.]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+  totItems = 0
+
+  if type(nSlot) == "number" then
+    if (nSlot < 1) or (nSlot > 16) then return false end
+    tData = turtle.getItemDetail(nSlot)
+    if tData then totItems = tData.count end
+  else
+    if type(nSlot) ~= "string" then return false end
+    for i = 1, 16 do
+      tData = turtle.getItemDetail(i)
+      if tData then
+        if nSlot == "inventory" then totItems = totItems + tData.count
+        elseif nSlot == tData.name then totItems = totItems + tData.count
+        end
+      end
+    end
+  end
+  return totItems
+end
+
+function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
+  05/09/2021  Returns: item name - if selected slot/slot is not empty.
+                        false - if selected slot/slot is empty. ]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+
+  if type(nSlot) ~= "number" then return nil end
+  local tData = turtle.getItemDetail(nSlot)
+  if not tData then return false end
+  return tData.name
+end
+
 function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
@@ -599,7 +894,7 @@ function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
                               - if nStartSlot is not a number.
               Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
                     if not supplied nStartSlot, default is the selected slot.
-              sintax: invSearch(sItemName [, nStartSlot=turtle.getSelectedSlot()])]]
+              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()]) ]]
 	if not sItemName then return false end
 	sItemName, nStartSlot = getParam("sn", {turtle.getSelectedSlot()}, sItemName, nStartSlot)
   if type(nStartSlot) ~= "number" then return false end
@@ -622,75 +917,121 @@ function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
   return false
 end
 
-function select(itemName) --[[ Select slot value or select slot with itemName = value. 
+function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
+
   29/08/2021  returns:  The selected slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
                               - if value is a number and ( < 1 or > 16 )
               Note: if executed select() is the same as turtle.getSelectedSlot()
-              sintax: select([value/Item Name])
+              sintax: select([Slot/Item Name])
               ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
   if not itemName then return turtle.getSelectedSlot() end
   if type(itemName) == "number" then
     if (itemName < 1) or (itemName > 16) then return false end
     if turtle.select(itemName) then return itemName end
   end
+
   if type(itemName) ~= "string" then return false end
   slot = search(itemName)
+
   if slot then
     turtle.select(slot)
     return slot
   end
   return false
 end
+
+------ SUCK FUNCTIONS ------
+
+function suckDir(sDir, nItems) --[[ Sucks nItems from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+  05/09/2021  Returns:  true if turtle collects some items.
+                        false if there are no items to take.
+              sintax: suckDir([sDir="forward][,nItems=all the items])
+              ex: suckDir() - Turtle sucks all the items forward.]]
+  sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
+  
+  if type(sDir) ~= "string" then return false end
+
+  if sDir == "forward" then
+    return turtle.suck(nItems)
+  elseif sDir == "right" then
+    turtle.turnRight()
+    return turtle.suck(nItems)
+  elseif sDir == "back" then
+    turnBack()
+    return turtle.suck(nItems)
+  elseif sDir == "left" then
+    turtle.turnLeft()
+    return turtle.suck(nItems)
+  elseif sDir == "up" then
+    return turtle.suckUp(nItems)
+  elseif sDir == "down" then
+    return turtle.suckDown(nItems)
+  end
+  return false
+end
+
 ------ DROP FUNCTIONS ------  
 
-function dropDir(sDir, nBlocks) --[[Drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
+function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory in the world in front, up or down the turtle.
   29/08/2021  Returns:  number of dropped items.
+                        true - if suck some items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
-              Sintax: drop([sDir="forward"] [,nBlocks])
+                        nil - if invalid direction.
+              Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
               Note: if nBlocks not supplied, drops all items in selected slot.
               ex: dropDir() - Drops all blocks from selected slot, forward.
-                  dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
+                  dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
+                  drop(-5, "down") - Suck 5 items from down.]]
 
+  selectedSlot = turtle.getSelectedSlot() --save selected slot
   tData = turtle.getItemDetail() --check the selected slot for items
-  if not tData then return false end --no items                
 
-  sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --asign sDir and nBlocks
+  if not tData then return false, "Empty selected slot." end --no items                
 
-  if not isInTable(sDir, lookingType) then return false end --invalid direction
-	
-  dropFunction = { ["up"]=turtle.dropUp, ["forward"]=turtle.drop, ["down"]=turtle.dropDown } --functions to drop
+  sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
+  dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --functions to drop
 
+  if not dirType[sDir] then return nil, "Invalid direction." end --invalid direction
+
+  if not lookingType[sDir] then
+    goDir(sDir, 0) --turn if it must
+    sDir = "forward"
+  end
+
+  print(sDir, nBlocks)  
   if not nBlocks then --drop all the stack from selected slot
-		dropFunction[sDir]()
+		dropF[sDir]()
 		return tData.count
-	end
+	else if type(nBlocks) ~= "number" then return nil end
+  end
 
+  if nBlocks < 0 then return suckDir(sDir, math.abs(nBlocks)) end
   nBlocks = math.abs(nBlocks) --nBlocks must be a positive number
 	local blocksDropped = 0 --total blocks dropped
 
 	while (blocksDropped < nBlocks) do
     if tData.count > (nBlocks-blocksDropped) then
-      dropFunction[sDir](nBlocks-blocksDropped)
+      dropF[sDir](nBlocks-blocksDropped)
       blocksDropped = blocksDropped + (nBlocks-blocksDropped)
     else
-      dropFunction[sDir]()
+      dropF[sDir]()
       blocksDropped = blocksDropped + tData.count
-      nextSlot, tData.count = invSearch(tData.name)
+      nextSlot, tData.count = search(tData.name)
       if nextSlot then turtle.select(nextSlot)
       elseif blocksDropped < nBlocks then break
       end
     end
   end
+  turtle.select(selectedSlot) --restore selected slot
   return blocksDropped
 end
 
-function drop(nBlocks) --[[Drops nBlocks from selected slot and inventory in the world in front of the turtle.
+function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
+                        true - if suck some items.
               Sintax: drop([nBlocks])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: drop() - Drops all blocks from selected slot, in front of the turtle.
@@ -698,10 +1039,10 @@ function drop(nBlocks) --[[Drops nBlocks from selected slot and inventory in the
   return dropDir("forward", nBlocks)
 end
 
-function dropUp(nBlocks) --[[Drops nBlocks from selected slot and inventory in the world upwards.
+function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
+                        true - if suck some items.
               Sintax: dropUp([nBlocks])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: dropUp() - Drops all blocks from selected slot, upwards.
@@ -709,13 +1050,115 @@ function dropUp(nBlocks) --[[Drops nBlocks from selected slot and inventory in t
   return dropDir("up", nBlocks)
 end
 
-function dropDown(nBlocks) --[[Drops nBlocks from selected slot and inventory in the world downwards.
+function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
   29/08/2021  Returns:  number of dropped items.
                         false - empty selected slot.
-                              - if nBlocks is not a number
+                        true - if suck some items.          
               Sintax: dropDown([nBlocks])
               Note: if nBlocks not supplied, drops all items from selected slot.
               ex: dropDown() - Drops all blocks from selected slot, downwards.
                   dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
   return dropDir("down", nBlocks)
 end
+
+function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
+  11/09/2021  Returns:  number of dropped items.
+                        false - empty selected slot.
+                        true - if suck some items.
+              Sintax: dropLeft([nBlocks])
+              Note: if nBlocks not supplied, drops all items from selected slot.
+              ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
+                  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  return dropDir("left", nBlocks)
+end
+
+function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward.
+  11/09/2021  Returns:  number of dropped items.
+                        false - empty selected slot.
+                        true - if suck some items.
+              Sintax: dropRight([nBlocks])
+              Note: if nBlocks not supplied, drops all items from selected slot.
+              ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
+                  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  return dropDir("right", nBlocks)
+end
+
+function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
+  29/08/2021  Returns:  number of dropped items.
+                        false - empty selected slot.
+                        true - if suck some items.
+              Sintax: dropBack([nBlocks])
+              Note: if nBlocks not supplied, drops all items from selected slot.
+              ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
+                  dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  return dropDir("back", nBlocks)
+end
+
+
+---- TEST AREA ------
+-- [x] checkType(sType, ...) Checks if parameters are from sType.
+-- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
+-- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
+-- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
+-- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+-- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
+-- [x] getCoords() gets coords from turtle.
+-- [x] itemName([Slot=Selected slot]) gets the item name from Slot.
+-- [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+-- [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+-- [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+-- [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
+-- [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
+-- [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
+-- [x] detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
+-- [x] detectDir([Direction="forward"]) detects if there is a block in Direction { "forward", "right", "back", "left", "up", "down" }.
+-- [x] itemCount([selected slot/slot/inventory/item name]) counts items in inventory.
+-- [x] itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
+-- [x] Search([ItemName[, StartSlot=Selected Slot]]) Search inventory for ItemName, starting at StartSlot. 
+-- [x] placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
+-- [x] placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
+-- [x] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
+-- [x] placeLeft([Blocks=1]) rotates turtle left, places inventory selected Blocks in a strait line forward, and returns to initial position.
+-- [x] place([Blocks=1]) places inventory selected Blocks in a strait line forward.
+-- [x] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward, and returns to initial position.
+-- [x] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward, and returns to initial position.
+-- [x] placeDir([Direction="forward"]) places inventory selected Block in Direction { "forward", "right", "back", "left", "up", "down" }.
+-- [x] digBack([Blocks=1]) rotates turtle back or not and dig Blocks forward.
+-- [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward or backwards.
+-- [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward or backwards.
+-- [x] digUp([Blocks=1]) dig Blocks upwards or downwards.
+-- [x] digDown([Blocks=1]) dig Blocks downwards or upwards.
+-- [x] digRight([Blocks=1]) rotates turtle Right or left and dig Blocks forward with tool.
+-- [X] digLeft([Blocks=1]) rotates turtle left or right and dig Blocks forward with tool.
+-- [x] dig([Blocks=1]) dig Blocks forward or backwards with tool.
+-- [x] digDir([Direction="forward"][, Blocks=1]) turtle digs in Direction direction Blocks.
+-- [X] turnDir([Direction="back"]) rotates turtle back, left or right.
+-- [x] turnBack() Turtle turns back.
+
+-- [x] goDir([Direction="forward][, nBlocks]) turtle goes in Direction { "forward", "right", "back", "left", "up", "down" } nBlocks until blocked.
+-- [x] goLeft(nBlocks) turns left or  right if nBlocks <0, and advances nBlocks until blocked.
+-- [x] goRight(nBlocks) turns right or left if nBlocks < 0, and advances nBlocks until blocked.
+-- [x] goBack(nBlocks) turns back or not if nBlocks < 0, and advances nBlocks until blocked.
+
+sleep(1)
+print(goDir("forward", 2))
+print(goBack(2))
+print(goLeft(2))
+print(goRight(2))
+
+
+------ TESTED ------
+-- [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
+-- [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
+-- [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
+-- [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
+-- [x] dropDir([sDir="forward"][, nBlocks=stack of items]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
+-- [x] drop(nBlocks) drops nBlocks from selected slot and inventory in the world in front of the turtle.
+-- [x] dropUp(nBlocks) drops nBlocks from selected slot and inventory in the world upwards.
+-- [x] dropDown(nBlocks) drops nBlocks from selected slot and inventory in the world downwards.
+-- [x] dropLeft(nBlocks) rotate left and drops or sucks nBlocks forward.
+-- [x] dropRight(nBlocks) rotate right and drops or sucks nBlocks forward.
+-- [x] dropBack(nBlocks) rotate back and drops or sucks nBlocks forward.
+
+
+
