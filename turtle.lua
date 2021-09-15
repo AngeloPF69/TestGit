@@ -1149,18 +1149,24 @@ end
 -- [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
 -- [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
 -- [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
+
+
+------ TESTING ------
+
+sleep(1)
+--print(dropDir(0))
+--print(dropDir(100))
+--print(dropDir())
+--print(dropDir(-1))
+--print(dropDir("left"))
+--print(dropDir("left", 5))
+--print(dropDir("down", -5))
+
+------ TESTED ------
 -- [x] dropDir([sDir="forward"][, nBlocks=stack of items]) drops nBlocks from selected slot and inventory in the world in front, up or down the turtle.
 -- [x] drop(nBlocks) drops nBlocks from selected slot and inventory in the world in front of the turtle.
 -- [x] dropUp(nBlocks) drops nBlocks from selected slot and inventory in the world upwards.
 -- [x] dropDown(nBlocks) drops nBlocks from selected slot and inventory in the world downwards.
 -- [x] dropLeft(nBlocks) rotate left and drops or sucks nBlocks forward.
-
-
------- TESTING ------
-
 -- [x] dropRight(nBlocks) rotate right and drops or sucks nBlocks forward.
-print(dropRight(-2))
-
------- TESTED ------
-
 -- [x] dropBack(nBlocks) rotate back and drops or sucks nBlocks forward.
