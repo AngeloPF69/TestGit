@@ -860,8 +860,32 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
---itemSpace([slot=selected slot/item Name]) get the how many items more you can store in inventory.
-function itemSpace(itemName)
+--not tested--
+--itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
+function itemSpace(nSlot)
+	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
+	local stack = 0
+	
+	if type(nSlot) == "string" then --is it  "minecraft:cobblestone" for example.
+		nSlot = search(nSlot)
+		if not nSlot then return false, "Item not found." end
+	end
+	
+	local tData = turtle.getItemDetail(nSlot)
+	if not tData then return false, "Empty slot "..nSlot.."." end
+	stack = turtle.getItemSpace(nSlot) + tData.count
+	
+	nSlot = bit.band(nSlot-1, 15)+1 --nSlot, the start slot [1..16]
+	totSpace = 0
+	
+	for i = 1, 16 do
+		tData = turtle.getItemDetail(i)
+		if tData then totSpace = totSpace + tData.count
+		else totSpace = totSpace + stack
+		end
+	end
+	
+	return totSpace
 end
 
 --compareDir([sDir="forward"][, slot=selected slot]) compares item in slot with item in sDir direction.
