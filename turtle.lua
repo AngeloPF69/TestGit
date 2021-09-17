@@ -888,8 +888,24 @@ function itemSpace(nSlot)
 	return totSpace
 end
 
+--not tested--
 --compareDir([sDir="forward"][, slot=selected slot]) compares item in slot with item in sDir direction.
 function compareDir(sDir, nSlot)
+	sDir, nSlot = getparam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
+	
+	if not dirType[sDir] then return false, "Invalid direction." end
+	if type(nSlot) ~= "number" then return false, "Invalid slot number." end
+	local invData = turtle.getItemDetail(nSlot)
+	if not invData then return false, "Empty slot." end
+	
+	if (sDir = "left") or (sDir = "right") or (sDir = "back") then
+		turnDir(sDir)
+		sDir = "forward"
+	end
+	
+	local success, worlData = insF[sDir]()
+	if worlData.name == invData.name then return true end
+	return false
 end
 
 function itemCount(nSlot) --[[ Counts items in inventory
