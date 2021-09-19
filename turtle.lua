@@ -1,4 +1,4 @@
-digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.down} --original dig functions
+digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
 InsF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
 dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions
@@ -371,11 +371,11 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction {"back", "right", "le
               sintax: turn([sDir="back"]) - sDir {"right", "back", "left"}
               ex: turn("back") or turn() - Turns the turtle back.]]
   sDir = sDir or "back"
-  
-  if sDir == "back" then
-    turnBack()
-  elseif sDir == "left" then turtle.turnLeft()
-  elseif sDir == "right" then turtle.turnRight()
+
+  if not dirType[sDir] then return false, "Invalid direction." end
+  if sDir == "back" then return turnBack()
+  elseif sDir == "left" then return turtle.turnLeft()
+  elseif sDir == "right" then return turtle.turnRight()
   end
   return true
 end
@@ -473,7 +473,9 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
     sDir = negOrient[sDir]
   end
 
-  turnDir(sDir)
+  local success, message = turnDir(sDir)
+
+  if not success  then return false, message end
   if (sDir == "left") or (sDir == "right") or (sDir == "back") then sDir = "forward" end
   for i = 1, nBlocks do
     if not digF[sDir]() then return false end
@@ -512,8 +514,10 @@ function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must ha
   nBlocks = nBlocks or 1
   
 	if type(nBlocks) ~= "number" then return false end
-  if nBlocks > 0 then turtle.turnLeft() end
-  return dig(nBlocks)
+  if nBlocks > -1 then turtle.turnLeft()
+  else turtle.turnRight()
+  end
+  return dig(math.abs(nBlocks))
 end
 
 function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must have a tool equiped.
@@ -525,8 +529,10 @@ function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must h
   nBlocks = nBlocks or 1
   
 	if type(nBlocks) ~= "number" then return false end
-  if nBlocks > 0 then turtle.turnRight() end
-  return dig(nBlocks)
+  if nBlocks > -1 then turtle.turnRight()
+  else turtle.turnLeft()
+  end
+  return dig(math.abs(nBlocks))
 end
 
 function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have a tool equiped.
@@ -578,7 +584,8 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
   
   if type(nBlocks) ~= "number" then return false end
   local dir = sign(nBlocks)
-  for i = 1, nBlocks, dir do
+
+  for i = 1, math.abs(nBlocks) do
     if not turtle.digUp() then return false end
     if i~= nBlocks then
 			if not forward(dir) then return false end
@@ -599,7 +606,7 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
   if type(nBlocks) ~= "number" then return false end
   local dir = sign(nBlocks)
 	
-  for i = 1, nBlocks, dir do
+  for i = 1, math.abs(nBlocks) do
     if not turtle.digDown() then return false end
     if i~= nBlocks then
 			if not forward(dir) then return false end
@@ -621,7 +628,7 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false end
     if i ~= nBlocks then
-			if not turtle.forward() then return false end
+			if not forward() then return false end
 		end
   end
   return true
@@ -901,7 +908,7 @@ function compareDir(sDir, nSlot)
 	local invData = turtle.getItemDetail(nSlot)
 	if not invData then return false, "Empty slot." end
 	
-	if (sDir = "left") or (sDir = "right") or (sDir = "back") then
+	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
 		turnDir(sDir)
 		sDir = "forward"
 	end
@@ -1161,25 +1168,34 @@ end
 
 
 ---- TEST AREA ------
+
+-- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+-- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
+-- [x] getCoords() gets coords from turtle.
+
 -- [x] checkType(sType, ...) Checks if parameters are from sType.
 -- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 -- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
 -- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
--- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
--- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
--- [x] getCoords() gets coords from turtle.
--- [x] itemName([Slot=Selected slot]) gets the item name from Slot.
+
 -- [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+
 -- [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+
 -- [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+
 -- [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
 -- [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
+
 -- [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
 -- [x] detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
 -- [x] detectDir([Direction="forward"]) detects if there is a block in Direction { "forward", "right", "back", "left", "up", "down" }.
+
+-- [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 -- [x] itemCount([selected slot/slot/inventory/item name]) counts items in inventory.
 -- [x] itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
 -- [x] Search([ItemName[, StartSlot=Selected Slot]]) Search inventory for ItemName, starting at StartSlot. 
+
 -- [x] placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
 -- [x] placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
 -- [x] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
@@ -1188,6 +1204,12 @@ end
 -- [x] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward, and returns to initial position.
 -- [x] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward, and returns to initial position.
 -- [x] placeDir([Direction="forward"]) places inventory selected Block in Direction { "forward", "right", "back", "left", "up", "down" }.
+
+------ TESTING ------
+
+sleep(1)
+print(digBack())
+------ TESTED ------
 -- [x] digBack([Blocks=1]) rotates turtle back or not and dig Blocks forward.
 -- [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward or backwards.
 -- [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward or backwards.
@@ -1199,24 +1221,10 @@ end
 -- [x] digDir([Direction="forward"][, Blocks=1]) turtle digs in Direction direction Blocks.
 -- [X] turnDir([Direction="back"]) rotates turtle back, left or right.
 -- [x] turnBack() Turtle turns back.
-
-
-
-
-
------- TESTING ------
-
-sleep(1)
-print(goDir())
-print(goDir(-1))
-print(goDir(0))
-
------- TESTED ------
 -- [x] goDir([Direction="forward][, nBlocks]) turtle goes in Direction { "forward", "right", "back", "left", "up", "down" } nBlocks until blocked.
 -- [x] goLeft(nBlocks) turns left or  right if nBlocks <0, and advances nBlocks until blocked.
 -- [x] goRight(nBlocks) turns right or left if nBlocks < 0, and advances nBlocks until blocked.
 -- [x] goBack(nBlocks) turns back or not if nBlocks < 0, and advances nBlocks until blocked.
-
 -- [x] back([Blocks=1]) moves the turtle backwards blocks, until it hits something.
 -- [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
 -- [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
