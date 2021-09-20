@@ -76,45 +76,48 @@ end
 
 
 ------ COMPARE FUNCTIONS ------
--- not tested --
+
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
   04/09/2021  Returns:  true - if all the blocks are the same.
                         false - if blocked, empty space, or found a diferent block.
 												nil if invalid parameter.
               sintax: compareAbove([nBlocks=1])
-              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+              Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
               ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil end  --nBlocks must be a number.
   local dir = sign(nBlocks)
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
 
-  for i = 1, nBlocks, dir do
+  for i = 1, nBlocks do
     if not turtle.compareUp() then return false end
     if nBlocks ~= i then
-			if not forward(dir) then return false end
+			if not forward() then return false end
 		end
   end
   return true
 end
 
--- not tested --
 function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
   04/09/2021  Returns:  true - if all the blocks are the same.
                         false - if blocked, empty space, or found a diferent block.
 												nil if invalid parameter.
               sintax: compareBelow([nBlocks=1])
-              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+              Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
               ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil end
   local dir = sign(nBlocks)
+  if nBlocks < 0 then turnBack() end
+  nBlocks = math.abs(nBlocks)
 
-  for i = 1, nBlocks, dir do
+  for i = 1, nBlocks do
     if not turtle.compareDown() then return false end
     if nBlocks ~= i then
-			if not forward(dir) then return false end
+			if not forward() then return false end
 		end
   end
   return true
@@ -126,6 +129,7 @@ end
 function detectDir(sDir) --[[ Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
   03/09/2021  Returns:  true - If turtle detects a block.
                         false - if turtle didn't detect a block.
+                        nil - invalid parameter.
               ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
 	sDir = sDir or "forward"
 
@@ -145,7 +149,6 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction {"forward"
   return nil
 end
 
--- not tested -
 function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block above the turtle.
   03/09/2021  Returns:  true - if turtle detects a line of nBlocks above it.
                         false - if blocked, empty space.
@@ -167,7 +170,6 @@ function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
   return true
 end
 
--- not tested --
 function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block below the turtle.
   03/09/2021  Returns:  true - if turtle detects a line of nBlocks below.
                         false - if blocked, empty space.
@@ -760,7 +762,8 @@ function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns
               sintax: placeLeft([nBlocks=1])
               Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
               ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
-  
+  nBlocks = nBlocks or 1
+
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then turtle.turnRight()
 	else turtle.turnLeft()
@@ -776,6 +779,8 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
               sintax: placeRight([nBlocks=1])
               Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
               ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
+  nBlocks = nBlocks or 1
+
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then turtle.turnLeft()
 	else turtle.turnRight()
@@ -953,6 +958,8 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   nSlot = nSlot or turtle.getSelectedSlot()
 
   if type(nSlot) ~= "number" then return nil end
+  if (nSlot <1 ) or (nSlot > 16) then return false, "Slot "..nSlot.." out of range." end
+
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return false end
   return tData.name
@@ -989,26 +996,37 @@ function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
 end
 
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-
-  29/08/2021  returns:  The selected slot.
+  29/08/2021  returns:  The selected slot, and items in that slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
                               - if value is a number and ( < 1 or > 16 )
               Note: if executed select() is the same as turtle.getSelectedSlot()
               sintax: select([Slot/Item Name])
               ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
-  if not itemName then return turtle.getSelectedSlot() end
+  local nSlot
+  local tData
+
+  if not itemName then
+    nSlot = turtle.getSelectedSlot()
+    tData = turtle.getItemDetail()
+    if tData then return nSlot, tData.count
+    else return nSlot
+    end
+  end
   if type(itemName) == "number" then
     if (itemName < 1) or (itemName > 16) then return false end
     if turtle.select(itemName) then return itemName end
   end
 
   if type(itemName) ~= "string" then return false end
-  slot = search(itemName)
+  nSlot = search(itemName)
 
-  if slot then
-    turtle.select(slot)
-    return slot
+  if nSlot then
+    turtle.select(nSlot)
+    tData = turtle.getItemDetail()
+    if tData then return nSlot, tData.count
+    else return nSlot
+    end
   end
   return false
 end
@@ -1045,7 +1063,6 @@ end
 
 ------ DROP FUNCTIONS ------  
 
--- not tested --
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory in the world in front, up or down the turtle.
   29/08/2021  Returns:  number of dropped items.
                         true - if suck some items.
@@ -1184,18 +1201,22 @@ end
 
 -- [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 
+
+------ TESTING ------
+
+sleep(1)
+print(attackDir())
+
+------ TESTED ------
 -- [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
 -- [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
-
 -- [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
 -- [x] detectBelow([Blocks=1]) detects if exits Blocks below the turtle in a strait line forward or backwards.
 -- [x] detectDir([Direction="forward"]) detects if there is a block in Direction { "forward", "right", "back", "left", "up", "down" }.
-
 -- [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 -- [x] itemCount([selected slot/slot/inventory/item name]) counts items in inventory.
 -- [x] itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
 -- [x] Search([ItemName[, StartSlot=Selected Slot]]) Search inventory for ItemName, starting at StartSlot. 
-
 -- [x] placeBelow([Blocks=1]) places inventory selected Blocks in a strait line 1 block below the turtle and forward, and returns to initial position.
 -- [x] placeAbove([Blocks=1]) places inventory selected Blocks in a strait line 1 block above the turtle and forward, and returns to initial position.
 -- [x] placeRight([Blocks=1]) rotates turtle Right, places inventory selected Blocks in a strait line forward, and returns to initial position.
@@ -1204,12 +1225,6 @@ end
 -- [x] placeDown([Blocks=1]) places inventory selected Blocks in a strait line downward, and returns to initial position.
 -- [x] placeUp([Blocks=1]) places inventory selected Blocks in a strait line upward, and returns to initial position.
 -- [x] placeDir([Direction="forward"]) places inventory selected Block in Direction { "forward", "right", "back", "left", "up", "down" }.
-
------- TESTING ------
-
-sleep(1)
-print(digBack())
------- TESTED ------
 -- [x] digBack([Blocks=1]) rotates turtle back or not and dig Blocks forward.
 -- [x] digAbove([Blocks=1]) dig Blocks, 1 block above the turtle, and forward or backwards.
 -- [x] digBelow([Blocks=1]) dig Blocks, 1 block below the turtle, and forward or backwards.
