@@ -5,6 +5,7 @@ Avilable functions:
 
   General:
 
+    isKey(Key, t) Checks if Key is in t table.
     checkType(sType, ...) Checks if parameters are from sType.
     getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
     tableInTable(tSearch, t) Verifies if tSearch is in table t.
@@ -83,6 +84,7 @@ Avilable functions:
 
   Compare:
 
+    compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.
     compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
     compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 

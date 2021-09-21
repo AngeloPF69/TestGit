@@ -11,6 +11,7 @@ improving commands in lua for computer craft turtle
 
 ### OPTIONAL
 
+- [x] isKey(Key, t) Checks if Key is in t table.
 - [x] checkType(sType, ...) Checks if parameters are from sType.
 - [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 - [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
@@ -28,7 +29,7 @@ improving commands in lua for computer craft turtle
 - [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectRight([Blocks=1]) detects if on the right of the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectBack([Blocks=1]) detects if on the turtle backs are blocks in a strait line, stops when there isn't or blocked.
-- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
+
 - [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
 - [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
 - [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
@@ -44,6 +45,7 @@ improving commands in lua for computer craft turtle
 - [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+- [x] compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.
 - [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
 - [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 - [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.

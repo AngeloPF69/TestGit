@@ -1,7 +1,8 @@
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
-InsF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
+insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
 dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions
+suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.
 
 dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
 lookingType = { ["up"] = 16, ["forward"] = 1, ["down"] = 32} --where is the turtle looking, it can't look to the sides or back.
@@ -50,13 +51,13 @@ function attackDir(sDir) --[[ Turtle attack in sDir direction {"forward", "right
 
   if sDir == "forward" then return turtle.attack()
   elseif sDir == "right" then
-    turn("right")
-    return attackRight()
+    turnDir("right")
+    return turtle.attack()
   elseif sDir == "back" then
     turnBack()
     return turtle.attack()
   elseif sDir == "left" then
-    turn("left")
+    turnDir("left")
     return turtle.attack()
   elseif sDir == "up" then return turtle.attackUp()
   elseif sDir == "down" then return turtle.attackDown()
@@ -202,16 +203,16 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "ri
 	sDir = sDir or "forward"
   
 	if sDir == "right" then
-      turn("right")
+      turnDir("right")
       sDir = "forward"
 	elseif sDir == "back" then
     turnBack()
     sDir = "forward"
 	elseif sDir == "left" then
-    turn("left")
+    turnDir("left")
     sDir = "forward"
 	end
-	if (sDir == "up") or (sDir == "down") or (sDir == "forward") then return InsF[sDir]() end
+	if isKey(sDir, insF) then return insF[sDir]() end
   return false
 end
 
@@ -330,6 +331,16 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   end
 end
 
+function isKey(Key, t) --[[ Checks if Key is in t table.
+  21/09/2021  Returns:  true - if Key is in t.
+                        false - if Key is not in t.
+              ex: isKey("hello", {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
+  for k,v in pairs(t) do
+    if k == Key then return true end
+  end
+  return false
+end
+
 function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in table t.
   27/08/2021  Returns:  true - tSearch is in t.
                         false - at the least one element of tSearch is not in table t.
@@ -338,12 +349,16 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
 
   totMatch = 0
 
-  for k1, v1 in pairs(t) do
-    for k2, v2 in pairs (tSearch) do
-      if v2 == v1 then totMatch = totMatch + 1 end
+  for k1, v1 in pairs(tSearch) do
+    for k2, v2 in pairs (t) do
+      if v2 == v1 then
+        totMatch = totMatch + 1
+        break
+      end
     end
   end
 
+  print(#tSearch, totMatch)
   if #tSearch ~= totMatch then return false end
   return true
 end
@@ -457,7 +472,6 @@ end
 
 ------ DIG FUNCTIONS ------  
 
---- not testes ---
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   08/09/2021  Returns:  true if turtle digs all way.
                       false if blocked, empty space.
@@ -903,13 +917,19 @@ function itemSpace(nSlot)
 	return totSpace
 end
 
---not tested--
---compareDir([sDir="forward"][, slot=selected slot]) compares item in slot with item in sDir direction.
-function compareDir(sDir, nSlot)
-	sDir, nSlot = getparam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
+function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
+  21/09/2021  Returns: true - if the item in slot and in the world is the same.
+                      false - if block in slot and in the world are not the same,
+                              invalid direction,
+                              if nSlot is not a number,
+                              if empty slot.
+              sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+              ex: compareDir() compares selected slot with block in front of turtle.
+                  compareDir("left", 2) - compares item in slot 2 with block on the left.]]
+	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	
 	if not dirType[sDir] then return false, "Invalid direction." end
-	if type(nSlot) ~= "number" then return false, "Invalid slot number." end
+	if type(nSlot) ~= "number" then return false, "Slot is not a number." end
 	local invData = turtle.getItemDetail(nSlot)
 	if not invData then return false, "Empty slot." end
 	
@@ -1039,26 +1059,22 @@ function suckDir(sDir, nItems) --[[ Sucks nItems from sDir direction {"forward",
               sintax: suckDir([sDir="forward][,nItems=all the items])
               ex: suckDir() - Turtle sucks all the items forward.]]
   sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
-  
+  if nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
   if type(sDir) ~= "string" then return false end
 
-  if sDir == "forward" then
-    return turtle.suck(nItems)
-  elseif sDir == "right" then
+  if sDir == "right" then
     turtle.turnRight()
-    return turtle.suck(nItems)
+    sDir = "forward"
   elseif sDir == "back" then
     turnBack()
-    return turtle.suck(nItems)
+    sDir = "forward"
   elseif sDir == "left" then
     turtle.turnLeft()
-    return turtle.suck(nItems)
-  elseif sDir == "up" then
-    return turtle.suckUp(nItems)
-  elseif sDir == "down" then
-    return turtle.suckDown(nItems)
+    sDir = "forward"
   end
-  return false
+
+  if not isKey(sDir, suckF) then return false, "Invalid direction." end
+  return suckF[sDir](nItems)
 end
 
 ------ DROP FUNCTIONS ------  
@@ -1190,24 +1206,22 @@ end
 -- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 -- [x] getCoords() gets coords from turtle.
 
--- [x] checkType(sType, ...) Checks if parameters are from sType.
--- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
--- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
--- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
 
--- [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
-
--- [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
-
--- [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 
 
 ------ TESTING ------
 
 sleep(1)
-print(attackDir())
+print(compareDir("left"))
 
 ------ TESTED ------
+-- [x] checkType(sType, ...) Checks if parameters are from sType.
+-- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
+-- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
+-- [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
+-- [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+-- [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+-- [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 -- [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
 -- [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 -- [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
