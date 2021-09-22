@@ -20,6 +20,7 @@ end
 ------ EQUIP ------
 --equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
 function equip(sHand, itemName)
+
 end
 
 
@@ -1202,14 +1203,14 @@ end
 -- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
 -- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 -- [x] getCoords() gets coords from turtle.
-
+-- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
 
 
 
 ------ TESTING ------
 
 sleep(1)
-print(compareDir("left"))
+print(itemSpace())
 
 ------ TESTED ------
 -- [x] checkType(sType, ...) Checks if parameters are from sType.
