@@ -195,7 +195,6 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
--- not tested --
 function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "up", "down" }.
   05/09/2021  Returns:  true, table with data - If turtle detects a block.
                         false, message - if turtle didn't detect a block.
@@ -589,7 +588,6 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
   return true
 end
 
--- not tested --
 function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -610,7 +608,6 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
   return true
 end
 
--- not tested --
 function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
