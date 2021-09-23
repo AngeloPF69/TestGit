@@ -1,4 +1,4 @@
-# TestGit
+# Turtle lua functions
 computercraft turtle lua improved commands.
 
 Avilable functions:
