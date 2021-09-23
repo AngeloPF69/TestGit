@@ -98,7 +98,8 @@ Avilable functions:
     compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 
   Inventory:
-
+    
+    itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
     itemCount([selected slot/slot/"inventory"/item name=Selected slot]) counts items in slot, inventory.
     itemName([Slot=Selected slot]) Gets the item name from Slot.
     itemSelect([Slot/Item Name]) selects slot [1..16] or first item with Item Name, or the turtle selected slot.
