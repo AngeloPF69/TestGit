@@ -5,7 +5,7 @@ Avilable functions:
 
   Equip:
   
-    function getFreeHand() Gets turtle free hand: "left"|"right"|false.
+    getFreeHand() Gets turtle free hand: "left"|"right"|false.
     equip(Side) Equip tool in the selected slot.
     
   General:
