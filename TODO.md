@@ -19,7 +19,6 @@ improving commands in lua for computer craft turtle
 - [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
 - [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 - [x] getCoords() gets coords from turtle.
-- [ ] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
 - [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
