@@ -1271,9 +1271,10 @@ end
 ------ TESTING ------
 
 sleep(1)
-print(itemSpace())
+print(refuel(1))
 
 ------ TESTED ------
+-- [x] refuels the turtle with nCount items.
 -- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
 -- [x] checkType(sType, ...) Checks if parameters are from sType.
 -- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
