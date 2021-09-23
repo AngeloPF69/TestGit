@@ -4,13 +4,10 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] refuel([item Name/Slot=selected slot][, count=stack]) refuel the turtle with item name, item in slot, or item in selected slot.
-- [ ] equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
-- [ ] itemSpace([slot=selected slot/item Name]) get the how many items more you can store in inventory.
-- [ ] compareDir([sDir="forward"][, slot=selected slot]) compares item in slot with item in sDir direction.
 
 ### OPTIONAL
 
+- [x] isKey(Key, t) Checks if Key is in t table.
 - [x] checkType(sType, ...) Checks if parameters are from sType.
 - [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 - [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
@@ -22,13 +19,12 @@ improving commands in lua for computer craft turtle
 - [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
 - [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 - [x] getCoords() gets coords from turtle.
-- [ ] itemSpace(selected slot/slot/"inventory"/"itemName") get item space in selected slot, slot, or when specified "inventory" or "itemName" in all inventory.
 - [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectRight([Blocks=1]) detects if on the right of the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectBack([Blocks=1]) detects if on the turtle backs are blocks in a strait line, stops when there isn't or blocked.
-- [ ] compare([Blocks=1]) compare blocks in front of turtle in a strait line with selected slot or inventory.
+
 - [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
 - [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
 - [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
@@ -40,10 +36,14 @@ improving commands in lua for computer craft turtle
 
 ### DONE
 
+- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
+- [x] equip([sHand=empty]) equip tool to left or right hand, from selected slot.
+- [x] refuel([nCount=stack]) Refuels the turtle with nCount items.
 - [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 - [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
+- [x] compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.
 - [x] compareAbove([Blocks=1]) compare blocks above the turtle in a strait line with selected slot.
 - [x] compareBelow([Blocks=1]) compare blocks below the turtle in a strait line with selected slot.
 - [x] detectAbove([Blocks=1]) detects if exits Blocks above the turtle in a strait line forward or backwards.
