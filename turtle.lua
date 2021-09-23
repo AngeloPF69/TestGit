@@ -136,6 +136,32 @@ end
 
 ------ COMPARE FUNCTIONS ------
 
+function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
+  21/09/2021  Returns: true - if the item in slot and in the world is the same.
+                      false - if block in slot and in the world are not the same,
+                              invalid direction,
+                              if nSlot is not a number,
+                              if empty slot.
+              sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+              ex: compareDir() compares selected slot with block in front of turtle.
+                  compareDir("left", 2) - compares item in slot 2 with block on the left.]]
+	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
+	
+	if not dirType[sDir] then return false, "Invalid direction." end
+	if type(nSlot) ~= "number" then return false, "Slot is not a number." end
+	local invData = turtle.getItemDetail(nSlot)
+	if not invData then return false, "Empty slot." end
+	
+	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
+		turnDir(sDir)
+		sDir = "forward"
+	end
+	
+	local success, worlData = insF[sDir]()
+	if worlData.name == invData.name then return true end
+	return false
+end
+
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
   04/09/2021  Returns:  true - if all the blocks are the same.
                         false - if blocked, empty space, or found a diferent block.
@@ -970,32 +996,6 @@ function itemSpace(nSlot)
 	end
 	
 	return totSpace
-end
-
-function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
-  21/09/2021  Returns: true - if the item in slot and in the world is the same.
-                      false - if block in slot and in the world are not the same,
-                              invalid direction,
-                              if nSlot is not a number,
-                              if empty slot.
-              sintax: compareDir([sDir="forward"][, nSlot=selected slot])
-              ex: compareDir() compares selected slot with block in front of turtle.
-                  compareDir("left", 2) - compares item in slot 2 with block on the left.]]
-	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
-	
-	if not dirType[sDir] then return false, "Invalid direction." end
-	if type(nSlot) ~= "number" then return false, "Slot is not a number." end
-	local invData = turtle.getItemDetail(nSlot)
-	if not invData then return false, "Empty slot." end
-	
-	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
-		turnDir(sDir)
-		sDir = "forward"
-	end
-	
-	local success, worlData = insF[sDir]()
-	if worlData.name == invData.name then return true end
-	return false
 end
 
 function itemCount(nSlot) --[[ Counts items in inventory
