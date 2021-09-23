@@ -8,6 +8,10 @@ Avilable functions:
     getFreeHand() Gets turtle free hand: "left"|"right"|false.
     equip(Side) Equip tool in the selected slot.
     
+  Fuel:
+  
+    refuel([nCount=stack]) Refuels the turtle with nCount items.
+    
   General:
 
     isKey(Key, t) Checks if Key is in t table.
