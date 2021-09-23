@@ -13,9 +13,37 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 } 
 
 ------ FUEL ------
---refuel([item Name/Slot=selected slot][, count=stack]) refuel the turtle with item name, item in slot, or item in selected slot.
-function refuel(itemName, count)
+
+function refuel(nCount) --[[ Refuels the turtle with nCount items.
+  23/09/2021  Returns:	number of items refueled.
+												false - if empty selected slot
+																if item is not fuel
+																if turtle doesn't need fuel.
+																if turtle is at maximum fuel.
+              ex: refuel(123) - Fuels the turtle with 123 items.]] 
+	local fuelLimit = turtle.getFuelLimit()
+	if type(fuelLimit) == "string" then return false, "Turtle doesn't need fuel." end
 	
+	local fuelLevel = turtle.getFuelLevel()
+	if fuelLevel == fuelLimit then return false, "Turtle is at maximum fuel." end
+	
+	local tData = turtle.getItemDetail()
+	
+	if not tData then return false, "Empty selected slot" end
+	if not nCount then nCount = tData.count end
+	if not turtle.refuel(0) then return false, "Item is not fuel." end
+	
+	totRefuel = 0
+	while totRefuel < nCount do
+		if tData.count >= nCount then
+			turtle.refuel(nCount)
+			totRefuel = totRefuel + nCount
+		else	turtle.refuel()
+				totRefuel = totRefuel + tData.count
+				if not itemSelect(tData.name) then break end
+		end
+	end
+	return totRefuel
 end
 
 
