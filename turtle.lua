@@ -53,8 +53,8 @@ function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
   23/09/2021  Returns:	"left" or "right" the first free hand found.
 												false - if no free hand found.
               ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
-	if tTurtle.["leftHand"] == "empty" then return "left" end
-	if tTurtle.["rightHand"] == "empty" then return "right" end
+	if tTurtle.leftHand == "empty" then return "left" end
+	if tTurtle.rightHand == "empty" then return "right" end
 	return false
 end
 
@@ -970,9 +970,14 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
---not tested--
---itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
-function itemSpace(nSlot)
+function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
+  23/09/2021  Returns: number of items you can store more in inventory.
+                      false - if item is not in inventory.
+                            - if slot is empty.
+              sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
+              ex: itemSpace() gets how many items you can store, like the item in selected slot.
+                  itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
+                  itemSpace(12) - gets how more items, like item in slot 12, you can store.]]
 	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
 	local stack = 0
 	
@@ -983,6 +988,7 @@ function itemSpace(nSlot)
 	
 	local tData = turtle.getItemDetail(nSlot)
 	if not tData then return false, "Empty slot "..nSlot.."." end
+  local itemName = tData.name
 	stack = turtle.getItemSpace(nSlot) + tData.count
 	
 	nSlot = bit.band(nSlot-1, 15)+1 --nSlot, the start slot [1..16]
@@ -990,7 +996,8 @@ function itemSpace(nSlot)
 	
 	for i = 1, 16 do
 		tData = turtle.getItemDetail(i)
-		if tData then totSpace = totSpace + tData.count
+		if tData then
+      if tData.name == itemName then totSpace = totSpace + stack - tData.count end
 		else totSpace = totSpace + stack
 		end
 	end
@@ -1260,9 +1267,6 @@ end
 -- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
 -- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 -- [x] getCoords() gets coords from turtle.
--- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
-
-
 
 ------ TESTING ------
 
@@ -1270,6 +1274,7 @@ sleep(1)
 print(itemSpace())
 
 ------ TESTED ------
+-- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
 -- [x] checkType(sType, ...) Checks if parameters are from sType.
 -- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 -- [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
