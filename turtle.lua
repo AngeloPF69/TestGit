@@ -3,6 +3,7 @@ movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down
 insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
 dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions
 suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.
+eqruipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions
 
 dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
 lookingType = { ["up"] = 16, ["forward"] = 1, ["down"] = 32} --where is the turtle looking, it can't look to the sides or back.
@@ -17,10 +18,38 @@ function refuel(itemName, count)
 	
 end
 
------- EQUIP ------
---equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
-function equip(sHand, itemName)
 
+------ EQUIP ------
+
+function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
+  23/09/2021  Returns:	"left" or "right" the first free hand found.
+												false - if no free hand found.
+              ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
+	if tTurtle.["leftHand"] == "empty" then return "left" end
+	if tTurtle.["rightHand"] == "empty" then return "right" end
+	return false
+end
+
+function equip(sSide) --[[ Equip tool in the selected slot.
+  23/09/2021  Returns:	true - if it was equiped.
+												false - if no empty hand.
+															- if invalid parameter.
+															- if empty selected slot.
+															- if it can't equip tool.
+              ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
+	sSide = sSide or getFreeHand()
+	if not sSide then return false, "No empty hand." end
+	local tData
+	
+	if not isKey(sSide, {"left", "right"}) then return false, "Invalid side." end
+
+	tData = turtle.getItemDetail()
+	if not tData then return false, "Empty selected slot." end
+	
+	local success, reason = equipF[sSide]()
+	if not success then return success, reason end
+	tTurtle[sSide.."Hand"] = tData.name
+	return true
 end
 
 
