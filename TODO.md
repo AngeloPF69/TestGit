@@ -4,7 +4,6 @@ improving commands in lua for computer craft turtle
 
 ### todo to version 0.1.0
 
-- [ ] equip([sHand=empty][, item Name]) equip tool to left or right hand, from inventory or selected slot, with item Name.
 - [ ] itemSpace([slot=selected slot/item Name]) get the how many items more you can store in inventory.
 
 
@@ -40,6 +39,7 @@ improving commands in lua for computer craft turtle
 
 ### DONE
 
+- [x] equip([sHand=empty]) equip tool to left or right hand, from selected slot.
 - [x] refuel([nCount=stack]) Refuels the turtle with nCount items.
 - [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 - [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
