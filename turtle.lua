@@ -7,7 +7,9 @@ eqruipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --origina
 
 dirType = { ["forward"]=1, ["right"]=2, ["back"]=4, ["left"]=8, ["up"]=16, ["down"]=32 } --moving direction options
 lookingType = { ["up"] = 16, ["forward"] = 1, ["down"] = 32} --where is the turtle looking, it can't look to the sides or back.
+facingType = {["x+"] = 1, ["z+"] = 2, ["x-"] = 4, ["z-"] = 8}
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
+						facing = facingType["x+"],
 						leftHand = "empty",
 						rightHand = "empty",
 } 
