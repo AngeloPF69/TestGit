@@ -1117,7 +1117,7 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-function suckDir(sDir, nItems) --[[ Sucks nItems from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
   05/09/2021  Returns:  true if turtle collects some items.
                         false if there are no items to take.
               sintax: suckDir([sDir="forward][,nItems=all the items])
