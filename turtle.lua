@@ -20,6 +20,7 @@ function refuel(nCount) --[[ Refuels the turtle with nCount items.
 																if item is not fuel
 																if turtle doesn't need fuel.
 																if turtle is at maximum fuel.
+							sintax: refuel([nCount=stack])
               ex: refuel(123) - Fuels the turtle with 123 items.]] 
 	local fuelLimit = turtle.getFuelLimit()
 	if type(fuelLimit) == "string" then return false, "Turtle doesn't need fuel." end
@@ -64,6 +65,7 @@ function equip(sSide) --[[ Equip tool in the selected slot.
 															- if invalid parameter.
 															- if empty selected slot.
 															- if it can't equip tool.
+							sintax: equip([Side=first free hand(left, right)])
               ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
 	sSide = sSide or getFreeHand()
 	if not sSide then return false, "No empty hand." end
@@ -279,7 +281,7 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
-function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "up", "down" }.
+function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
   05/09/2021  Returns:  true, table with data - If turtle detects a block.
                         false, message - if turtle didn't detect a block.
               ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
@@ -1115,7 +1117,7 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-function suckDir(sDir, nItems) --[[ Sucks nItems from sDir direction {"forward", "right", "back", "left", "up", "down"}.
+function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
   05/09/2021  Returns:  true if turtle collects some items.
                         false if there are no items to take.
               sintax: suckDir([sDir="forward][,nItems=all the items])
@@ -1271,9 +1273,10 @@ end
 ------ TESTING ------
 
 sleep(1)
-print(itemSpace())
+print(refuel(1))
 
 ------ TESTED ------
+-- [x] refuels the turtle with nCount items.
 -- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
 -- [x] checkType(sType, ...) Checks if parameters are from sType.
 -- [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.

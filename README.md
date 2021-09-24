@@ -10,7 +10,7 @@ Avilable functions:
     
   Fuel:
   
-    refuel([nCount=stack]) Refuels the turtle with nCount items.
+    refuel([nItems=stack]) Refuels the turtle with nItems.
     
   General:
 

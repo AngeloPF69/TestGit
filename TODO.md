@@ -35,7 +35,7 @@ improving commands in lua for computer craft turtle
 
 
 ### DONE
-
+- [x] refuels([nItems=stack]) refuels the turtle with nItems.
 - [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
 - [x] equip([sHand=empty]) equip tool to left or right hand, from selected slot.
 - [x] refuel([nCount=stack]) Refuels the turtle with nCount items.
