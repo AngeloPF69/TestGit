@@ -30,7 +30,7 @@ Avilable functions:
   Rotations:
   
     turnBack() The turtle turns back.
-    turn([Direction="back"]) Rotates turtle back, left or right.
+    turnDir([Direction="back"]) Rotates turtle back, left or right.
     
   Moving:
   
