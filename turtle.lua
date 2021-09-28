@@ -3,10 +3,10 @@ movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down
 insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
 dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions
 suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.
-eqruipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions
+equipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions
 
 dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down"]=8 } --moving direction options
-lookingType = { ["forward"] = 0, ["up"] = 4, , ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
+lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
 facingType = {["z+"]=0, ["x+"]=1,["z-"]=2,["x-"]=3, ["y+"]=4, ["y-"]=8}
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 						facing = facingType["z+"],
@@ -73,7 +73,7 @@ function equip(sSide) --[[ Equip tool in the selected slot.
 	if not sSide then return false, "No empty hand." end
 	local tData
 	
-	if not isKey(sSide, {"left", "right"}) then return false, "Invalid side." end
+	if not isValue(sSide, {"left", "right"}) then return false, "Invalid side." end
 
 	tData = turtle.getItemDetail()
 	if not tData then return false, "Empty selected slot." end
@@ -520,6 +520,13 @@ function isKey(Key, t) --[[ Checks if Key is in t table.
   return false
 end
 
+function isValue(value, t)
+  for k,v in pairs(t) do
+    if v == value then return true end
+  end
+  return false
+end
+
 function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in table t.
   27/08/2021  Returns:  true - tSearch is in t.
                         false - at the least one element of tSearch is not in table t.
@@ -713,7 +720,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   if (sDir == "left") or (sDir == "right") or (sDir == "back") then sDir = "forward" end
   
   local facing = tTurtle.facing
-  if (sDir = "up") or (sDir = "down") then tTurtle.facing = dirType[sDir] end
+  if (sDir == "up") or (sDir == "down") then tTurtle.facing = dirType[sDir] end
 
   for i = 1, nBlocks do
     if not digF[sDir]() then return false end
@@ -1443,4 +1450,5 @@ end
 
 
 ---- TEST AREA ------
+
 
