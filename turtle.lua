@@ -94,8 +94,9 @@ function turtleLoad()
 end
 ------ TERMINATE ------
 function turtleSave()
-  if saveTable(tTurtle, "tTurtle.txt") then return true end
-  return false, "Couldn't save tTurtle."
+  local success, reason = saveTable(tTurtle, "tTurtle.txt")
+  if success then return success end
+  return false, reason
 end
 ------ TURTLE STATUS FUNCTIONS ----
 --not tested--
@@ -429,13 +430,13 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
                                   if it couldn't create file.
               Note: if not supplied extension it adds ".txt" to the file name.
               ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.]]
-	if not t or not sFileName then return false end --no arguments
+	if not t or not sFileName then return false, "table or filename not supplied." end --no arguments
 	if string.sub(sFileName, -4, -4) ~= "." then sFileName=sFileName..".txt" end --if no extension add 1
 	local str2Save = textutils.serialize(t)
 	if string.len(str2Save) > fsGetFreeSpace("/") then return false,"no disk space" end
 	
 	local fh = fs.open(sFileName, "w") --open file for write
-	if not fh then return false end
+	if not fh then return false, "couldn't open file for write." end
 	
 	fh.write(str2Save) --transform table values and keys in strings
 	fh.close() --close file handle(file)
@@ -1325,6 +1326,14 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"
   return suckF[sDir](nItems)
 end
 
+
+------ FILE SYSTEM FUNCTIONS ------
+
+function fsGetFreeSpace()
+	return fs.getFreeSpace("/")
+end
+
+
 ------ DROP FUNCTIONS ------  
 
 --not tested--
@@ -1450,5 +1459,6 @@ end
 
 
 ---- TEST AREA ------
-
-
+--function turtleSave()
+--print(turtleSave())
+print(fs.getCapacity("/"))
