@@ -1,8 +1,20 @@
 # computercraft turtle lua improved commands
 
-improving commands in lua for computer craft turtle
+improving commands in lua for computer craft turtle.
 
-### todo to version 0.1.0
+### TODO TO VERSION 0.2.0
+
+- [ ] craft([sRecipeName][, limit=64]) craft a recipe limit number of times.
+- [ ] all base movement functions (forward, up, down, back) must change the coords in tTurtle.
+  - [ ] down([Blocks=1]) moves the turtle down blocks, until it hits something.
+  - [ ] up([Blocks=1]) moves the turtle up blocks, until it hits something.
+  - [ ] back([Blocks=1]) Moves the turtle backwards or forward blocks, until blocked.
+  - [ ] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
+  
+- [ ] All base rotation functions (turn left and right) must update tTurtle.facing.
+  - [ ] turnDir([Direction="back"]) rotates turtle back, left or right.
+
+### TODO TO VERSION 0.1.0
 
 
 ### OPTIONAL
