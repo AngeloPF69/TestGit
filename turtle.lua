@@ -117,6 +117,7 @@ function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
   return true
 end
 
+--not tested--
 function getCoords() --[[ Gets coords from turtle.
   03/09/2021  Returns: the turtle coords x, y, z.
               ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
@@ -391,10 +392,10 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
+	
   for i = 1, nBlocks do
     if not turtle.up() then return false
-    else  if tTurtle.y > 254 then return false, "Turtle is at the maximum y." end
-          tTurtle.y = tTurtle.y + 1
+    else	tTurtle.y = tTurtle.y + 1
     end
   end
   return true
@@ -412,8 +413,7 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
       if not turtle.down() then return false
-      else  if tTurtle.y < 1 then return false, "Turtle is at minimum y." end
-            tTurtle.y = tTurtle.y -1
+      else	tTurtle.y = tTurtle.y -1
       end
   end
   return true
@@ -521,9 +521,12 @@ function isKey(Key, t) --[[ Checks if Key is in t table.
   return false
 end
 
-function isValue(value, t)
+function isValue(Value, t) --[[ Checks if Value is in t table.
+  29/09/2021  Returns:  true - if Value is in t.
+                        false - if Value is not in t.
+              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
   for k,v in pairs(t) do
-    if v == value then return true end
+    if v == Value then return true end
   end
   return false
 end
@@ -688,9 +691,7 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
   if type(nBlocks) ~= "number" then return false end
   if nBlocks >= 0  then turnBack() end
   for i = 1, math.abs(nBlocks) do
-    if not turtle.forward() then return false
-    else tTurtle.x, tTurtle.y, tTurtle.z = AddSteps()
-    end
+    if not forward() then return false end
   end
   return true
 end
@@ -752,9 +753,7 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false end
     if i~= nBlocks then
-			if not turtle.forward() then return False
-      else addSteps()
-      end
+			if not forward() then return False
 		end
   end
   return true
@@ -804,20 +803,12 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then return digDown(math.abs(nBlocks)) end
 
-  local facing = tTurtle.facing
-  tTurtle.facing = facingType["up"]
-
   for i = 1, nBlocks do
     if not turtle.digUp() then return false end
     if i ~= nBlocks then
-			if not turtle.up() then
-        tTurtle.facing = facing
-        return false
-      else addSteps()
-      end
+			if not up() then	return false end
 		end
   end
-  tTurtle.facing = facing
   return true
 end
 
@@ -833,23 +824,16 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
   if type(nBlocks) ~= "number" then return false end
   if nBlocks < 0 then return digUp(math.abs(nBlocks)) end
 
-  local facing = tTurtle.facing
-  tTurtle.facing = facingType["down"]
-
   for i = 1, nBlocks do
     if not turtle.digDown() then return false end
     if i ~= nBlocks then
-			if not turtle.down() then
-        tTurtle.facing = facing
-        return false
-      else addSteps()
-      end
+			if not down() then	return false end
 		end
   end
-  tTurtle.facing = facing
   return true
 end
 
+	--not tested--
 function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -870,6 +854,7 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
   return true
 end
 
+	--not tested--
 function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -890,6 +875,7 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
   return true
 end
 
+	--not tested--
 function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if bllocked, empty space, or invalid parameter.
