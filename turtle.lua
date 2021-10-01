@@ -87,7 +87,10 @@ end
 
 ------ INIT ------
 
-function turtleLoad()
+function turtleLoad() --[[ Loads tTurtle from file tTurtle.txt.
+  23/09/2021  Returns:	true - if it could load the file to tTurtle.
+												false - if it couldn't load file.
+              ex: turtleLoad() ]] 
   local t = loadTable("tTurtle.txt")
 	if not t then return false,"Can't load tTurtle.txt" end
 	tTurtle = t
@@ -97,7 +100,10 @@ end
 
 ------ TERMINATE ------
 
-function turtleSave()
+function turtleSave() --[[ Saves tTurtle to file tTurtle.txt.
+  23/09/2021  Returns:	true - if it could save the file.
+												false - if it couldn't save file.
+              ex: turtleSave() ]] 
   local success, reason = saveTable(tTurtle, "tTurtle.txt")
   if success then return success end
   return false, reason
