@@ -112,13 +112,18 @@ end
 
 ------ TURTLE STATUS FUNCTIONS ----
 
-function setFacing(sFacing)
+function setFacing(sFacing) --[[ Sets tTurtle.facing.
+  02/10/2021  Returns:  false - if no parameter was supplied.
+                              - if sFacing is not in facingType.
+              ex: setFacing("z+") - Sets the tTurtle.facing to "z+"]]
   if not sFacing then return false end
   if not facingType[sFacing] then return false end
   tTurtle.facing = sFacing
 end
 
-function getFacing(sFacing)
+function getFacing() --[[ Returns tTurtle.facing.
+  02/10/2021  Returns:  tTurtle.facing.
+              ex: getFacing() - Outputs whatever is in tTurtle.facing [0..3].]]
   return tTurtle.facing
 end
 
@@ -525,7 +530,10 @@ function isKey(Key, t) --[[ Checks if Key is in t table.
   return false
 end
 
-function isValue(value, t)
+function isValue(value, t) --[[ Checks if value is in t table.
+  21/09/2021  Returns:  true - if value is in t.
+                        false - if value is not in t.
+              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
   for k,v in pairs(t) do
     if v == value then return true end
   end
@@ -571,16 +579,22 @@ end
 
 ------ ROTATING FUNCTIONS ------  
 
-function incFacing(nTurns)
+function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
+  02/10/2021  returns: true
+              sintax: incFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing + nTurns
   tTurtle.facing = bit32.band(tTurtle.facing, 3)
+  return true
 end
 
-function decFacing(nTurns)
+function decFacing(nTurns) --[[ Decrements tTurtle.facing by nTurns
+  02/10/2021  returns: true
+              sintax: decFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing - nTurns
   tTurtle.facing = bit32.band(tTurtle.facing, 3)
+  return true
 end
 
 function turnBack() --[[ Turtle turns back.
@@ -1328,7 +1342,9 @@ end
 
 ------ FILE SYSTEM FUNCTIONS ------
 
-function fsGetFreeSpace()
+function fsGetFreeSpace() --[[ Gets the total free space on disk.
+  02/10/2021  Returns:  Free space on disk.
+              ex: fsGetFreeSpace() - Outputs free space on disk.]]
 	return fs.getFreeSpace("/")
 end
 
