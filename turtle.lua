@@ -9,10 +9,12 @@ dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down
 lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
 facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8}
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-						facing = facingType["z+"],
+						facing = facingType["z+"], --the axis where the turtle is facing at
 						leftHand = "empty",
 						rightHand = "empty",
 } 
+
+tRecipes = {} --["Name"] {{slot = "itemName", slot = "itemName"}, ...
 
 ------ FUEL ------
 
@@ -87,6 +89,11 @@ end
 
 ------ INIT ------
 
+function INIT()
+	turtleLoad()
+	loadRecipes()
+end
+
 function turtleLoad() --[[ Loads tTurtle from file tTurtle.txt.
   23/09/2021  Returns:	true - if it could load the file to tTurtle.
 												false - if it couldn't load file.
@@ -99,6 +106,11 @@ end
 
 
 ------ TERMINATE ------
+
+function TERMINATE()
+	turtleSave()
+	saveRecipes()
+end
 
 function turtleSave() --[[ Saves tTurtle to file tTurtle.txt.
   23/09/2021  Returns:	true - if it could save the file.
@@ -573,8 +585,63 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
-function craft(sRecipe, nLimit)
+--not tested--
+function saveRecipes()
+	return saveTable(tRecipes, "tRecipes.txt")
+end
 
+--not tested--
+function loadRecipes()
+	loca t = loadTable("tRecipes.txt")
+	if not t then return false end
+	tRecipes = t
+end
+
+--not tested--
+function storeRecipe()
+	local tRecipe = {}
+	tRecipe["default"] = {}
+	
+	for i = 1, 16 do
+		local tData = turtle.getItemDetail(i)
+		
+		if tData then
+			tRecipe["default"].nSlot = i
+			tRecipe["default"].sName = tData.name
+		end
+	end
+end
+
+--not tested--
+function getMaxCraft()
+	local minCount = 64
+	for i = 1, 16 do
+		local tData = turtle.getItemDetail(i)
+		
+		if tData then
+			if tData.count < minCount then minCount = tData.count end
+		end
+	end
+	return minCount
+end
+
+--not tested--
+function craft(sRecipe, nLimit)
+	sRecipe, nLimit = getParam("sn", {-1}, sRecipe, nLimit)
+	
+	if not sRecipe then if not turtle.craft(0) then return false, "Couldn't create recipe." end
+	if not tRecipes[sRecipe] then storeRecipe() end
+	if nLimit == -1 then nLimit = getMaxCraft() end
+	if not turtle.craft(nLimit) then return false end
+	local tData = turtle.getItemDetail(1)
+	
+	if not tData then return false end
+	local sName = tData.name
+	
+	if not tRecipes[sName] then
+		tRecipes[sName] = tRecipes["default"]
+	end
+	return sName
 end
 
 ------ ROTATING FUNCTIONS ------  
@@ -1474,7 +1541,12 @@ end
 
 
 ---- TEST AREA ------
+	
+INIT()
+	
 print(fsGetFreeSpace())
 --print(goBack(2))
 
 --print(textutils.serialize(tTurtle))
+
+TERMINATE()
