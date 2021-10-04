@@ -9,7 +9,7 @@ dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down
 lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
 facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8}
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-						facing = facingType["z+"], --the axis where the turtle is facing at
+						facing = facingType["z-"], --the axis where the turtle is facing at
 						leftHand = "empty",
 						rightHand = "empty",
 } 
@@ -89,6 +89,7 @@ end
 
 ------ INIT ------
 
+--not tested--
 function INIT()
 	turtleLoad()
 	loadRecipes()
@@ -107,6 +108,7 @@ end
 
 ------ TERMINATE ------
 
+--not tested--
 function TERMINATE()
 	turtleSave()
 	saveRecipes()
@@ -182,7 +184,7 @@ end
 
 ------ MEASUREMENTS FUNCTIONS ------
 
-function AddSteps(nSteps) --[[ Adds nSteps to coords of turtle.
+function addSteps(nSteps) --[[ Adds nSteps to coords of turtle.
   24/09/2021  Returns:  x,y,z adding nSteps in direction turtle is facing.
                         false - if nSteps is not a number.
               ex: AddSteps() - Adds 1 to the coord of the turtle is facing.]] 
@@ -592,7 +594,7 @@ end
 
 --not tested--
 function loadRecipes()
-	loca t = loadTable("tRecipes.txt")
+	local t = loadTable("tRecipes.txt")
 	if not t then return false end
 	tRecipes = t
 end
@@ -629,7 +631,9 @@ end
 function craft(sRecipe, nLimit)
 	sRecipe, nLimit = getParam("sn", {-1}, sRecipe, nLimit)
 	
-	if not sRecipe then if not turtle.craft(0) then return false, "Couldn't create recipe." end
+	if not sRecipe then
+    if not turtle.craft(0) then return false, "Couldn't create recipe." end
+  end
 	if not tRecipes[sRecipe] then storeRecipe() end
 	if nLimit == -1 then nLimit = getMaxCraft() end
 	if not turtle.craft(nLimit) then return false end
@@ -777,11 +781,10 @@ end
 
 ------ DIG FUNCTIONS ------  
 
---not tested--
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   08/09/2021  Returns:  true if turtle digs all way.
-                      false if blocked, empty space.
-                      nil if invalid parameter
+                        false if blocked, empty space, can't turn that way.
+                        nil if invalid parameter
               sintax: digDir([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
               ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
               ex: digDir() - Digs 1 block forward.
@@ -789,7 +792,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
   negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
   
-  if type(nBlocks) ~= "number" then return nil end
+  if type(nBlocks) ~= "number" then return nil, "Blocks must be a number." end
   if nBlocks < 0 then
     nBlocks = math.abs(nBlocks)
     sDir = negOrient[sDir]
@@ -804,12 +807,12 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   if (sDir == "up") or (sDir == "down") then tTurtle.facing = dirType[sDir] end
 
   for i = 1, nBlocks do
-    if not digF[sDir]() then return false end
+    if not digF[sDir]() then return false, "No block to dig." end
     if i ~= nBlocks then
 			if not movF[sDir]() then
         tTurtle.facing = facing
-        return false
-      else addSteps()
+        return false, "Can't move that way."
+      else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
       end
 		end
   end
@@ -818,7 +821,6 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   return true
 end
 
---not tested--
 function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -827,20 +829,21 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
               ex: dig() or dig(1) - Dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then turnBack() end
-  for i = 1, math.abs(nBlocks) do
-    if not turtle.dig() then return false end
+  nBlocks = math.abs(nBlocks)
+
+  for i = 1, nBlocks do
+    if not turtle.dig() then return false, "No block to dig." end
     if i~= nBlocks then
-			if not turtle.forward() then return False
-      else addSteps()
+			if not turtle.forward() then return false, "Can't go that way."
+      else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
       end
 		end
   end
   return true
 end
 
---not tested--
 function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -849,14 +852,13 @@ function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must ha
               ex: digLeft() or digLeft(1) - Dig 1 block left.]]
   nBlocks = nBlocks or 1
   
-	if type(nBlocks) ~= "number" then return false end
+	if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks > -1 then turnDir("left")
   else turnDir("right")
   end
   return dig(math.abs(nBlocks))
 end
 
---not tested--
 function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -865,14 +867,13 @@ function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must h
               ex: digRight() or digRight(1) - Dig 1 block right.]]
   nBlocks = nBlocks or 1
   
-	if type(nBlocks) ~= "number" then return false end
+	if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks > -1 then turnDir("right")
   else turnDir("left")
   end
   return dig(math.abs(nBlocks))
 end
 
---not tested--
 function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
@@ -881,27 +882,20 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
               ex: digUp() or digUp(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be anumber." end
   if nBlocks < 0 then return digDown(math.abs(nBlocks)) end
 
-  local facing = tTurtle.facing
-  tTurtle.facing = facingType["up"]
-
   for i = 1, nBlocks do
-    if not turtle.digUp() then return false end
+    if not turtle.digUp() then return false, "No block to dig." end
     if i ~= nBlocks then
-			if not turtle.up() then
-        tTurtle.facing = facing
-        return false
-      else addSteps()
+			if not turtle.up() then return false, "Can't go that way."
+      else tTurtle.y = tTurtle.y + 1
       end
 		end
   end
-  tTurtle.facing = facing
   return true
 end
 
---not tested--
 function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must have a tool equiped.
   27/08/2021  Returns:  true if turtle digs all way.
                         false if bllocked, empty space, or invalid parameter.
@@ -910,23 +904,17 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
               ex: digDown() or digDown(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then return digUp(math.abs(nBlocks)) end
 
-  local facing = tTurtle.facing
-  tTurtle.facing = facingType["down"]
-
   for i = 1, nBlocks do
-    if not turtle.digDown() then return false end
+    if not turtle.digDown() then return false, "No block to dig." end
     if i ~= nBlocks then
-			if not turtle.down() then
-        tTurtle.facing = facing
-        return false
-      else addSteps()
+			if not turtle.down() then return false, "Can't go that way."
+      else tTurtle.y = tTurtle.y - 1
       end
 		end
   end
-  tTurtle.facing = facing
   return true
 end
 
@@ -992,7 +980,7 @@ end
 
 ------ PLACE FUNCTIONS ------  
 
---not tested--
+
 function placeDir(sDir) --[[ Places one selected block in sDir {"forward", "right", "back", "left", "up", "down"}.
   27/08/2021  Returns:  true if turtle places the selected block.
                         false if turtle doesn't place the selected block, or invalid parameter.
@@ -1544,9 +1532,6 @@ end
 	
 INIT()
 	
-print(fsGetFreeSpace())
---print(goBack(2))
-
---print(textutils.serialize(tTurtle))
+print(placeDir("back"))
 
 TERMINATE()
