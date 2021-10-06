@@ -187,7 +187,7 @@ end
 function addSteps(nSteps) --[[ Adds nSteps to coords of turtle.
   24/09/2021  Returns:  x,y,z adding nSteps in direction turtle is facing.
                         false - if nSteps is not a number.
-              ex: AddSteps() - Adds 1 to the coord of the turtle is facing.]] 
+              ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
   nSteps = nSteps or 1
 
   if type(nSteps) ~= "number" then return false end
@@ -386,7 +386,7 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.forward() then return false
-    else tTurtle.x, tTurtle.y, tTurtle.z = AddSteps()
+    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
     end
   end
   return true
@@ -403,7 +403,7 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.back() then return false
-    else tTurtle.x, tTurtle.y, tTurtle.z = AddSteps(-1)
+    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps(-1)
     end
   end
   return true
@@ -734,7 +734,7 @@ function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until bl
 
   for i = 1, math.abs(nBlocks) do
     if not turtle.forward() then return false
-    else tTurtle.x, tTurtle.y, tTurtle.z = AddSteps()
+    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
     end
   end
   return true
@@ -756,7 +756,7 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
 
   for i= 1, math.abs(nBlocks) do
     if not turtle.forward() then return false
-    else tTurtle.x, tTurtle.y, tTurtle.z = AddSteps()
+    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
     end
   end
   return true
@@ -773,7 +773,7 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
   if nBlocks >= 0  then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.forward() then return false
-    else tTurtle.x, tTurtle.y, tTurtle.z = AddSteps()
+    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
     end
   end
   return true
@@ -1008,40 +1008,38 @@ function placeDir(sDir) --[[ Places one selected block in sDir {"forward", "righ
   return false
 end
 
---not tested--
 function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021  Returns:  number of blocks placed.
-                        false - if turtle was blocked on the way back
-                              - invalid parameter.
-                              - couldn't place block.
+                        false - invalid parameter.
               sintax: place([nBlocks=1])
               Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
               ex: place(1) or place() - Places 1 Block in front of turtle.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then
     turnBack()
     nBlocks=math.abs(nBlocks)
   end
+
   for i = 2, nBlocks do
     if not forward() then
-      nBlocks=i-2
-      back()
+      nBlocks = i - 2
+      back(sign(nBlocks))
       break
     end
   end
 
+  local placed = 0
   for i = 1, nBlocks do
-    if not turtle.place() then return false end
+    if turtle.place() then placed = placed + 1 end
     if i ~= nBlocks then
-      if not back() then return false end
+      if not back() then return placed end
     end
   end
-  return nBlocks
+  return placed
 end
 
---not tested--
 function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns to starting point.
   27/08/2021  Returns:  number os blocks placed.
                         false - if turtle was blocked on the way back.
@@ -1051,26 +1049,26 @@ function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns 
               ex: placeUp(1) or placeUp() - Places 1 Block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then return placeDown(math.abs(nBlocks)) end
   for i = 2, nBlocks do
     if not up() then
-      nBlocks=i
-      down()
+      nBlocks = i - 2
+      down(sign(nBlocks))
       break
     end
   end
 
+  local placed = 0
   for i = 1, nBlocks do
-    turtle.placeUp()
+    if turtle.placeUp() then placed = placed + 1 end
     if i ~= nBlocks then
-      if not down() then return false end
+      if not down() then return placed end
     end
   end
-  return nBlocks
+  return placed
 end
 
---not tested--
 function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and returns to starting point.
   27/08/2021  Returns:  number of blocks placed.
                         false - if turtle was blocked on the way back.
@@ -1080,26 +1078,26 @@ function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and return
               ex: placeDown(1) or placeDown() - Places 1 Block Down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then return placeUp(math.abs(nBlocks)) end
   for i = 2, nBlocks do
     if not down() then
-      nBlocks=i
-      up()
+      nBlocks = i - 2
+      up(sign(nBlocks))
       break
     end
   end
 
+  local placed = 0
   for i = 1, nBlocks do
-    turtle.placeDown()
+    if turtle.placeDown() then placed = placed + 1 end
     if i ~= nBlocks then
-      if not up() then return false end
+      if not up() then return placed end
     end
   end
-  return nBlocks
+  return placed
 end
   
---not tested--
 function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns to starting point.
   27/08/2021  Returns:  number of placed blocks.
                         false - if turtle was blocked on the way back.
@@ -1110,14 +1108,13 @@ function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns
               ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
   nBlocks = nBlocks or 1
 
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then turnDir("right")
 	else turnDir("left")
 	end
   return place(math.abs(nBlocks))
 end
   
---not tested--
 function placeRight(nBlocks) --[[ Places Blocks to the right or left, and returns to starting point.
   27/08/2021  Returns:  true if turtle places all blocks all the way.
                         false - if turtle was blocked on the way back.
@@ -1128,14 +1125,13 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
               ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
   nBlocks = nBlocks or 1
 
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then turnDir("left")
 	else turnDir("right")
 	end
   return place(math.abs(nBlocks))
 end
   
---not tested--
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
   27/08/2021  Returns:  number of blocks placed
                       false - if turtle was blocked on the way back.
@@ -1145,7 +1141,7 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
             ex: placeAbove(1) or placeAbove() - Places one Block above turtle.]]
     nBlocks = nBlocks or 1
     
-    if type(nBlocks) ~= "number" then return false end
+    if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
     if nBlocks < 0 then
       nBlocks=math.abs(nBlocks)
       turnBack()
@@ -1153,32 +1149,32 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
     for i = 2, nBlocks do --goto last pos to place
       if i == 2 then
         if not up() then
-          nBlocks=1
+          nBlocks = 1
           break
         end
       elseif not forward() then
-        nBlocks = i-1
+        nBlocks = i - 1
         break
       end
     end
     
+    local placed = 0
     for i = 1, nBlocks do --place backwards
       if i == nBlocks then
         if i ~= 1 then
           if not down() then return false end
         end
-        if not turtle.placeUp() then return false end
+        if turtle.placeUp() then placed = placed + 1 end
       else
-        turtle.place()
+        if turtle.place() then placed = placed + 1 end
         if (i ~= (nBlocks-1)) then
-          if not back() then return false end
+          if not back() then return placed end
         end
       end
     end
-    return nBlocks
+    return placed
 end
 
---not tested--
 function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
   27/08/2021  Returns:  number of placed blocks.
                       false - if turtle was blocked on the way back.
@@ -1188,7 +1184,7 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
             ex: placeBelow(1) or placeBelow() - Places one Block below turtle.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks < 0 then
     nBlocks=math.abs(nBlocks)
     turnBack()
@@ -1196,29 +1192,30 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   for i = 2, nBlocks do
     if i == 2 then
       if not down() then
-        nBlocks=1
+        nBlocks = 1
         break
       end
     elseif not forward() then
-      nBlocks = i-1
+      nBlocks = i - 1
       break
     end
   end
   
+  local placed = 0
   for i = 1, nBlocks do
     if i == nBlocks then
       if i ~= 1 then
         if not up() then return false end
       end
-      if not turtle.placeDown() then return false end
+      if turtle.placeDown() then placed = placed + 1 end
     else
-      turtle.place()
+      if turtle.place() then placed = placed + 1 end
       if (i ~= (nBlocks-1)) then
-        if not back() then return false end
+        if not back() then return placed end
       end
     end
   end
-  return nBlocks
+  return placed
 end
 
 
@@ -1529,9 +1526,9 @@ end
 
 
 ---- TEST AREA ------
-	
+--function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
 INIT()
-	
-print(placeDir("back"))
+
+print(suckDir())
 
 TERMINATE()

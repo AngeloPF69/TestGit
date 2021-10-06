@@ -1,8 +1,8 @@
 {
-  y = 1,
-  x = 0,
+  y = 3,
+  x = 1,
   leftHand = "empty",
   z = 0,
   rightHand = "empty",
-  facing = 1,
+  facing = 0,
 }
