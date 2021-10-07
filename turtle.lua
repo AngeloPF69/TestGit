@@ -89,13 +89,12 @@ end
 
 ------ INIT ------
 
---not tested--
 function INIT()
-	turtleLoad()
+	loadTurtle()
 	loadRecipes()
 end
 
-function turtleLoad() --[[ Loads tTurtle from file tTurtle.txt.
+function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
   23/09/2021  Returns:	true - if it could load the file to tTurtle.
 												false - if it couldn't load file.
               ex: turtleLoad() ]] 
@@ -108,13 +107,12 @@ end
 
 ------ TERMINATE ------
 
---not tested--
 function TERMINATE()
-	turtleSave()
+	saveTurtle()
 	saveRecipes()
 end
 
-function turtleSave() --[[ Saves tTurtle to file tTurtle.txt.
+function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
   23/09/2021  Returns:	true - if it could save the file.
 												false - if it couldn't save file.
               ex: turtleSave() ]] 
@@ -571,7 +569,6 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
     end
   end
 
-  print(#tSearch, totMatch)
   if #tSearch ~= totMatch then return false end
   return true
 end
@@ -587,12 +584,10 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
---not tested--
 function saveRecipes()
 	return saveTable(tRecipes, "tRecipes.txt")
 end
 
---not tested--
 function loadRecipes()
 	local t = loadTable("tRecipes.txt")
 	if not t then return false end
@@ -779,6 +774,7 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
   return true
 end
 
+
 ------ DIG FUNCTIONS ------  
 
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
@@ -926,13 +922,13 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
               ex: digAbove() or digAbove(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   local dir = sign(nBlocks)
 
   for i = 1, math.abs(nBlocks) do
-    if not turtle.digUp() then return false end
+    if not turtle.digUp() then return false, "No block to dig." end
     if i~= nBlocks then
-			if not forward(dir) then return false end
+			if not forward(dir) then return false, "Can't go that way." end
 		end
   end
   return true
@@ -946,13 +942,13 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
               ex: digBelow() or digBelow(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   local dir = sign(nBlocks)
 	
   for i = 1, math.abs(nBlocks) do
-    if not turtle.digDown() then return false end
+    if not turtle.digDown() then return false, "No block to dig." end
     if i~= nBlocks then
-			if not forward(dir) then return false end
+			if not forward(dir) then return false, "Can't go that way." end
 		end
   end
   return true
@@ -966,12 +962,12 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
               ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
   if nBlocks > 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
-    if not turtle.dig() then return false end
+    if not turtle.dig() then return false, "No block to dig." end
     if i ~= nBlocks then
-			if not forward() then return false end
+			if not forward() then return false, "Can't go that way." end
 		end
   end
   return true
@@ -987,7 +983,7 @@ function placeDir(sDir) --[[ Places one selected block in sDir {"forward", "righ
               sintax: placeDir([sDir="forward"])
               ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
   sDir = sDir or "forward"
-  if type(sDir) ~= "string" then return false end
+  if type(sDir) ~= "string" then return false, "Direction must be a string." end
 
   if sDir == "forward" then
     return turtle.place()
