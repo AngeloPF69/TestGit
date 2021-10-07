@@ -87,11 +87,15 @@ function equip(sSide) --[[ Equip tool in the selected slot.
 end
 
 
------- INIT ------
+------ TURTLE ------
 
-function INIT()
-	loadTurtle()
-	loadRecipes()
+function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
+  23/09/2021  Returns:	true - if it could save the file.
+												false - if it couldn't save file.
+              ex: turtleSave() ]] 
+  local success, reason = saveTable(tTurtle, "tTurtle.txt")
+  if success then return success end
+  return false, reason
 end
 
 function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
@@ -105,20 +109,19 @@ function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
 end
 
 
+------ INIT ------
+
+function INIT()
+	loadTurtle()
+	loadRecipes()
+end
+
+
 ------ TERMINATE ------
 
 function TERMINATE()
 	saveTurtle()
 	saveRecipes()
-end
-
-function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
-  23/09/2021  Returns:	true - if it could save the file.
-												false - if it couldn't save file.
-              ex: turtleSave() ]] 
-  local success, reason = saveTable(tTurtle, "tTurtle.txt")
-  if success then return success end
-  return false, reason
 end
 
 
@@ -569,6 +572,7 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
     end
   end
 
+  print(#tSearch, totMatch)
   if #tSearch ~= totMatch then return false end
   return true
 end
@@ -594,7 +598,7 @@ function loadRecipes()
 	tRecipes = t
 end
 
---not tested--
+-- not tested--
 function storeRecipe()
 	local tRecipe = {}
 	tRecipe["default"] = {}
@@ -922,13 +926,13 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
               ex: digAbove() or digAbove(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return false end
   local dir = sign(nBlocks)
 
   for i = 1, math.abs(nBlocks) do
-    if not turtle.digUp() then return false, "No block to dig." end
+    if not turtle.digUp() then return false end
     if i~= nBlocks then
-			if not forward(dir) then return false, "Can't go that way." end
+			if not forward(dir) then return false end
 		end
   end
   return true
@@ -942,13 +946,13 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
               ex: digBelow() or digBelow(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return false end
   local dir = sign(nBlocks)
 	
   for i = 1, math.abs(nBlocks) do
-    if not turtle.digDown() then return false, "No block to dig." end
+    if not turtle.digDown() then return false end
     if i~= nBlocks then
-			if not forward(dir) then return false, "Can't go that way." end
+			if not forward(dir) then return false end
 		end
   end
   return true
@@ -962,12 +966,12 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
               ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return false end
   if nBlocks > 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
-    if not turtle.dig() then return false, "No block to dig." end
+    if not turtle.dig() then return false end
     if i ~= nBlocks then
-			if not forward() then return false, "Can't go that way." end
+			if not forward() then return false end
 		end
   end
   return true
@@ -983,7 +987,7 @@ function placeDir(sDir) --[[ Places one selected block in sDir {"forward", "righ
               sintax: placeDir([sDir="forward"])
               ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
   sDir = sDir or "forward"
-  if type(sDir) ~= "string" then return false, "Direction must be a string." end
+  if type(sDir) ~= "string" then return false end
 
   if sDir == "forward" then
     return turtle.place()
@@ -1217,6 +1221,65 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
+--not tested--
+function freeCount() --[[ Get free slots in turtle's inventory.
+  07/10/2021  Returns:  number of free slots.
+              sintax: freeCount()]]
+  local nFree,i=0
+  for i=1,16 do
+    if turtle.getItemCount(i)==0 then nFree=nFree+1 end
+  end	
+  return nFree
+end
+
+
+--not tested--
+function getFreeSlot(nSlot) --[[ Get the first free slot.
+  07/10/2021  Returns:  first free slot number.
+              sintax: getFreeSlot([nStartSlot=1])
+              Note: if n<0 search backwards--]]
+              
+              --return:false or first free slot from nSlot - CHECKED
+  --[[  03/07/2018	sintax: tInvGetFreeSlot([nStartSlot=1]) - if nSlot="last" search backwards from 16
+				complete name - Turtle INVentory GET FREE SLOT ( [NSTARTSLOT=1] ) ]]
+	nSlot = nSlot or 1
+	
+	local i, nEndSlot, dir = 1, 16
+	if type(nSlot) == "string" then
+		if nSlot == "last" then
+			dir = -1;
+			nEndSlot=1;
+			nSlot=16
+		end
+	end
+	if nSlot<0 or nSlot>16 then return false end --validate nSlot
+  for i=nSlot,nEndSlot,dir do
+    if turtle.getItemCount(i)==0 then return i end
+  end
+  return false
+end
+
+--not tested--
+function groupItems() --[[ Groups the same type of items in one slot in inventory.
+  07/10/2021  Returns:  true.
+              sintax: groupItems()]]
+  local destSlot,orgSlot,tmpSlot
+ 
+  for destSlot=1,15 do --destination slot
+    if turtle.getItemCount(destSlot) ~=0 then --has some items?
+      for orgSlot=destSlot+1,16 do --origin slot
+        if turtle.getItemCount(orgSlot) ~= 0 then --has some items
+          turtle.select(orgSlot) --select the origin slot
+          if turtle.compareTo(destSlot) then --is the same family entity
+            turtle.transferTo(destSlot) --transfer to destination slot if possible, doesn't matter if not
+          end
+        end
+      end
+    end
+  end
+	return true
+end
+
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
   23/09/2021  Returns: number of items you can store more in inventory.
                       false - if item is not in inventory.
@@ -1358,6 +1421,19 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
     end
   end
   return false
+end
+
+--not tested--
+function selectFree() --[[ Selects the first free slot in turtle's inventory.
+  07/10/2021  Returns:  free slot number.
+                        false - if no free slot.
+              sintax: selectFree()]]
+  local nSlot
+
+  nSlot=getFreeSlot() --get a free slot
+  if not nSlot then return false end --not found
+  if turtle.select(nSlot) then return nSlot end
+  return false --couldn't select nSlot
 end
 
 ------ SUCK FUNCTIONS ------
