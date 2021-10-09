@@ -369,7 +369,7 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "ri
     turnDir("left")
     sDir = "forward"
 	end
-	if isKey(sDir, insF) then return insF[sDir]() end
+	if insF[sDir] then return insF[sDir]() end
   return false
 end
 
@@ -535,16 +535,6 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   end
 end
 
-function isKey(Key, t) --[[ Checks if Key is in t table.
-  21/09/2021  Returns:  true - if Key is in t.
-                        false - if Key is not in t.
-              ex: isKey("hello", {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
-  for k,v in pairs(t) do
-    if k == Key then return true end
-  end
-  return false
-end
-
 function isValue(value, t) --[[ Checks if value is in t table.
   21/09/2021  Returns:  true - if value is in t.
                         false - if value is not in t.
@@ -598,19 +588,59 @@ function loadRecipes()
 	tRecipes = t
 end
 
--- not tested--
-function storeRecipe()
-	local tRecipe = {}
-	tRecipe["default"] = {}
+function getRecipe() --[[ Get recipe from inventory.
+	09/10/2021	return: table with recipe.
+                      false - if is not a recipe in inventory.
+              sintax:getRecipe()]]
+  if not turtle.craft(0) then return false, "Not a recipe." end
+	local i,nRIndex,tRecipe=1,1,{} --counter for inventory slot, tRecipe item index, new tRecipe
+	local first=true --is this the first item
 	
-	for i = 1, 16 do
-		local tData = turtle.getItemDetail(i)
-		
-		if tData then
-			tRecipe["default"].nSlot = i
-			tRecipe["default"].sName = tData.name
+	for i=1, 16 do
+		local tData=turtle.getItemDetail(i) --get details from slot i
+		if tData then --there was some item
+			tRecipe[nRIndex]={} --initialize tRecipe table
+			tRecipe[nRIndex].sItemName=tData.name --set tRecipe item name
+			if first then --is the first item in tRecipe
+				first=false --next item will be not the first
+				firstPos=i --the 1st pos of the item
+				nRIndex=nRIndex+1 --next item
+			else --this is not the first item
+				tRecipe[nRIndex].nPos=i-firstPos --set the pos of this item
+				nRIndex=nRIndex+1 --next item
+			end
 		end
 	end
+	if not tRecipe[1] then return false end --there tRecipe is empty
+	return tRecipe
+end
+
+-- not tested--
+function addRecipe(nResSlot) --[[ Add inventory tRecipe to tRecipes - 
+	09/10/2021	return: Recipe name and item quantity created with one recipe.
+                      false - if in inventory is not a recipe.
+                            - if resulting slot is out of range [1..16].
+                            - if inventory is empty.
+              sintax:addRecipe([nResSlot=16])]]
+	if not turtle.craft(0) then return false,"this is not a recipe!" end --this is not a tRecipe
+	nResSlot = nResSlot or 16
+	if nResSlot<1 or nResSlot>16 then return false,"addRecipe(nResSlot) nResSlot[1..16]" end --is valid slot
+	
+	local tRecipe=getRecipe() --generate tRecipe from inventory
+	if not tRecipe then return false,"no recipe to add!" end --couldn't generate a tRecipe
+	if not turtle.select(nResSlot) then return false,"cant select slot "..tostring(nResSlot).."!" end
+	if not turtle.craft(1) then return false,"can't craft a item!" end
+	
+	local tData=turtle.getItemDetail(nResSlot)
+	if tData then
+    if not tRecipes[tData.name] then
+      tRecipes[tData.name]={}
+      tRecipes[tData.name].tRecipe=tRecipe
+      tRecipes[tData.name].nQuant=tData.count
+    end
+	else return false
+	end
+	return tData.name, tData.count
 end
 
 --not tested--
@@ -630,15 +660,15 @@ end
 
 --not tested--
 function craft(sRecipe, nLimit)
-	sRecipe, nLimit = getParam("sn", {-1}, sRecipe, nLimit)
+	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	
 	if not sRecipe then
     if not turtle.craft(0) then return false, "Couldn't create recipe." end
   end
-	if not tRecipes[sRecipe] then storeRecipe() end
-	if nLimit == -1 then nLimit = getMaxCraft() end
-	if not turtle.craft(nLimit) then return false end
-	local tData = turtle.getItemDetail(1)
+	if not tRecipes[sRecipe] then addRecipe(turtle.getSelectedSlot()) end
+  if nLimit == -1 then nLimit = getMaxCraft() end
+  if not turtle.craft(nLimit) then return false, "Couldn't create "..nLimit.." items." end
+	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
 	
 	if not tData then return false end
 	local sName = tData.name
@@ -1223,7 +1253,6 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
---not tested--
 function freeCount() --[[ Get free slots in turtle's inventory.
   07/10/2021  Returns:  number of free slots.
               sintax: freeCount()]]
@@ -1234,34 +1263,25 @@ function freeCount() --[[ Get free slots in turtle's inventory.
   return nFree
 end
 
-
---not tested--
-function getFreeSlot(nSlot) --[[ Get the first free slot.
+function getFreeSlot(nStartSlot) --[[ Get the first free slot.
   07/10/2021  Returns:  first free slot number.
               sintax: getFreeSlot([nStartSlot=1])
-              Note: if n<0 search backwards--]]
-              
-              --return:false or first free slot from nSlot - CHECKED
-  --[[  03/07/2018	sintax: tInvGetFreeSlot([nStartSlot=1]) - if nSlot="last" search backwards from 16
-				complete name - Turtle INVentory GET FREE SLOT ( [NSTARTSLOT=1] ) ]]
-	nSlot = nSlot or 1
+              Note: if nStartSlot<0 search backwards--]]
+	nStartSlot = nStartSlot or 1
 	
-	local i, nEndSlot, dir = 1, 16
-	if type(nSlot) == "string" then
-		if nSlot == "last" then
-			dir = -1;
-			nEndSlot=1;
-			nSlot=16
-		end
-	end
-	if nSlot<0 or nSlot>16 then return false end --validate nSlot
-  for i=nSlot,nEndSlot,dir do
-    if turtle.getItemCount(i)==0 then return i end
-  end
+  if not type(nStartSlot) == "number" then return false end
+  local dir = sign(nStartSlot)
+  nStartSlot = math.abs(nStartSlot)
+  local nEndSlot = nStartSlot
+
+  repeat
+    local tData = turtle.getItemDetail(nStartSlot)
+    if not tData then return nStartSlot end
+    nStartSlot = bit32.band((nStartSlot + dir)-1, 15)+1
+  until (nEndSlot == nStartSlot)
   return false
 end
 
---not tested--
 function groupItems() --[[ Groups the same type of items in one slot in inventory.
   07/10/2021  Returns:  true.
               sintax: groupItems()]]
@@ -1425,7 +1445,6 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
   return false
 end
 
---not tested--
 function selectFree() --[[ Selects the first free slot in turtle's inventory.
   07/10/2021  Returns:  free slot number.
                         false - if no free slot.
@@ -1440,14 +1459,13 @@ end
 
 ------ SUCK FUNCTIONS ------
 
---not tested--
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
   05/09/2021  Returns:  true if turtle collects some items.
                         false if there are no items to take.
               sintax: suckDir([sDir="forward][,nItems=all the items])
               ex: suckDir() - Turtle sucks all the items forward.]]
   sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
-  if nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
+  if nItems and nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
   if type(sDir) ~= "string" then return false end
 
   if sDir == "right" then
@@ -1461,7 +1479,7 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"
     sDir = "forward"
   end
 
-  if not isKey(sDir, suckF) then return false, "Invalid direction." end
+  if not suckF[sDir] then return false, "Invalid direction." end
   return suckF[sDir](nItems)
 end
 
@@ -1477,7 +1495,6 @@ end
 
 ------ DROP FUNCTIONS ------  
 
---not tested--
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory in the world in front, up or down the turtle.
   29/08/2021  Returns:  number of dropped items.
                         true - if suck some items.
@@ -1600,9 +1617,9 @@ end
 
 
 ---- TEST AREA ------
---function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
+--function addRecipe(nResSlot) --[[ Add inventory tRecipe to tRecipes - 
 INIT()
 
-print(suckDir())
-
+--print(craft())
+print(addRecipe())
 TERMINATE()

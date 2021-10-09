@@ -1,1 +1,14 @@
-{}
+{
+  [ "minecraft:stick" ] = {
+    nQuant = 4,
+    tRecipe = {
+      {
+        sItemName = "minecraft:oak_planks",
+      },
+      {
+        nPos = 4,
+        sItemName = "minecraft:oak_planks",
+      },
+    },
+  },
+}
