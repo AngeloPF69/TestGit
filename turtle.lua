@@ -615,6 +615,8 @@ end
 
 --not tested--
 function getMaxCraft()
+  if not turtle.craft(0) then return false, "This is not a recipe." end
+  
 	local minCount = 64
 	for i = 1, 16 do
 		local tData = turtle.getItemDetail(i)
