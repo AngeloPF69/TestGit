@@ -14,7 +14,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 						rightHand = "empty",
 } 
 
-tRecipes = {} --["Name"] {{slot = "itemName", slot = "itemName"}, ...
+tRecipes = {} --["Name"] = {{{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ...}
 
 ------ FUEL ------
 
@@ -562,7 +562,6 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
     end
   end
 
-  print(#tSearch, totMatch)
   if #tSearch ~= totMatch then return false end
   return true
 end
@@ -588,26 +587,27 @@ function loadRecipes()
 	tRecipes = t
 end
 
-function getRecipe() --[[ Get recipe from inventory.
-	09/10/2021	return: table with recipe.
-                      false - if is not a recipe in inventory.
-              sintax:getRecipe()]]
-  if not turtle.craft(0) then return false, "Not a recipe." end
-	local i,nRIndex,tRecipe=1,1,{} --counter for inventory slot, tRecipe item index, new tRecipe
-	local first=true --is this the first item
+-- not tested--
+function storeRecipe(sRecipeName)
+	tRecipes[sRecipeName] = tRecipes[sRecipeName] or {}
 	
-	for i=1, 16 do
-		local tData=turtle.getItemDetail(i) --get details from slot i
-		if tData then --there was some item
-			tRecipe[nRIndex]={} --initialize tRecipe table
-			tRecipe[nRIndex].sItemName=tData.name --set tRecipe item name
-			if first then --is the first item in tRecipe
-				first=false --next item will be not the first
-				firstPos=i --the 1st pos of the item
-				nRIndex=nRIndex+1 --next item
-			else --this is not the first item
-				tRecipe[nRIndex].nPos=i-firstPos --set the pos of this item
-				nRIndex=nRIndex+1 --next item
+	local tFirstItem
+	local tData
+	
+	for col = 0, 3 do
+		for lin = 0, 3 do
+			tData = turtle.getItemDetail(lin*4+col+1)
+			if tData then
+				if not tFirstItem then
+					tFirstItem = {}
+					tFirstItem.col = col
+					tFirstItem.col = lin
+					tRecipes[sRecipeName][tData.name] = {}
+				else
+					tRecipes[sRecipeName][tData.name] = {}
+					tRecipes[sRecipeName][tData.name].col = col - tFirstItem.col
+					tRecipes[sRecipeName][tData.name].lin = lin - tFirstItem.lin
+				end
 			end
 		end
 	end
