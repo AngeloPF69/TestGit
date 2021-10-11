@@ -14,7 +14,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 						rightHand = "empty",
 } 
 
-tRecipes = {} --["Name"] {{slot = "itemName", slot = "itemName"}, ...
+tRecipes = {} --["Name"] = {{{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ...}
 
 ------ FUEL ------
 
@@ -572,7 +572,6 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
     end
   end
 
-  print(#tSearch, totMatch)
   if #tSearch ~= totMatch then return false end
   return true
 end
@@ -599,16 +598,27 @@ function loadRecipes()
 end
 
 -- not tested--
-function storeRecipe()
-	local tRecipe = {}
-	tRecipe["default"] = {}
+function storeRecipe(sRecipeName)
+	tRecipes[sRecipeName] = tRecipes[sRecipeName] or {}
 	
-	for i = 1, 16 do
-		local tData = turtle.getItemDetail(i)
-		
-		if tData then
-			tRecipe["default"].nSlot = i
-			tRecipe["default"].sName = tData.name
+	local tFirstItem
+	local tData
+	
+	for col = 0, 3 do
+		for lin = 0, 3 do
+			tData = turtle.getItemDetail(lin*4+col+1)
+			if tData then
+				if not tFirstItem then
+					tFirstItem = {}
+					tFirstItem.col = col
+					tFirstItem.col = lin
+					tRecipes[sRecipeName][tData.name] = {}
+				else
+					tRecipes[sRecipeName][tData.name] = {}
+					tRecipes[sRecipeName][tData.name].col = col - tFirstItem.col
+					tRecipes[sRecipeName][tData.name].lin = lin - tFirstItem.lin
+				end
+			end
 		end
 	end
 end
