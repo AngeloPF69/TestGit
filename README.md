@@ -1,7 +1,7 @@
 
 # computercraft turtle lua improved commands.
 
-##Avilable functions:
+Avilable functions:
 
   Equip:
   
