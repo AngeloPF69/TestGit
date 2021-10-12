@@ -1,9 +1,9 @@
 
 # computercraft turtle lua improved commands.
 
-Avilable functions:
 
-  Equip:
+
+## Equip:
   
     getFreeHand() Gets turtle free hand: "left"|"right"|false.
     equip(Side) Equip tool in the selected slot.
