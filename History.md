@@ -1,11 +1,11 @@
 # Version 0.1.0
-  forward(nBlocks) - Moves nBlocks forward or backwards, if nBlocks < 0, until blocked.
-  back(nBlocks) - Moves nBlocks back or forward, if nBlocks < 0, until blocked.
-  up(nBlocks) - Moves nBlocks up or down, if nBlocks < 0, until blocked.
-  down(nBlocks) - Moves nBlocks down or up, if nBlocks < 0, until blocked.
+  - forward(nBlocks) - Moves nBlocks forward or backwards, if nBlocks < 0, until blocked.
+  - back(nBlocks) - Moves nBlocks back or forward, if nBlocks < 0, until blocked.
+  - up(nBlocks) - Moves nBlocks up or down, if nBlocks < 0, until blocked.
+  - down(nBlocks) - Moves nBlocks down or up, if nBlocks < 0, until blocked.
   
-  turnDir(sDir) - Turtle turns to sDir direction {"back", "right", "left"}.
-  turnBack() - Turtle turns back.
+  - turnDir(sDir) - Turtle turns to sDir direction {"back", "right", "left"}.
+  - turnBack() - Turtle turns back.
   
   sDir {"forward", "right", "back", "left", "up", "down"}
   goDir(sDir, nBlocks) - Turtle goes in sDir direction, or the other way if nBlocks < 0, until blocked.
