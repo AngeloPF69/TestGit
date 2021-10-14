@@ -1,14 +1,17 @@
 {
-  [ "minecraft:stick" ] = {
-    nQuant = 4,
-    tRecipe = {
+  [ "minecraft:shears" ] = {
+    recipe = {
       {
-        sItemName = "minecraft:oak_planks",
+        [ "minecraft:iron_ingot" ] = {},
       },
       {
-        nPos = 4,
-        sItemName = "minecraft:oak_planks",
+        [ "minecraft:iron_ingot" ] = {
+          lin = 1,
+          col = -1,
+        },
       },
     },
+    count = 1,
   },
+  CSlot = 1,
 }

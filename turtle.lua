@@ -587,63 +587,35 @@ function loadRecipes()
 	tRecipes = t
 end
 
--- not tested--
-function storeRecipe(sRecipeName)
-	tRecipes[sRecipeName] = tRecipes[sRecipeName] or {}
+function getInvRecipe()
+  if not turtle.craft(0) then return false, "This is not a recipe." end
+  
+	local index, tFirstItem, tData, tRecipe = 1
 	
-	local tFirstItem
-	local tData
-	
-	for col = 0, 3 do
-		for lin = 0, 3 do
+	for lin = 0, 3 do
+		for col = 0, 3 do
 			tData = turtle.getItemDetail(lin*4+col+1)
 			if tData then
 				if not tFirstItem then
-					tFirstItem = {}
-					tFirstItem.col = col
-					tFirstItem.col = lin
-					tRecipes[sRecipeName][tData.name] = {}
+					tRecipe = {}
+          tRecipe[index] = {}
+          tRecipe[index][tData.name] = {}
+          tFirstItem = {}
+          tFirstItem.col = col
+          tFirstItem.lin = lin
 				else
-					tRecipes[sRecipeName][tData.name] = {}
-					tRecipes[sRecipeName][tData.name].col = col - tFirstItem.col
-					tRecipes[sRecipeName][tData.name].lin = lin - tFirstItem.lin
+          tRecipe[index] = {}
+					tRecipe[index][tData.name] = {}
+					tRecipe[index][tData.name].col = col - tFirstItem.col
+					tRecipe[index][tData.name].lin = lin - tFirstItem.lin
 				end
+        index = index + 1
 			end
 		end
 	end
-	if not tRecipe[1] then return false end --there tRecipe is empty
-	return tRecipe
+  return tRecipe
 end
 
--- not tested--
-function addRecipe(nResSlot) --[[ Add inventory tRecipe to tRecipes - 
-	09/10/2021	return: Recipe name and item quantity created with one recipe.
-                      false - if in inventory is not a recipe.
-                            - if resulting slot is out of range [1..16].
-                            - if inventory is empty.
-              sintax:addRecipe([nResSlot=16])]]
-	if not turtle.craft(0) then return false,"this is not a recipe!" end --this is not a tRecipe
-	nResSlot = nResSlot or 16
-	if nResSlot<1 or nResSlot>16 then return false,"addRecipe(nResSlot) nResSlot[1..16]" end --is valid slot
-	
-	local tRecipe=getRecipe() --generate tRecipe from inventory
-	if not tRecipe then return false,"no recipe to add!" end --couldn't generate a tRecipe
-	if not turtle.select(nResSlot) then return false,"cant select slot "..tostring(nResSlot).."!" end
-	if not turtle.craft(1) then return false,"can't craft a item!" end
-	
-	local tData=turtle.getItemDetail(nResSlot)
-	if tData then
-    if not tRecipes[tData.name] then
-      tRecipes[tData.name]={}
-      tRecipes[tData.name].tRecipe=tRecipe
-      tRecipes[tData.name].nQuant=tData.count
-    end
-	else return false
-	end
-	return tData.name, tData.count
-end
-
---not tested--
 function getMaxCraft()
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
@@ -658,15 +630,52 @@ function getMaxCraft()
 	return minCount
 end
 
+function getFirstItemCoords(sRecipe)
+  if not sRecipe then return false, "Must supply recipe name." end
+  if not tRecipes[sRecipe] then return false, "Recipe not found." end
+
+  local col = 9
+  for k,v in pairs(tRecipes[sRecipe].recipe) do
+      for k1,v1 in pairs(v) do
+        for k2,v2 in pairs(v1) do
+          if k2 == "col" then
+            if v2 < col then col = v2 end
+          end
+        end
+      end
+  end
+  return math.abs(col), 0
+end
+
+--implementing--
+function arrangeRecipe(sRecipe)
+  if not tRecipes[sRecipe] then
+    if tRecipes[lastRecipe] then sRecipe = tRecipes[lastRecipe]
+    else return false, "Must supply recipe name."
+    end
+  end
+
+end
+
+function setCraftSlot(nSlot)
+  nSlot = nSlot or turtle.selectedSlot()
+  if nSlot < 0 or nSlot > 16 then return false, "nSlot out of range." end
+  tRecipes["CSlot"] = nSlot
+  return true
+end
+
 --not tested--
 function craft(sRecipe, nLimit)
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
-	
-	if not sRecipe then
-    if not turtle.craft(0) then return false, "Couldn't create recipe." end
-  end
-	if not tRecipes[sRecipe] then addRecipe(turtle.getSelectedSlot()) end
+	if not turtle.craft(0) then return false, "This is not a recipe." end
+
+  local tRecipe = getInvRecipe()
   if nLimit == -1 then nLimit = getMaxCraft() end
+
+  if tRecipes["CSlot"] then turtle.select(tRecipes["CSlot"])
+  else setCraftSlot(turtle.getSelectedSlot())
+  end
+
   if not turtle.craft(nLimit) then return false, "Couldn't create "..nLimit.." items." end
 	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
 	
@@ -674,9 +683,11 @@ function craft(sRecipe, nLimit)
 	local sName = tData.name
 	
 	if not tRecipes[sName] then
-		tRecipes[sName] = tRecipes["default"]
+		tRecipes[sName] = {}
+    tRecipes[sName].recipe = tRecipe
+    tRecipes[sName].count = tData.count / nLimit
 	end
-	return sName
+	return sName, tData.count
 end
 
 ------ ROTATING FUNCTIONS ------  
@@ -1617,9 +1628,12 @@ end
 
 
 ---- TEST AREA ------
---function addRecipe(nResSlot) --[[ Add inventory tRecipe to tRecipes - 
+--function craft(sRecipe, nLimit)
+--function getFirstItemCoords(sRecipe)
 INIT()
 
---print(craft())
-print(addRecipe())
+print(craft())
+--print(getFirstItemCoords("minecraft:shears"))
+--print(textutils.serialize(getInvRecipe()))
+--print(setCraftSlot(1))
 TERMINATE()
