@@ -1,3 +1,10 @@
+# Version 0.2.0
+  - refuel(nCount) - Refuels the turtle with nCount items.
+  - getFreeHand() - Gets turtle free hand: "left"|"right"|false.
+  - equip(sSide) - Equip tool in the selected slot.
+  - compareDir(sDir, nSlot) - Compares item in slot with block in sDir direction.
+  - itemSpace(nSlot/sItemName) - Get how many items more you can store in inventory.
+  
 # Version 0.1.0
   - forward(nBlocks) - Moves nBlocks forward or backwards, if nBlocks < 0, until blocked.
   - back(nBlocks) - Moves nBlocks back or forward, if nBlocks < 0, until blocked.
@@ -40,7 +47,7 @@
 
   - suckDir(sDir, nItems) - Sucks nItems from sDir direction.
   
-  - dropDir(sDir, nBlocks) - Drops or sucks if nBlocks <0, between selected slot to inventory or the world in front, up or down the turtle.
+  - dropDir(sDir, nBlocks) - Drops or sucks if nBlocks <0, between selected slot to inventory or the world in front.
   - drop(nBlocks) - Drops or sucks if nBlocks < 0, in front of the turtle.
   - dropUp(nBlocks) - Drops or sucks if nBlocks < 0, upwards.
   - dropDown(nBlocks) - Drops or sucks if nBlocks <0, downwards.
