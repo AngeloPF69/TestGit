@@ -2,7 +2,13 @@
 
 improving commands in lua for computer craft turtle.
 
-### TODO TO VERSION 0.2.0
+## TODO TO VERSION 0.2.0
+
+### OPTIONAL
+
+### POSTPONED
+
+### IN PROGRESS
 
 - [ ] craft([sRecipeName][, limit=64]) craft a recipe limit number of times.
 - [ ] all base movement functions (forward, up, down, back) must change the coords in tTurtle.
@@ -14,8 +20,12 @@ improving commands in lua for computer craft turtle.
 - [ ] All base rotation functions (turn left and right) must update tTurtle.facing.
   - [ ] turnDir([Direction="back"]) rotates turtle back, left or right.
 
-### TODO TO VERSION 0.1.0
 
+### DONE
+
+
+
+## TODO TO VERSION 0.1.0
 
 ### OPTIONAL
 
@@ -24,7 +34,6 @@ improving commands in lua for computer craft turtle.
 - [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 - [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.
 - [x] sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-
 
 ### POSTPONED
 
@@ -42,9 +51,7 @@ improving commands in lua for computer craft turtle.
 - [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
 - [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
 
-
 ### IN PROGRESS
-
 
 ### DONE
 - [x] refuels([nItems=stack]) refuels the turtle with nItems.
