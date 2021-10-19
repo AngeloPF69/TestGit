@@ -1,4 +1,5 @@
 {
+  CSlot = 1,
   [ "minecraft:shears" ] = {
     recipe = {
       {
@@ -6,12 +7,11 @@
       },
       {
         [ "minecraft:iron_ingot" ] = {
-          lin = 1,
           col = -1,
+          lin = 1,
         },
       },
     },
     count = 1,
   },
-  CSlot = 1,
 }

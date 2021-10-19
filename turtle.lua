@@ -567,7 +567,7 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
 end
 
 function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-  28/08/2021  Note: returns false if value is not a number, or not supplied.]]
+  28/08/2021  Returns false if value is not a number, or not supplied.]]
   if type(value) ~= "number" then return false end
   if value < 0 then return -1 end
   if value == 0  then return 0 end
@@ -577,17 +577,23 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
-function saveRecipes()
+function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
+  19/10/2021  Returns false - if it couldn't save file.
+                      true - if it could save file.]]
 	return saveTable(tRecipes, "tRecipes.txt")
 end
 
-function loadRecipes()
+function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
+  19/10/2021  Returns false - if it couldn't load file.
+                      true - if it could load file.]]
 	local t = loadTable("tRecipes.txt")
 	if not t then return false end
 	tRecipes = t
 end
 
-function getInvRecipe()
+function getInvRecipe() --[[ Builds a table with items and their position (the recipe).
+  19/10/2021  Returns false - if it is not a recipe in the inventory.
+                      tRecipe - the recipe with items and positions.]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
 	local index, tFirstItem, tData, tRecipe = 1
@@ -616,7 +622,9 @@ function getInvRecipe()
   return tRecipe
 end
 
-function getMaxCraft()
+function getMaxCraft() --[[ Returns maximum limit to craft the recipe on inventory.
+  19/10/2021  Returns false - if it is not a recipe in the inventory.
+                      tRecipe - the recipe with items and positions.]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
 	local minCount = 64
@@ -630,7 +638,10 @@ function getMaxCraft()
 	return minCount
 end
 
-function getFirstItemCoords(sRecipe)
+function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the first item in the recipe.
+  19/10/2021  Returns:  false - if the recipe name was not supplied.
+                              - if this recipe does not exist.
+                        col, lin - the column and line of first item.]]
   if not sRecipe then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
 
@@ -647,6 +658,75 @@ function getFirstItemCoords(sRecipe)
   return math.abs(col), 0
 end
 
+--not teste--
+function leaveItems(nSlot, nQuant) --[[ Leaves nQuant of item in nSlot, moving.
+  19/10/2021  Returns:  false - if there is no space to tranfer items.
+                        true - if the slot is empty.]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+  local tData = turtle.getItemDetail(nSlot)
+  if not tData then return true end
+
+  local destSlot = nSlot
+  repeat
+    destSlot = bit32.band( destSlot, 15 ) + 1
+    if destSlot == nSlot then return false, "Nowhere to transfer items." end
+
+    local destData = turtle.getItemDetail(destSlot)
+    if not destData then
+      turtle.transferTo(destSlot, tData.count)
+      break
+    else
+      if tData.name == destData.name then
+        local nSpace = turtle.getItemSpace(destSlot)
+        if nSpace > 0 then
+          if tData.count > nSpace then
+            turtle.transferTo(destSlot, nSpace)
+            tData.count = tData.count - nSpace
+          else
+            turtle.transferTo(destSlot, tData.count)
+            tData.count = 0
+          end
+        end
+      end
+    end
+  until (tData.count == 0)
+  return true
+end
+
+function clearSlot(nSlot) --[[ Clears content of slot, moving items to another slot.
+  19/10/2021  Returns:  false - if there is no space to tranfer items.
+                        true - if the slot is empty.]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+  local tData = turtle.getItemDetail(nSlot)
+  if not tData then return true end
+
+  local destSlot = nSlot
+  repeat
+    destSlot = bit32.band( destSlot, 15 ) + 1
+    if destSlot == nSlot then return false, "Nowhere to transfer items." end
+
+    local destData = turtle.getItemDetail(destSlot)
+    if not destData then
+      turtle.transferTo(destSlot, tData.count)
+      break
+    else
+      if tData.name == destData.name then
+        local nSpace = turtle.getItemSpace(destSlot)
+        if nSpace > 0 then
+          if tData.count > nSpace then
+            turtle.transferTo(destSlot, nSpace)
+            tData.count = tData.count - nSpace
+          else
+            turtle.transferTo(destSlot, tData.count)
+            tData.count = 0
+          end
+        end
+      end
+    end
+  until (tData.count == 0)
+  return true
+end
+  
 --implementing--
 function arrangeRecipe(sRecipe)
   if not tRecipes[sRecipe] then
@@ -655,6 +735,12 @@ function arrangeRecipe(sRecipe)
     end
   end
 
+  local col, lin = getFirstItemCoords(sRecipe)
+  for c = 0, 3 do
+    for l = 0, 3 do
+      if c < col and l <= lin then leaveItems(0) end
+    end
+  end
 end
 
 function setCraftSlot(nSlot)
@@ -1632,8 +1718,9 @@ end
 --function getFirstItemCoords(sRecipe)
 INIT()
 
-print(craft())
+--print(craft())
 --print(getFirstItemCoords("minecraft:shears"))
 --print(textutils.serialize(getInvRecipe()))
 --print(setCraftSlot(1))
+print(clearSlot())
 TERMINATE()
