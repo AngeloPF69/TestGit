@@ -6,24 +6,45 @@ improving commands in lua for computer craft turtle.
 
 ### OPTIONAL
 
+- [x] saveTable(t, sFileName) saves a table into a text file.
+- [x] loadTable(sFileName) loads a text file into a table.
+- [x] isValue(value, t) checks if value is in t table.
+
 ### POSTPONED
 
 ### IN PROGRESS
 
 - [ ] craft([sRecipeName][, limit=64]) craft a recipe limit number of times.
-- [ ] all base movement functions (forward, up, down, back) must change the coords in tTurtle.
-  - [ ] down([Blocks=1]) moves the turtle down blocks, until it hits something.
-  - [ ] up([Blocks=1]) moves the turtle up blocks, until it hits something.
-  - [ ] back([Blocks=1]) Moves the turtle backwards or forward blocks, until blocked.
-  - [ ] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
-  
-- [ ] All base rotation functions (turn left and right) must update tTurtle.facing.
-  - [ ] turnDir([Direction="back"]) rotates turtle back, left or right.
-
 
 ### DONE
-
-
+- [x] addSteps(nSteps) adds nSteps to coords of turtle.
+- [x] freeCount() get free slots in turtle's inventory.
+- [x] getFreeSlot(nStartSlot) get the first free slot.
+- [x] groupItems() groups the same type of items in one slot in inventory.
+- [x] incFacing(nTurns) increments tTurtle.facing by nTurns
+- [x] decFacing(nTurns) decrements tTurtle.facing by nTurns
+- [x] saveRecipes() saves tRecipes in a file as "tRecipes.txt"
+- [x] loadRecipes() loads tRecipes from file "tRecipes.txt"
+- [x] clearSlot(nSlot) clears content of slot, moving items to another slot.
+- [x] getFirstItemCoords(sRecipe) returns the column and line=0 of the first item in the recipe.
+- [x] getMaxCraft() returns maximum limit to craft the recipe on inventory.
+- [x] getInvRecipe() builds a table with items and their position (the recipe).
+- [x] setFacing(sFacing) sets tTurtle.facing.
+- [x] getFacing() returns tTurtle.facing.
+- [x] saveTurtle() saves tTurtle to file tTurtle.txt.
+- [x] loadTurtle() loads tTurtle from file tTurtle.txt.
+- [x] getFreeHand() gets turtle free hand: "left"|"right"|false.
+- [x] all base movement functions (forward, up, down, back) must change the coords in tTurtle.
+  - [x] down([Blocks=1]) moves the turtle down blocks, until it hits something.
+  - [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
+  - [x] back([Blocks=1]) Moves the turtle backwards or forward blocks, until blocked.
+  - [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
+  
+- [x] All base rotation functions (turn left and right) must update tTurtle.facing.
+  - [x] turnDir([Direction="back"]) rotates turtle back, left or right.
+- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
+- [x] getCoords() gets coords from turtle.
 
 ## TODO TO VERSION 0.1.0
 
