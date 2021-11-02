@@ -2,11 +2,54 @@
 # computercraft turtle lua improved commands.
 
 
+## Settings
+
+    Type of values:
+    dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down"]=8 } --moving direction options
+    lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
+    facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8}
+    
+    Table for turtle properties.
+    tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
+						facing = facingType["z-"], --the axis where the turtle is facing at.
+						leftHand = "empty",
+						rightHand = "empty",
+    }
+    
+    saveTurtle() Saves tTurtle to file tTurtle.txt.
+    loadTurtle() Loads tTurtle from file tTurtle.txt.
+    -------------------------------------------------
+    Table of recipes properties.
+    tRecipes = {} --["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
+                                          count = resulting number of items, CSlot = number crafting slot}
+    
+    saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
+    loadRecipes() Loads tRecipes from file "tRecipes.txt"
+    
+## INITIALIZE
+
+  INIT() Loads tTurtle.txt, tRecipes.txt from files to tables.
+  TERMINATE() Saves tTurtle, tRecipes to text files.
+  
+## Measurements
+
+    addSteps(nSteps) Adds nSteps to coords of turtle.
+    distTo(x, y, z) Gets the three components of the distance from the turtle to point.
+    
+## Turtle facing
+
+    setFacing(sFacing) Sets tTurtle.facing.
+    getFacing() Returns tTurtle.facing.
+    
+## Turtle coords
+
+    setCoords(x, y, z) Set coords x, y, z for turtle.
+    getCoords() Gets coords from turtle.
 
 ## Equip:
   
     getFreeHand() Gets turtle free hand: "left"|"right"|false.
-    equip(Side) Equip tool in the selected slot.
+    equip(Side) Equip tool from the selected slot.
     
 ## Fuel:
   
@@ -14,7 +57,10 @@
     
 ## General:
 
+    saveTable(t, sFileName) Saves a table into a text file.
+    loadTable(sFileName) Loads a text file into a table.
     isKey(Key, t) Checks if Key is in t table.
+    isValue(value, t) Checks if value is in t table.
     checkType(sType, ...) Checks if parameters are from sType.
     getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
     tableInTable(tSearch, t) Verifies if tSearch is in table t.
@@ -26,7 +72,13 @@
     attackRight([Side]) Rotate right and attack the entity in front.
     attackBack([Side]) Rotate back and attack the entity in front.
     attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
+    
+## Recipes
 
+    getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
+    getInvRecipe() Builds a table with items and their position (the recipe).
+    getMaxCraft() Returns maximum limit to craft the recipe on inventory.
+    
 ## Rotations:
   
     turnBack() The turtle turns back.
@@ -86,9 +138,6 @@
 
 ## Inspect:
 
-    inspectLeft() Rotate left and inspect block in front of turtle.
-    inspectRight() Rotate right and inspect block in front of turtle.
-    inspectBack() Rotate back and inspect block in front of turtle.
     inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 
 ## Compare:
@@ -99,6 +148,8 @@
 
 ## Inventory:
     
+    incSlot(nSlot) Increases nSlot in range [1..16].
+    decSlot(nSlot) Decreases nSlot in range [1..16].
     itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.
     itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.
     itemName([Slot=Selected slot]) Gets the item name from Slot.
