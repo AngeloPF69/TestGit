@@ -15,6 +15,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 } 
 
 tRecipes = {} --["Name"] = {{{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ...}
+tStack = {} --["itemName"] = nStack
 
 ------ FUEL ------
 
@@ -501,7 +502,7 @@ end
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   27/08/2021  Returns: Parameters sorted by type, nil if no parameters.
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
-              Note: Only sorts two parameters type (string, number).
+              Note: Only sorts three parameters type (string, number and boolean).
                     The default table is returned when no parameter is supplied.]]
   if not sParamOrder then return nil end
   
@@ -527,6 +528,7 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   for i = 1, #sParamOrder do
     if sParamOrder:sub(i,i) == "s" then addParam("string")
     elseif sParamOrder:sub(i,i) == "n" then addParam("number")
+    elseif sParamOrder:sub(i,i) == "b" then addParam("boolean")
     end
   end
   
@@ -574,6 +576,31 @@ function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value 
   return 1
 end
 
+
+------ STACK FUNCTIONS ------
+
+--not tested--
+function getStack(nSlot)
+  local tData, nStack
+  if type(nSlot) == "number" then
+    tData = turtle.getItemDetail(nSlot)
+    if not tData then return false, "Empty slot." end
+    nStack = turtle.getItemSpace(nSlot) + tData.count
+    if not tStack[tData.name] then tStack[tData.name] = nStack  end
+  end
+  if type(nSlot) == "string" then
+    if tStack[nSlot] then nStack = tStack[nSlot]
+    else nStack = false
+    end
+  end
+  return nStack
+end
+
+--not tested--
+function setStack(sItemName, nStack)
+  if not tStack[sItemName] then tStack[sItemName] = nStack  end
+  return true
+end
 
 ------ RECIPES FUNCTIONS ------
 
@@ -658,39 +685,42 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
   return math.abs(col), 0
 end
 
+function incSlot(nSlot)
+  return bit.band(nSlot, 15) + 1
+end
+
+function decSlot(nSlot)
+  return bit32.band(nSlot, 15) + 1
+end
+
 --not teste--
-function leaveItems(nSlot, nQuant) --[[ Leaves nQuant of item in nSlot, moving.
+function leaveItems(nSlot, nQuant, bWrap) --[[ Leaves nQuant of item in nSlot, moving.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
-  local tData = turtle.getItemDetail(nSlot)
-  if not tData then return true end
+  if nSlot < 1 or nSlot > 16 then return false, "Slot out of range." end
+  turtle.select(nSlot)
+  local tData = turtle.getItemDetail()
 
-  local destSlot = nSlot
-  repeat
-    destSlot = bit32.band( destSlot, 15 ) + 1
-    if destSlot == nSlot then return false, "Nowhere to transfer items." end
+  local nStored
+  if not tData then nStored = 0
+  else nStored = tData.count
+  end
 
-    local destData = turtle.getItemDetail(destSlot)
-    if not destData then
-      turtle.transferTo(destSlot, tData.count)
-      break
-    else
-      if tData.name == destData.name then
-        local nSpace = turtle.getItemSpace(destSlot)
-        if nSpace > 0 then
-          if tData.count > nSpace then
-            turtle.transferTo(destSlot, nSpace)
-            tData.count = tData.count - nSpace
-          else
-            turtle.transferTo(destSlot, tData.count)
-            tData.count = 0
-          end
-        end
+  while (nStored ~= nQuant) do
+    if nStored > nQuant then
+      local nDestSlot = search(tData.name, incSlot(nSlot), bWrap)
+      if not nDestSlot then
+        nDestSlot = getFreeSlot(incSlot(nSlot), bWrap)
+        if not nDestSlot then break end
+      end
+      tData = turtle.getItemDetail(nDestSlot)
+      if not tData then 
+      else
+      
       end
     end
-  until (tData.count == 0)
-  return true
+  end
 end
 
 function clearSlot(nSlot) --[[ Clears content of slot, moving items to another slot.
@@ -727,6 +757,30 @@ function clearSlot(nSlot) --[[ Clears content of slot, moving items to another s
   return true
 end
   
+function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
+  02/11/2021  Returns:  number of items in selected slot.
+                        nil - if nSlot is not supplied.
+                        false - if nSlot is empty.
+                              - if nSlot is out of range [1..16].
+                              - if selected slot is full.]]
+  if not nSlot then return nil, "Must supply origin slot." end
+  local tData = turtle.getItemDetail(nSlot)
+  if not tData then return false, "Empty origin slot." end
+  local destSlot = turtle.getSelectedSlot()
+
+  if nSlot < 1 or nSlot > 16 then return false, "Slot out of range [1..16]." end
+  turtle.select(nSlot)
+
+  if not turtle.transferTo(destSlot, nItems) then
+    turtle.select(destSlot)
+     return false, "Couldn't tranfer items."
+  end
+  turtle.select(destSlot)
+  tData = turtle.getItemDetail(destSlot)
+  if not tData then return 0 end
+  return tData.count
+end
+
 --implementing--
 function arrangeRecipe(sRecipe)
   if not tRecipes[sRecipe] then
@@ -1360,21 +1414,29 @@ function freeCount() --[[ Get free slots in turtle's inventory.
   return nFree
 end
 
-function getFreeSlot(nStartSlot) --[[ Get the first free slot.
+function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the search or not.
   07/10/2021  Returns:  first free slot number.
-              sintax: getFreeSlot([nStartSlot=1])
+              sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
               Note: if nStartSlot<0 search backwards--]]
-	nStartSlot = nStartSlot or 1
-	
+	nStartSlot, bWrap = getParam("nb",{1, true}, nStartSlot, bWrap)
+
   if not type(nStartSlot) == "number" then return false end
   local dir = sign(nStartSlot)
   nStartSlot = math.abs(nStartSlot)
   local nEndSlot = nStartSlot
-
+  
   repeat
     local tData = turtle.getItemDetail(nStartSlot)
     if not tData then return nStartSlot end
-    nStartSlot = bit32.band((nStartSlot + dir)-1, 15)+1
+    nStartSlot = nStartSlot + dir
+    if not bWrap then
+      if dir == 1 then
+        if nStartSlot == 17 then break end
+      else
+        if nStartSlot == 0 then break end
+      end
+    end
+    nStartSlot = bit32.band(nStartSlot-1, 15)+1
   until (nEndSlot == nStartSlot)
   return false
 end
@@ -1476,16 +1538,17 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   return tData.name
 end
 
-function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, starting at startSlot. 
+function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
                               - if sItemName not supplied.
                               - if nStartSlot is not a number.
               Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
                     if not supplied nStartSlot, default is the selected slot.
-              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()]) ]]
+                    if not supplied bWrap, it defaults to true.
+              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
 	if not sItemName then return false end
-	sItemName, nStartSlot = getParam("sn", {turtle.getSelectedSlot()}, sItemName, nStartSlot)
+	sItemName, nStartSlot = getParam("snb", {turtle.getSelectedSlot(), true}, sItemName, nStartSlot)
   if type(nStartSlot) ~= "number" then return false end
   dir = sign(nStartSlot)
   nStartSlot = math.abs(nStartSlot)-1
@@ -1501,6 +1564,13 @@ function search(sItemName, nStartSlot) --[[ Search inventory for ItemName, start
       end
     end
     slot = slot + dir
+    if not bWrap then
+      if dir == -1 then
+        if slot == -1 then break end
+      else
+        if slot == 16 then break end
+      end
+    end
     slot = bit32.band(slot, 15)
   until (slot == nStartSlot)
   return false
@@ -1542,13 +1612,14 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
   return false
 end
 
-function selectFree() --[[ Selects the first free slot in turtle's inventory.
+--not tested--
+function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
   07/10/2021  Returns:  free slot number.
                         false - if no free slot.
               sintax: selectFree()]]
   local nSlot
 
-  nSlot=getFreeSlot() --get a free slot
+  nSlot=getFreeSlot(nStartSlot, bWrap) --get a free slot
   if not nSlot then return false end --not found
   if turtle.select(nSlot) then return nSlot end
   return false --couldn't select nSlot
@@ -1714,13 +1785,14 @@ end
 
 
 ---- TEST AREA ------
+--function leaveItems(nSlot, nQuant) --[[ Leaves nQuant of item in nSlot, moving.
 --function craft(sRecipe, nLimit)
 --function getFirstItemCoords(sRecipe)
+--function transferFrom(nSlot, nItems)
+--function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot.
+
 INIT()
 
---print(craft())
---print(getFirstItemCoords("minecraft:shears"))
---print(textutils.serialize(getInvRecipe()))
---print(setCraftSlot(1))
-print(clearSlot())
+
+
 TERMINATE()
