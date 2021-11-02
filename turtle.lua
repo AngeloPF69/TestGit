@@ -64,7 +64,7 @@ function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
 	return false
 end
 
-function equip(sSide) --[[ Equip tool in the selected slot.
+function equip(sSide) --[[ Equip tool from the selected slot.
   23/09/2021  Returns:	true - if it was equiped.
 												false - if no empty hand.
 															- if invalid parameter.
@@ -112,17 +112,21 @@ end
 
 ------ INIT ------
 
-function INIT()
+function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
+  02/11/2021  Returns:	true]] 
 	loadTurtle()
 	loadRecipes()
+	return true
 end
 
 
 ------ TERMINATE ------
 
-function TERMINATE()
+function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
+  02/11/2021  Returns:	true]] 
 	saveTurtle()
 	saveRecipes()
+	return true
 end
 
 
@@ -685,12 +689,15 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
   return math.abs(col), 0
 end
 
-function incSlot(nSlot)
+function incSlot(nSlot) --[[ Increases nSlot in range [1..16].
+  02/11/2021  Returns:  the number of slot increased by 1.]]
   return bit.band(nSlot, 15) + 1
 end
 
-function decSlot(nSlot)
-  return bit32.band(nSlot, 15) + 1
+function decSlot(nSlot) --[[ Increases nSlot in range [1..16].
+  02/11/2021  Returns:  the number of slot increased by 1]]
+	nSlot = nSlot - 1
+  return nSlot == 0 and 16 or nSlot
 end
 
 --not teste--
