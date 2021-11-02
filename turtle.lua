@@ -690,7 +690,8 @@ function incSlot(nSlot)
 end
 
 function decSlot(nSlot)
-  return bit32.band(nSlot, 15) + 1
+  nSlot = nSlot - 1
+  return nSlot == 0 and 16 or nSlot
 end
 
 --not teste--
@@ -1790,9 +1791,9 @@ end
 --function getFirstItemCoords(sRecipe)
 --function transferFrom(nSlot, nItems)
 --function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot.
-
+--function decSlot(nSlot)
 INIT()
 
-
+print(decSlot(16))
 
 TERMINATE()
