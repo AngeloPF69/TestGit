@@ -11,9 +11,9 @@
     
     Table for turtle properties.
     tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-		facing = facingType["z-"], --the axis where the turtle is facing at.
-		leftHand = "empty",
-		rightHand = "empty",
+			facing = facingType["z-"], --the axis where the turtle is facing at.
+			leftHand = "empty",
+			rightHand = "empty",
     }
     
     saveTurtle() Saves tTurtle to file tTurtle.txt.
@@ -26,9 +26,12 @@
     saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
     loadRecipes() Loads tRecipes from file "tRecipes.txt"
     
-## INITIALIZE
+## Initialize
 
   INIT() Loads tTurtle.txt, tRecipes.txt from files to tables.
+	
+## Terminate
+
   TERMINATE() Saves tTurtle, tRecipes to text files.
   
 ## Measurements
