@@ -145,7 +145,7 @@
 
 ## Disk
 
-		fsGetFreeSpace() Gets the total free space on disk.
+    fsGetFreeSpace() Gets the total free space on disk.
 		
 ## Inspect:
 
@@ -174,4 +174,4 @@
     
 ## Suck
 
-		suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
+    suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
