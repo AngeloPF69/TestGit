@@ -159,7 +159,7 @@
 
 ## Inventory:
     
-		incSlot(nSlot) Increases nSlot in range [1..16].
+    incSlot(nSlot) Increases nSlot in range [1..16].
     decSlot(nSlot) Decreases nSlot in range [1..16].
     freeCount() Get number of free slots in turtle's inventory.
     getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.
