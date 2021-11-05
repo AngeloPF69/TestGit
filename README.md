@@ -16,16 +16,11 @@
 			rightHand = "empty",
     }
     
-    saveTurtle() Saves tTurtle to file tTurtle.txt.
-    loadTurtle() Loads tTurtle from file tTurtle.txt.
     -------------------------------------------------
     Table of recipes properties.
     tRecipes = {} --["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
                                           count = resulting number of items, CSlot = number crafting slot}
-    
-    saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
-    loadRecipes() Loads tRecipes from file "tRecipes.txt"
-    
+            
 ## Initialize
 
   INIT() Loads tTurtle.txt, tRecipes.txt from files to tables.
@@ -38,6 +33,11 @@
 
     addSteps(nSteps) Adds nSteps to coords of turtle.
     distTo(x, y, z) Gets the three components of the distance from the turtle to point.
+    
+## Turtle
+
+    saveTurtle() Saves tTurtle to file tTurtle.txt.
+    loadTurtle() Loads tTurtle from file tTurtle.txt.
     
 ## Turtle facing
 
@@ -80,6 +80,8 @@
     
 ## Recipes
 
+    saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
+    loadRecipes() Loads tRecipes from file "tRecipes.txt"
     getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
     getInvRecipe() Builds a table with items and their position (the recipe).
     getMaxCraft() Returns maximum limit to craft the recipe on inventory.
