@@ -11,24 +11,22 @@
     
     Table for turtle properties.
     tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-						facing = facingType["z-"], --the axis where the turtle is facing at.
-						leftHand = "empty",
-						rightHand = "empty",
+			facing = facingType["z-"], --the axis where the turtle is facing at.
+			leftHand = "empty",
+			rightHand = "empty",
     }
     
-    saveTurtle() Saves tTurtle to file tTurtle.txt.
-    loadTurtle() Loads tTurtle from file tTurtle.txt.
     -------------------------------------------------
     Table of recipes properties.
     tRecipes = {} --["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
                                           count = resulting number of items, CSlot = number crafting slot}
-    
-    saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
-    loadRecipes() Loads tRecipes from file "tRecipes.txt"
-    
-## INITIALIZE
+            
+## Initialize
 
   INIT() Loads tTurtle.txt, tRecipes.txt from files to tables.
+	
+## Terminate
+
   TERMINATE() Saves tTurtle, tRecipes to text files.
   
 ## Measurements
@@ -36,10 +34,17 @@
     addSteps(nSteps) Adds nSteps to coords of turtle.
     distTo(x, y, z) Gets the three components of the distance from the turtle to point.
     
+## Turtle
+
+    saveTurtle() Saves tTurtle to file tTurtle.txt.
+    loadTurtle() Loads tTurtle from file tTurtle.txt.
+    
 ## Turtle facing
 
     setFacing(sFacing) Sets tTurtle.facing.
     getFacing() Returns tTurtle.facing.
+    incFacing(nTurns) Increments tTurtle.facing by nTurns
+    decFacing(nTurns) Decrements tTurtle.facing by nTurns
     
 ## Turtle coords
 
@@ -75,9 +80,12 @@
     
 ## Recipes
 
+    saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
+    loadRecipes() Loads tRecipes from file "tRecipes.txt"
     getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
     getInvRecipe() Builds a table with items and their position (the recipe).
     getMaxCraft() Returns maximum limit to craft the recipe on inventory.
+    setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot
     
 ## Rotations:
   
@@ -100,6 +108,7 @@
 
 ## Dig:
   
+  	digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.
     dig([Blocks=1]) Dig Blocks forward or backwards with equiped tool.
     digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.
     digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.
@@ -136,6 +145,10 @@
     detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.
     detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.
 
+## Disk
+
+    fsGetFreeSpace() Gets the total free space on disk.
+		
 ## Inspect:
 
     inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
@@ -150,9 +163,17 @@
     
     incSlot(nSlot) Increases nSlot in range [1..16].
     decSlot(nSlot) Decreases nSlot in range [1..16].
+    freeCount() Get number of free slots in turtle's inventory.
+    getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.
+    groupItems() Groups the same type of items in one slot in inventory.
+    clearSlot(nSlot) Clears content of slot, moving items to another slot.
     itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.
     itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.
     itemName([Slot=Selected slot]) Gets the item name from Slot.
     itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-    search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot. 
+    search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.
+    transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.
     
+## Suck
+
+    suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
