@@ -15,7 +15,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 } 
 
 tRecipes = {} --[[ ["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
-                                          count = resulting number of items, CSlot = number crafting slot, lasrRecipe = last recipe name} ]]
+                                          count = resulting number of items, CSlot = number crafting slot, lastRecipe = last recipe name} ]]
 tStack = {} --["itemName"] = nStack
 
 ------ FUEL ------
@@ -609,6 +609,51 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
+--not tested--
+function invIngredients()
+  local tRecipe = {}
+  for nSlot = 1, 16 do
+    local tData = turtle.getItemDetail(nSlot)
+    if tData then
+      if tRecipe[tData.name] then tRecipes[tData.name] = tRecipes[tData.name] + 1
+      else tRecipes[tData.name] = 1
+      end
+    end
+  end
+  return tRecipe
+end
+
+--not tested--
+function ingredients(sRecipe)
+  sRecipe = sRecipe or tRecipes.lastRecipe
+  if not sRecipe then return invIngredientes() end
+  if not tRecipes[sRecipe] then return false, "Recipe name not found" end
+  local tRecipe = {}
+  for k,v in pairs(tRecipes.recipe) do
+    if tRecipe[k] then tRecipe[k] = tRecipe[k] + 1
+    else tRecipe[k] = 1
+    end
+  end
+  return tRecipe
+end
+
+--not tested--
+function haveIngredientes(sRecipe, nLimit)
+  sRecipe = sRecipe or tRecipes.lastRecipe
+  nLimit = nLimit or 1
+
+  local tNeededIng, tInvIng = ingredientes(sRecipe), invIngredientes()
+  local tIngredientes = {}
+  for k,v in pairs(tNeededIng) do
+    for k1,v1 in pairs(tInvIng) do
+      if k == k1 then 
+        tIngredientes[k] = v * nLimit - v1
+      end
+    end
+  end
+  return tIngredientes
+end
+
 function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
   19/10/2021  Returns false - if it couldn't save file.
                       true - if it could save file.]]
@@ -690,18 +735,7 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
   return math.abs(col), 0
 end
 
-function incSlot(nSlot) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Returns:  the number of slot increased by 1.]]
-  return bit.band(nSlot, 15) + 1
-end
-
-function decSlot(nSlot) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Returns:  the number of slot increased by 1]]
-	nSlot = nSlot - 1
-  return nSlot == 0 and 16 or nSlot
-end
-
---not teste--
+--implementing--
 function leaveItems(nSlot, nQuant, bWrap) --[[ Leaves nQuant of item in nSlot, moving.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.]]
@@ -814,7 +848,7 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
   return true
 end
 
---not tested--
+--implementing--
 function craft(sRecipe, nLimit)
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then return false, "This is not a recipe." end
@@ -1414,6 +1448,13 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
+function decSlot(nSlot) --[[ Increases nSlot in range [1..16].
+  02/11/2021  Returns:  the number of slot increased by 1]]
+	nSlot = nSlot - 1
+  return nSlot == 0 and 16 or nSlot
+end
+
+
 function freeCount() --[[ Get number of free slots in turtle's inventory.
   07/10/2021  Returns:  number of free slots.
               sintax: freeCount()]]
@@ -1469,6 +1510,11 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
     end
   end
 	return true
+end
+
+function incSlot(nSlot) --[[ Increases nSlot in range [1..16].
+  02/11/2021  Returns:  the number of slot increased by 1.]]
+  return bit.band(nSlot, 15) + 1
 end
 
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
@@ -1548,6 +1594,43 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   return tData.name
 end
 
+
+function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
+  29/08/2021  returns:  The selected slot, and items in that slot.
+                        False - if the item was not found
+                              - if nStartSlot is not a number or a string.
+                              - if value is a number and ( < 1 or > 16 )
+              Note: if executed select() is the same as turtle.getSelectedSlot()
+              sintax: select([Slot/Item Name])
+              ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  local nSlot
+  local tData
+
+  if not itemName then
+    nSlot = turtle.getSelectedSlot()
+    tData = turtle.getItemDetail()
+    if tData then return nSlot, tData.count
+    else return nSlot
+    end
+  end
+  if type(itemName) == "number" then
+    if (itemName < 1) or (itemName > 16) then return false end
+    if turtle.select(itemName) then return itemName end
+  end
+
+  if type(itemName) ~= "string" then return false end
+  nSlot = search(itemName)
+
+  if nSlot then
+    turtle.select(nSlot)
+    tData = turtle.getItemDetail()
+    if tData then return nSlot, tData.count
+    else return nSlot
+    end
+  end
+  return false
+end
+
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
   28/08/2021  returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
@@ -1583,42 +1666,6 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
     end
     slot = bit32.band(slot, 15)
   until (slot == nStartSlot)
-  return false
-end
-
-function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-  29/08/2021  returns:  The selected slot, and items in that slot.
-                        False - if the item was not found
-                              - if nStartSlot is not a number or a string.
-                              - if value is a number and ( < 1 or > 16 )
-              Note: if executed select() is the same as turtle.getSelectedSlot()
-              sintax: select([Slot/Item Name])
-              ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
-  local nSlot
-  local tData
-
-  if not itemName then
-    nSlot = turtle.getSelectedSlot()
-    tData = turtle.getItemDetail()
-    if tData then return nSlot, tData.count
-    else return nSlot
-    end
-  end
-  if type(itemName) == "number" then
-    if (itemName < 1) or (itemName > 16) then return false end
-    if turtle.select(itemName) then return itemName end
-  end
-
-  if type(itemName) ~= "string" then return false end
-  nSlot = search(itemName)
-
-  if nSlot then
-    turtle.select(nSlot)
-    tData = turtle.getItemDetail()
-    if tData then return nSlot, tData.count
-    else return nSlot
-    end
-  end
   return false
 end
 
