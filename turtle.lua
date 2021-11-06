@@ -14,7 +14,8 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 						rightHand = "empty",
 } 
 
-tRecipes = {} --["Name"] = {{{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ...}
+tRecipes = {} --[[ ["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
+                                          count = resulting number of items, CSlot = number crafting slot, lasrRecipe = last recipe name} ]]
 tStack = {} --["itemName"] = nStack
 
 ------ FUEL ------
@@ -804,9 +805,11 @@ function arrangeRecipe(sRecipe)
   end
 end
 
-function setCraftSlot(nSlot)
+function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
+  03/11/2021  Returns:  nil - if nSlot is not in range[1..16].
+                        true - if was set tRecipes["CSlot"].]]
   nSlot = nSlot or turtle.selectedSlot()
-  if nSlot < 0 or nSlot > 16 then return false, "nSlot out of range." end
+  if nSlot < 0 or nSlot > 16 then return nil, "nSlot out of range." end
   tRecipes["CSlot"] = nSlot
   return true
 end
@@ -1411,7 +1414,7 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
-function freeCount() --[[ Get free slots in turtle's inventory.
+function freeCount() --[[ Get number of free slots in turtle's inventory.
   07/10/2021  Returns:  number of free slots.
               sintax: freeCount()]]
   local nFree,i=0
