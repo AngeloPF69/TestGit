@@ -1,4 +1,4 @@
-
+<p id="top"></p>
 # computercraft turtle lua improved commands.
 
 
@@ -31,8 +31,8 @@
   
 ## Measurements
 
-    addSteps(nSteps) Adds nSteps to coords of turtle.
-    distTo(x, y, z) Gets the three components of the distance from the turtle to point.
+   <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle.</a>
+   <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
     
 ## Turtle
 
@@ -177,3 +177,11 @@
 ## Suck
 
     suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
+    
+---------------------------------------------------------------------------------------------------------------------------
+
+<p id="addSteps"></p>
+addSteps(nSteps) Adds nSteps to coords of turtle.
+<p id="distTo"></p>
+distTo(x, y, z) Gets the three components of the distance from the turtle to point.
+<a href="#top">Top of page</a>
