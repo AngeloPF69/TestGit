@@ -133,13 +133,20 @@ end
 
 ------ TURTLE STATUS FUNCTIONS ----
 
+--not tested--
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021  Returns:  false - if no parameter was supplied.
                               - if sFacing is not in facingType.
               ex: setFacing("z+") - Sets the tTurtle.facing to "z+"]]
   if not sFacing then return false end
-  if not facingType[sFacing] then return false end
+  if type(sFacing) == "number" then
+    sFacing = bit32.band(sFacing, 3)
+  elseif type(sFacing) == "string" then
+    if facingType[sFacing] then sFacing = facingType[sFacing]
+  else return false
+  end
   tTurtle.facing = sFacing
+  return tTurtle.facing
 end
 
 function getFacing() --[[ Returns tTurtle.facing.
