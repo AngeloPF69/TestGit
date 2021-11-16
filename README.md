@@ -1,6 +1,5 @@
-<p id="top"></p>
 # computercraft turtle lua improved commands.
-
+<p id="top"></p>
 
 ## Settings
 
@@ -36,15 +35,15 @@
     
 ## Turtle
 
-    loadTurtle() Loads tTurtle from file tTurtle.txt.
-    saveTurtle() Saves tTurtle to file tTurtle.txt.
+   <a href="loadTurtle">loadTurtle() Loads tTurtle from file tTurtle.txt.</a><br>
+   <a href="saveTurtle">saveTurtle() Saves tTurtle to file tTurtle.txt.</a>
     
 ## Turtle facing
 
-    decFacing(nTurns) Decrements tTurtle.facing by nTurns
-    getFacing() Returns tTurtle.facing.
-    incFacing(nTurns) Increments tTurtle.facing by nTurns
-    setFacing(sFacing) Sets tTurtle.facing.
+   <a href="decFacing">decFacing(nTurns) Decrements tTurtle.facing by nTurns.</a><br>
+   <a href="getFacing">getFacing() Returns tTurtle.facing.</a><br>
+   <a href="incFacing">incFacing(nTurns) Increments tTurtle.facing by nTurns.</a><br>
+   <a href="setFacing">setFacing(sFacing) Sets tTurtle.facing.</a>
     
 ## Turtle coords
 
@@ -180,16 +179,61 @@
     
 ---------------------------------------------------------------------------------------------------------------------------
 
+## Measurements
+
    <p id="addSteps"></p>
    
-## addSteps(nSteps)
-    Adds nSteps to coords of turtle.
+- addSteps(nSteps) Adds nSteps to coords of turtle.
     --------------------------------
-    Returns:  x,y,z adding nSteps in direction turtle is facing.
-    ex: if tTurtle x=0, y=0, z=0, facing="x+"
-    addSteps() - Returns 1,0,0.
-    ex: addSteps(-1) - Returns -1,0,0.
+    Sintax: addSteps([nSteps=1])<br>
+    Returns:  x, y, z adding nSteps in direction turtle is facing.<br>
+    ex: if tTurtle x=0, y=0, z=0, facing="x+"<br>
+    addSteps() - Returns 1,0,0.<br>
+    ex: addSteps(-1) - Returns -1,0,0.<br>
   
-<p id="distTo"></p>
-distTo(x, y, z) Gets the three components of the distance from the turtle to point.
-<a href="#top">Top of page</a>
+   <p id="distTo"></p>
+
+- distTo(x, y, z) Gets the three components of the distance from the turtle to point.<br>
+    --------------------------------
+    Sintax: distTo(x, y, z)<br>
+    Returns: distX, distY, distZ From turtle to point x, y, z.<br>
+    ex: if turtle x=0, y=0, z=0<br>
+    distTo(10,10,10) Returns 10, 10, 10
+
+
+## Turtle facing
+
+   <p id="decFacing"></p>
+   
+- decFacing(nTurns) Decrements tTurtle.facing by nTurns.
+    --------------------------------
+    Sintax: decFacing([nTurns=1])
+    Returns: true
+    ex: if turtle is facing "x+"=1
+    decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0
+    
+   <p id="getFacing"></p>
+   
+- getFacing() Returns tTurtle.facing.
+    --------------------------------
+    Sintax: getFacing([nTurns=1])
+    Returns: tTurtle.facing
+    ex: getFacing()
+    
+   <p id="incFacing"></p>
+   
+- incFacing(nTurns) Increments tTurtle.facing by nTurns.
+    --------------------------------
+    Sintax: incFacing(nTurns)
+    Returns: true
+    ex: incFacing(-145) Decrements tTurtle.facing in 145 and 3
+    
+   <p id="setFacing"></p>
+   
+- setFacing(sFacing) Sets tTurtle.facing.</a>
+    --------------------------------
+    Sintax:
+    Returns:
+    ex:
+   
+   <a href="#top">Top of page</a>
