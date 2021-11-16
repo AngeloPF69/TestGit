@@ -31,7 +31,7 @@
   
 ## Measurements
 
-   <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle.</a>
+   <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle.</a><br>
    <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
     
 ## Turtle
@@ -180,8 +180,16 @@
     
 ---------------------------------------------------------------------------------------------------------------------------
 
-<p id="addSteps"></p>
-addSteps(nSteps) Adds nSteps to coords of turtle.
+   <p id="addSteps"></p>
+   
+## addSteps(nSteps)
+    Adds nSteps to coords of turtle.
+    --------------------------------
+    Returns:  x,y,z adding nSteps in direction turtle is facing.
+    ex: if tTurtle x=0, y=0, z=0, facing="x+"
+    addSteps() - Returns 1,0,0.
+    ex: addSteps(-1) - Returns -1,0,0.
+  
 <p id="distTo"></p>
 distTo(x, y, z) Gets the three components of the distance from the turtle to point.
 <a href="#top">Top of page</a>
