@@ -185,20 +185,20 @@
    
 - addSteps(nSteps) Adds nSteps to coords of turtle.
     --------------------------------
-    Sintax: addSteps([nSteps=1])<br>
-    Returns:  x, y, z adding nSteps in direction turtle is facing.<br>
-    ex: if tTurtle x=0, y=0, z=0, facing="x+"<br>
-    addSteps() - Returns 1,0,0.<br>
-    ex: addSteps(-1) - Returns -1,0,0.<br>
+    <pre>Sintax: addSteps([nSteps=1])
+  Returns:  x, y, z adding nSteps in direction turtle is facing.
+  ex: if tTurtle x=0, y=0, z=0, facing="x+"
+  addSteps() - Returns 1,0,0.
+  ex: addSteps(-1) - Returns -1,0,0.</pre>
   
    <p id="distTo"></p>
 
 - distTo(x, y, z) Gets the three components of the distance from the turtle to point.<br>
     --------------------------------
-    Sintax: distTo(x, y, z)<br>
-    Returns: distX, distY, distZ From turtle to point x, y, z.<br>
-    ex: if turtle x=0, y=0, z=0<br>
-    distTo(10,10,10) Returns 10, 10, 10
+    <pre>Sintax: distTo(x, y, z)
+  Returns: distX, distY, distZ From turtle to point x, y, z.
+  ex: if turtle x=0, y=0, z=0
+  distTo(10,10,10) Returns 10, 10, 10</pre>
 
 
 ## Turtle facing
@@ -207,37 +207,37 @@
    
 - decFacing(nTurns) Decrements tTurtle.facing by nTurns.<br>
     --------------------------------
-    Sintax: decFacing([nTurns=1])<br>
-    Returns: true<br>
-    ex: if turtle is facing "x+"=1<br>
-    decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0
+    <pre>Sintax: decFacing([nTurns=1])
+  Returns: true
+  ex: if turtle is facing "x+"=1
+  decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
    <p id="getFacing"></p>
    
 - getFacing() Returns tTurtle.facing.<br>
     --------------------------------
-    Sintax: getFacing([nTurns=1])<br>
-    Returns: tTurtle.facing<br>
-    ex: getFacing()
+    <pre>Sintax: getFacing([nTurns=1])
+  Returns: tTurtle.facing
+  ex: getFacing()</pre>
     
    <p id="incFacing"></p>
    
 - incFacing(nTurns) Increments tTurtle.facing by nTurns.<br>
     --------------------------------
-    Sintax: incFacing(nTurns)<br>
-    Returns: true<br>
-    ex: incFacing(-145) Decrements tTurtle.facing in 145 and 3
+    <pre>Sintax: incFacing(nTurns)
+  Returns: true
+  ex: incFacing(-145) Decrements tTurtle.facing in 145 and 3</pre>
     
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
     --------------------------------
-    Sintax: setFacing(sFacing) - sFacing = {"z-"|"x+"|"z+"|"x-"|"y+"|"y-"}|[0..3]<br>
-    Returns:  tTurtle.facing<br>
-              false - if no parameter was supplied.<br>
-                    - if sFacing is not in facingType.<br>
-    ex: setFacing("z+") - Sets tTurtle.facing = 2<br>
-        setFacing(1) - sets tTurtle.facing = 1
+    <pre>Sintax: setFacing(sFacing) - sFacing = {"z-"|"x+"|"z+"|"x-"|"y+"|"y-"}|[0..3]
+  Returns:  tTurtle.facing
+            false - if no parameter was supplied.
+                  - if sFacing is not in facingType.
+  ex: setFacing("z+") - Sets tTurtle.facing = 2
+      setFacing(1) - sets tTurtle.facing = 1</pre>
 
 
 ## Turtle coords
@@ -245,41 +245,42 @@
    <p id="getCoords"></p>
      
 - getCoords() Gets coords from turtle.<br>
-   --------------------------------
-   Sintx: getCoords()<br>
-   Returns: x,y,z the turtle coords.<br>
-   ex: getCoords()
+    --------------------------------
+    <pre>Sintax: getCoords()
+  Returns: x,y,z the turtle coords.
+  ex: getCoords() </pre>
      
    <p id="setCoords"></p>
       
 - setCoords(x, y, z) Set coords x, y, z for turtle.<br>
-   --------------------------------
-   Sintax: setCoords(x, y, z)<br>
-   Returns: true<br>
-   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14
+    --------------------------------
+    <pre>Sintax: setCoords(x, y, z)
+  Returns: true
+  ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
 
 
 ## Equip:
   
    <p id="equip"></p>
      
-   equip(Side) Equip tool from the selected slot.<br>
-   --------------------------------
-   Sintax:equip([Side=free hand = {"left"|"right"}])<br>
-   Returns: true - if it was equiped.<br>
-						false - if no empty hand.<br>
-									- if invalid parameter.<br>
-									- if empty selected slot.<br>
-						  		- if it can't equip tool.<br>
-   ex: equip("left") - Equips in the left hand, the tool in the selected slot.<br>
-       equip() - Equips in the first free hand the tool in the selected slot.
+- equip(Side) Equip tool from the selected slot.<br>
+    --------------------------------
+    <pre>Sintax:equip([Side=free hand = {"left"|"right"}])
+  Returns: true - if it was equiped.
+				   false - if no empty hand.
+					   	   - if invalid parameter.
+							   - if empty selected slot.
+				  		   - if it can't equip tool.
+  ex: equip("left") - Equips in the left hand, the tool in the selected slot.
+      equip() - Equips in the first free hand the tool in the selected slot.</pre>
      
    <p id="getFreeHand"></p>
-   getFreeHand() Gets turtle free hand: "left"|"right"|false.<br>
-   --------------------------------
-   Sintax: getFreeHand()<br>
-   Returns: "left" or "right" the first free hand found.
-						false - if no free hand found.<br>
-   ex: getFreeHand()<br>
+      
+- getFreeHand() Gets turtle free hand: "left"|"right"|false.<br>
+    --------------------------------
+    <pre>Sintax: getFreeHand()
+  Returns: "left" or "right" the first free hand found.
+	    		 false - if no free hand found.
+  ex: getFreeHand()</pre>
      
    <a href="#top">Top of page</a>
