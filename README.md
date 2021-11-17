@@ -31,12 +31,12 @@
 ## Measurements
 
    <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle.</a><br>
-   <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
+   <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a><br>
     
 ## Turtle
 
    <a href="#loadTurtle">loadTurtle() Loads tTurtle from file tTurtle.txt.</a><br>
-   <a href="#saveTurtle">saveTurtle() Saves tTurtle to file tTurtle.txt.</a>
+   <a href="#saveTurtle">saveTurtle() Saves tTurtle to file tTurtle.txt.</a><br>
     
 ## Turtle facing
 
@@ -47,30 +47,30 @@
     
 ## Turtle coords
 
-   <a href="#getCoords">getCoords() Gets coords from turtle.<br>
-   <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for turtle.
+   <a href="#getCoords">getCoords() Gets coords from turtle.</a><br>
+   <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for turtle.</a><br>
 
 ## Equip:
   
-   <a href="#equip">equip(Side) Equip tool from the selected slot.<br>
-   <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.
+   <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
+   <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.</a><br>
     
 ## Fuel:
   
-   <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.
+   <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.</a><br>
     
-## General:
+## General
 
-    checkType(sType, ...) Checks if parameters are from sType.
-    getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
-    isKey(Key, t) Checks if Key is in t table.
-    isValue(value, t) Checks if value is in t table.
-    loadTable(sFileName) Loads a text file into a table.
-    saveTable(t, sFileName) Saves a table into a text file.
-    sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-    tableInTable(tSearch, t) Verifies if tSearch is in table t.
+   <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
+   <a href="#getParam">getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
+   <a href="#isKey">isKey(Key, t) Checks if Key is in t table.</a><br>
+   <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
+   <a href="#loadTable">loadTable(sFileName) Loads a text file into a table.</a><br>
+   <a href="#saveTable">(t, sFileName) Saves a table into a text file.</a><br>
+   <a href="#sign">sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
+   <a href="#tableInTable">tableInTable(tSearch, t) Verifies if tSearch is in table t.</a><br>
 
-## Attack:
+## Attack
 
     attackBack([Side]) Rotate back and attack the entity in front.
     attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
@@ -86,26 +86,26 @@
     saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
     setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot
     
-## Rotations:
+## Rotations
   
     turnBack() The turtle turns back.
     turnDir([Direction="back"]) Rotates turtle back, left or right.
     
-## Moving:
+## Moving
   
     back([Blocks=1]) Moves the turtle backwards or forward blocks.
     down([Blocks=1]) Moves the turtle down or up blocks.
     forward([Blocks=1]) Moves the turtle forward or backwards blocks.
     up([Blocks=1]) Moves the turtle up or down blocks.
   
-## Rotations and Moving:
+## Rotations and Moving
   
     go([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.
     goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward.
     goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward.
     goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.
 
-## Dig:
+## Dig
   
     dig([Blocks=1]) Dig Blocks forward or backwards with equiped tool.
     digAbove([Blocks=1]) Dig Blocks forward or backwards, 1 block above the turtle, with equiped tool.
@@ -117,7 +117,7 @@
     digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.
     digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.
 
-## Drop:
+## Drop
 
     drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.
     dropBack([nBlocks=stack]) Rotate back and drops or sucks nBlocks forward.
@@ -127,7 +127,7 @@
     dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.
     dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.
 
-## Place:
+## Place
 
     place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.
     placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.
@@ -138,7 +138,7 @@
     placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.
     placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.
 
-## Detect:
+## Detect
 
     detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.
     detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.
@@ -148,17 +148,17 @@
 
     fsGetFreeSpace() Gets the total free space on disk.
 		
-## Inspect:
+## Inspect
 
     inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 
-## Compare:
+## Compare
 
     compareAbove([Blocks=1]) Compare blocks above the turtle in a strait line with selected slot.
     compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.
     compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.
 
-## Inventory:
+## Inventory
     
     clearSlot(nSlot) Clears content of slot, moving items to another slot.
     decSlot(nSlot) Decreases nSlot in range [1..16].
@@ -200,7 +200,27 @@
   ex: if turtle x=0, y=0, z=0
   distTo(10,10,10) Returns 10, 10, 10</pre>
 
+## Turtle
 
+   <p id="loadTurtle">
+     
+- loadTurtle() Loads tTurtle from file tTurtle.txt.<br>
+    -------------------------------- 
+   <pre>Sintax: loadTurtle()
+  Returns: true - if could load from file "tTurtle.txt" to tTurtle.
+           false - if it couldn't.
+  ex: loadTurtle()</pre>
+  
+   <p id="saveTurtle">
+     
+- saveTurtle() Saves tTurtle to file tTurtle.txt.<br>
+    -------------------------------- 
+   <pre>Sintax: saveTurtle()
+  Returns: true - if could save tTurtle to file "tTurtle.txt".
+           false - if it couldn't.
+  ex: saveTurtle()</pre>
+  
+  
 ## Turtle facing
 
    <p id="decFacing"></p>
@@ -224,9 +244,10 @@
    
 - incFacing(nTurns) Increments tTurtle.facing by nTurns.<br>
     --------------------------------
-    <pre>Sintax: incFacing(nTurns)
+    <pre>Sintax: incFacing([nTurns=1])
   Returns: true
-  ex: incFacing(-145) Decrements tTurtle.facing in 145 and 3</pre>
+  ex: if turtle is facing "x+"=1
+  incFacing(1) - Increments tTurtle.facing </pre>
     
    <p id="setFacing"></p>
    
@@ -259,7 +280,7 @@
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
 
 
-## Equip:
+## Equip
   
    <p id="equip"></p>
      
@@ -284,7 +305,7 @@
   ex: getFreeHand()</pre>
 
 
-## Fuel:
+## Fuel
   
    <p id="refuel"></p>
      
