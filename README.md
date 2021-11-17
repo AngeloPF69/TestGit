@@ -72,11 +72,9 @@
 
 ## Attack
 
-    attackBack([Side]) Rotate back and attack the entity in front.
-    attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
-    attackLeft([Side]) Rotate left and attack the entity in front.
-    attackRight([Side]) Rotate right and attack the entity in front.
-    
+   <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}</a>
+
+
 ## Recipes
 
     getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
@@ -111,7 +109,7 @@
     digAbove([Blocks=1]) Dig Blocks forward or backwards, 1 block above the turtle, with equiped tool.
     digBack([Blocks=1]) Rotates turtle back or not, and dig Blocks forward.
     digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.
-  	digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.
+    digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.
     digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.
     digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.
     digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.
@@ -296,7 +294,7 @@
       equip() - Equips in the first free hand the tool in the selected slot.</pre>
      
    <p id="getFreeHand"></p>
-      
+
 - getFreeHand() Gets turtle free hand: "left"|"right"|false.<br>
     --------------------------------
     <pre>Sintax: getFreeHand()
@@ -308,7 +306,7 @@
 ## Fuel
   
    <p id="refuel"></p>
-     
+
 - refuel([nItems=stack]) Refuels the turtle with nItems.
     --------------------------------
     <pre>Sintax: refuel([nItems=all items in selected slot])
@@ -318,5 +316,17 @@
                  - if turtle doesn't need fuel.
                  - if turtle is at maximum fuel.
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
-     
+
+## Attack
+
+   <p id="attackDir"></p>
+
+- attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
+    --------------------------------
+    <pre>Sintax: attackDir([sDir="forward"])
+  Returns: true if turtle attack something.
+           false if there is nothing to attack, or no weapon.
+           nil if invalid parameter.
+  ex: attackDir() - Attacks forward.</pre>
+
    <a href="#top">Top of page</a>

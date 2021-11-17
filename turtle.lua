@@ -683,12 +683,7 @@ function ingredients(sRecipe) --[[ Builds a table with items and quantities in a
 end
 
 --not tested--
-<<<<<<< HEAD
 function haveIngredients(sRecipe, nLimit)
-=======
-function haveIngredientes(sRecipe, nLimit) --[[ Builds a table with de diference between a recipe and the ingredients in inventory.
-                                           <0 there are excess items in inventory, >0 there are some missing ingredients in inventory.]]
->>>>>>> 2567e749266ccf20ab19ae5ca4189ad378e11cdf
   sRecipe = sRecipe or tRecipes.lastRecipe
   nLimit = nLimit or 1
 
