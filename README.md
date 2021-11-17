@@ -66,7 +66,7 @@
    <a href="#isKey">isKey(Key, t) Checks if Key is in t table.</a><br>
    <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
    <a href="#loadTable">loadTable(sFileName) Loads a text file into a table.</a><br>
-   <a href="#saveTable">(t, sFileName) Saves a table into a text file.</a><br>
+   <a href="#saveTable">saveTable(t, sFileName) Saves a table into a text file.</a><br>
    <a href="#sign">sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
    <a href="#tableInTable">tableInTable(tSearch, t) Verifies if tSearch is in table t.</a><br>
 
