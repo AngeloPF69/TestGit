@@ -135,13 +135,20 @@ end
 
 ------ TURTLE STATUS FUNCTIONS ----
 
+--not tested--
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021  Returns:  false - if no parameter was supplied.
                               - if sFacing is not in facingType.
               ex: setFacing("z+") - Sets the tTurtle.facing to "z+"]]
   if not sFacing then return false end
-  if not facingType[sFacing] then return false end
+  if type(sFacing) == "number" then
+    sFacing = bit32.band(sFacing, 3)
+  elseif type(sFacing) == "string" then
+    if facingType[sFacing] then sFacing = facingType[sFacing]
+  else return false
+  end
   tTurtle.facing = sFacing
+  return tTurtle.facing
 end
 
 function getFacing() --[[ Returns tTurtle.facing.
@@ -648,7 +655,7 @@ end
 ------ RECIPES FUNCTIONS ------
 
 --not tested--
-function invIngredients()
+function invIngredients() --[[ Builds a table with the items and quantities in inventory]]
   local tRecipe = {}
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
@@ -662,7 +669,7 @@ function invIngredients()
 end
 
 --not tested--
-function ingredients(sRecipe)
+function ingredients(sRecipe) --[[ Builds a table with items and quantities in a recipe or inventory]]
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not sRecipe then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe name not found" end
@@ -676,7 +683,12 @@ function ingredients(sRecipe)
 end
 
 --not tested--
+<<<<<<< HEAD
 function haveIngredients(sRecipe, nLimit)
+=======
+function haveIngredientes(sRecipe, nLimit) --[[ Builds a table with de diference between a recipe and the ingredients in inventory.
+                                           <0 there are excess items in inventory, >0 there are some missing ingredients in inventory.]]
+>>>>>>> 2567e749266ccf20ab19ae5ca4189ad378e11cdf
   sRecipe = sRecipe or tRecipes.lastRecipe
   nLimit = nLimit or 1
 
@@ -709,7 +721,9 @@ end
 
 function getInvRecipe() --[[ Builds a table with items and their position (the recipe).
   19/10/2021  Returns false - if it is not a recipe in the inventory.
-                      tRecipe - the recipe with items and positions.]]
+                      tRecipe - the recipe with items and positions.
+  Note: Trecipe[Ingredient number][Ingredient name] = if not first item {{col = column position, lin = line position (relative to 1st ingredient) }, ...
+                                                      else {}]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
 	local index, tFirstItem, tData, tRecipe = 1
