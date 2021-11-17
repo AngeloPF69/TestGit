@@ -57,7 +57,7 @@
     
 ## Fuel:
   
-    <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.
+   <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.
     
 ## General:
 
@@ -282,5 +282,20 @@
   Returns: "left" or "right" the first free hand found.
 	    		 false - if no free hand found.
   ex: getFreeHand()</pre>
+
+
+## Fuel:
+  
+   <p id="refuel"></p>
+     
+- refuel([nItems=stack]) Refuels the turtle with nItems.
+    --------------------------------
+    <pre>Sintax: refuel([nItems=all items in selected slot])
+  Returns: number of items refueled.
+					 false - if empty selected slot
+								 - if item is not fuel
+								 - if turtle doesn't need fuel.
+								 - if turtle is at maximum fuel.
+  ex: refuel(10) - Refuels turtle with 10 items.</pre>
      
    <a href="#top">Top of page</a>
