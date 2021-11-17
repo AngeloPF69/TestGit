@@ -267,10 +267,10 @@
     --------------------------------
     <pre>Sintax:equip([Side=free hand = {"left"|"right"}])
   Returns: true - if it was equiped.
-				   false - if no empty hand.
-					   	   - if invalid parameter.
-							   - if empty selected slot.
-				  		   - if it can't equip tool.
+           false - if no empty hand.
+                 - if invalid parameter.
+                 - if empty selected slot.
+                 - if it can't equip tool.
   ex: equip("left") - Equips in the left hand, the tool in the selected slot.
       equip() - Equips in the first free hand the tool in the selected slot.</pre>
      
@@ -280,7 +280,7 @@
     --------------------------------
     <pre>Sintax: getFreeHand()
   Returns: "left" or "right" the first free hand found.
-	    		 false - if no free hand found.
+           false - if no free hand found.
   ex: getFreeHand()</pre>
 
 
@@ -292,10 +292,10 @@
     --------------------------------
     <pre>Sintax: refuel([nItems=all items in selected slot])
   Returns: number of items refueled.
-					 false - if empty selected slot
-								 - if item is not fuel
-								 - if turtle doesn't need fuel.
-								 - if turtle is at maximum fuel.
+           false - if empty selected slot
+                 - if item is not fuel
+                 - if turtle doesn't need fuel.
+                 - if turtle is at maximum fuel.
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
      
    <a href="#top">Top of page</a>
