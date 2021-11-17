@@ -1,17 +1,18 @@
 {
-  [ "minecraft:shears" ] = {
+  [ "minecraft:stick" ] = {
     recipe = {
       {
-        [ "minecraft:iron_ingot" ] = {},
+        [ "minecraft:oak_planks" ] = {},
       },
       {
-        [ "minecraft:iron_ingot" ] = {
+        [ "minecraft:oak_planks" ] = {
           lin = 1,
-          col = -1,
+          col = 0,
         },
       },
     },
-    count = 1,
+    count = 4,
   },
-  CSlot = 1,
+  CSlot = 2,
+  lastRecipe = "minecraft:stick",
 }

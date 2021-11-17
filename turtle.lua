@@ -15,8 +15,8 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 } 
 
 tRecipes = {} --[[ ["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
-                                          count = resulting number of items, CSlot = number crafting slot, lastRecipe = last recipe name} ]]
-tStack = {} --["itemName"] = nStack
+                              count = resulting number of items, CSlot = number crafting slot, lastRecipe = last recipe name} ]]
+tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
 
@@ -117,6 +117,7 @@ function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
   02/11/2021  Returns:	true]] 
 	loadTurtle()
 	loadRecipes()
+  loadStacks()
 	return true
 end
 
@@ -127,6 +128,7 @@ function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
   02/11/2021  Returns:	true]] 
 	saveTurtle()
 	saveRecipes()
+  saveStacks()
 	return true
 end
 
@@ -584,26 +586,62 @@ end
 
 ------ STACK FUNCTIONS ------
 
---not tested--
-function getStack(nSlot)
+function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
+  10/11/2021  Returns false - if it couldn't save file.
+                      true - if it could save file.]]
+  return saveTable(tStacks, "tStacks.txt")
+end
+
+function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
+  10/11/2021  Returns false - if it couldn't load file.
+                      true - if it could load file.]]
+  local t = loadTable("tStacks.txt")
+	if not t then return false end
+	tStacks = t
+  return true
+end
+
+function getStack(nSlot) --[[ Returns the stack of item in nSlot.
+  10/11/2021  Return: quantity a item can stack.
+                      nil - if slot is out of range[1..16].
+                      false - if slot is empty.
+                            - if item was not found in inventory.
+              sintax: getStack([nSlot/sItemName = selected slot]).
+              ex: getStack() - gets the stack of item in selected slot.
+                  getStack("minecraft:oak_planks") - gets the stack for oak_planks, in inventory or in tStacks.]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+
   local tData, nStack
   if type(nSlot) == "number" then
+    if nSlot < 1 or nSlot > 16 then return nil, "Slot out of range[1..16]." end
     tData = turtle.getItemDetail(nSlot)
     if not tData then return false, "Empty slot." end
     nStack = turtle.getItemSpace(nSlot) + tData.count
-    if not tStack[tData.name] then tStack[tData.name] = nStack  end
+    if not tStacks[tData.name] then tStacks[tData.name] = nStack  end
   end
   if type(nSlot) == "string" then
-    if tStack[nSlot] then nStack = tStack[nSlot]
-    else nStack = false
+    if tStacks[nSlot] then nStack = tStacks[nSlot]
+    else
+      nSlot = search(nSlot)
+      if not nSlot then return false, "Item not found" end
+      tData = turtle.getItemDetail(nSlot)
+      nStack = tData.count + turtle.getItemSpace(nSlot)
+      tStacks[tData.name] = nStack
     end
   end
   return nStack
 end
 
---not tested--
-function setStack(sItemName, nStack)
-  if not tStack[sItemName] then tStack[sItemName] = nStack  end
+function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
+  10/11/2021  Return: true - if it could set the stack for item.
+                      nil - if no item name supplied.
+                          - if no stack number is supplied.
+              sintax: setStack(sItemName = selected slot) ]]
+  sItemName, nStacks = getParam("sn", {"", -1}, sItemName, nStack)
+  if sItemName == "" then return nil, "Must supply item name." end
+  if nStack == -1 then return nil, "Must supply stack." end
+  if nStack < 1 then return nil, "Stack out of range [1..]." end
+  tStacks[sItemName] = nStack
   return true
 end
 
@@ -615,8 +653,8 @@ function invIngredients()
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
-      if tRecipe[tData.name] then tRecipes[tData.name] = tRecipes[tData.name] + 1
-      else tRecipes[tData.name] = 1
+      if tRecipe[tData.name] then tRecipe[tData.name] = tRecipe[tData.name] + tData.count
+      else tRecipe[tData.name] = tData.count
       end
     end
   end
@@ -626,7 +664,7 @@ end
 --not tested--
 function ingredients(sRecipe)
   sRecipe = sRecipe or tRecipes.lastRecipe
-  if not sRecipe then return invIngredientes() end
+  if not sRecipe then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe name not found" end
   local tRecipe = {}
   for k,v in pairs(tRecipes.recipe) do
@@ -638,11 +676,11 @@ function ingredients(sRecipe)
 end
 
 --not tested--
-function haveIngredientes(sRecipe, nLimit)
+function haveIngredients(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
   nLimit = nLimit or 1
 
-  local tNeededIng, tInvIng = ingredientes(sRecipe), invIngredientes()
+  local tNeededIng, tInvIng = ingredients(sRecipe), invIngredients()
   local tIngredientes = {}
   for k,v in pairs(tNeededIng) do
     for k1,v1 in pairs(tInvIng) do
@@ -666,6 +704,7 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
 	local t = loadTable("tRecipes.txt")
 	if not t then return false end
 	tRecipes = t
+  return true
 end
 
 function getInvRecipe() --[[ Builds a table with items and their position (the recipe).
@@ -703,16 +742,21 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
   19/10/2021  Returns false - if it is not a recipe in the inventory.
                       tRecipe - the recipe with items and positions.]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
-  
-	local minCount = 64
-	for i = 1, 16 do
-		local tData = turtle.getItemDetail(i)
-		
-		if tData then
-			if tData.count < minCount then minCount = tData.count end
-		end
-	end
-	return minCount
+  local tIng = invIngredients() --[ingredient name] = quantity
+  local tIngSlots = countItemSlots() --[ingredient name] = qunatity of slots ocupied
+
+  local minCount = 128
+	for k,v in pairs(tIng) do
+    for k1, v1 in pairs(tIngSlots) do
+      if k == k1 then
+        if minCount > (v/v1) then
+          minCount = v/v1
+          break
+        end
+      end
+    end
+  end
+	return math.floor(minCount)
 end
 
 function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the first item in the recipe.
@@ -850,14 +894,18 @@ end
 
 --implementing--
 function craft(sRecipe, nLimit)
+  sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then return false, "This is not a recipe." end
 
   local tRecipe = getInvRecipe()
   if nLimit == -1 then nLimit = getMaxCraft() end
 
-  if tRecipes["CSlot"] then turtle.select(tRecipes["CSlot"])
-  else setCraftSlot(turtle.getSelectedSlot())
+  if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
+  if not isEmptySlot(tRecipes["CSlot"]) then
+    local nSlot = getFreeSlot()
+    if nSlot then turtle.select(nSlot) end
+    tRecipes["CSlot"] = nSlot
   end
 
   if not turtle.craft(nLimit) then return false, "Couldn't create "..nLimit.." items." end
@@ -871,6 +919,7 @@ function craft(sRecipe, nLimit)
     tRecipes[sName].recipe = tRecipe
     tRecipes[sName].count = tData.count / nLimit
 	end
+  tRecipes.lastRecipe = sName
 	return sName, tData.count
 end
 
@@ -1448,12 +1497,24 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
+function countItemSlots()
+  local tItemSlots = {}
+  for iSlot = 1, 16 do
+    local tData = turtle.getItemDetail(iSlot)
+    if tData then
+      if tItemSlots[tData.name] then tItemSlots[tData.name] = tItemSlots[tData.name] + 1
+      else tItemSlots[tData.name] = 1
+      end
+    end
+  end
+  return tItemSlots
+end
+
 function decSlot(nSlot) --[[ Increases nSlot in range [1..16].
   02/11/2021  Returns:  the number of slot increased by 1]]
 	nSlot = nSlot - 1
   return nSlot == 0 and 16 or nSlot
 end
-
 
 function freeCount() --[[ Get number of free slots in turtle's inventory.
   07/10/2021  Returns:  number of free slots.
@@ -1490,6 +1551,19 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
     nStartSlot = bit32.band(nStartSlot-1, 15)+1
   until (nEndSlot == nStartSlot)
   return false
+end
+
+function getInventory()
+  local tInv = {}
+  for iSlot = 1, 16 do
+    local tData = turtle.getItemDetail(iSlot)
+    if tData then
+      print("i", iSlot)
+      tInv[iSlot] = {}
+      tInv[iSlot][tData.name] = tData.count
+    end
+  end
+  return tInv
 end
 
 function groupItems() --[[ Groups the same type of items in one slot in inventory.
@@ -1552,6 +1626,11 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 	return totSpace
 end
 
+function isEmptySlot(nSlot)
+  nSlot = nSlot or turtle.getSelectedSlot()
+  return turtle.getItemDetail(nSlot) == nil
+end
+
 function itemCount(nSlot) --[[ Counts items in inventory
   31/08/2021  Returns: number of items counted.
                       false - if nSlot <0 or > 16.
@@ -1559,7 +1638,7 @@ function itemCount(nSlot) --[[ Counts items in inventory
               sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
               ex: itemCount() counts items in selected slot.
                   itemCount("inventory") - counts items in inventory.
-                  itemCount("minecraft:cobblestone") - counts cbblestone in inventory.]]
+                  itemCount("minecraft:cobblestone") - counts cobblestone in inventory.]]
   nSlot = nSlot or turtle.getSelectedSlot()
   totItems = 0
 
@@ -1593,7 +1672,6 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   if not tData then return false end
   return tData.name
 end
-
 
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
   29/08/2021  returns:  The selected slot, and items in that slot.
@@ -1842,14 +1920,10 @@ end
 
 
 ---- TEST AREA ------
---function leaveItems(nSlot, nQuant) --[[ Leaves nQuant of item in nSlot, moving.
 --function craft(sRecipe, nLimit)
---function getFirstItemCoords(sRecipe)
---function transferFrom(nSlot, nItems)
---function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot.
---function decSlot(nSlot)
 INIT()
 
-print(decSlot(16))
+print(craft())
+
 
 TERMINATE()
