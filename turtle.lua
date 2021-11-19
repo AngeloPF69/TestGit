@@ -514,10 +514,10 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
-  27/08/2021  Returns: Parameters sorted by type, nil if no parameters.
+  27/08/2021  Returns:  Parameters sorted by type, nil if no parameters.
+                        nil - nil - if no parameters.
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
-              Note: Only sorts three parameters type (string, number and boolean).
-                    The default table is returned when no parameter is supplied.]]
+              Note: Only sorts three parameters type (string, number and boolean).]]
   if not sParamOrder then return nil end
   
   local Args={...}
