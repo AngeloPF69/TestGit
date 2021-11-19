@@ -323,17 +323,20 @@
   
 - checkType(sType, ...) Checks if parameters are from sType.</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: checkType(sType, ...)
+  Returns: true - if all parameters have the type of sType.
+           false - if #sType ~= #... (number of parameters are diferent from length of sType).
+  ex: checkType("snt", "hello", number1, tTable) - Outputs: true.</pre>
   
   <p id="getParam"></p>
   
 - getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: getParam(sTypeParamOrder,{default parameter value,}, parameters ...}
+  Returns: Parameters ordered by type.
+           nil - if no parameters.
+  Note: Only sorts three parameters type (string, number and boolean).
+  ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.</pre>
    
    <p id="isKey"></p>
    
