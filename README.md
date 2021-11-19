@@ -31,12 +31,12 @@
 ## Measurements
 
    <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle.</a><br>
-   <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a><br>
+   <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
     
 ## Turtle
 
    <a href="#loadTurtle">loadTurtle() Loads tTurtle from file tTurtle.txt.</a><br>
-   <a href="#saveTurtle">saveTurtle() Saves tTurtle to file tTurtle.txt.</a><br>
+   <a href="#saveTurtle">saveTurtle() Saves tTurtle to file tTurtle.txt.</a>
     
 ## Turtle facing
 
@@ -48,17 +48,17 @@
 ## Turtle coords
 
    <a href="#getCoords">getCoords() Gets coords from turtle.</a><br>
-   <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for turtle.</a><br>
+   <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for turtle.</a>
 
-## Equip:
+## Equip
   
    <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
-   <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.</a><br>
+   <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.</a>
     
-## Fuel:
-  
-   <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.</a><br>
-    
+## Fuel
+
+   <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.</a>
+
 ## General
 
    <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
@@ -68,21 +68,20 @@
    <a href="#loadTable">loadTable(sFileName) Loads a text file into a table.</a><br>
    <a href="#saveTable">saveTable(t, sFileName) Saves a table into a text file.</a><br>
    <a href="#sign">sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
-   <a href="#tableInTable">tableInTable(tSearch, t) Verifies if tSearch is in table t.</a><br>
+   <a href="#tableInTable">tableInTable(tSearch, t) Verifies if tSearch is in table t.</a>
 
 ## Attack
 
    <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}</a>
 
-
 ## Recipes
 
-    getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
-    getInvRecipe() Builds a table with items and their position (the recipe).
-    getMaxCraft() Returns maximum limit to craft the recipe on inventory.
-    loadRecipes() Loads tRecipes from file "tRecipes.txt"
-    saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
-    setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot
+   <a href="#getFirstItemCoords">getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.</a><br>
+   <a href="#getInvRecipe">getInvRecipe() Builds a table with items and their position (the recipe).</a><br>
+   <a href="#getMaxCraft">getMaxCraft() Returns maximum limit to craft the recipe on inventory.</a><br>
+   <a href="#loadRecipes">loadRecipes() Loads tRecipes from file "tRecipes.txt".</a><br>
+   <a href="#saveRecipes">saveRecipes() Saves tRecipes in a file as "tRecipes.txt".</a><br>
+   <a href="#setCraftSlot">setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot.</a>
     
 ## Rotations
   
@@ -317,6 +316,74 @@
                  - if turtle is at maximum fuel.
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
+  
+## General
+
+  <p id="checkType"></p>
+  
+- checkType(sType, ...) Checks if parameters are from sType.</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="getParam"></p>
+  
+- getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+   
+   <p id="isKey"></p>
+   
+- isKey(Key, t) Checks if Key is in t table.</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+   <p id="isValue"></p>
+   
+- isValue(value, t) Checks if value is in t table.</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+   <p id="loadTable"></p>
+   
+- loadTable(sFileName) Loads a text file into a table.</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+   <p id="saveTable"></p>
+   
+- saveTable(t, sFileName) Saves a table into a text file.</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+   <p id="sign"></p>
+   
+- sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="tableInTable"></p>
+  
+- tableInTable(tSearch, t) Verifies if tSearch is in table t.</a>
+  --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+
 ## Attack
 
    <p id="attackDir"></p>
@@ -329,4 +396,55 @@
            nil if invalid parameter.
   ex: attackDir() - Attacks forward.</pre>
 
+  
+## Recipes
+
+  <p id="getFirstItemCoords"></p>
+  
+- getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="getInvRecipe"></p>
+  
+- getInvRecipe() Builds a table with items and their position (the recipe).
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="getMaxCraft"></p>
+  
+- getMaxCraft() Returns maximum limit to craft the recipe on inventory.
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="loadRecipes"></p>
+  
+- loadRecipes() Loads tRecipes from file "tRecipes.txt"
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="saveRecipes"></p>
+  
+- saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
+  <p id="setCraftSlot"></p>
+  
+- setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot
+    --------------------------------
+    <pre>Sintax: 
+  Returns: 
+  ex: </pre>
+  
    <a href="#top">Top of page</a>
