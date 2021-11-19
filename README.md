@@ -342,17 +342,19 @@
    
 - isKey(Key, t) Checks if Key is in t table.</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: isKey(key, t)
+  Returns: true - if Key is in t.
+           false - if Key is not in t.
+  ex: isKey("hello", {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
   
    <p id="isValue"></p>
    
 - isValue(value, t) Checks if value is in t table.</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: isValue(value, t)
+  Returns: true - if value is in t.
+           false - if value is not in t.
+  ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
   
    <p id="loadTable"></p>
    
