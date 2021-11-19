@@ -488,7 +488,7 @@ function loadTable(sFileName) --[[ Loads a text file into a table.
                           false - if sFileName is not supplied,
                                   if the file couldn't be opened for reading,
                                   if the file is empty.
-                ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" into t table.]]
+                ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.]]
 	if not sFileName then return false end
 	
   local fh,t

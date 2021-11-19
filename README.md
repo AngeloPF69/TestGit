@@ -360,33 +360,41 @@
    
 - loadTable(sFileName) Loads a text file into a table.</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: loadTable(sFileName)
+  Returns: true - if could read a text file into a table.
+           false - if sFileName is not supplied,
+                 - if the file couldn't be opened for reading,
+                 - if the file is empty.
+  ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.</pre>
   
    <p id="saveTable"></p>
    
 - saveTable(t, sFileName) Saves a table into a text file.</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: saveTable(t, sFileName)
+  Returns: true - if saving file was a success.
+           false - if t or sFileName not supplied,
+                 - if no disk space,
+                 - if it couldn't create file.
+  Note: if not supplied extension it adds ".txt" to the file name.
+  ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.</pre>
   
    <p id="sign"></p>
    
 - sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: sign(value)
+  Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
+  ex: sign(-1) - Returns -1</pre>
   
   <p id="tableInTable"></p>
   
 - tableInTable(tSearch, t) Verifies if tSearch is in table t.</a>
   --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: tableInTable(tSearch, t)
+  Returns: true - tSearch is in t.
+           false - at the least one element of tSearch is not in table t.
+  ex: tableInTable("forward", {"forward", "left", "right"}) - Returns true.</pre>
   
 
 ## Attack
@@ -397,8 +405,8 @@
     --------------------------------
     <pre>Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
-           false if there is nothing to attack, or no weapon.
-           nil if invalid parameter.
+           false - if there is nothing to attack, or no weapon.
+           nil - if invalid parameter.
   ex: attackDir() - Attacks forward.</pre>
 
   
@@ -408,48 +416,56 @@
   
 - getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: getFirstItemCoords(sRecipe)
+  Returns: false - if the recipe name was not supplied.
+                 - if this recipe does not exist.
+           col, lin - the column and line of first item.
+  ex: getFirstItemCoords("minecraft:stick") - Retuens the column and line of the turtle inventory, where to place the ingredients of recipe.</pre>
   
   <p id="getInvRecipe"></p>
   
 - getInvRecipe() Builds a table with items and their position (the recipe).
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: getInvRecipe()
+  Returns: false - if it is not a recipe in the inventory.
+           tRecipe - the recipe with items and positions.
+  Note: Trecipe[Ingredient number][Ingredient name] = if not first item {{col = column position, lin = line position (relative to 1st ingredient) }
+  ex: getInvRecipe() - Returns the recipe in inventory.</pre>
   
   <p id="getMaxCraft"></p>
   
 - getMaxCraft() Returns maximum limit to craft the recipe on inventory.
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: getMaxCraft()
+  Returns: false - if it is not a recipe in the inventory.
+           tRecipe - the recipe with items and positions.
+  ex: getMaxCraft() - Returns the recipe from inventory.</pre>
   
   <p id="loadRecipes"></p>
   
 - loadRecipes() Loads tRecipes from file "tRecipes.txt"
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: loadRecipes()
+  Returns: false - if it couldn't load file.
+           true - if it could load file.
+  ex: loadRecipes()</pre>
   
   <p id="saveRecipes"></p>
   
 - saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: saveRecipes()
+  Returns: false - if it couldn't load file.
+           true - if it could load file.
+  ex: saveRecipes()</pre>
   
   <p id="setCraftSlot"></p>
   
 - setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot
     --------------------------------
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: setCraftSlot([nSlot=Selected Slot])
+  Returns: nil - if nSlot is not in range[1..16].
+           true - if was set tRecipes["CSlot"].
+  ex: setCraftSlot(16) - Sets the resulting craft slot to 16.</pre>
   
    <a href="#top">Top of page</a>
