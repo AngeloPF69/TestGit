@@ -85,8 +85,8 @@
     
 ## Rotations
   
-    turnBack() The turtle turns back.
-    turnDir([Direction="back"]) Rotates turtle back, left or right.
+  <a href="#turnBack">turnBack() The turtle turns back.</a>
+    <a href="#turnDir">turnDir([Direction="back"]) Rotates turtle back, left or right.</a>
     
 ## Moving
   
@@ -467,5 +467,24 @@
   Returns: nil - if nSlot is not in range[1..16].
            true - if was set tRecipes["CSlot"].
   ex: setCraftSlot(16) - Sets the resulting craft slot to 16.</pre>
+
+
+## Rotations
+  
+  <p id="turnBack"></p>
+  
+- turnBack() The turtle turns back.<br>
+    --------------------------------
+    <pre>Sintax:
+  Returns:
+  ex: </pre>
+  
+  <p id="turnDir"></p>
+  
+- turnDir([Direction="back"]) Rotates turtle back, left or right.</a>
+    --------------------------------
+    <pre>Sintax:
+  Returns:
+  ex: </pre>
   
    <a href="#top">Top of page</a>
