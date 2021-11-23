@@ -135,7 +135,6 @@ end
 
 ------ TURTLE STATUS FUNCTIONS ----
 
---not tested--
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021  Returns:  false - if no parameter was supplied.
                               - if sFacing is not in facingType.
@@ -145,6 +144,8 @@ function setFacing(sFacing) --[[ Sets tTurtle.facing.
     sFacing = bit32.band(sFacing, 3)
   elseif type(sFacing) == "string" then
     if facingType[sFacing] then sFacing = facingType[sFacing]
+    else return false
+    end
   else return false
   end
   tTurtle.facing = sFacing
@@ -534,11 +535,12 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
         end
       end
     end
-    for i = 1, #tDefault do
-      if type(tDefault[i]) == sType then table.insert(retTable, tDefault[i]) end
+
+    for k, v in pairs(tDefault) do
+      if type(v) == sType then table.insert(retTable, v) end
     end
   end
-  
+
   for i = 1, #sParamOrder do
     if sParamOrder:sub(i,i) == "s" then addParam("string")
     elseif sParamOrder:sub(i,i) == "n" then addParam("number")
@@ -546,6 +548,7 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
     end
   end
   
+
   if #retTable == 0 then return nil
   else return table.unpack(retTable);
   end
@@ -654,8 +657,8 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
---not tested--
-function invIngredients() --[[ Builds a table with the items and quantities in inventory]]
+function invIngredients() --[[ Builds a table with the items and quantities in inventory.
+  20/11/2021  Return: table - with ingredient name and quantity.]]
   local tRecipe = {}
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
@@ -668,35 +671,57 @@ function invIngredients() --[[ Builds a table with the items and quantities in i
   return tRecipe
 end
 
---not tested--
-function ingredients(sRecipe) --[[ Builds a table with items and quantities in a recipe or inventory]]
+function ingredients(sRecipe) --[[ Builds a table with items and quantities in a recipe.
+  20/11/2021  Return: table - with ingredient name and quantity.
+                      false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
+                            - if sRecipe dosn't exist, (never was made).
+              Sintax: ingredients([sRecipeName = tRecipes.lastRecipe])]]
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not sRecipe then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe name not found" end
   local tRecipe = {}
-  for k,v in pairs(tRecipes.recipe) do
-    if tRecipe[k] then tRecipe[k] = tRecipe[k] + 1
-    else tRecipe[k] = 1
+  for k,v in pairs(tRecipes[sRecipe].recipe) do
+    for k1,v1 in pairs(v) do
+      if tRecipe[k1] then tRecipe[k1] = tRecipe[k1] + 1
+      else tRecipe[k1] = 1
+      end
     end
   end
   return tRecipe
 end
 
---not tested--
-function haveIngredients(sRecipe, nLimit)
-  sRecipe = sRecipe or tRecipes.lastRecipe
-  nLimit = nLimit or 1
+function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference between the recipe and the inventory.
+  23/11/2021  Return: table - with ingredients name and the diference between the recipe and inventory.
+                      false - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
+                            - if sRecipe dosn't exist, (never was made).
+              Note: The returning table has negative values if is missing ingredients in the inventory.
+              Sintax: haveIngredients([sRecipeName = tRecipes.lastRecipe][, nLimit =1])]]
+  sRecipe, nLimit = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nLimit)
+  if type(sRecipe) == "number" then
+    nLimit = sRecipe
+    sRecipe = ""
+  end
 
-  local tNeededIng, tInvIng = ingredients(sRecipe), invIngredients()
-  local tIngredientes = {}
+  local tNeededIng
+  if sRecipe == "" then --there was no last recipe
+    if not turtle.craft(0) then return false, "This is not a recipe." 
+    else tNeededIng = invIngredients()
+    end
+  else tNeededIng, message = ingredients(sRecipe)
+       if not tNeededIng then return false, message end
+  end
+
+  local tInvIng = invIngredients()
+  local tIngredients = {}
   for k,v in pairs(tNeededIng) do
+    tIngredients[k] = - nLimit * v
     for k1,v1 in pairs(tInvIng) do
-      if k == k1 then 
-        tIngredientes[k] = v * nLimit - v1
+      if k == k1 then
+        tIngredients[k] = tIngredients[k] + v1
       end
     end
   end
-  return tIngredientes
+  return tIngredients
 end
 
 function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
@@ -1930,9 +1955,14 @@ end
 
 ---- TEST AREA ------
 --function craft(sRecipe, nLimit)
+--function haveIngredients(sRecipe, nLimit)
 INIT()
 
-print(craft())
-
+--print(craft())
+local tRecipe, message = haveIngredients("minecraft:stick")
+print(tRecipe, message)
+if tRecipe then print(textutils.serializeJSON(tRecipe))
+else print(tRecipe, message)
+end
 
 TERMINATE()
