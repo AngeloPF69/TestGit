@@ -85,8 +85,8 @@
     
 ## Rotations
   
-  <a href="#turnBack">turnBack() The turtle turns back.</a>
-    <a href="#turnDir">turnDir([Direction="back"]) Rotates turtle back, left or right.</a>
+   <a href="#turnBack">turnBack() The turtle turns back.</a><br>
+   <a href="#turnDir">turnDir([Direction="back"]) Rotates turtle back, left or right.</a>
     
 ## Moving
   
@@ -475,16 +475,17 @@
   
 - turnBack() The turtle turns back.<br>
     --------------------------------
-    <pre>Sintax:
-  Returns:
-  ex: </pre>
+    <pre>Sintax: turnBack()
+  Returns: true
+  ex: turnBack()</pre>
   
   <p id="turnDir"></p>
   
 - turnDir([Direction="back"]) Rotates turtle back, left or right.</a>
     --------------------------------
-    <pre>Sintax:
-  Returns:
-  ex: </pre>
+    <pre>Sintax: turnDir([Direction="back"])
+  Returns: true if sDir is a valid direction.
+           false if sDir is not a valid direction.
+  ex: turnDir("left") - Turtle turns left.</pre>
   
    <a href="#top">Top of page</a>
