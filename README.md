@@ -22,11 +22,11 @@
             
 ## Initialize
 
-  INIT() Loads tTurtle.txt, tRecipes.txt from files to tables.
+  <a href="#INIT">INIT() Loads tTurtle.txt, tRecipes.txt from files to tables.</a>
 	
 ## Terminate
 
-  TERMINATE() Saves tTurtle, tRecipes to text files.
+  <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes to text files.</a>
   
 ## Measurements
 
@@ -176,12 +176,36 @@
     
 ---------------------------------------------------------------------------------------------------------------------------
 
+# Functions Explained
+
+
+## Initialize
+
+  <p id="INIT"></p>
+  
+- INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.<br>
+    <pre>Sintax: INIT() - Loads turtle coords, facing, equiped tool,
+                   table of recipes,
+                   table of items stacks.
+  Returns:  true
+  ex: INIT()</pre>
+  
+## Terminate
+
+  <p id="TERMINATE"></p>
+  
+- TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
+    <pre>Sintax: TERMINATE() - Saves turtle coords, facing, equiped tool,
+                        table of recipes,
+                        table of items stacks.
+  Returns:  true
+  ex: TERMINATE()</pre>
+  
 ## Measurements
 
    <p id="addSteps"></p>
    
-- addSteps(nSteps) Adds nSteps to coords of turtle.
-    --------------------------------
+- addSteps(nSteps) Adds nSteps to coords of turtle.<br>
     <pre>Sintax: addSteps([nSteps=1])
   Returns:  x, y, z adding nSteps in direction turtle is facing.
   ex: if tTurtle x=0, y=0, z=0, facing="x+"
@@ -191,7 +215,6 @@
    <p id="distTo"></p>
 
 - distTo(x, y, z) Gets the three components of the distance from the turtle to point.<br>
-    --------------------------------
     <pre>Sintax: distTo(x, y, z)
   Returns: distX, distY, distZ From turtle to point x, y, z.
   ex: if turtle x=0, y=0, z=0
@@ -202,7 +225,6 @@
    <p id="loadTurtle">
      
 - loadTurtle() Loads tTurtle from file tTurtle.txt.<br>
-    -------------------------------- 
    <pre>Sintax: loadTurtle()
   Returns: true - if could load from file "tTurtle.txt" to tTurtle.
            false - if it couldn't.
@@ -211,7 +233,6 @@
    <p id="saveTurtle">
      
 - saveTurtle() Saves tTurtle to file tTurtle.txt.<br>
-    -------------------------------- 
    <pre>Sintax: saveTurtle()
   Returns: true - if could save tTurtle to file "tTurtle.txt".
            false - if it couldn't.
@@ -223,7 +244,6 @@
    <p id="decFacing"></p>
    
 - decFacing(nTurns) Decrements tTurtle.facing by nTurns.<br>
-    --------------------------------
     <pre>Sintax: decFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
@@ -232,7 +252,6 @@
    <p id="getFacing"></p>
    
 - getFacing() Returns tTurtle.facing.<br>
-    --------------------------------
     <pre>Sintax: getFacing([nTurns=1])
   Returns: tTurtle.facing
   ex: getFacing()</pre>
@@ -240,7 +259,6 @@
    <p id="incFacing"></p>
    
 - incFacing(nTurns) Increments tTurtle.facing by nTurns.<br>
-    --------------------------------
     <pre>Sintax: incFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
@@ -249,7 +267,6 @@
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
-    --------------------------------
     <pre>Sintax: setFacing(sFacing) - sFacing = {"z-"|"x+"|"z+"|"x-"|"y+"|"y-"}|[0..3]
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
@@ -263,7 +280,6 @@
    <p id="getCoords"></p>
      
 - getCoords() Gets coords from turtle.<br>
-    --------------------------------
     <pre>Sintax: getCoords()
   Returns: x,y,z the turtle coords.
   ex: getCoords() </pre>
@@ -271,7 +287,6 @@
    <p id="setCoords"></p>
       
 - setCoords(x, y, z) Set coords x, y, z for turtle.<br>
-    --------------------------------
     <pre>Sintax: setCoords(x, y, z)
   Returns: true
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
@@ -282,7 +297,6 @@
    <p id="equip"></p>
      
 - equip(Side) Equip tool from the selected slot.<br>
-    --------------------------------
     <pre>Sintax:equip([Side=free hand = {"left"|"right"}])
   Returns: true - if it was equiped.
            false - if no empty hand.
@@ -295,7 +309,6 @@
    <p id="getFreeHand"></p>
 
 - getFreeHand() Gets turtle free hand: "left"|"right"|false.<br>
-    --------------------------------
     <pre>Sintax: getFreeHand()
   Returns: "left" or "right" the first free hand found.
            false - if no free hand found.
@@ -307,7 +320,6 @@
    <p id="refuel"></p>
 
 - refuel([nItems=stack]) Refuels the turtle with nItems.
-    --------------------------------
     <pre>Sintax: refuel([nItems=all items in selected slot])
   Returns: number of items refueled.
            false - if empty selected slot
@@ -322,7 +334,6 @@
   <p id="checkType"></p>
   
 - checkType(sType, ...) Checks if parameters are from sType.</a><br>
-    --------------------------------
     <pre>Sintax: checkType(sType, ...)
   Returns: true - if all parameters have the type of sType.
            false - if #sType ~= #... (number of parameters are diferent from length of sType).
@@ -331,7 +342,6 @@
   <p id="getParam"></p>
   
 - getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
-    --------------------------------
     <pre>Sintax: getParam(sTypeParamOrder,{default parameter value,}, parameters ...}
   Returns: Parameters ordered by type.
            nil - if no parameters.
@@ -341,7 +351,6 @@
    <p id="isKey"></p>
    
 - isKey(Key, t) Checks if Key is in t table.</a><br>
-    --------------------------------
     <pre>Sintax: isKey(key, t)
   Returns: true - if Key is in t.
            false - if Key is not in t.
@@ -350,7 +359,6 @@
    <p id="isValue"></p>
    
 - isValue(value, t) Checks if value is in t table.</a><br>
-    --------------------------------
     <pre>Sintax: isValue(value, t)
   Returns: true - if value is in t.
            false - if value is not in t.
@@ -359,7 +367,6 @@
    <p id="loadTable"></p>
    
 - loadTable(sFileName) Loads a text file into a table.</a><br>
-    --------------------------------
     <pre>Sintax: loadTable(sFileName)
   Returns: true - if could read a text file into a table.
            false - if sFileName is not supplied,
@@ -370,7 +377,6 @@
    <p id="saveTable"></p>
    
 - saveTable(t, sFileName) Saves a table into a text file.</a><br>
-    --------------------------------
     <pre>Sintax: saveTable(t, sFileName)
   Returns: true - if saving file was a success.
            false - if t or sFileName not supplied,
@@ -382,7 +388,6 @@
    <p id="sign"></p>
    
 - sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
-    --------------------------------
     <pre>Sintax: sign(value)
   Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
   ex: sign(-1) - Returns -1</pre>
@@ -390,7 +395,6 @@
   <p id="tableInTable"></p>
   
 - tableInTable(tSearch, t) Verifies if tSearch is in table t.</a>
-  --------------------------------
     <pre>Sintax: tableInTable(tSearch, t)
   Returns: true - tSearch is in t.
            false - at the least one element of tSearch is not in table t.
@@ -402,7 +406,6 @@
    <p id="attackDir"></p>
 
 - attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
-    --------------------------------
     <pre>Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
            false - if there is nothing to attack, or no weapon.
@@ -415,7 +418,6 @@
   <p id="getFirstItemCoords"></p>
   
 - getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.
-    --------------------------------
     <pre>Sintax: getFirstItemCoords(sRecipe)
   Returns: false - if the recipe name was not supplied.
                  - if this recipe does not exist.
@@ -425,7 +427,6 @@
   <p id="getInvRecipe"></p>
   
 - getInvRecipe() Builds a table with items and their position (the recipe).
-    --------------------------------
     <pre>Sintax: getInvRecipe()
   Returns: false - if it is not a recipe in the inventory.
            tRecipe - the recipe with items and positions.
@@ -435,7 +436,6 @@
   <p id="getMaxCraft"></p>
   
 - getMaxCraft() Returns maximum limit to craft the recipe on inventory.
-    --------------------------------
     <pre>Sintax: getMaxCraft()
   Returns: false - if it is not a recipe in the inventory.
            tRecipe - the recipe with items and positions.
@@ -444,7 +444,6 @@
   <p id="loadRecipes"></p>
   
 - loadRecipes() Loads tRecipes from file "tRecipes.txt"
-    --------------------------------
     <pre>Sintax: loadRecipes()
   Returns: false - if it couldn't load file.
            true - if it could load file.
@@ -453,7 +452,6 @@
   <p id="saveRecipes"></p>
   
 - saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
-    --------------------------------
     <pre>Sintax: saveRecipes()
   Returns: false - if it couldn't load file.
            true - if it could load file.
@@ -462,7 +460,6 @@
   <p id="setCraftSlot"></p>
   
 - setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot
-    --------------------------------
     <pre>Sintax: setCraftSlot([nSlot=Selected Slot])
   Returns: nil - if nSlot is not in range[1..16].
            true - if was set tRecipes["CSlot"].
@@ -474,7 +471,6 @@
   <p id="turnBack"></p>
   
 - turnBack() The turtle turns back.<br>
-    --------------------------------
     <pre>Sintax: turnBack()
   Returns: true
   ex: turnBack()</pre>
@@ -482,7 +478,6 @@
   <p id="turnDir"></p>
   
 - turnDir([Direction="back"]) Rotates turtle back, left or right.</a>
-    --------------------------------
     <pre>Sintax: turnDir([Direction="back"])
   Returns: true if sDir is a valid direction.
            false if sDir is not a valid direction.
