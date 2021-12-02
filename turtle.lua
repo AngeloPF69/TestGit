@@ -912,7 +912,7 @@ function arrangeRecipe(sRecipe)
   local col, lin = getFirstItemCoords(sRecipe)
   for c = 0, 3 do
     for l = 0, 3 do
-      if c < col and l <= lin then leaveItems(0) end
+      if c < col and l <= lin then leaveItems(0, false) end
     end
   end
 end
