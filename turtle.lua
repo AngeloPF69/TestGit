@@ -814,15 +814,12 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
 end
 
 --implementing--
-function leaveItems(nSlot, nQuant, bWrap) --[[ Leaves nQuant of item in nSlot, moving.
+function leaveItems(nQuant, bWrap) --[[ Leaves nQuant of item in nSlot, moving.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.]]
-  nSlot = nSlot or turtle.getSelectedSlot()
-  if nSlot < 1 or nSlot > 16 then return false, "Slot out of range." end
-  turtle.select(nSlot)
   local tData = turtle.getItemDetail()
 
-  local nStored
+  local nSlot, nStored = turtle.getSelectedSlot()
   if not tData then nStored = 0
   else nStored = tData.count
   end
@@ -903,11 +900,8 @@ end
 
 --implementing--
 function arrangeRecipe(sRecipe)
-  if not tRecipes[sRecipe] then
-    if tRecipes[lastRecipe] then sRecipe = tRecipes[lastRecipe]
-    else return false, "Must supply recipe name."
-    end
-  end
+  sRecipe = sRecipe or tRecipes.lastRecipe
+  if not tRecipes[sRecipe] then return false, "Must supply recipe name." end
 
   local col, lin = getFirstItemCoords(sRecipe)
   for c = 0, 3 do
@@ -926,6 +920,11 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
   return true
 end
 
+function flatRecipe()
+  for nSlot = 1, 16 do
+  end
+end
+
 --implementing--
 function craft(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
@@ -938,10 +937,11 @@ function craft(sRecipe, nLimit)
   if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
   if not isEmptySlot(tRecipes["CSlot"]) then
     local nSlot = getFreeSlot()
-    if nSlot then turtle.select(nSlot) end
+    if not nSlot then return false, "No empty slot." end
     tRecipes["CSlot"] = nSlot
   end
 
+  turtle.select(tRecipes["CSlot"])
   if not turtle.craft(nLimit) then return false, "Couldn't create "..nLimit.." items." end
 	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
 	
@@ -1781,11 +1781,12 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
   return false
 end
 
---not tested--
 function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
   07/10/2021  Returns:  free slot number.
                         false - if no free slot.
-              sintax: selectFree()]]
+              sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
+              ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
+              ex: selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
   local nSlot
 
   nSlot=getFreeSlot(nStartSlot, bWrap) --get a free slot
@@ -1955,14 +1956,10 @@ end
 
 ---- TEST AREA ------
 --function craft(sRecipe, nLimit)
---function haveIngredients(sRecipe, nLimit)
+--function arrangeRecipe(sRecipe)
 INIT()
 
---print(craft())
-local tRecipe, message = haveIngredients("minecraft:stick")
-print(tRecipe, message)
-if tRecipe then print(textutils.serializeJSON(tRecipe))
-else print(tRecipe, message)
-end
+print(arrangeRecipe())
+
 
 TERMINATE()
