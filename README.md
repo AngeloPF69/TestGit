@@ -489,14 +489,17 @@
   <p id="back"></p>
   
 - back([Blocks=1]) Moves the turtle backwards or forward blocks.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: back([Blocks=1])
+  Returns:  true - if it goes all the way.
+            false - if Blocks is not a number.
+                  - if it couldn't complete all the moves.
+  Note: if Blocks < 0 it moves forward.
+  ex: back() - Moves 1 block backwards.</pre>
   
   <p id="down"></p>
   
 - down([Blocks=1]) Moves the turtle down or up blocks.<br>
-    <pre>Sintax: 
+    <pre>Sintax:  
   Returns: 
   ex: </pre>
   
