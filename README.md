@@ -97,7 +97,7 @@
   
 ## Rotations and Moving
   
-    <a href="#go">go([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
+    <a href="#goDir">goDir([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
     <a href="#goBack">goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward.</a><br>
     <a href="#goLeft">goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward.</a><br>
     <a href="#goRight">goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.</a>
@@ -499,54 +499,73 @@
   <p id="down"></p>
   
 - down([Blocks=1]) Moves the turtle down or up blocks.<br>
-    <pre>Sintax:  
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: down([Blocks=1])
+  Returns: true - if it goes all the way.
+           false - if Blocks is not a number.
+                 - if it couldn't complete all the moves.
+  Note: if Blocks < 0 it moves upwards.
+  ex: down(2) - moves 2 blocks down</pre>
   
   <p id="forward"></p>
   
 - forward([Blocks=1]) Moves the turtle forward or backwards blocks.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: forward([Blocks=1])
+  Returns: true - if it goes all the way.
+           false - if Blocks is not a number.
+                 - if it couldn't complete all the moves.
+  Note: if Blocks < 0 it moves backwards.
+  ex: forward(-2) - moves 2 blocks backwards.</pre>
   
   <p id="up"></p>
   
 - up([Blocks=1]) Moves the turtle up or down blocks.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: up([Blocks=1])
+  Returns: true - if it goes all the way.
+           false - if Blocks is not a number.
+                 - if it couldn't complete all the moves.
+  Note: if Blocks < 0 it moves downwards.
+  ex: up(1) - moves 1 block upwards.</pre>
   
   
 ## Rotations and Moving
   
-  <p id="go"></p>
+  <p id="goDir"></p>
   
-- go([sDir="forward"], [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+- goDir([sDir="forward"], [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.<br>
+    <pre>Sintax: go([sDir="forward"][,Blocks=1])
+  Returns: true - if turtle goes all way.
+           false - if blocked.
+                 - if invalid direction.
+  ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
+  ex: go() - Moves 1 block forward.
+  ex: go(-3, "up") - moves 3 blocks down.</pre>
   
   <p id="goBack"></p>
   
 - goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: goBack([Blocks=1])
+  Returns: true - if turtle goes all way.
+           false - if blocked, or invalid parameter.
+  Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
+  ex: goBack(3) - Turns back and moves 3 blocks forward.</pre>
   
   <p id="goLeft"></p>
   
 - goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: goLeft([Blocks=1])
+  Returns: true - if turtle goes all way.
+           false - if bllocked, or invalid parameter.
+  Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
+  ex: goLeft(3) - Moves 3 Blocks to the left.</pre>
   
   <p id="goBack"></p>
   
 - goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.<br>
-    <pre>Sintax: 
-  Returns: 
-  ex: </pre>
+    <pre>Sintax: goRight([Blocks=1])
+  Returns: true - if turtle goes all way.
+           false - if bllocked, or invalid parameter.
+  Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
+  ex: goRight(3) - Moves 3 Blocks to the right.</pre>
   
 
 ## Dig
