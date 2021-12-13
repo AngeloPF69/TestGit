@@ -90,89 +90,89 @@
     
 ## Moving
   
-    <a href="#back">back([Blocks=1]) Moves the turtle backwards or forward blocks.</a><br>
-    <a href="#down">down([Blocks=1]) Moves the turtle down or up blocks.</a><br>
-    <a href="#forward">forward([Blocks=1]) Moves the turtle forward or backwards blocks.</a><br>
-    <a href="#up">up([Blocks=1]) Moves the turtle up or down blocks.</a>
+   <a href="#back">back([Blocks=1]) Moves the turtle backwards or forward blocks.</a><br>
+   <a href="#down">down([Blocks=1]) Moves the turtle down or up blocks.</a><br>
+   <a href="#forward">forward([Blocks=1]) Moves the turtle forward or backwards blocks.</a><br>
+   <a href="#up">up([Blocks=1]) Moves the turtle up or down blocks.</a>
   
 ## Rotations and Moving
   
-    <a href="#goDir">goDir([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
-    <a href="#goBack">goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward.</a><br>
-    <a href="#goLeft">goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward.</a><br>
-    <a href="#goRight">goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.</a>
+   <a href="#goDir">goDir([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
+   <a href="#goBack">goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward.</a><br>
+   <a href="#goLeft">goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward.</a><br>
+   <a href="#goRight">goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.</a>
 
 ## Dig
   
-    <a href="#dig">dig([Blocks=1]) Dig Blocks forward or backwards with equiped tool.</a><br>
-    <a href="#digAbove">digAbove([Blocks=1]) Dig Blocks forward or backwards, 1 block above the turtle, with equiped tool.</a><br>
-    <a href="#digBack">digBack([Blocks=1]) Rotates turtle back or not, and dig Blocks forward.</a><br>
-    <a href="#digBelow">digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.</a><br>
-    <a href="#digDir">digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.</a><br>
-    <a href="#digDown">digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.</a><br>
-    <a href="#digLeft">digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.</a><br>
-    <a href="#digRight">digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.</a><br>
-    <a href="#digUp">digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.</a>
+   <a href="#dig">dig([Blocks=1]) Dig Blocks forward or backwards with equiped tool.</a><br>
+   <a href="#digAbove">digAbove([Blocks=1]) Dig Blocks forward or backwards, 1 block above the turtle, with equiped tool.</a><br>
+   <a href="#digBack">digBack([Blocks=1]) Rotates turtle back or not, and dig Blocks forward.</a><br>
+   <a href="#digBelow">digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.</a><br>
+   <a href="#digDir">digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.</a><br>
+   <a href="#digDown">digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.</a><br>
+   <a href="#digLeft">digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.</a><br>
+   <a href="#digRight">digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.</a><br>
+   <a href="#digUp">digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.</a>
 
 ## Drop
 
-    <a href="#drop">drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.</a><br>
-    <a href="#dropBack">dropBack([nBlocks=stack]) Rotate back and drops or sucks nBlocks forward.</a><br>
-    <a href="#dropDir">dropDir(sDir, [Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front, up or down the turtle.</a><br>
-    <a href="#dropDown">dropDown([Blocks=stack]) Drops nBlocks from selected slot and inventory in the world downwards.</a><br>
-    <a href="#dropLeft">dropLeft([nBlocks=stack]) Rotate left and drops or sucks nBlocks forward.</a><br>
-    <a href="#dropRight">dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.</a><br>
-    <a href="#dropUp">dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.</a>
+   <a href="#drop">drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.</a><br>
+   <a href="#dropBack">dropBack([nBlocks=stack]) Rotate back and drops or sucks nBlocks forward.</a><br>
+   <a href="#dropDir">dropDir(sDir, [Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front, up or down the turtle.</a><br>
+   <a href="#dropDown">dropDown([Blocks=stack]) Drops nBlocks from selected slot and inventory in the world downwards.</a><br>
+   <a href="#dropLeft">dropLeft([nBlocks=stack]) Rotate left and drops or sucks nBlocks forward.</a><br>
+   <a href="#dropRight">dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.</a><br>
+   <a href="#dropUp">dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.</a>
 
 ## Place
 
-    <a href="#place">place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.</a><br>
-    <a href="#placeAbove">placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.</a><br>
-    <a href="#placeBelow">placeBelow([Blocks=1]) Places selected Blocks forwards or backwards, 1 block below the turtle, and returns to initial position.</a><br>
-    <a href="#placeDir">placeDir([sDir="forward"]) Places inventory selected Block in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
-    <a href="#placeDown">placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.</a><br>
-    <a href="#placeLeft">placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.</a><br>
-    <a href="#placeRight">placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.</a><br>
-    <a href="#placeUp">placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.</a>
+   <a href="#place">place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.</a><br>
+   <a href="#placeAbove">placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.</a><br>
+   <a href="#placeBelow">placeBelow([Blocks=1]) Places selected Blocks forwards or backwards, 1 block below the turtle, and returns to initial position.</a><br>
+   <a href="#placeDir">placeDir([sDir="forward"]) Places inventory selected Block in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
+   <a href="#placeDown">placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.</a><br>
+   <a href="#placeLeft">placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.</a><br>
+   <a href="#placeRight">placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.</a><br>
+   <a href="#placeUp">placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.</a>
 
 ## Detect
 
-    <a href="#detectAbove">detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.</a><br>
-    <a href="#detectBelow">detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.</a><br>
-    <a href="#detectDir">detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.</a>
+   <a href="#detectAbove">detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.</a><br>
+   <a href="#detectBelow">detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.</a><br>
+   <a href="#detectDir">detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.</a>
 
 ## Disk
 
-    <a href="#fsGetFreeSpace">fsGetFreeSpace() Gets the total free space on disk.</a>
+   <a href="#fsGetFreeSpace">fsGetFreeSpace() Gets the total free space on disk.</a>
 		
 ## Inspect
 
-    <a href="#inspectDir">inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
+   <a href="#inspectDir">inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
 
 ## Compare
 
-    <a href="#compareAbove">compareAbove([Blocks=1]) Compare blocks above the turtle in a strait line with selected slot.</a><br>
-    <a href="#compareBelow">compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.</a><br>
-    <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
+   <a href="#compareAbove">compareAbove([Blocks=1]) Compare blocks above the turtle in a strait line with selected slot.</a><br>
+   <a href="#compareBelow">compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.</a><br>
+   <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
 
 ## Inventory
     
-    <a href="#clearSlot">clearSlot(nSlot) Clears content of slot, moving items to another slot.</a><br>
-    <a href="#decSlot">decSlot(nSlot) Decreases nSlot in range [1..16].</a><br>
-    <a href="#freeCount">freeCount() Get number of free slots in turtle's inventory.</a><br>
-    <a href="#getFreeSlot">getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.</a><br>
-    <a href="#groupItems">groupItems() Groups the same type of items in one slot in inventory.</a><br>
-    <a href="#incSlot">incSlot(nSlot) Increases nSlot in range [1..16].</a><br>
-    <a href="#itemCount">itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.</a><br>
-    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
-    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
-    <a href="#itemSpace">itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.</a><br>
-    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
-    <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
-    
+   <a href="#clearSlot">clearSlot(nSlot) Clears content of slot, moving items to another slot.</a><br>
+   <a href="#decSlot">decSlot(nSlot) Decreases nSlot in range [1..16].</a><br>
+   <a href="#freeCount">freeCount() Get number of free slots in turtle's inventory.</a><br>
+   <a href="#getFreeSlot">getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.</a><br>
+   <a href="#groupItems">groupItems() Groups the same type of items in one slot in inventory.</a><br>
+   <a href="#incSlot">incSlot(nSlot) Increases nSlot in range [1..16].</a><br>
+   <a href="#itemCount">itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.</a><br>
+   <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
+   <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
+   <a href="#itemSpace">itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.</a><br>
+   <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
+   <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
+
 ## Suck
 
-    <a href="#suckDir">suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
+   <a href="#suckDir">suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
     
 ---------------------------------------------------------------------------------------------------------------------------
 
@@ -484,7 +484,7 @@
   ex: turnDir("left") - Turtle turns left.</pre>
 
 
-  ## Moving
+## Moving
  
   <p id="back"></p>
   
