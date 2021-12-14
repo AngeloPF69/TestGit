@@ -920,9 +920,45 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
   return true
 end
 
-function flatRecipe()
-  for nSlot = 1, 16 do
+--implementing--
+function flattenInventory()
+  local tTotIng = invIngredients()
+  local tTotSlots = countItemSlots()
+  local tInv = getInventory() --get [slot][itemName]=Quantity
+  
+  local tMedia = {}
+  for k,v in pairs(tTotIng) do
+    for k1,v1 in pairs(tTotSlots) do
+      if k == k1 then
+        tMedia[k] = v / v1
+        break
+      end
+    end
   end
+
+  local tInv = getInventory() --get [slot][itemName]=Quantity
+  for k,v in pairs(tMedia) do --k=itemName, v=quantity should be in slot
+    for iSlot = 1, 16 do --iterate for every slot
+      if tInv[iSlot] then --is there any item in slot
+        if tInv[iSlot][k] then --is the same item
+          tTotSlots[k] = tTotSlots[k] - 1 --decrease the number of slots to check
+          if tTotSlots[k] ~= 0 then --this is not the last slot
+            if tInv[iSlot][k] > tMedia[k] then
+              --transfer excess items to other slot with the same item
+              local nExcess = tInv[iSlot][k] - tMedia[k]
+              local nDestSlot, nCount = search(k, iSlot, false)
+              if nDestSlot then
+                if nCount<tMedia[k] then
+                  transferTo(nDest)
+                end
+              end
+            elseif tInv[iSlot][k] < tMedia[k] then
+              --transfer the missing items from another slot
+            end
+        end
+      end
+    end
+
 end
 
 --implementing--
@@ -1531,7 +1567,10 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
-function countItemSlots()
+--not tested--
+function countItemSlots() --[[ Counts how many slots is ocupied with each item.
+  04/12/2021  Returns: table[itemName]=Slots ocupied by item.
+            sintax: countItemSlots()]]
   local tItemSlots = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -1587,12 +1626,14 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
   return false
 end
 
-function getInventory()
+--not tested--
+function getInventory() --[[ Builds a table with the slot, the name and quantity of items in inventory.
+  04/12/2021  Returns:  table[slot][itemName]=Quantity.
+              sintax: getInventory()]]
   local tInv = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
     if tData then
-      print("i", iSlot)
       tInv[iSlot] = {}
       tInv[iSlot][tData.name] = tData.count
     end
