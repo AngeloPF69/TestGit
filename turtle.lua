@@ -1247,7 +1247,7 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
                         false if bllocked, empty space, or invalid parameter.
               sintax: digDown([nBlocks=1])
               Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
-              ex: digDown() or digDown(1) - Dig 1 block up.]]
+              ex: digDown() or digDown(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
