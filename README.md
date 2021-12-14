@@ -558,7 +558,7 @@
   Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
   ex: goLeft(3) - Moves 3 Blocks to the left.</pre>
   
-  <p id="goBack"></p>
+  <p id="goRight"></p>
   
 - goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.<br>
     <pre>Sintax: goRight([Blocks=1])
@@ -570,12 +570,62 @@
 
 ## Dig
   
-    <a href="#dig">dig([Blocks=1]) Dig Blocks forward or backwards with equiped tool.</a><br>
-    <a href="#digAbove">digAbove([Blocks=1]) Dig Blocks forward or backwards, 1 block above the turtle, with equiped tool.</a><br>
-    <a href="#digBack">digBack([Blocks=1]) Rotates turtle back or not, and dig Blocks forward.</a><br>
-    <a href="#digBelow">digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.</a><br>
-    <a href="#digDir">digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.</a><br>
-    <a href="#digDown">digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.</a><br>
+  <p id="dig"></p>
+  
+- dig([Blocks=1]) Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
+    <pre>Sintax: dig([Blocks=1])
+  Returns: true - if turtle digs all way.
+           false - if blocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 turns back and digs forward, nBlocks > 0 digs forward.
+  ex: dig() or dig(1) - Dig 1 block forward.</pre>
+  
+  <p id="digAbove"></p>
+  
+- digAbove([Blocks=1]) Dig Blocks forward or backwards, 1 block above the turtle, with equiped tool.<br>
+    <pre>Sintax: digAbove([Blocks=1])
+  Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 moves backwards and dig above, nBlocks > 0 moves forward and digs above.
+  ex: digAbove() or digAbove(1) - Dig 1 block above the turtle and moves forward.</pre>
+  
+  <p id="digBack"></p>
+  
+- digBack([Blocks=1]) Turns back or not and digs Blocks forward, must have a tool equiped.<br>
+    <pre>Sintax: digBack([Blocks=1])
+  Returns: true - if turtle digs all way.
+           false - if blocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 digs forward, nBlocks > 0 digs backwards.
+  ex: digBack() or digBack(1) - Turns back and dig 1 block forward.</pre>
+  
+  <p id="digBelow"></p>
+  
+- digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.<br>
+    <pre>Sintax: digBelow([Blocks=1])
+   Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+   Note: nBlocks < 0 moves backwards and dig below, nBlocks > 0 moves forward and digs below.
+   ex: digBelow() or digBelow(1) - Dig 1 block above the turtle and moves forward.</pre>
+  
+  <p id="digDir"></p>
+  
+- digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.<br>
+    <pre>Sintax: digDir([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
+   Returns: true - if turtle digs all way.
+            false - if blocked, empty space, can't turn that way.
+            nil if invalid parameter
+   ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
+   ex: digDir() - Digs 1 block forward.
+   ex: digDir(-3, "up") - Digs 3 blocks down.</pre>
+   
+   <p id="digDown"></p>
+   
+- digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.<br>
+    <pre>Sintax: digDown([Blocks=1])
+   Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+   Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
+   ex: digDown() or digDown(1) - Dig 1 block down.</pre>
+   
     <a href="#digLeft">digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.</a><br>
     <a href="#digRight">digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.</a><br>
     <a href="#digUp">digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.</a>
