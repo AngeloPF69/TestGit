@@ -602,7 +602,7 @@
 - digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.<br>
     <pre>Sintax: digBelow([Blocks=1])
    Returns: true - if turtle digs all way.
-           false - if bllocked, empty space, or invalid parameter.
+            false - if bllocked, empty space, or invalid parameter.
    Note: nBlocks < 0 moves backwards and dig below, nBlocks > 0 moves forward and digs below.
    ex: digBelow() or digBelow(1) - Dig 1 block above the turtle and moves forward.</pre>
   
@@ -622,7 +622,7 @@
 - digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.<br>
     <pre>Sintax: digDown([Blocks=1])
    Returns: true - if turtle digs all way.
-           false - if bllocked, empty space, or invalid parameter.
+            false - if bllocked, empty space, or invalid parameter.
    Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
    ex: digDown() or digDown(1) - Dig 1 block down.</pre>
    
@@ -631,7 +631,7 @@
 - digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.<br>
     <pre>Sintax: digLeft([Blocks=1])
    Returns: true - if turtle digs all way.
-           false - if bllocked, empty space, or invalid parameter.
+            false - if bllocked, empty space, or invalid parameter.
    Note: nBlocks < 0 digs right, nBlocks > 0 digs left.
    ex: digLeft() or digLeft(1) - Dig 1 block left.</pre>
    
@@ -640,7 +640,7 @@
 - digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.<br>
     <pre>Sintax: digRight([Blocks=1])
    Returns: true - if turtle digs all way.
-           false - if bllocked, empty space, or invalid parameter.
+            false - if bllocked, empty space, or invalid parameter.
    Note: nBlocks < 0 digs left, nBlocks > 0 digs left.
    ex: digRight(-1) or digLeft(1) - Dig 1 block left.</pre>
    
@@ -649,14 +649,22 @@
 - digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.
     <pre>Sintax: digUp([Blocks=1])
    Returns: true - if turtle digs all way.
-           false - if bllocked, empty space, or invalid parameter.
+            false - if bllocked, empty space, or invalid parameter.
    Note: nBlocks < 0 digs down, nBlocks > 0 digs Up.
    ex: digUp(2) - Dig 2 blocks Up.</pre>
    
 
 ## Drop
 
-    <a href="#drop">drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.</a><br>
+   <p id="drop"></p>
+
+- drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.<br>
+    <pre>Sintax: drop([Blocks=stack])
+   Returns: true - if turtle digs all way.
+            false - if bllocked, empty space, or invalid parameter.
+   Note: nBlocks < 0 digs down, nBlocks > 0 digs Up.
+   ex: digUp(2) - Dig 2 blocks Up.</pre>
+   
     <a href="#dropBack">dropBack([nBlocks=stack]) Rotate back and drops or sucks nBlocks forward.</a><br>
     <a href="#dropDir">dropDir(sDir, [Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front, up or down the turtle.</a><br>
     <a href="#dropDown">dropDown([Blocks=stack]) Drops nBlocks from selected slot and inventory in the world downwards.</a><br>
