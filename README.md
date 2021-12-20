@@ -750,7 +750,6 @@
     <pre>Sintax: placeDir([sDir="forward"])
    Returns: true if turtle places the selected block.
             false if turtle doesn't place the selected block, or invalid parameter.
-   Sintax: placeDir([sDir="forward"])
    ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.</pre>
    
    <p id="placeDown">
@@ -760,7 +759,6 @@
    Returns: number of blocks placed.
             false - if turtle was blocked on the way back.
                   - invalid parameter.
-   Sintax: placeDown([nBlocks=1])
    Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
    ex: placeDown(1) or placeDown() - Places 1 Block Down.</pre>
    
@@ -772,7 +770,6 @@
             false - if turtle was blocked on the way back.
                   - invalid parameter.
                   - couldn't place block.
-   Sintax: placeLeft([nBlocks=1])
    Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
    ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.</pre>
    
@@ -784,7 +781,6 @@
             false - if turtle was blocked on the way back.
                   - invalid parameter.
                   - couldn't place block
-   Sintax: placeRight([nBlocks=1])
    Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
    ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.</pre>
    
@@ -795,28 +791,75 @@
    Returns: number os blocks placed.
             false - if turtle was blocked on the way back.
                   - invalid parameter.
-   Sintax: placeUp([nBlocks=1])
    Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
    ex: placeUp(1) or placeUp() - Places 1 Block up.</pre>
    
    
 ## Detect
 
-    <a href="#detectAbove">detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.</a><br>
-    <a href="#detectBelow">detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.</a><br>
-    <a href="#detectDir">detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.</a>
+   <p id="detectAbove">
+   
+- detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.<br>
+    <pre>Sintax: detectAbose([Blocks=1])
+   Returns: true - if turtle detects a line of nBlocks above it.
+            false - if blocked, empty space.
+						nil - if invalid parameter.
+   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+   ex: detectAbove() or detectAbove(1) - Detects 1 block up.</pre>
+   
+   <p id="detectBelow">
+   
+- detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.<br>
+    <pre>Sintax: detectBelow([Blocks=1])
+   Returns: true - if turtle detects a line of nBlocks below.
+            false - if blocked, empty space.
+						nil - if invalid parameter
+   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
+   
+   <p id="detectBelow">
+   
+- detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.<br>
+    <pre>Sintax: detectDir([sDir="forward"])
+   Returns: true - If turtle detects a block.
+            false - if turtle didn't detect a block.
+            nil - invalid parameter.
+   ex: detectDir([sDir="forward"]) - Detect blocks forward.</pre>
+
 
 ## Disk
 
-    <a href="#fsGetFreeSpace">fsGetFreeSpace() Gets the total free space on disk.</a>
-		
+   <p id="fsGetFreeSpace">
+   
+- fsGetFreeSpace() Gets the total free space on disk.<br>
+		<pre>Sintax: fsGetFreeSpace()
+   Returns: Number - Free space on disk.
+   ex: fsGetFreeSpace() - Gets the free space on disk.</pre>
+   
+   
 ## Inspect
+    
+   <p id="inspectDir">
 
-    <a href="#inspectDir">inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
+- inspectDir([sDir="forward"]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
+    <pre>Sintax: inspectDir([sDir="forward"])
+   Returns: true, table with data - If turtle detects a block.
+            false, message - if turtle didn't detect a block.
+   ex: detectDir([sDir="forward"]) - Inspects a block forward.</pre>
+   
 
 ## Compare
 
-    <a href="#compareAbove">compareAbove([Blocks=1]) Compare blocks above the turtle in a strait line with selected slot.</a><br>
+   <p id="compareAbove">
+   
+ - compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
+    <pre>Sintax: compareAbove([Blocks=1])
+   Returns: true - if all the blocks are the same.
+            false - if blocked, empty space, or found a diferent block.
+						nil if invalid parameter.
+   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
+   ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
+   
     <a href="#compareBelow">compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.</a><br>
     <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
 
