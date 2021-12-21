@@ -984,13 +984,13 @@
    ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
-    <pre>Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
-   Returns: The first slot where the item was found, and the quantity
-            False - if the item was not found
-                  - if sItemName not supplied.
-                  - if nStartSlot is not a number.
-   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
-   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
+    <pre>Sintax: transferFrom(nSlot, nItems)
+   Returns: number of items in selected slot.
+            nil - if nSlot is not supplied.
+            false - if nSlot is empty.
+                  - if nSlot is out of range [1..16].
+                  - if selected slot is full.
+   ex: transferFrom(1, 3) - Tranfers from slot 1, 3 items to selected slot.</pre>
    
    
 ## Suck
