@@ -860,25 +860,139 @@
    Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
    ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
    
-    <a href="#compareBelow">compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.</a><br>
-    <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
+   <p id="compareBelow">
+   
+- compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.<br>
+    <pre>Sintax: compareBelow([Blocks=1])
+   Returns: true - if all the blocks are the same.
+            false - if blocked, empty space, or found a diferent block.
+						nil if invalid parameter.
+   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
+   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
+   
+   <p id="compareDir">
+   
+- compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
+    <pre>Sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+   Returns: true - if the item in slot and in the world is the same.
+            false - if block in slot and in the world are not the same,
+                  - if invalid direction,
+                  - if nSlot is not a number,
+                  - if empty slot.
+   sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+   ex: compareDir() compares selected slot with block in front of turtle.
+       compareDir("left", 2) - compares item in slot 2 with block on the left.</pre>
+
 
 ## Inventory
     
-    <a href="#clearSlot">clearSlot(nSlot) Clears content of slot, moving items to another slot.</a><br>
-    <a href="#decSlot">decSlot(nSlot) Decreases nSlot in range [1..16].</a><br>
-    <a href="#freeCount">freeCount() Get number of free slots in turtle's inventory.</a><br>
-    <a href="#getFreeSlot">getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.</a><br>
-    <a href="#groupItems">groupItems() Groups the same type of items in one slot in inventory.</a><br>
-    <a href="#incSlot">incSlot(nSlot) Increases nSlot in range [1..16].</a><br>
-    <a href="#itemCount">itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.</a><br>
-    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
-    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
-    <a href="#itemSpace">itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.</a><br>
-    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
-    <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
+   <p id="clearSlot">
     
+- clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
+    <pre>Sintax: compareBelow([Blocks=1])
+   Returns: false - if there is no space to tranfer items.
+            true - if the slot is empty.
+   ex: clearSlot() - Clears the selected slot.</pre>
+   
+   <p id="decSlot">
+   
+- decSlot(nSlot) Decreases nSlot in range [1..16].<br>
+    <pre>Sintax: decSlot(nSlot)
+   Returns: the number of slot increased by 1.
+   ex: decSlot(1) - Returns 16.</pre>
+   
+   <p id="freeCount">
+   
+- freeCount() Get number of free slots in turtle's inventory.<br>
+    <pre>Sintax: freeCount()
+   Returns: Number of free slots.
+   ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
+   
+   <p id="getFreeSlot">
+   
+- getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
+    <pre>Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
+   Returns: first free slot number.
+   ex: getFreeSlot() - Returns the first empty slot startint at slot 1.
+       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
+       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
+   
+   <p id="groupItems">
+   
+- groupItems() Groups the same type of items in one slot in inventoy.<br>
+    <pre>Sintax: groupItems()
+   Returns: true.
+   ex: groupItems() - Stacks the same items.</pre>
+   
+   <p id="indSlot">
+   
+- incSlot(nSlot) Increases nSlot in range [1..16].<br>
+    <pre>Sintax: incSlot(nSlot)
+   Returns: The number of slot increased by 1.
+   ex: incSlot(16) - Returns 1</pre>
+   
+   <p id="itemCount">
+   
+- itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
+    <pre>Sintax: itemCount([slot/"inventory"/item name=Selected slot])
+   Returns: number of items counted.
+            false - if nSlot <0 or > 16.
+                  - if nSlot is neither a string nor a number.
+   ex: itemCount() counts items in selected slot.
+       itemCount("inventory") - counts items in inventory.
+       itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
+   
+   <p id="itemName">
+   
+- itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
+    <pre>Sintax: itemName([Slot=Selected slot])
+   Returns: item name - if selected slot/slot is not empty.
+            false - if selected slot/slot is empty.
+   ex: itemName(1) - Returns the name of item in slot 1.</pre>
+   
+   <p id="itemSelect">
+   
+- itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
+    <pre>Sintax: itemSelect([Slot/itemName=Selected slot])
+   Returns: The selected slot, and items in that slot.
+            False - if the item was not found
+                  - if nStartSlot is not a number or a string.
+                  - if value is a number and ( < 1 or > 16 )
+   Note: if executed select() is the same as turtle.getSelectedSlot()
+   ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
+   
+   <p id="itemSpace">
+   
+- itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
+    <pre>Sintax: itemSpace([Slot/itemName=Selected slot])
+   Returns: number of items you can store more in inventory.
+            false - if item is not in inventory.
+                  - if slot is empty.
+   ex: itemSpace() gets how many items you can store, like the item in selected slot.
+       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
+       itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
+   
+   <p id="search">
+   
+- search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.<br>
+- transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
+    <pre>Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
+   Returns: The first slot where the item was found, and the quantity
+            False - if the item was not found
+                  - if sItemName not supplied.
+                  - if nStartSlot is not a number.
+   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
+   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
+   
+   
 ## Suck
 
-    <a href="#suckDir">suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
+   <p id="search">
+   
+- suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
+    <pre>Sintax: suckDir([sDir="forward][,nItems=all the items])
+   Returns: true - if turtle collects some items.
+            false - if there are no items to take.
+   ex: suckDir() - Turtle sucks all the items forward.</pre>
+
    <a href="#top">Top of page</a>
