@@ -975,7 +975,15 @@
    <p id="search">
    
 - search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.<br>
-- transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
+    <pre>Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
+   Returns: The first slot where the item was found, and the quantity
+            False - if the item was not found
+                  - if sItemName not supplied.
+                  - if nStartSlot is not a number.
+   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
+   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
+   
+- transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
     <pre>Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
    Returns: The first slot where the item was found, and the quantity
             False - if the item was not found
