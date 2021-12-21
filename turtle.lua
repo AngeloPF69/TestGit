@@ -642,6 +642,38 @@ function getStack(nSlot) --[[ Returns the stack of item in nSlot.
   return nStack
 end
 
+--not tested--
+function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory.
+  17/12/2021  Return: number the lower stack of items in inventory.
+                      false - if item not found.
+              sintax: invLowerStack([sItemName]).
+              ex: invLowerStack() - gets the lowest stack of items in inventory.
+                  invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks, in inventory.]]
+  local nLower = false
+  local sName = ""
+  for nSlot = 1, 16 do
+    local tData = turtle.getItemDetail(nSlot)
+    if tData then
+      if not nLower then nLower = 9999 end
+      if sItem then
+        if sItem == tData.name then
+          if nLower > tData.count then
+            nLower = tData.count
+            sName = tData.name
+          end
+        end
+      else
+        if nLower > tData.count then
+          nLower = tData.count
+          sName = tData.name
+        end
+      end
+    end
+    end
+  end
+  return nLower, sName
+end
+
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
   10/11/2021  Return: true - if it could set the stack for item.
                       nil - if no item name supplied.
@@ -690,11 +722,13 @@ function ingredients(sRecipe) --[[ Builds a table with items and quantities in a
   return tRecipe
 end
 
+--not tested--
 function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference between the recipe and the inventory.
-  23/11/2021  Return: table - with ingredients name and the diference between the recipe and inventory.
-                      false - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
+  23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
+                      nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
                             - if sRecipe dosn't exist, (never was made).
-              Note: The returning table has negative values if is missing ingredients in the inventory.
+              Note: If the table has negative values, because is missing ingredientes in inventory it returns first false and the table,
+                    if not it returns true and the table.
               Sintax: haveIngredients([sRecipeName = tRecipes.lastRecipe][, nLimit =1])]]
   sRecipe, nLimit = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nLimit)
   if type(sRecipe) == "number" then
@@ -704,24 +738,26 @@ function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference
 
   local tNeededIng
   if sRecipe == "" then --there was no last recipe
-    if not turtle.craft(0) then return false, "This is not a recipe." 
+    if not turtle.craft(0) then return nil, "This is not a recipe." 
     else tNeededIng = invIngredients()
     end
   else tNeededIng, message = ingredients(sRecipe)
-       if not tNeededIng then return false, message end
+       if not tNeededIng then return nil, message end
   end
 
   local tInvIng = invIngredients()
   local tIngredients = {}
+  local bHave = true
   for k,v in pairs(tNeededIng) do
     tIngredients[k] = - nLimit * v
     for k1,v1 in pairs(tInvIng) do
       if k == k1 then
         tIngredients[k] = tIngredients[k] + v1
+        if tIngredients[k] < 0 then bHave = false end
       end
     end
   end
-  return tIngredients
+  return bHave, tIngredients
 end
 
 function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
@@ -777,9 +813,9 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
                       tRecipe - the recipe with items and positions.]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
   local tIng = invIngredients() --[ingredient name] = quantity
-  local tIngSlots = countItemSlots() --[ingredient name] = qunatity of slots ocupied
+  local tIngSlots = countItemSlots() --[ingredient name] = quantity of slots ocupied
 
-  local minCount = 128
+  local minCount = 512
 	for k,v in pairs(tIng) do
     for k1, v1 in pairs(tIngSlots) do
       if k == k1 then
@@ -920,55 +956,75 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
   return true
 end
 
---implementing--
 function flattenInventory()
   local tTotIng = invIngredients()
   local tTotSlots = countItemSlots()
   local tInv = getInventory() --get [slot][itemName]=Quantity
-  
-  local tMedia = {}
+  local nMean
+
+  function slotBelowMean(sItem, nMean)
+    for i = 1, 16 do
+      if tInv[i] and tInv[i][sItem] then
+        if tInv[i][sItem] < nMean then return i, tInv[i][sItem] end
+      end
+    end
+    return false
+  end
+
+  function slotAboveMean(sItem, nMean)
+    for i = 1, 16 do
+      if tInv[i] and tInv[i][sItem] then
+        if tInv[i][sItem] > nMean then return i, tInv[i][sItem] end
+      end
+    end
+    return false
+  end
+
   for k,v in pairs(tTotIng) do
     for k1,v1 in pairs(tTotSlots) do
       if k == k1 then
-        tMedia[k] = v / v1
-        break
-      end
-    end
-  end
-
-  local tInv = getInventory() --get [slot][itemName]=Quantity
-  for k,v in pairs(tMedia) do --k=itemName, v=quantity should be in slot
-    for iSlot = 1, 16 do --iterate for every slot
-      if tInv[iSlot] then --is there any item in slot
-        if tInv[iSlot][k] then --is the same item
-          tTotSlots[k] = tTotSlots[k] - 1 --decrease the number of slots to check
-          if tTotSlots[k] ~= 0 then --this is not the last slot
-            if tInv[iSlot][k] > tMedia[k] then
-              --transfer excess items to other slot with the same item
-              local nExcess = tInv[iSlot][k] - tMedia[k]
-              local nDestSlot, nCount = search(k, iSlot, false)
-              if nDestSlot then
-                if nCount<tMedia[k] then
-                  transferTo(nDest)
-                end
-              end
-            elseif tInv[iSlot][k] < tMedia[k] then
-              --transfer the missing items from another slot
-            end
+        nMean = math.floor(v / v1)
+        local nDestSlot, nDestQuant = slotBelowMean(k, nMean )
+        while nDestSlot do
+          local nDestQuantNeeded = nMean - nDestQuant
+          local nOrgSlot, nOrgQuant = slotAboveMean(k, nMean)
+          while nOrgSlot do
+            local nOrgTrans = nOrgQuant - nMean
+            if nOrgTrans > nDestQuantNeeded then nOrgTrans = nDestQuantNeeded end
+            turtle.select(nOrgSlot)
+            turtle.transferTo(nDestSlot, nOrgTrans)
+            tInv[nDestSlot][k] = nDestQuant + nOrgTrans
+            tInv[nOrgSlot][k] = nOrgQuant - nOrgTrans
+            if tInv[nDestSlot][k] >= nMean then break end
+            nOrgSlot, nOrgQuant = slotAboveMean(k, nMean)
+          end
+          nDestSlot, nDestQuant = slotBelowMean(k, nMean )
         end
       end
     end
-
+  end
+  return true
 end
 
 --implementing--
 function craft(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
-	if not turtle.craft(0) then return false, "This is not a recipe." end
+	if not turtle.craft(0) then
+    if sRecipe then
+      if not haveIngredients(sRecipe) then return false, "There are missing ingredients." end
+      --else arrange recipe
+    end
+    return false, "This is not a recipe."
+  end
 
   local tRecipe = getInvRecipe()
-  if nLimit == -1 then nLimit = getMaxCraft() end
+  local nMaxCraft = getMaxCraft()
+  if nLimit < 0 or nLimit > nMaxCraft then nLimit = nMaxCraft
+  elseif nLimit == 0 then return true
+  end
+
+  if lowerStack() < nLimit then flattenInventory() end
 
   if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
   if not isEmptySlot(tRecipes["CSlot"]) then
@@ -1998,9 +2054,10 @@ end
 ---- TEST AREA ------
 --function craft(sRecipe, nLimit)
 --function arrangeRecipe(sRecipe)
+
 INIT()
 
-print(arrangeRecipe())
+print(arrangeRecipe("minecraft:stick"))
 
 
 TERMINATE()

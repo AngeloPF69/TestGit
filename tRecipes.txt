@@ -1,19 +1,4 @@
 {
-  [ "minecraft:stick" ] = {
-    recipe = {
-      {
-        [ "minecraft:oak_planks" ] = {},
-      },
-      {
-        [ "minecraft:oak_planks" ] = {
-          col = 0,
-          lin = 1,
-        },
-      },
-    },
-    count = 4,
-  },
-  CSlot = 2,
   [ "minecraft:oak_button" ] = {
     recipe = {
       {
@@ -22,5 +7,40 @@
     },
     count = 1,
   },
-  lastRecipe = "minecraft:stick",
+  lastRecipe = "minecraft:wooden_shovel",
+  CSlot = 2,
+  [ "minecraft:stick" ] = {
+    recipe = {
+      {
+        [ "minecraft:oak_planks" ] = {},
+      },
+      {
+        [ "minecraft:oak_planks" ] = {
+          lin = 1,
+          col = 0,
+        },
+      },
+    },
+    count = 4,
+  },
+  [ "minecraft:wooden_shovel" ] = {
+    recipe = {
+      {
+        [ "minecraft:oak_planks" ] = {},
+      },
+      {
+        [ "minecraft:stick" ] = {
+          col = 0,
+          lin = 1,
+        },
+      },
+      {
+        [ "minecraft:stick" ] = {
+          col = 0,
+          lin = 2,
+        },
+      },
+    },
+    count = 1,
+  },
 }
