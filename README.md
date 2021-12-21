@@ -987,7 +987,7 @@
    
 ## Suck
 
-   <p id="search">
+   <p id="suckDir">
    
 - suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
     <pre>Sintax: suckDir([sDir="forward][,nItems=all the items])
