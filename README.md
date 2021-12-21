@@ -601,57 +601,57 @@
   
 - digBelow([Blocks=1]) Dig Blocks forward or backwards, 1 block below the turtle, with equiped tool.<br>
     <pre>Sintax: digBelow([Blocks=1])
-   Returns: true - if turtle digs all way.
-            false - if bllocked, empty space, or invalid parameter.
-   Note: nBlocks < 0 moves backwards and dig below, nBlocks > 0 moves forward and digs below.
-   ex: digBelow() or digBelow(1) - Dig 1 block above the turtle and moves forward.</pre>
+  Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 moves backwards and dig below, nBlocks > 0 moves forward and digs below.
+  ex: digBelow() or digBelow(1) - Dig 1 block above the turtle and moves forward.</pre>
   
   <p id="digDir"></p>
   
 - digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.<br>
     <pre>Sintax: digDir([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
-   Returns: true - if turtle digs all way.
-            false - if blocked, empty space, can't turn that way.
-            nil if invalid parameter
-   ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
-   ex: digDir() - Digs 1 block forward.
-   ex: digDir(-3, "up") - Digs 3 blocks down.</pre>
+  Returns: true - if turtle digs all way.
+           false - if blocked, empty space, can't turn that way.
+           nil if invalid parameter
+  ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
+  ex: digDir() - Digs 1 block forward.
+  ex: digDir(-3, "up") - Digs 3 blocks down.</pre>
    
    <p id="digDown"></p>
    
 - digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.<br>
     <pre>Sintax: digDown([Blocks=1])
-   Returns: true - if turtle digs all way.
-            false - if bllocked, empty space, or invalid parameter.
-   Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
-   ex: digDown() or digDown(1) - Dig 1 block down.</pre>
+  Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
+  ex: digDown() or digDown(1) - Dig 1 block down.</pre>
    
    <p id="digLeft"></p>
    
 - digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.<br>
     <pre>Sintax: digLeft([Blocks=1])
-   Returns: true - if turtle digs all way.
-            false - if bllocked, empty space, or invalid parameter.
-   Note: nBlocks < 0 digs right, nBlocks > 0 digs left.
-   ex: digLeft() or digLeft(1) - Dig 1 block left.</pre>
+  Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 digs right, nBlocks > 0 digs left.
+  ex: digLeft() or digLeft(1) - Dig 1 block left.</pre>
    
    <p id="digRight"></p>
    
 - digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.<br>
     <pre>Sintax: digRight([Blocks=1])
-   Returns: true - if turtle digs all way.
-            false - if bllocked, empty space, or invalid parameter.
-   Note: nBlocks < 0 digs left, nBlocks > 0 digs left.
-   ex: digRight(-1) or digLeft(1) - Dig 1 block left.</pre>
+  Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 digs left, nBlocks > 0 digs left.
+  ex: digRight(-1) or digLeft(1) - Dig 1 block left.</pre>
    
    <p id="digUp"></p>
    
 - digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.
     <pre>Sintax: digUp([Blocks=1])
-   Returns: true - if turtle digs all way.
-            false - if bllocked, empty space, or invalid parameter.
-   Note: nBlocks < 0 digs down, nBlocks > 0 digs Up.
-   ex: digUp(2) - Dig 2 blocks Up.</pre>
+  Returns: true - if turtle digs all way.
+           false - if bllocked, empty space, or invalid parameter.
+  Note: nBlocks < 0 digs down, nBlocks > 0 digs Up.
+  ex: digUp(2) - Dig 2 blocks Up.</pre>
    
 
 ## Drop
@@ -660,57 +660,57 @@
 
 - drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.<br>
     <pre>Sintax: drop([Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from the front.
-   ex: drop(2) - Drops 2 blocks forward.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from the front.
+  ex: drop(2) - Drops 2 blocks forward.</pre>
    
    <p id="dropBack"></p>
    
 - dropBack([Blocks=stack]) Rotate back and drops or sucks Blocks forward.<br>
     <pre>Sintax: dropBack([Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from the back.
-   ex: dropBack(-2) - Sucks 2 blocks from the back.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from the back.
+  ex: dropBack(-2) - Sucks 2 blocks from the back.</pre>
    
    <p id="dropDir"></p>
    
 - dropDir([sDir="forward"][, Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front, up or down the turtle.<br>
     <pre>Sintax: dropDir([sDir="forward"][, Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from sDir direction.
-   ex: dropDir(-2) - Sucks 2 blocks from the front.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from sDir direction.
+  ex: dropDir(-2) - Sucks 2 blocks from the front.</pre>
    
    <p id="dropDown"></p>
    
 - dropDown([Blocks=stack]) Drops nBlocks from selected slot and inventory in the world downwards.<br>
     <pre>Sintax: dropDown([Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from down.
-   ex: dropDown() - Drops 1 block down.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from down.
+  ex: dropDown() - Drops 1 block down.</pre>
    
    <p id="dropLeft"></p>
    
 - dropLeft([nBlocks=stack]) Rotate left and drops or sucks nBlocks forward.<br>
     <pre>Sintax: dropLeft([Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from the left.
-   ex: dropLeft() - Drops 1 block to the left.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from the left.
+  ex: dropLeft() - Drops 1 block to the left.</pre>
    
    <p id="dropRight"></p>
    
 - dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.<br>
     <pre>Sintax: dropRight([Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from the right.
-   ex: dropRight() - Drops 1 block to the right.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from the right.
+  ex: dropRight() - Drops 1 block to the right.</pre>
    
    <p id="dropUp"></p>
    
 - dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.<br>
     <pre>Sintax: dropUp([Blocks=stack])
-   Returns: Number of blocks dropped.
-   Note: Blocks < 0 sucks Blocks from up.
-   ex: dropUp() - Drops 1 block upwards.</pre>
+  Returns: Number of blocks dropped.
+  Note: Blocks < 0 sucks Blocks from up.
+  ex: dropUp() - Drops 1 block upwards.</pre>
    
 
 ## Place
@@ -719,80 +719,80 @@
    
 - place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.<br>
     <pre>Sintax: place([Blocks=1])
-   Returns: number of blocks placed.
-            false - invalid parameter.
-   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards
-   ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
+  Returns: number of blocks placed.
+           false - invalid parameter.
+  Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards
+  ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
    
    <p id="placeAbove">
    
 - placeAbove([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.<br>
     <pre>Sintax: placeAbove([nBlocks=1])
-   Returns: number of placed blocks.
-            false - if turtle was blocked on the way back.
-                  - couldn't place block.
-                  - invalid parameter.
-   ex: placeAbove(1) or placeAbove() - Places one Block above turtle.</pre>
+  Returns: number of placed blocks.
+           false - if turtle was blocked on the way back.
+                 - couldn't place block.
+                 - invalid parameter.
+  ex: placeAbove(1) or placeAbove() - Places one Block above turtle.</pre>
             
    <p id="placeBelow">
    
 - placeBelow([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.<br>
     <pre>Sintax: placeAbove([nBlocks=1])
-   Returns:  number of blocks placed
-             false - if turtle was blocked on the way back.
-                   - couldn't place block.
-                   - invalid parameter.
-   ex: placeBelow(2) - Places two Blocks below turtle in a strait line forward.</pre>
+  Returns:  number of blocks placed
+            false - if turtle was blocked on the way back.
+                  - couldn't place block.
+                  - invalid parameter.
+  ex: placeBelow(2) - Places two Blocks below turtle in a strait line forward.</pre>
    
    <p id="placeDir">
    
 - placeDir([sDir="forward"]) Places inventory selected Block in sDir { "forward", "right", "back", "left", "up", "down" }.<br>
     <pre>Sintax: placeDir([sDir="forward"])
-   Returns: true if turtle places the selected block.
-            false if turtle doesn't place the selected block, or invalid parameter.
-   ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.</pre>
+  Returns: true if turtle places the selected block.
+           false if turtle doesn't place the selected block, or invalid parameter.
+  ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.</pre>
    
    <p id="placeDown">
    
 - placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.<br>
     <pre>Sintax: placeDown([Blocks=1])
-   Returns: number of blocks placed.
-            false - if turtle was blocked on the way back.
-                  - invalid parameter.
-   Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
-   ex: placeDown(1) or placeDown() - Places 1 Block Down.</pre>
+  Returns: number of blocks placed.
+           false - if turtle was blocked on the way back.
+                 - invalid parameter.
+  Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
+  ex: placeDown(1) or placeDown() - Places 1 Block Down.</pre>
    
    <p id="placeLeft">
    
 - placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.<br>
     <pre>Sintax: placeLeft([Blocks=1])
-   Returns: number of placed blocks.
-            false - if turtle was blocked on the way back.
-                  - invalid parameter.
-                  - couldn't place block.
-   Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
-   ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.</pre>
+  Returns: number of placed blocks.
+           false - if turtle was blocked on the way back.
+                 - invalid parameter.
+                 - couldn't place block.
+  Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
+  ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.</pre>
    
    <p id="placeRight">
    
 - placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.<br>
     <pre>Sintax: placeRight([Blocks=1])
-   Returns: true if turtle places all blocks all the way.
-            false - if turtle was blocked on the way back.
-                  - invalid parameter.
-                  - couldn't place block
-   Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
-   ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.</pre>
+  Returns: true if turtle places all blocks all the way.
+           false - if turtle was blocked on the way back.
+                 - invalid parameter.
+                 - couldn't place block
+  Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
+  ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.</pre>
    
    <p id="placeUp">
    
 - placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.<br>
     <pre>Sintax: placeUp([Blocks=1])
-   Returns: number os blocks placed.
-            false - if turtle was blocked on the way back.
-                  - invalid parameter.
-   Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
-   ex: placeUp(1) or placeUp() - Places 1 Block up.</pre>
+  Returns: number os blocks placed.
+           false - if turtle was blocked on the way back.
+                 - invalid parameter.
+  Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
+  ex: placeUp(1) or placeUp() - Places 1 Block up.</pre>
    
    
 ## Detect
@@ -801,30 +801,30 @@
    
 - detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.<br>
     <pre>Sintax: detectAbose([Blocks=1])
-   Returns: true - if turtle detects a line of nBlocks above it.
-            false - if blocked, empty space.
-						nil - if invalid parameter.
-   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-   ex: detectAbove() or detectAbove(1) - Detects 1 block up.</pre>
+  Returns: true - if turtle detects a line of nBlocks above it.
+           false - if blocked, empty space.
+					nil - if invalid parameter.
+  Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+  ex: detectAbove() or detectAbove(1) - Detects 1 block up.</pre>
    
    <p id="detectBelow">
    
 - detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.<br>
     <pre>Sintax: detectBelow([Blocks=1])
-   Returns: true - if turtle detects a line of nBlocks below.
-            false - if blocked, empty space.
-						nil - if invalid parameter
-   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
+  Returns: true - if turtle detects a line of nBlocks below.
+           false - if blocked, empty space.
+					nil - if invalid parameter
+  Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+  ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
    <p id="detectBelow">
    
 - detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.<br>
     <pre>Sintax: detectDir([sDir="forward"])
-   Returns: true - If turtle detects a block.
-            false - if turtle didn't detect a block.
-            nil - invalid parameter.
-   ex: detectDir([sDir="forward"]) - Detect blocks forward.</pre>
+  Returns: true - If turtle detects a block.
+           false - if turtle didn't detect a block.
+           nil - invalid parameter.
+  ex: detectDir([sDir="forward"]) - Detect blocks forward.</pre>
 
 
 ## Disk
@@ -833,8 +833,8 @@
    
 - fsGetFreeSpace() Gets the total free space on disk.<br>
 		<pre>Sintax: fsGetFreeSpace()
-   Returns: Number - Free space on disk.
-   ex: fsGetFreeSpace() - Gets the free space on disk.</pre>
+  Returns: Number - Free space on disk.
+  ex: fsGetFreeSpace() - Gets the free space on disk.</pre>
    
    
 ## Inspect
@@ -843,9 +843,9 @@
 
 - inspectDir([sDir="forward"]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
     <pre>Sintax: inspectDir([sDir="forward"])
-   Returns: true, table with data - If turtle detects a block.
-            false, message - if turtle didn't detect a block.
-   ex: detectDir([sDir="forward"]) - Inspects a block forward.</pre>
+  Returns: true, table with data - If turtle detects a block.
+           false, message - if turtle didn't detect a block.
+  ex: detectDir([sDir="forward"]) - Inspects a block forward.</pre>
    
 
 ## Compare
@@ -854,34 +854,34 @@
    
  - compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
     <pre>Sintax: compareAbove([Blocks=1])
-   Returns: true - if all the blocks are the same.
-            false - if blocked, empty space, or found a diferent block.
-						nil if invalid parameter.
-   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
-   ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
+  Returns: true - if all the blocks are the same.
+           false - if blocked, empty space, or found a diferent block.
+					nil if invalid parameter.
+  Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
+  ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
    
    <p id="compareBelow">
    
 - compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.<br>
     <pre>Sintax: compareBelow([Blocks=1])
-   Returns: true - if all the blocks are the same.
-            false - if blocked, empty space, or found a diferent block.
-						nil if invalid parameter.
-   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
-   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
+  Returns: true - if all the blocks are the same.
+           false - if blocked, empty space, or found a diferent block.
+					nil if invalid parameter.
+  Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
+  ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
    
    <p id="compareDir">
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
     <pre>Sintax: compareDir([sDir="forward"][, nSlot=selected slot])
-   Returns: true - if the item in slot and in the world is the same.
-            false - if block in slot and in the world are not the same,
-                  - if invalid direction,
-                  - if nSlot is not a number,
-                  - if empty slot.
-   sintax: compareDir([sDir="forward"][, nSlot=selected slot])
-   ex: compareDir() compares selected slot with block in front of turtle.
-       compareDir("left", 2) - compares item in slot 2 with block on the left.</pre>
+  Returns: true - if the item in slot and in the world is the same.
+           false - if block in slot and in the world are not the same,
+                 - if invalid direction,
+                 - if nSlot is not a number,
+                 - if empty slot.
+  sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+  ex: compareDir() compares selected slot with block in front of turtle.
+      compareDir("left", 2) - compares item in slot 2 with block on the left.</pre>
 
 
 ## Inventory
@@ -890,107 +890,107 @@
     
 - clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
     <pre>Sintax: compareBelow([Blocks=1])
-   Returns: false - if there is no space to tranfer items.
-            true - if the slot is empty.
-   ex: clearSlot() - Clears the selected slot.</pre>
+  Returns: false - if there is no space to tranfer items.
+           true - if the slot is empty.
+  ex: clearSlot() - Clears the selected slot.</pre>
    
    <p id="decSlot">
    
 - decSlot(nSlot) Decreases nSlot in range [1..16].<br>
     <pre>Sintax: decSlot(nSlot)
-   Returns: the number of slot increased by 1.
-   ex: decSlot(1) - Returns 16.</pre>
+  Returns: the number of slot increased by 1.
+  ex: decSlot(1) - Returns 16.</pre>
    
    <p id="freeCount">
    
 - freeCount() Get number of free slots in turtle's inventory.<br>
     <pre>Sintax: freeCount()
-   Returns: Number of free slots.
-   ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
+  Returns: Number of free slots.
+  ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
    
    <p id="getFreeSlot">
    
 - getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
     <pre>Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
-   Returns: first free slot number.
-   ex: getFreeSlot() - Returns the first empty slot startint at slot 1.
-       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
-       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
+  Returns: first free slot number.
+  ex: getFreeSlot() - Returns the first empty slot startint at slot 1.
+      getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
+      getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
    
    <p id="groupItems">
    
 - groupItems() Groups the same type of items in one slot in inventoy.<br>
     <pre>Sintax: groupItems()
-   Returns: true.
-   ex: groupItems() - Stacks the same items.</pre>
+  Returns: true.
+  ex: groupItems() - Stacks the same items.</pre>
    
    <p id="indSlot">
    
 - incSlot(nSlot) Increases nSlot in range [1..16].<br>
     <pre>Sintax: incSlot(nSlot)
-   Returns: The number of slot increased by 1.
-   ex: incSlot(16) - Returns 1</pre>
+  Returns: The number of slot increased by 1.
+  ex: incSlot(16) - Returns 1</pre>
    
    <p id="itemCount">
    
 - itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
     <pre>Sintax: itemCount([slot/"inventory"/item name=Selected slot])
-   Returns: number of items counted.
-            false - if nSlot <0 or > 16.
-                  - if nSlot is neither a string nor a number.
-   ex: itemCount() counts items in selected slot.
-       itemCount("inventory") - counts items in inventory.
-       itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
+  Returns: number of items counted.
+           false - if nSlot <0 or > 16.
+                 - if nSlot is neither a string nor a number.
+  ex: itemCount() counts items in selected slot.
+      itemCount("inventory") - counts items in inventory.
+      itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
    
    <p id="itemName">
    
 - itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
     <pre>Sintax: itemName([Slot=Selected slot])
-   Returns: item name - if selected slot/slot is not empty.
-            false - if selected slot/slot is empty.
-   ex: itemName(1) - Returns the name of item in slot 1.</pre>
-   
+  Returns: item name - if selected slot/slot is not empty.
+           false - if selected slot/slot is empty.
+  ex: itemName(1) - Returns the name of item in slot 1.</pre>
+  
    <p id="itemSelect">
    
 - itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
     <pre>Sintax: itemSelect([Slot/itemName=Selected slot])
-   Returns: The selected slot, and items in that slot.
-            False - if the item was not found
-                  - if nStartSlot is not a number or a string.
-                  - if value is a number and ( < 1 or > 16 )
-   Note: if executed select() is the same as turtle.getSelectedSlot()
-   ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
+  Returns: The selected slot, and items in that slot.
+           False - if the item was not found
+                 - if nStartSlot is not a number or a string.
+                 - if value is a number and ( < 1 or > 16 )
+  Note: if executed select() is the same as turtle.getSelectedSlot()
+  ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
    
    <p id="itemSpace">
    
 - itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
     <pre>Sintax: itemSpace([Slot/itemName=Selected slot])
-   Returns: number of items you can store more in inventory.
-            false - if item is not in inventory.
-                  - if slot is empty.
-   ex: itemSpace() gets how many items you can store, like the item in selected slot.
-       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
-       itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
+  Returns: number of items you can store more in inventory.
+           false - if item is not in inventory.
+                 - if slot is empty.
+  ex: itemSpace() gets how many items you can store, like the item in selected slot.
+      itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
+      itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
    
    <p id="search">
    
 - search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.<br>
     <pre>Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
-   Returns: The first slot where the item was found, and the quantity
-            False - if the item was not found
-                  - if sItemName not supplied.
-                  - if nStartSlot is not a number.
-   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
-   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
+  Returns: The first slot where the item was found, and the quantity
+           False - if the item was not found
+                 - if sItemName not supplied.
+                 - if nStartSlot is not a number.
+  Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
+  ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
     <pre>Sintax: transferFrom(nSlot, nItems)
-   Returns: number of items in selected slot.
-            nil - if nSlot is not supplied.
-            false - if nSlot is empty.
-                  - if nSlot is out of range [1..16].
-                  - if selected slot is full.
-   ex: transferFrom(1, 3) - Tranfers from slot 1, 3 items to selected slot.</pre>
+  Returns: number of items in selected slot.
+           nil - if nSlot is not supplied.
+           false - if nSlot is empty.
+                 - if nSlot is out of range [1..16].
+                 - if selected slot is full.
+  ex: transferFrom(1, 3) - Tranfers from slot 1, 3 items to selected slot.</pre>
    
    
 ## Suck
@@ -999,8 +999,8 @@
    
 - suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
     <pre>Sintax: suckDir([sDir="forward][,nItems=all the items])
-   Returns: true - if turtle collects some items.
-            false - if there are no items to take.
-   ex: suckDir() - Turtle sucks all the items forward.</pre>
+  Returns: true - if turtle collects some items.
+           false - if there are no items to take.
+  ex: suckDir() - Turtle sucks all the items forward.</pre>
 
    <a href="#top">Top of page</a>
