@@ -669,7 +669,6 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
         end
       end
     end
-    end
   end
   return nLower, sName
 end
@@ -876,18 +875,18 @@ function leaveItems(nQuant, bWrap) --[[ Leaves nQuant of item in nSlot, moving.
   end
 end
 
-function clearSlot(nSlot) --[[ Clears content of slot, moving items to another slot.
+function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.]]
-  nSlot = nSlot or turtle.getSelectedSlot()
+  nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
+  if nSlot > 16 or nSlot < 1 then return nil, "Slot out of range." end
+  if turtle.getSelectedSlot() ~= nSlot then turtle.select(nSlot) end 
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return true end
 
-  local destSlot = nSlot
-  repeat
-    destSlot = bit32.band( destSlot, 15 ) + 1
-    if destSlot == nSlot then return false, "Nowhere to transfer items." end
-
+  local destSlot = incSlot(nSlot, bWrap)
+  if not destSlot then return false, "No where to transfer items." end
+  while destSlot and (tData.count > 0) do
     local destData = turtle.getItemDetail(destSlot)
     if not destData then
       turtle.transferTo(destSlot, tData.count)
@@ -906,7 +905,9 @@ function clearSlot(nSlot) --[[ Clears content of slot, moving items to another s
         end
       end
     end
-  until (tData.count == 0)
+    destSlot = incSlot(destSlot, bWrap)
+    if not destSlot or destSlot == nSlot then return false, "No where to transfer items." end
+  end
   return true
 end
   
@@ -935,14 +936,23 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
 end
 
 --implementing--
-function arrangeRecipe(sRecipe)
+function arrangeRecipe(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not tRecipes[sRecipe] then return false, "Must supply recipe name." end
 
+  if not nLimit then nLimit = getMaxCraft() end
+
   local col, lin = getFirstItemCoords(sRecipe)
-  for c = 0, 3 do
-    for l = 0, 3 do
-      if c < col and l <= lin then leaveItems(0, false) end
+  local tRecipe = tRecipes[sRecipe].recipe
+  local c, l = 0, 0
+  for k, v in pairs(tRecipe)do
+    if v.lin then
+      local col = v.col
+      local lin = v.lin 
+      if c < col and l <= lin then ClearSlot(0, false)
+      else
+        --leave
+      end
     end
   end
 end
@@ -1639,9 +1649,18 @@ function countItemSlots() --[[ Counts how many slots is ocupied with each item.
   return tItemSlots
 end
 
-function decSlot(nSlot) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Returns:  the number of slot increased by 1]]
+function decSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
+  02/11/2021  Returns:  the number of slot increased by 1.
+                        nil - if nSlot if not a number.
+                        false - if bWrap and nSlot < 1.
+              Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
+              ex: decSlot() - Decrements the selected slot.
+                  decSlot(1, false) - Returns false.
+                  decSlot(16, false) - Returns 15]]
+  nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
+  if type(nSlot) ~= "number" then return nil, "Invalid slot number" end
 	nSlot = nSlot - 1
+  if not bWrap and nSlot < 1 then return false end
   return nSlot == 0 and 16 or nSlot
 end
 
@@ -1717,9 +1736,14 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 	return true
 end
 
-function incSlot(nSlot) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Returns:  the number of slot increased by 1.]]
-  return bit.band(nSlot, 15) + 1
+function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
+  02/11/2021  Returns:  the number of slot increased by 1.
+                        ]]
+  nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
+  if type(nSlot) ~= "number" then return nil, "Invalid slot number" end
+  nSlot = nSlot + 1
+  if not bWrap and (nSlot > 16) then return false end
+  return bit.band(nSlot-1, 15) + 1
 end
 
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
@@ -2054,10 +2078,11 @@ end
 ---- TEST AREA ------
 --function craft(sRecipe, nLimit)
 --function arrangeRecipe(sRecipe)
+--function clearSlot(nSlot) --[[ Clears content of slot, moving items to another slot.
 
 INIT()
 
-print(arrangeRecipe("minecraft:stick"))
-
+--print(arrangeRecipe("minecraft:stick"))
+print(clearSlot(16, false))
 
 TERMINATE()
