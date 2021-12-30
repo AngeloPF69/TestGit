@@ -326,10 +326,10 @@
 - refuel([nItems=stack]) Refuels the turtle with nItems.
     <pre>Sintax: refuel([nItems=all items in selected slot])
   Returns: number of items refueled.
-           false - if empty selected slot
-                 - if item is not fuel
-                 - if turtle doesn't need fuel.
-                 - if turtle is at maximum fuel.
+           false - "Empty selected slot."
+								 -	"Item is not fuel."
+								 - "Turtle doesn't need fuel."
+								 - "Turtle is at maximum fuel."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   
