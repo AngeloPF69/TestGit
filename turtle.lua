@@ -22,10 +22,10 @@ tStacks = {} --["itemName"] = nStack
 
 function refuel(nCount) --[[ Refuels the turtle with nCount items.
   23/09/2021  Returns:	number of items refueled.
-												false - if empty selected slot
-																if item is not fuel
-																if turtle doesn't need fuel.
-																if turtle is at maximum fuel.
+												false - "Empty selected slot."
+															-	"Item is not fuel."
+															- "Turtle doesn't need fuel."
+															- "Turtle is at maximum fuel."
 							sintax: refuel([nCount=stack])
               ex: refuel(123) - Fuels the turtle with 123 items.]] 
 	local fuelLimit = turtle.getFuelLimit()
@@ -36,7 +36,7 @@ function refuel(nCount) --[[ Refuels the turtle with nCount items.
 	
 	local tData = turtle.getItemDetail()
 	
-	if not tData then return false, "Empty selected slot" end
+	if not tData then return false, "Empty selected slot." end
 	if not nCount then nCount = tData.count end
 	if not turtle.refuel(0) then return false, "Item is not fuel." end
 	
