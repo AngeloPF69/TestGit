@@ -67,7 +67,6 @@
 
    <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
    <a href="#getParam">getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
-   <a href="#isKey">isKey(Key, t) Checks if Key is in t table.</a><br>
    <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
    <a href="#loadTable">loadTable(sFileName) Loads a text file into a table.</a><br>
    <a href="#saveTable">saveTable(t, sFileName) Saves a table into a text file.</a><br>
@@ -352,14 +351,6 @@
   Note: Only sorts three parameters type (string, number and boolean).
   ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.</pre>
    
-   <p id="isKey"></p>
-   
-- isKey(Key, t) Checks if Key is in t table.</a><br>
-    <pre>Sintax: isKey(key, t)
-  Returns: true - if Key is in t.
-           false - if Key is not in t.
-  ex: isKey("hello", {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
-  
    <p id="isValue"></p>
    
 - isValue(value, t) Checks if value is in t table.</a><br>
