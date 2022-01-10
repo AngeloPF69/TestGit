@@ -877,7 +877,9 @@ end
 
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
-                        true - if the slot is empty.]]
+                        true - if the slot is empty.
+                        nil - if nSlot is out of range [1..16].
+              Sintax: clearSlot([nSlot=selected slot][], bWrap)]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if nSlot > 16 or nSlot < 1 then return nil, "Slot out of range." end
   if turtle.getSelectedSlot() ~= nSlot then turtle.select(nSlot) end 
