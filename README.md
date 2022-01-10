@@ -67,7 +67,6 @@
 
    <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
    <a href="#getParam">getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
-   <a href="#isKey">isKey(Key, t) Checks if Key is in t table.</a><br>
    <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
    <a href="#loadTable">loadTable(sFileName) Loads a text file into a table.</a><br>
    <a href="#saveTable">saveTable(t, sFileName) Saves a table into a text file.</a><br>
@@ -326,10 +325,10 @@
 - refuel([nItems=stack]) Refuels the turtle with nItems.
     <pre>Sintax: refuel([nItems=all items in selected slot])
   Returns: number of items refueled.
-           false - if empty selected slot
-                 - if item is not fuel
-                 - if turtle doesn't need fuel.
-                 - if turtle is at maximum fuel.
+           false - "Empty selected slot."
+								 -	"Item is not fuel."
+								 - "Turtle doesn't need fuel."
+								 - "Turtle is at maximum fuel."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   
@@ -352,14 +351,6 @@
   Note: Only sorts three parameters type (string, number and boolean).
   ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.</pre>
    
-   <p id="isKey"></p>
-   
-- isKey(Key, t) Checks if Key is in t table.</a><br>
-    <pre>Sintax: isKey(key, t)
-  Returns: true - if Key is in t.
-           false - if Key is not in t.
-  ex: isKey("hello", {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
-  
    <p id="isValue"></p>
    
 - isValue(value, t) Checks if value is in t table.</a><br>
