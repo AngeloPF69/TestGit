@@ -848,31 +848,61 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
   return math.abs(col), 0
 end
 
---implementing--
-function leaveItems(nQuant, bWrap) --[[ Leaves nQuant of item in nSlot, moving.
+function searchSpace(sItemName, nStartSlot, bWrap)
+  local nSlot, nItems = search(sItemName, nStartSlot, bWrap)
+  if nSlot then return nSlot, nItems end
+  return false
+end
+
+function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.]]
+  sItemName, nQuant, bWrap = getParam("snb", {"", true}, sItemName, nQuant, bWrap)
   local tData = turtle.getItemDetail()
 
-  local nSlot, nStored = turtle.getSelectedSlot()
-  if not tData then nStored = 0
-  else nStored = tData.count
-  end
-
-  while (nStored ~= nQuant) do
-    if nStored > nQuant then
-      local nDestSlot = search(tData.name, incSlot(nSlot), bWrap)
-      if not nDestSlot then
-        nDestSlot = getFreeSlot(incSlot(nSlot), bWrap)
-        if not nDestSlot then break end
-      end
-      tData = turtle.getItemDetail(nDestSlot)
-      if not tData then 
-      else
-      
-      end
+  if sItemName == "" then
+    if not tData then return false, "Slot empty and item name not supplied."
+    else sItemName = tData.name
     end
   end
+
+  local nOrgSlot, nStored = turtle.getSelectedSlot()
+  local nLastSlot = nOrgSlot
+  
+  if tData then nStored = tData.count
+  else nStored = 0
+  end
+
+  if nQuant < 0 then nQuant = nStored + nQuant end
+
+  while (nStored ~= nQuant) do
+    local nDestSlot, nDestSpace, nOrgSpace
+    nLastSlot = incSlot(nLastSlot, bWrap)
+    if not nLastSlot then break end
+
+    if nStored > nQuant then
+      nDestSlot, nDestSpace = searchSpace(sItemName, nLastSlot, bWrap)
+      if not nDestSlot then
+        nDestSlot = getFreeSlot(nLastSlot, bWrap)
+        if not nDestSlot then break end
+        nDestSpace=64
+      end
+
+      if nDestSpace > (nStored - nQuant) then
+        turtle.transferTo(nDestSlot, nStored - nQuant)
+      else 
+        turtle.transferTo(nDestSlot, nDestSpace)
+      end
+    else
+      nDestSlot = search(sItemName, nLastSlot, bWrap)
+      if not nDestSlot then break end
+      transferFrom(nDestSlot, nQuant - nStored)
+    end
+    nLastSlot = nDestSlot
+    nStored = turtle.getItemCount()
+  end
+  if nStored == nQuant then return true end
+  return false
 end
 
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
@@ -902,7 +932,7 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
             tData.count = tData.count - nSpace
           else
             turtle.transferTo(destSlot, tData.count)
-            tData.count = 0
+            return true
           end
         end
       end
@@ -2084,7 +2114,6 @@ end
 
 INIT()
 
---print(arrangeRecipe("minecraft:stick"))
-print(clearSlot(16, false))
+print(leaveItems("minecraft:oak_planks", 3))
 
 TERMINATE()
