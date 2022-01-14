@@ -848,7 +848,13 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
   return math.abs(col), 0
 end
 
-function searchSpace(sItemName, nStartSlot, bWrap)
+function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a slot that has sItemName.
+  19/10/2021  Returns:  nSlot, nItems - Slot where is this item, and number of items.
+                        false - if it didn't find a slot with sItemName and some space.
+              sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
+              ex: searchSpace("minecraft:oak_planks") - Search for a not compete stack of oak boards.
+                  searchSpace("minecraft:cobblestone", 16, false) - Checks if slot 16 has cobblestone and space for more.
+                  searchSpace("minecraft:cobblestone", 5) - Searchs for cobblestone a incomplete stack, starting at slot 5 in all inventory.]]
   local nSlot, nItems = search(sItemName, nStartSlot, bWrap)
   if nSlot then return nSlot, nItems end
   return false
