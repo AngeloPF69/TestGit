@@ -9,9 +9,9 @@ dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down
 lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
 facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8}
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-						facing = facingType["z-"], --the axis where the turtle is facing at
-						leftHand = "empty",
-						rightHand = "empty",
+          facing = facingType["z-"], --the axis where the turtle is facing at
+          leftHand = "empty",
+          rightHand = "empty",
 } 
 
 tRecipes = {} --[[ ["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
@@ -983,8 +983,10 @@ end
 --implementing--
 function arrangeRecipe(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
-  if not tRecipes[sRecipe] then return false, "Must supply recipe name." end
-
+  if not sRecipe then return false, "Must supply recipe name."
+  elseif not tRecipes[sRecipe] then return false, "Recipe name does not exist."
+  end
+  
   if not nLimit then nLimit = getMaxCraft() end
 
   local col, lin = getFirstItemCoords(sRecipe)
