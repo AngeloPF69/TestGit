@@ -326,9 +326,9 @@
     <pre>Sintax: refuel([nItems=all items in selected slot])
   Returns: number of items refueled.
            false - "Empty selected slot."
-								 -	"Item is not fuel."
-								 - "Turtle doesn't need fuel."
-								 - "Turtle is at maximum fuel."
+                 -	"Item is not fuel."
+                 - "Turtle doesn't need fuel."
+                 - "Turtle is at maximum fuel."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   
