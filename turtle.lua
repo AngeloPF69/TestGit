@@ -1064,7 +1064,7 @@ function flattenInventory()
 end
 
 --implementing--
-function craft(sRecipe, nLimit)
+function craftRecipe(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then
