@@ -860,10 +860,16 @@ function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a sl
   return false
 end
 
+--not tested
 function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
-  19/10/2021  Returns:  false - if there is no space to tranfer items.
-                        true - if the slot is empty.]]
-  sItemName, nQuant, bWrap = getParam("snb", {"", true}, sItemName, nQuant, bWrap)
+  19/10/2021  Returns:  true - if there is nQuant of items.
+                        false - of sItemName not supplied.
+                        false - if there is no items to tranfer to selected slot or no space to tranfer items to.
+              Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
+              ex: leaveItems() - Removes items from selected slot.
+                  leaveItems("minecraft:cobblestone") - Removes items from selected slot.
+                  leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot]]
+  sItemName, nQuant, bWrap = getParam("snb", {"", 0, true}, sItemName, nQuant, bWrap)
   local tData = turtle.getItemDetail()
 
   if sItemName == "" then
@@ -911,6 +917,7 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
   return false
 end
 
+--not tested
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.
@@ -918,11 +925,11 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
               Sintax: clearSlot([nSlot=selected slot][], bWrap)]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if nSlot > 16 or nSlot < 1 then return nil, "Slot out of range." end
+  if isEmptySlot(nSlot) then return true end
   if turtle.getSelectedSlot() ~= nSlot then turtle.select(nSlot) end 
-  local tData = turtle.getItemDetail(nSlot)
-  if not tData then return true end
-
-  local destSlot = incSlot(nSlot, bWrap)
+  return leaveItems(0)
+end  
+  --[[local destSlot = incSlot(nSlot, bWrap)
   if not destSlot then return false, "No where to transfer items." end
   while destSlot and (tData.count > 0) do
     local destData = turtle.getItemDetail(destSlot)
@@ -947,7 +954,7 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
     if not destSlot or destSlot == nSlot then return false, "No where to transfer items." end
   end
   return true
-end
+end--]]
   
 function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
   02/11/2021  Returns:  number of items in selected slot.
