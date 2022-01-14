@@ -847,11 +847,11 @@
 
    <p id="compareAbove">
    
- - compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
+- compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
     <pre>Sintax: compareAbove([Blocks=1])
   Returns: true - if all the blocks are the same.
            false - if blocked, empty space, or found a diferent block.
-					nil if invalid parameter.
+           nil - if invalid parameter.
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
    
@@ -865,7 +865,7 @@
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
    
-   <p id="compareDir">
+    <p id="compareDir">
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
     <pre>Sintax: compareDir([sDir="forward"][, nSlot=selected slot])
