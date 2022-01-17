@@ -2125,10 +2125,10 @@ end
 ---- TEST AREA ------
 --function craft(sRecipe, nLimit)
 --function arrangeRecipe(sRecipe)
---function clearSlot(nSlot) --[[ Clears content of slot, moving items to another slot.
 
 INIT()
 
-print(leaveItems("minecraft:oak_planks", 3))
+--print(arrangeRecipe())
+print(leaveItems())
 
 TERMINATE()
