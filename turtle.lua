@@ -849,18 +849,24 @@ function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the f
 end
 
 function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a slot that has sItemName.
-  19/10/2021  Returns:  nSlot, nItems - Slot where is this item, and number of items.
+  19/10/2021  Returns:  nSlot, nSpace - Slot where is this item, and number of space.
                         false - if it didn't find a slot with sItemName and some space.
               sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
-              ex: searchSpace("minecraft:oak_planks") - Search for a not compete stack of oak boards.
+              ex: searchSpace("minecraft:oak_planks") - Search for a not complete stack of oak boards.
                   searchSpace("minecraft:cobblestone", 16, false) - Checks if slot 16 has cobblestone and space for more.
                   searchSpace("minecraft:cobblestone", 5) - Searchs for cobblestone a incomplete stack, starting at slot 5 in all inventory.]]
-  local nSlot, nItems = search(sItemName, nStartSlot, bWrap)
-  if nSlot then return nSlot, nItems end
+  local nSlot, nSpace = nStartSlot
+  repeat
+    nSlot = search(sItemName, nSlot, bWrap)
+    if nSlot then
+      nSpace = turtle.getItemSpace(nSlot)
+      if nSpace > 0 then return nSlot, nSpace end
+    end
+    nSlot = incSlot(nSlot, bWrap)
+  until nSlot == nStartSlot
   return false
 end
 
---not tested
 function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
   19/10/2021  Returns:  true - if there is nQuant of items.
                         false - of sItemName not supplied.
@@ -894,7 +900,8 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
 
     if nStored > nQuant then
       nDestSlot, nDestSpace = searchSpace(sItemName, nLastSlot, bWrap)
-      if not nDestSlot then
+
+      if not nDestSlot or (nDestSlot == nOrgSlot) then
         nDestSlot = getFreeSlot(nLastSlot, bWrap)
         if not nDestSlot then break end
         nDestSpace=64
@@ -2129,6 +2136,7 @@ end
 INIT()
 
 --print(arrangeRecipe())
-print(leaveItems())
+print(leaveItems(1))
+
 
 TERMINATE()
