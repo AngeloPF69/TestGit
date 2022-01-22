@@ -642,14 +642,13 @@ function getStack(nSlot) --[[ Returns the stack of item in nSlot.
   return nStack
 end
 
---not tested--
-function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory.
-  17/12/2021  Return: number the lower stack of items in inventory.
+function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory, the slot and the name of item.
+  17/12/2021  Return: number the lower stack of items in inventory, the Slot, the name of item.
                       false - if item not found.
               sintax: invLowerStack([sItemName]).
-              ex: invLowerStack() - gets the lowest stack of items in inventory.
-                  invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks, in inventory.]]
-  local nLower = false
+              ex: invLowerStack() - gets the lowest stack of items in inventory, the slot, and the item name.
+                  invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks in inventory, the slot and the item name.]]
+  local nLower, nRSlot = false
   local sName = ""
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
@@ -660,17 +659,19 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
           if nLower > tData.count then
             nLower = tData.count
             sName = tData.name
+            nRSlot = nSlot
           end
         end
       else
         if nLower > tData.count then
           nLower = tData.count
           sName = tData.name
+          nRSlot = nSlot
         end
       end
     end
   end
-  return nLower, sName
+  return nLower, nRSlot, sName
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
@@ -721,7 +722,6 @@ function ingredients(sRecipe) --[[ Builds a table with items and quantities in a
   return tRecipe
 end
 
---not tested--
 function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference between the recipe and the inventory.
   23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
                       nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
@@ -752,9 +752,9 @@ function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference
     for k1,v1 in pairs(tInvIng) do
       if k == k1 then
         tIngredients[k] = tIngredients[k] + v1
-        if tIngredients[k] < 0 then bHave = false end
       end
     end
+    if tIngredients[k] < 0 then bHave = false end
   end
   return bHave, tIngredients
 end
@@ -810,7 +810,7 @@ end
 function getMaxCraft() --[[ Returns maximum limit to craft the recipe on inventory.
   19/10/2021  Returns false - if it is not a recipe in the inventory.
                       tRecipe - the recipe with items and positions.]]
-  if not turtle.craft(0) then return false, "This is not a recipe." end
+  --if not turtle.craft(0) then return false, "This is not a recipe." end
   local tIng = invIngredients() --[ingredient name] = quantity
   local tIngSlots = countItemSlots() --[ingredient name] = quantity of slots ocupied
 
@@ -924,7 +924,6 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
   return false
 end
 
---not tested
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
   19/10/2021  Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.
@@ -934,35 +933,9 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
   if nSlot > 16 or nSlot < 1 then return nil, "Slot out of range." end
   if isEmptySlot(nSlot) then return true end
   if turtle.getSelectedSlot() ~= nSlot then turtle.select(nSlot) end 
-  return leaveItems(0)
+  return leaveItems(0, bWrap)
 end  
-  --[[local destSlot = incSlot(nSlot, bWrap)
-  if not destSlot then return false, "No where to transfer items." end
-  while destSlot and (tData.count > 0) do
-    local destData = turtle.getItemDetail(destSlot)
-    if not destData then
-      turtle.transferTo(destSlot, tData.count)
-      break
-    else
-      if tData.name == destData.name then
-        local nSpace = turtle.getItemSpace(destSlot)
-        if nSpace > 0 then
-          if tData.count > nSpace then
-            turtle.transferTo(destSlot, nSpace)
-            tData.count = tData.count - nSpace
-          else
-            turtle.transferTo(destSlot, tData.count)
-            return true
-          end
-        end
-      end
-    end
-    destSlot = incSlot(destSlot, bWrap)
-    if not destSlot or destSlot == nSlot then return false, "No where to transfer items." end
-  end
-  return true
-end--]]
-  
+    
 function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
   02/11/2021  Returns:  number of items in selected slot.
                         nil - if nSlot is not supplied.
@@ -987,7 +960,43 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
   return tData.count
 end
 
---implementing--
+
+function recipeSlots(sRecipe) --[[ Builds a table with item and quantity of slots ocupied by it.
+  21/01/2022  Returns:  table with item and quantity of slots ocupied by it.
+							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe])
+							ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
+  sRecipe = sRecipe or tRecipes.lastRecipe
+  if not sRecipe then return false, "Must supply recipe name." end
+  if not tRecipes[sRecipe] then return false, "Recipe name not found." end
+  local tRecipe = tRecipes[sRecipe].recipe
+  local tSlots = {}
+  for i=1, #tRecipe do
+    for k,v in pairs(tRecipe[i]) do
+      if not tSlots[k] then tSlots[k] = 1
+      else tSlots[k] = tSlots[k] + 1
+      end
+    end
+  end
+  return tSlots
+end
+
+function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
+  21/01/2022  Returns:  table with item and average between items and slots.
+							sintax: calcAverage(tSlots, tIng) - tSlots is a table with item and quantity of slots ocupied by it.
+								- tIng is a table with item and quantity of it.
+							ex: calcAverage(tSlots, tIng)]]
+  local tMean = {}
+  for k,v in pairs(tSlots) do
+    for k1,v1 in pairs(tIng) do
+      if k == k1 then
+        if not tMean[k] then tMean[k] = v1/v end
+      end
+    end
+  end
+  return tMean
+end
+
+--not tested
 function arrangeRecipe(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not sRecipe then return false, "Must supply recipe name."
@@ -996,16 +1005,41 @@ function arrangeRecipe(sRecipe, nLimit)
   
   if not nLimit then nLimit = getMaxCraft() end
 
-  local col, lin = getFirstItemCoords(sRecipe)
+  local tRecipeSlots = recipeSlots(sRecipe)
+  local tInvIng = invIngredients()
+  local tAverage = calcAverage(tRecipeSlots, tInvIng)
+
+
+  local nRCol, nRLin = getFirstItemCoords(sRecipe)
   local tRecipe = tRecipes[sRecipe].recipe
-  local c, l = 0, 0
-  for k, v in pairs(tRecipe)do
-    if v.lin then
-      local col = v.col
-      local lin = v.lin 
-      if c < col and l <= lin then ClearSlot(0, false)
-      else
-        --leave
+  local nCol, nLin = 0, 0
+  local tTmpLeave = {}
+  for i=1, #tRecipe do
+    for k, v in pairs(tRecipe[i]) do
+      while (nLin < nRLin) and (nCol < nRCol) do
+        if not clearSlot(nLin*4+nCol+1) then return
+          false, "Couldn't clear slot, "..tostring(nLin*4+nCol+1)
+        end
+        nCol = nCol + 1
+        if nCol > 3 then
+          nCol = 0
+          nLin= nLin + 1
+        end
+        if nLin > 3 then return true end
+      end
+
+			if not tTmpLeave[k] then tTmpLeave[k] = tAverage[k]
+      else tTmpLeave[k] = tTmpLeave[k] + tAverage[k]
+      end
+
+      turtle.select(nRLin*4+nRCol+1)
+      local nLeaveItem = math.floor(tTmpLeave[k])
+      if not leaveItems(k, nLeaveItem, false) then return false end
+      tTmpLeave[k] = tTmpLeave[k] - nLeaveItem
+
+      if v.lin then
+        nRCol = v.col
+        nRLin = v.lin
       end
     end
   end
@@ -1687,7 +1721,6 @@ end
 
 ------ INVENTORY FUNCTIONS ------
 
---not tested--
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
   04/12/2021  Returns: table[itemName]=Slots ocupied by item.
             sintax: countItemSlots()]]
@@ -1755,7 +1788,6 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
   return false
 end
 
---not tested--
 function getInventory() --[[ Builds a table with the slot, the name and quantity of items in inventory.
   04/12/2021  Returns:  table[slot][itemName]=Quantity.
               sintax: getInventory()]]
@@ -2130,13 +2162,12 @@ end
 
 
 ---- TEST AREA ------
---function craft(sRecipe, nLimit)
---function arrangeRecipe(sRecipe)
+--function arrangeRecipe(sRecipe, nLimit)
 
 INIT()
 
---print(arrangeRecipe())
-print(leaveItems(1))
+print(arrangeRecipe("minecraft:wooden_shovel"))
+
 
 
 TERMINATE()
