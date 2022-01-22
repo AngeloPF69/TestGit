@@ -997,19 +997,23 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
 end
 
 --not tested
-function arrangeRecipe(sRecipe, nLimit)
+function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a recipe.
+  21/01/2022  Returns:  true - if items from the recipe was arranged.
+                        false - if no recipe name was supplied
+                              - if the recipe is not registered.
+                              - if some slot couldn't be cleared.
+                              - if it couldn't leave the exact number of items in a slot.
+                              - if it dowsn't have enough items to craft recipe.
+							sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe])
+							ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not sRecipe then return false, "Must supply recipe name."
   elseif not tRecipes[sRecipe] then return false, "Recipe name does not exist."
   end
-  
-  if not nLimit then nLimit = getMaxCraft() end
 
-  local tRecipeSlots = recipeSlots(sRecipe)
-  local tInvIng = invIngredients()
-  local tAverage = calcAverage(tRecipeSlots, tInvIng)
+  if not haveIngredients(sRecipe) then return false, "Don't have anough ingredients." end
 
-
+  local tAverage = calcAverage(recipeSlots(sRecipe), invIngredients())
   local nRCol, nRLin = getFirstItemCoords(sRecipe)
   local tRecipe = tRecipes[sRecipe].recipe
   local nCol, nLin = 0, 0
@@ -1104,14 +1108,13 @@ function flattenInventory()
   return true
 end
 
---implementing--
+--not tested
 function craftRecipe(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then
     if sRecipe then
-      if not haveIngredients(sRecipe) then return false, "There are missing ingredients." end
-      --else arrange recipe
+      if not arrangeRecipe(sRecipe) then return false, "Couldn't arrange recipe." end
     end
     return false, "This is not a recipe."
   end
