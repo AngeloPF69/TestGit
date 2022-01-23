@@ -878,15 +878,19 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
   sItemName, nQuant, bWrap = getParam("snb", {"", 0, true}, sItemName, nQuant, bWrap)
   local tData = turtle.getItemDetail()
 
+  local nOrgSlot, nStored = turtle.getSelectedSlot()
+  local nLastSlot = nOrgSlot
+
   if sItemName == "" then
     if not tData then return false, "Slot empty and item name not supplied."
     else sItemName = tData.name
     end
+  else
+    if tData then
+      if tData.name ~= sItemName then clearSlot(nOrgSlot, bWrap) end
+    end
   end
 
-  local nOrgSlot, nStored = turtle.getSelectedSlot()
-  local nLastSlot = nOrgSlot
-  
   if tData then nStored = tData.count
   else nStored = 0
   end
@@ -996,7 +1000,6 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
   return tMean
 end
 
---not tested
 function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a recipe.
   21/01/2022  Returns:  true - if items from the recipe was arranged.
                         false - if no recipe name was supplied
@@ -1015,38 +1018,33 @@ function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a reci
 
   local tAverage = calcAverage(recipeSlots(sRecipe), invIngredients())
   local nRCol, nRLin = getFirstItemCoords(sRecipe)
+  local nSlot, nRSlot = 1, nRLin * 4 + nRCol + 1
   local tRecipe = tRecipes[sRecipe].recipe
-  local nCol, nLin = 0, 0
   local tTmpLeave = {}
   for i=1, #tRecipe do
     for k, v in pairs(tRecipe[i]) do
-      while (nLin < nRLin) and (nCol < nRCol) do
-        if not clearSlot(nLin*4+nCol+1) then return
-          false, "Couldn't clear slot, "..tostring(nLin*4+nCol+1)
-        end
-        nCol = nCol + 1
-        if nCol > 3 then
-          nCol = 0
-          nLin= nLin + 1
-        end
-        if nLin > 3 then return true end
-      end
+      if v.lin then nRSlot = v.lin * 4 + v.col + 1 end
 
+      while nSlot < nRSlot do
+        if not clearSlot(nSlot, false) then return
+          false, "Couldn't clear slot, "..tostring(nSlot)
+        end
+        nSlot = incSlot(nSlot, false)
+      end
+      nSlot = incSlot(nSlot, false)
 			if not tTmpLeave[k] then tTmpLeave[k] = tAverage[k]
       else tTmpLeave[k] = tTmpLeave[k] + tAverage[k]
       end
 
-      turtle.select(nRLin*4+nRCol+1)
+      turtle.select(nRSlot)
       local nLeaveItem = math.floor(tTmpLeave[k])
-      if not leaveItems(k, nLeaveItem, false) then return false end
-      tTmpLeave[k] = tTmpLeave[k] - nLeaveItem
-
-      if v.lin then
-        nRCol = v.col
-        nRLin = v.lin
+      if not leaveItems(k, nLeaveItem, false) then
+        return false, "Couldn't leave only "..tostring(nLeaveItem).." "..k.." items."
       end
+      tTmpLeave[k] = tTmpLeave[k] - nLeaveItem
     end
   end
+  return true
 end
 
 function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
@@ -2166,11 +2164,11 @@ end
 
 ---- TEST AREA ------
 --function arrangeRecipe(sRecipe, nLimit)
+--function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
+--function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
 
 INIT()
 
 print(arrangeRecipe("minecraft:wooden_shovel"))
-
-
 
 TERMINATE()
