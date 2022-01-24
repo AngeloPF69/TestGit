@@ -887,7 +887,10 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
     end
   else
     if tData then
-      if tData.name ~= sItemName then clearSlot(nOrgSlot, bWrap) end
+      if tData.name ~= sItemName then
+        clearSlot(nOrgSlot, bWrap)
+        tData = turtle.getItemDetail()
+      end
     end
   end
 
@@ -1107,14 +1110,37 @@ function flattenInventory()
 end
 
 --not tested
+function ingDontBelong(sRecipe)
+  if not tRecipes[sRecipe] then return false, "Recipe not found." end
+  local tRecipe = tRecipes[sRecipe].recipe
+  local tItems, bExcess = {}, false
+  for nSlot = 1, 16 do
+    local tData = turtle.getItemDetail(nSlot)
+    if tData then
+      local bFound = false
+      for i = 1, #tRecipe do
+        for k,v in pairs(tRecipe[i]) do
+          if k == tData.name then bFound = true end
+        end
+      end
+      if not bFound then
+        tItems[tData.name] = tData.count
+        bExcess = true
+      end
+    end
+  end
+  return bExcess, tItems
+end
+
 function craftRecipe(sRecipe, nLimit)
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then
     if sRecipe then
-      if not arrangeRecipe(sRecipe) then return false, "Couldn't arrange recipe." end
+      local success, message = arrangeRecipe(sRecipe)
+      if not success then return success, message end
+    else return false, "This is not a recipe."
     end
-    return false, "This is not a recipe."
   end
 
   local tRecipe = getInvRecipe()
@@ -1123,7 +1149,7 @@ function craftRecipe(sRecipe, nLimit)
   elseif nLimit == 0 then return true
   end
 
-  if lowerStack() < nLimit then flattenInventory() end
+  if invLowerStack() < nLimit then flattenInventory() end
 
   if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
   if not isEmptySlot(tRecipes["CSlot"]) then
@@ -1133,7 +1159,10 @@ function craftRecipe(sRecipe, nLimit)
   end
 
   turtle.select(tRecipes["CSlot"])
-  if not turtle.craft(nLimit) then return false, "Couldn't create "..nLimit.." items." end
+  if not turtle.craft(nLimit) then
+    local success, tItems = ingDontBelong(sRecipe)
+    if success then return false, "Remove items that do not belong to the recipe." end
+  end
 	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
 	
 	if not tData then return false end
@@ -2163,12 +2192,11 @@ end
 
 
 ---- TEST AREA ------
---function arrangeRecipe(sRecipe, nLimit)
+--function craftRecipe(sRecipe, nLimit)
 --function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
---function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
-
 INIT()
 
-print(arrangeRecipe("minecraft:wooden_shovel"))
+print(craftRecipe())
+
 
 TERMINATE()
