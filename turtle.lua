@@ -483,7 +483,6 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
 	return true --return success
 end
 
-
 function loadTable(sFileName) --[[ Loads a text file into a table.
   27/09/2021 -  Returns:  true - if could read a text file into a table.
                           false - if sFileName is not supplied,
@@ -1139,7 +1138,7 @@ function craftRecipe(sRecipe, nLimit)
     if sRecipe then
       local success, message = arrangeRecipe(sRecipe)
       if not success then return success, message end
-    else return false, "This is not a recipe."
+    else return false, "Inventory doesn't have arranged items to craft a recipe."
     end
   end
 
