@@ -547,7 +547,6 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
     end
   end
   
-
   if #retTable == 0 then return nil
   else return table.unpack(retTable);
   end
@@ -1058,7 +1057,9 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
   return true
 end
 
-function flattenInventory()
+function flattenInventory() --[[ Averages all the item stacks in inventory.
+  26/01/2022  Returns:  true
+              Sintax: flattenInventory()]]
   local tTotIng = invIngredients()
   local tTotSlots = countItemSlots()
   local tInv = getInventory() --get [slot][itemName]=Quantity
@@ -1073,7 +1074,7 @@ function flattenInventory()
     return false
   end
 
-  function slotAboveMean(sItem, nMean)
+  function slotAboveMean(sItem, nMean) 
     for i = 1, 16 do
       if tInv[i] and tInv[i][sItem] then
         if tInv[i][sItem] > nMean then return i, tInv[i][sItem] end
@@ -1109,7 +1110,14 @@ function flattenInventory()
 end
 
 --not tested
-function ingDontBelong(sRecipe)
+function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong to a recipe.
+  26/01/2022  Returns:  true, table of items that dont belong to recipe.
+                        false - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
+                              - if sRecipe is not in tRecipes.
+              Sintax: ingDontBelong([sRecipe=tRecipes.lastRecipe])
+              ex: ingDontBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
+  sRecipe = sRecipe or tRecipes.lastRecipe
+  if not sRecipe then return false, "Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
   local tRecipe = tRecipes[sRecipe].recipe
   local tItems, bExcess = {}, false
@@ -1131,7 +1139,15 @@ function ingDontBelong(sRecipe)
   return bExcess, tItems
 end
 
-function craftRecipe(sRecipe, nLimit)
+function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
+  26/01/2022  Returns: Name of the item craft, and the quantity.
+                       true - if nLimit == 0 and could craft a recipe.
+                       false - if the recipe name was not supplied, this is the first recipe craft, and items are not arranged to craft a recipe.
+                             - if couln't find a empty slot where to craft recipe.
+                             - if there are items that don't belong to the recipe.
+                              - if turtle couldn't craft.
+              Sintax: craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible])
+              ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then
