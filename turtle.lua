@@ -483,7 +483,6 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
 	return true --return success
 end
 
-
 function loadTable(sFileName) --[[ Loads a text file into a table.
   27/09/2021 -  Returns:  true - if could read a text file into a table.
                           false - if sFileName is not supplied,
@@ -548,7 +547,6 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
     end
   end
   
-
   if #retTable == 0 then return nil
   else return table.unpack(retTable);
   end
@@ -1059,7 +1057,9 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
   return true
 end
 
-function flattenInventory()
+function flattenInventory() --[[ Averages all the item stacks in inventory.
+  26/01/2022  Returns:  true
+              Sintax: flattenInventory()]]
   local tTotIng = invIngredients()
   local tTotSlots = countItemSlots()
   local tInv = getInventory() --get [slot][itemName]=Quantity
@@ -1074,7 +1074,7 @@ function flattenInventory()
     return false
   end
 
-  function slotAboveMean(sItem, nMean)
+  function slotAboveMean(sItem, nMean) 
     for i = 1, 16 do
       if tInv[i] and tInv[i][sItem] then
         if tInv[i][sItem] > nMean then return i, tInv[i][sItem] end
@@ -1131,14 +1131,22 @@ function ingDontBelong(sRecipe)
   return bExcess, tItems
 end
 
-function craftRecipe(sRecipe, nLimit)
+function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
+  26/01/2022  Returns: Name of the item craft, and the quantity.
+                       true - if nLimit == 0 and could craft a recipe.
+                       false - if the recipe name was not supplied, this is the first recipe craft, and items are not arranged to craft a recipe.
+                             - if couln't find a empty slot where to craft recipe.
+                             - if there are items that don't belong to the recipe.
+                              - if turtle couldn't craft.
+              Sintax: craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible])
+              ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then
     if sRecipe then
       local success, message = arrangeRecipe(sRecipe)
       if not success then return success, message end
-    else return false, "This is not a recipe."
+    else return false, "Inventory doesn't have arranged items to craft a recipe."
     end
   end
 
