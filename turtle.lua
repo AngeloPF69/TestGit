@@ -1109,7 +1109,14 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
   return true
 end
 
-function ingDontBelong(sRecipe)
+function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong to a recipe.
+  26/01/2022  Returns:  true, table of items that dont belong to recipe {itemname=quantity,...}.
+                        false - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
+                              - if sRecipe is not in tRecipes.
+              Sintax: ingDontBelong([sRecipe=tRecipes.lastRecipe])
+              ex: ingDontBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
+  sRecipe = sRecipe or tRecipes.lastRecipe
+  if not sRecipe then return false, "Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
   local tRecipe = tRecipes[sRecipe].recipe
   local tItems, bExcess = {}, false
@@ -1904,7 +1911,12 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 	return totSpace
 end
 
-function isEmptySlot(nSlot)
+function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
+  23/09/2021  Returns: true - if nSlot is empty.
+                      false - if nSlot is not empty.
+              sintax: isEmpty([nSlot=selected slot])
+              ex: isEmpty() - Checks if selected slot is empty.
+                  isEmpty(12) - checks if slot 12 is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
   return turtle.getItemDetail(nSlot) == nil
 end
@@ -2199,8 +2211,7 @@ end
 
 
 ---- TEST AREA ------
---function craftRecipe(sRecipe, nLimit)
---function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
+--function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
 INIT()
 
 print(craftRecipe())
