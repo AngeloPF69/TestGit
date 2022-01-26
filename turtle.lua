@@ -1109,7 +1109,6 @@ function flattenInventory()
   return true
 end
 
---not tested
 function ingDontBelong(sRecipe)
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
   local tRecipe = tRecipes[sRecipe].recipe
