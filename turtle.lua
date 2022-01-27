@@ -609,7 +609,7 @@ function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
   return true
 end
 
-function getStack(nSlot) --[[ Returns the stack of item in nSlot.
+function getStack(nSlot) --[[ Returns how many items can stack.
   10/11/2021  Return: quantity a item can stack.
                       nil - if slot is out of range[1..16].
                       false - if slot is empty.
@@ -966,7 +966,7 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
 end
 
 
-function recipeSlots(sRecipe) --[[ Builds a table with item and quantity of slots ocupied by it.
+function recipeSlots(sRecipe) --[[ Builds a table with item and quantity of slots ocupied by the recipe.
   21/01/2022  Returns:  table with item and quantity of slots ocupied by it.
 							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe])
 							ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
@@ -1186,7 +1186,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
 		tRecipes[sName] = {}
     tRecipes[sName].recipe = tRecipe
     tRecipes[sName].count = tData.count / nLimit
-	end
+  end
   tRecipes.lastRecipe = sName
 	return sName, tData.count
 end
@@ -1780,7 +1780,7 @@ function countItemSlots() --[[ Counts how many slots is ocupied with each item.
   return tItemSlots
 end
 
-function decSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
+function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
   02/11/2021  Returns:  the number of slot increased by 1.
                         nil - if nSlot if not a number.
                         false - if bWrap and nSlot < 1.

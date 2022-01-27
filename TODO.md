@@ -6,6 +6,15 @@ improving commands in lua for computer craft turtle.
 
 ### OPTIONAL
 
+- [x] flattenInventory() averages all the item stacks in inventory.
+- [x] calcAverage(tSlots, tIng) builds a table with item and average between items and slots.
+- [x] recipeSlots(sRecipe) builds a table with item and quantity of slots ocupied by the recipe.
+- [x] leaveItems(sItemName, nQuant, bWrap) leaves nQuant of item in Selected Slot, moving item from or to another slot.
+- [x] searchSpace(sItemName, nStartSlot, bWrap) search for space in a slot that has sItemName.
+- [x] haveIngredients(sRecipe, nLimit) builds a table with the diference between the recipe and the inventory.
+- [x] ingredients(sRecipe) builds a table with items and quantities in a recipe.
+- [x] invIngredients() builds a table with the items and quantities in inventory.
+- [x] invLowerStack(sItem) returns the lower stack of items in inventory, the slot and the name of item.
 - [x] saveTable(t, sFileName) saves a table into a text file.
 - [x] loadTable(sFileName) loads a text file into a table.
 - [x] isValue(value, t) checks if value is in t table.
@@ -16,6 +25,28 @@ improving commands in lua for computer craft turtle.
 
 
 ### DONE
+
+- [x] fsGetFreeSpace() gets the total free space on disk.
+- [x] selectFreeSlot(nStartSlot, bWrap) selects the first free slot starting at nStartSlot, and if the search wraps or not.
+- [x] itemCount(nSlot) counts items in inventory
+- [x] isEmptySlot(nSlot) checks if nSlot is empty.
+- [x] incSlot(nSlot, bWrap) increases nSlot in range [1..16].
+- [x] decSlot(nSlot, bWrap) decreases nSlot in range [1..16].
+- [x] getInventory() builds a table with the slot, the name and quantity of items in inventory.
+- [x] countItemSlots() counts how many slots is ocupied with each item.
+- [x] ingDontBelong(sRecipe) checks if all the items in inventory belong to a recipe.
+- [x] setCraftSlot(nSlot) sets the craft resulting slot, in tRecipes CSlot
+- [x] arrangeRecipe(sRecipe) arranges items in inventory to craft a recipe.
+- [x] transferFrom(nSlot, nItems) transfer nItems from nSlot to selected slot.
+- [x] INIT() loads tables from text files.
+- [x] TERMINATE() saves tables to text files.
+- [x] setStack(sItemName, nStack) sets the item stack value in tStacks.
+- [x] getStack(nSlot/sItemName) returns how many items can stack.
+- [x] loadStacks() loads tStacks.txt to tStacks.
+- [x] saveStacks() saves tStacks to tStacks.txt
+- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
+- [x] getCoords() gets coords from turtle.
 - [x] craftRecipe(\[sRecipeName=lastRecipe\]\[, limit=64\]) craft a recipe limit number of times.
 - [x] addSteps(\[nSteps=1\]) adds nSteps to coords of turtle.
 - [x] freeCount() get free slots in turtle's inventory.
@@ -58,9 +89,6 @@ improving commands in lua for computer craft turtle.
 
 ### POSTPONED
 
-- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
-- [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
-- [x] getCoords() gets coords from turtle.
 - [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
@@ -75,9 +103,10 @@ improving commands in lua for computer craft turtle.
 ### IN PROGRESS
 
 ### DONE
-- [x] refuels([nItems=stack]) refuels the turtle with nItems.
-- [x] itemSpace([slot/item Name=selected slot]) get the how many items more you can store in inventory.
-- [x] equip([sHand=empty]) equip tool to left or right hand, from selected slot.
+
+- [x] refuel(\[nItems=stack\]) refuels the turtle with nItems.
+- [x] itemSpace(\[slot/item Name=selected slot\]) get the how many items more you can store in inventory.
+- [x] equip(\[side=empty hand\]) equip tool to left or right hand, from selected slot.
 - [x] refuel([nCount=stack]) Refuels the turtle with nCount items.
 - [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 - [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
