@@ -14,10 +14,10 @@ improving commands in lua for computer craft turtle.
 
 ### IN PROGRESS
 
-- [ ] craft([sRecipeName][, limit=64]) craft a recipe limit number of times.
 
 ### DONE
-- [x] addSteps(nSteps) adds nSteps to coords of turtle.
+- [x] craftRecipe(\[sRecipeName=lastRecipe\]\[, limit=64\]) craft a recipe limit number of times.
+- [x] addSteps(\[nSteps=1\]) adds nSteps to coords of turtle.
 - [x] freeCount() get free slots in turtle's inventory.
 - [x] getFreeSlot(nStartSlot) get the first free slot.
 - [x] groupItems() groups the same type of items in one slot in inventory.
