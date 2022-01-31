@@ -14,8 +14,9 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
-                              count = resulting number of items, CSlot = number crafting slot, lastRecipe = last recipe name} ]]
+tRecipes = {} --[[ ["Name"][index] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
+                              count = resulting number of items} ]]
+              --[[ ["lastRecipe"] = sLastRecipe, ["CSlot"] = Crafting slot.]]
 tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
@@ -701,6 +702,7 @@ function invIngredients() --[[ Builds a table with the items and quantities in i
   return tRecipe
 end
 
+--not tested
 function ingredients(sRecipe) --[[ Builds a table with items and quantities in a recipe.
   20/11/2021  Return: table - with ingredient name and quantity.
                       false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
@@ -720,6 +722,7 @@ function ingredients(sRecipe) --[[ Builds a table with items and quantities in a
   return tRecipe
 end
 
+--not tested
 function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference between the recipe and the inventory.
   23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
                       nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
@@ -826,6 +829,7 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
 	return math.floor(minCount)
 end
 
+--not tested
 function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the first item in the recipe.
   19/10/2021  Returns:  false - if the recipe name was not supplied.
                               - if this recipe does not exist.
@@ -965,7 +969,7 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
   return tData.count
 end
 
-
+--not tested
 function recipeSlots(sRecipe) --[[ Builds a table with item and quantity of slots ocupied by the recipe.
   21/01/2022  Returns:  table with item and quantity of slots ocupied by it.
 							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe])
@@ -1001,6 +1005,7 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
   return tMean
 end
 
+--not tested
 function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a recipe.
   21/01/2022  Returns:  true - if items from the recipe was arranged.
                         false - if no recipe name was supplied
@@ -1048,6 +1053,7 @@ function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a reci
   return true
 end
 
+--not tested
 function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
   03/11/2021  Returns:  nil - if nSlot is not in range[1..16].
                         true - if was set tRecipes["CSlot"].]]
@@ -1109,6 +1115,7 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
   return true
 end
 
+--not tested
 function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong to a recipe.
   26/01/2022  Returns:  true, table of items that dont belong to recipe {itemname=quantity,...}.
                         false - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
@@ -1138,6 +1145,7 @@ function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong
   return bExcess, tItems
 end
 
+--not tested
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
   26/01/2022  Returns: Name of the item craft, and the quantity.
                        true - if nLimit == 0 and could craft a recipe.
