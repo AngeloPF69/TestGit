@@ -1184,8 +1184,12 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
 	
 	if not tRecipes[sName] then
 		tRecipes[sName] = {}
-    tRecipes[sName].recipe = tRecipe
-    tRecipes[sName].count = tData.count / nLimit
+    tRecipes[sName].recipe = {}
+    tRecipes[sName].recipe[1] = {}
+    tRecipes[sName].recipe[1].recipe = tRecipe
+    tRecipes[sName].recipe[1].count = tData.count / nLimit
+    --tRecipes[sName].recipe = tRecipe
+    --tRecipes[sName].count = tData.count / nLimit
   end
   tRecipes.lastRecipe = sName
 	return sName, tData.count
