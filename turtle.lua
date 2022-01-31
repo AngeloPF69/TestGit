@@ -14,9 +14,9 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"][index] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
-                              count = resulting number of items} ]]
-              --[[ ["lastRecipe"] = sLastRecipe, ["CSlot"] = Crafting slot.]]
+tRecipes = {} --[[ ["Name"][index]["recipe"] = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}, ...}
+                   ["Name"][index]["count"] = resulting number of items}
+                   ["lastRecipe"] = sLastRecipe, ["CSlot"] = Crafting slot.]]
 tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
