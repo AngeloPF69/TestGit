@@ -1053,7 +1053,6 @@ function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a reci
   return true
 end
 
---not tested
 function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
   03/11/2021  Returns:  nil - if nSlot is not in range[1..16].
                         true - if was set tRecipes["CSlot"].]]
@@ -1145,6 +1144,41 @@ function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong
   return bExcess, tItems
 end
 
+function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
+  01/02/2022  Returns:
+              Sintax:
+              ex:]]
+  sRecipe, tRecipe = getParam("st", {tRecipes.lastRecipe,{}}, sRecipe, tRecipe)
+  if not sRecipe then
+    if not turtle.craft(0) then return false, "Recipe items are not arranged as a recipe." end
+  else
+    if not tRecipes[sRecipe] then return false, "Recipe name not found." end
+  end
+
+  if not tRecipe then tRecipe = getInvRecipe() end
+  print(textutils.serializeJSON(tRecipe))
+  if not tRecipe then return false, "This is not a recipe for "..sRecipe.."." end
+
+  if sRecipe then
+    for i = 1, #tRecipes[sRecipe] do
+      local tRec = tRecipes[sRecipe][i].recipe[i]
+      for sItemRecipes, tRecipesCoords in pairs(tRec) do
+        for j = 1, #tRecipe do
+          for sItemRecipe, tRecipeCoords in pairs(tRecipe[j])do
+            print(sItemRecipes, tRecipesCoords)
+            print(sItemRecipe, tRecipeCoords)
+            print(#tRecipeCoords)
+          end
+        end
+      end
+    end
+  else
+    for k,v in pairs(tRecipes) do
+      print("k:",k,v)
+    end
+  end
+end
+
 --not tested
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
   26/01/2022  Returns: Name of the item craft, and the quantity.
@@ -1158,7 +1192,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
   sRecipe = sRecipe or tRecipes.lastRecipe
 	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
 	if not turtle.craft(0) then
-    if sRecipe then
+    if #sRecipe > 0 then
       local success, message = arrangeRecipe(sRecipe)
       if not success then return success, message end
     else return false, "Inventory doesn't have arranged items to craft a recipe."
@@ -1192,12 +1226,14 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
 	
 	if not tRecipes[sName] then
 		tRecipes[sName] = {}
-    tRecipes[sName].recipe = {}
-    tRecipes[sName].recipe[1] = {}
-    tRecipes[sName].recipe[1].recipe = tRecipe
-    tRecipes[sName].recipe[1].count = tData.count / nLimit
-    --tRecipes[sName].recipe = tRecipe
-    --tRecipes[sName].count = tData.count / nLimit
+    tRecipes[sName][1] = {}
+    tRecipes[sName][1].recipe = tRecipe
+    tRecipes[sName][1].count = tData.count / nLimit
+  else
+    for i = 1, #tRecipes[sName] do
+      tRecipes[sName][#tRecipes[sName]+1].recipe = tRecipe
+      tRecipes[sName][#tRecipes[sName]+1].count = tRecipe
+    end
   end
   tRecipes.lastRecipe = sName
 	return sName, tData.count
@@ -2223,10 +2259,11 @@ end
 
 
 ---- TEST AREA ------
---function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
+--function getRecipeIndex(sRecipe, tRecipe)
 INIT()
 
-print(craftRecipe())
+
+print(getRecipeIndex("minecraft:oak_button"))
 
 
 TERMINATE()
