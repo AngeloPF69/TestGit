@@ -14,7 +14,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"][index]["recipe"] = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}, ...}
+tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
                    ["lastRecipe"] = sLastRecipe, ["CSlot"] = Crafting slot.]]
 tStacks = {} --["itemName"] = nStack
@@ -518,7 +518,7 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   27/08/2021  Returns:  Parameters sorted by type, nil if no parameters.
                         nil - nil - if no parameters.
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
-              Note: Only sorts three parameters type (string, number and boolean).]]
+              Note: Only sorts three parameters type (string, table, number and boolean).]]
   if not sParamOrder then return nil end
   
   local Args={...}
@@ -543,6 +543,7 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
 
   for i = 1, #sParamOrder do
     if sParamOrder:sub(i,i) == "s" then addParam("string")
+    elseif sParamOrder:sub(i,i) == "t" then addParam("table")
     elseif sParamOrder:sub(i,i) == "n" then addParam("number")
     elseif sParamOrder:sub(i,i) == "b" then addParam("boolean")
     end
@@ -791,15 +792,15 @@ function getInvRecipe() --[[ Builds a table with items and their position (the r
 				if not tFirstItem then
 					tRecipe = {}
           tRecipe[index] = {}
-          tRecipe[index][tData.name] = {}
+          tRecipe[index].name = tData.name
           tFirstItem = {}
           tFirstItem.col = col
           tFirstItem.lin = lin
 				else
           tRecipe[index] = {}
-					tRecipe[index][tData.name] = {}
-					tRecipe[index][tData.name].col = col - tFirstItem.col
-					tRecipe[index][tData.name].lin = lin - tFirstItem.lin
+					tRecipe[index].name = tData.name
+					tRecipe[index].col = col - tFirstItem.col
+					tRecipe[index].lin = lin - tFirstItem.lin
 				end
         index = index + 1
 			end
@@ -1149,33 +1150,35 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
               Sintax:
               ex:]]
   sRecipe, tRecipe = getParam("st", {tRecipes.lastRecipe,{}}, sRecipe, tRecipe)
-  if not sRecipe then
-    if not turtle.craft(0) then return false, "Recipe items are not arranged as a recipe." end
+  if not sRecipe then return false, "Recipe name not supplied."
   else
-    if not tRecipes[sRecipe] then return false, "Recipe name not found." end
+    if not tRecipes[sRecipe] then return false, "Recipe name not found."
+    elseif not tRecipe then return 1
+    end
   end
 
-  if not tRecipe then tRecipe = getInvRecipe() end
-  print(textutils.serializeJSON(tRecipe))
-  if not tRecipe then return false, "This is not a recipe for "..sRecipe.."." end
-
-  if sRecipe then
-    for i = 1, #tRecipes[sRecipe] do
-      local tRec = tRecipes[sRecipe][i].recipe[i]
-      for sItemRecipes, tRecipesCoords in pairs(tRec) do
-        for j = 1, #tRecipe do
-          for sItemRecipe, tRecipeCoords in pairs(tRecipe[j])do
-            print(sItemRecipes, tRecipesCoords)
-            print(sItemRecipe, tRecipeCoords)
-            print(#tRecipeCoords)
+  for iRecipes = 1, #tRecipes[sRecipe] do
+    local tRecs = tRecipes[sRecipe][iRecipes].recipe
+    local bFound = false
+    if #tRecs == #tRecipe then
+      for iItems = 1, #tRecipe do
+        if tRecs[iItems].name == tRecipe[iItems].name then
+          bFound = true
+          if tRecipe[iItems].col then
+            if (tRecipe[iItems].col == tRecs[iItems].col) and (tRecipe[iItems].lin == tRecs[iItems].lin) then
+              bFound = true
+            else
+              bFound = false
+              break
+            end
           end
+        else
+          bFound = false
+          break
         end
       end
     end
-  else
-    for k,v in pairs(tRecipes) do
-      print("k:",k,v)
-    end
+    if bFound then return iRecipes end
   end
 end
 
@@ -1198,13 +1201,13 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
     else return false, "Inventory doesn't have arranged items to craft a recipe."
     end
   end
-
+  
   local tRecipe = getInvRecipe()
   local nMaxCraft = getMaxCraft()
   if nLimit < 0 or nLimit > nMaxCraft then nLimit = nMaxCraft
   elseif nLimit == 0 then return true
   end
-
+  
   if invLowerStack() < nLimit then flattenInventory() end
 
   if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
@@ -1213,7 +1216,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
     if not nSlot then return false, "No empty slot." end
     tRecipes["CSlot"] = nSlot
   end
-
+  
   turtle.select(tRecipes["CSlot"])
   if not turtle.craft(nLimit) then
     local success, tItems = ingDontBelong(sRecipe)
@@ -1231,8 +1234,9 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
     tRecipes[sName][1].count = tData.count / nLimit
   else
     for i = 1, #tRecipes[sName] do
+      --getRecipeIndex...
       tRecipes[sName][#tRecipes[sName]+1].recipe = tRecipe
-      tRecipes[sName][#tRecipes[sName]+1].count = tRecipe
+      tRecipes[sName][#tRecipes[sName]+1].count = tData.count / nLimit
     end
   end
   tRecipes.lastRecipe = sName
@@ -2260,10 +2264,11 @@ end
 
 ---- TEST AREA ------
 --function getRecipeIndex(sRecipe, tRecipe)
+--function getInvRecipe() --[[ Builds a table with items and their position (the recipe).
 INIT()
 
-
-print(getRecipeIndex("minecraft:oak_button"))
-
+--print(craftRecipe())
+print(getRecipeIndex("minecraft:jungle_button", getInvRecipe()))
+--print(textutils.serializeJSON(getInvRecipe()))
 
 TERMINATE()

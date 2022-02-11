@@ -1,13 +1,29 @@
 {
-  [ "minecraft:oak_button" ] = {
+  [ "minecraft:stick" ] = {
     {
       recipe = {
         {
-          [ "minecraft:oak_planks" ] = {},
+          name = "minecraft:jungle_planks",
+        },
+        {
+          lin = 1,
+          name = "minecraft:jungle_planks",
+          col = 0,
+        },
+      },
+      count = 4,
+    },
+  },
+  CSlot = 16,
+  [ "minecraft:jungle_button" ] = {
+    {
+      recipe = {
+        {
+          name = "minecraft:jungle_planks",
         },
       },
       count = 1,
     },
   },
-  CSlot = 16,
+  lastRecipe = "minecraft:stick",
 }
