@@ -1115,7 +1115,6 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
   return true
 end
 
---not tested
 function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong to a recipe.
   26/01/2022  Returns:  true, table of items that dont belong to recipe {itemname=quantity,...}.
                         false - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
@@ -1125,20 +1124,22 @@ function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not sRecipe then return false, "Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
-  local tRecipe = tRecipes[sRecipe].recipe
+  local tRecipe = tRecipes[sRecipe]
   local tItems, bExcess = {}, false
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
       local bFound = false
-      for i = 1, #tRecipe do
-        for k,v in pairs(tRecipe[i]) do
-          if k == tData.name then bFound = true end
+      for iRec = 1, #tRecipe do
+        for iItems = 1, #tRecipe[iRec].recipe do
+          for k,v in pairs(tRecipe[iRec].recipe[iItems]) do
+            if v == tData.name then bFound = true end
+          end
         end
-      end
-      if not bFound then
-        tItems[tData.name] = tData.count
-        bExcess = true
+        if not bFound then
+          tItems[tData.name] = tData.count
+          bExcess = true
+        end
       end
     end
   end
@@ -2263,12 +2264,9 @@ end
 
 
 ---- TEST AREA ------
---function getRecipeIndex(sRecipe, tRecipe)
---function getInvRecipe() --[[ Builds a table with items and their position (the recipe).
+--function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
 INIT()
 
---print(craftRecipe())
-print(getRecipeIndex("minecraft:jungle_button", getInvRecipe()))
---print(textutils.serializeJSON(getInvRecipe()))
+print(craftRecipe("minecraft:stick", 1))
 
 TERMINATE()

@@ -14,7 +14,7 @@
       count = 4,
     },
   },
-  CSlot = 16,
+  lastRecipe = "minecraft:oak_button",
   [ "minecraft:jungle_button" ] = {
     {
       recipe = {
@@ -25,5 +25,15 @@
       count = 1,
     },
   },
-  lastRecipe = "minecraft:stick",
+  [ "minecraft:oak_button" ] = {
+    {
+      recipe = {
+        {
+          name = "minecraft:oak_planks",
+        },
+      },
+      count = 1,
+    },
+  },
+  CSlot = 16,
 }
