@@ -265,7 +265,7 @@
     <pre>Sintax: incFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  incFacing(1) - Increments tTurtle.facing </pre>
+  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2 </pre>
     
    <p id="setFacing"></p>
    
