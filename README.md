@@ -255,7 +255,7 @@
    <p id="getFacing"></p>
    
 - getFacing() Returns tTurtle.facing.<br>
-    <pre>Sintax: getFacing([nTurns=1])
+    <pre>Sintax: getFacing()
   Returns: tTurtle.facing
   ex: getFacing()</pre>
     
