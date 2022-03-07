@@ -17,7 +17,7 @@
     
     -------------------------------------------------
     Table of recipes properties.
-    tRecipes = {} --["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
+    tRecipes = {} --["Name"] = {{ {"itemName", "itemName", ...}, {"itemName",  nCol = nColumn, nLin = nLine}}, ..., },
                                           count = resulting number of items, CSlot = number crafting slot}
 
     -------------------------------------------------
