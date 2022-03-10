@@ -689,7 +689,7 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
-function invIngredients() --[[ Builds a table with the items and quantities in inventory.
+function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021  Return: table - with ingredient name and quantity.]]
   local tRecipe = {}
   for nSlot = 1, 16 do
@@ -740,13 +740,13 @@ function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference
   local tNeededIng
   if sRecipe == "" then --there was no last recipe
     if not turtle.craft(0) then return nil, "This is not a recipe." 
-    else tNeededIng = invIngredients()
+    else tNeededIng = getInvItems()
     end
   else tNeededIng, message = ingredients(sRecipe)
        if not tNeededIng then return nil, message end
   end
 
-  local tInvIng = invIngredients()
+  local tInvIng = getInvItems()
   local tIngredients = {}
   local bHave = true
   for k,v in pairs(tNeededIng) do
@@ -776,11 +776,14 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
   return true
 end
 
-function getInvRecipe() --[[ Builds a table with items and their position (the recipe).
+function getInvRecipe() --[[ Builds a table with items and their position from inventory (the recipe).
   19/10/2021  Returns false - if it is not a recipe in the inventory.
                       tRecipe - the recipe with items and positions.
-  Note: Trecipe[Ingredient number][Ingredient name] = if not first item {{col = column position, lin = line position (relative to 1st ingredient) }, ...
-                                                      else {}]]
+              Sintax: getInvRecipe()
+  Note: Trecipe[Ingredient number].name = item name
+        Trecipe[Ingredient number ~= 1].name = item name
+        Trecipe[Ingredient number ~= 1].col = distance to first item col
+        Trecipe[Ingredient number ~= 1].lin = distance to first item lin]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
 	local index, tFirstItem, tData, tRecipe = 1
@@ -792,13 +795,15 @@ function getInvRecipe() --[[ Builds a table with items and their position (the r
 				if not tFirstItem then
 					tRecipe = {}
           tRecipe[index] = {}
-          tRecipe[index].name = tData.name
+          tRecipe[index][1] ={}
+          tRecipe[index][1] = tData.name
           tFirstItem = {}
           tFirstItem.col = col
           tFirstItem.lin = lin
 				else
           tRecipe[index] = {}
-					tRecipe[index].name = tData.name
+					tRecipe[index][1] = {}
+          tRecipe[index][1] = tData.name
 					tRecipe[index].col = col - tFirstItem.col
 					tRecipe[index].lin = lin - tFirstItem.lin
 				end
@@ -813,7 +818,7 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
   19/10/2021  Returns false - if it is not a recipe in the inventory.
                       tRecipe - the recipe with items and positions.]]
   --if not turtle.craft(0) then return false, "This is not a recipe." end
-  local tIng = invIngredients() --[ingredient name] = quantity
+  local tIng = getInvItems() --[ingredient name] = quantity
   local tIngSlots = countItemSlots() --[ingredient name] = quantity of slots ocupied
 
   local minCount = 512
@@ -1023,7 +1028,7 @@ function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a reci
 
   if not haveIngredients(sRecipe) then return false, "Don't have anough ingredients." end
 
-  local tAverage = calcAverage(recipeSlots(sRecipe), invIngredients())
+  local tAverage = calcAverage(recipeSlots(sRecipe), getInvItems())
   local nRCol, nRLin = getFirstItemCoords(sRecipe)
   local nSlot, nRSlot = 1, nRLin * 4 + nRCol + 1
   local tRecipe = tRecipes[sRecipe].recipe
@@ -1066,7 +1071,7 @@ end
 function flattenInventory() --[[ Averages all the item stacks in inventory.
   26/01/2022  Returns:  true
               Sintax: flattenInventory()]]
-  local tTotIng = invIngredients()
+  local tTotIng = getInvItems()
   local tTotSlots = countItemSlots()
   local tInv = getInventory() --get [slot][itemName]=Quantity
   local nMean
@@ -1146,6 +1151,7 @@ function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong
   return bExcess, tItems
 end
 
+--not tested
 function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
   01/02/2022  Returns:
               Sintax:
@@ -1154,7 +1160,12 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
   if not sRecipe then return false, "Recipe name not supplied."
   else
     if not tRecipes[sRecipe] then return false, "Recipe name not found."
-    elseif not tRecipe then return 1
+    elseif #tRecipe == 0 then
+      if not turtle.craft(0) then return false, "Inventory has no recipe."
+      else
+        tRecipe = getInvRecipe()
+        if not tRecipe then return false, "Couldn't create recipe from inventory" end
+      end
     end
   end
 
@@ -1163,24 +1174,87 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
     local bFound = false
     if #tRecs == #tRecipe then
       for iItems = 1, #tRecipe do
-        if tRecs[iItems].name == tRecipe[iItems].name then
-          bFound = true
-          if tRecipe[iItems].col then
-            if (tRecipe[iItems].col == tRecs[iItems].col) and (tRecipe[iItems].lin == tRecs[iItems].lin) then
-              bFound = true
-            else
+        local bFoundItem = false
+        for iRepItems = 1, #tRecs[iItems] do
+          if tRecs[iItems][iRepItems] == tRecipe[iItems][1] then
+            bFoundItem = true
+            break
+          end
+        end
+        if not bFoundItem then break end
+
+        if tRecipe[iItems].col then
+          if (tRecipe[iItems].col == tRecs[iItems].col) and
+             (tRecipe[iItems].lin == tRecs[iItems].lin) then bFound = true
+          else
               bFound = false
               break
-            end
           end
-        else
-          bFound = false
-          break
+        else bFound = true
         end
       end
+      if bFound then return iRecipes end
     end
-    if bFound then return iRecipes end
   end
+  return false
+end
+
+function colLinMatch(tRecs, tRec)
+  if #tRecs ~= tRec then return false end
+  local bFound = true
+  for iRecs = 1, #tRecs do
+    if tRec[iRecs].col then
+      if (tRec[iRecs].col ~= tRecs[iRecs].col) or (tRec[iRecs].lin ~= tRecs[iRecs].lin) then
+        bFound = false
+        break
+      end
+    end
+  end
+  return bFound
+end
+
+function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.]]
+  local nIndex
+
+  if not sRecipe then return false, "Recipe name not supplied." end
+  if not tRecipe then return false, "Recipe table not supplied." end
+  if #tRecipe == 0 then return false, "Empty recipe to add." end
+  if not nCount then return false, "Quantity of items produced not supplied." end
+
+  if tRecipes[sRecipe] then --recipe exists
+    nIndex = getRecipeIndex(sRecipe, tRecipe)
+    if nIndex then return nIndex end
+  else
+    tRecipes[sRecipe] = {}
+    tRecipes[sRecipe][1] = {}
+    tRecipes[sRecipe][1].recipe = tRecipe
+    tRecipes[sRecipe][1].count = nCount
+    tRecipes.lastRecipe = sRecipe
+    return 1
+  end
+  
+  --recipe exists but it is not the same as in tRecipe
+  for iRecipes = 1, #tRecipes[sRecipe] do
+    if colLinMatch(tRecipes[sRecipe][iRecipes].recipe, tRecipe) then
+      for iRecs = 1, #tRecipes[sRecipe][iRecipes].recipe do
+        for iItems = 1, #tRecipes[sRecipe][iRecipes].recipe[iRecs] do
+          if tRecipe[iRecs][iItems] ~= tRecipes[sRecipe][iRecipes].recipe[iRecs][iItems] then
+            nIndex = #tRecipes[sRecipe][iRecipes].recipe[iRecs] + 1
+            tRecipes[sRecipe][iRecipes].recipe[iRecs][nIndex] = tRecipe[iRecs][iItems]
+            break
+          end
+        end
+      end
+      return iRecipes
+    end
+  end
+
+  nIndex = #tRecipes[sRecipe]+1
+  tRecipes[sRecipe][nIndex] = {}
+  tRecipes[sRecipe][nIndex].recipe = tRecipe
+  tRecipes[sRecipe][nIndex].count = nCount
+  tRecipes.lastRecipe = sRecipe
+  return nIndex
 end
 
 --not tested
@@ -1234,10 +1308,11 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
     tRecipes[sName][1].recipe = tRecipe
     tRecipes[sName][1].count = tData.count / nLimit
   else
-    for i = 1, #tRecipes[sName] do
-      --getRecipeIndex...
-      tRecipes[sName][#tRecipes[sName]+1].recipe = tRecipe
-      tRecipes[sName][#tRecipes[sName]+1].count = tData.count / nLimit
+    local nRecIndex = getRecipeIndex(sName, tRecipe)
+    if not nRecIndex then
+      tRecipes[sName][#tRecipes[sName]+1] = {}
+      tRecipes[sName][#tRecipes[sName]].recipe = tRecipe
+      tRecipes[sName][#tRecipes[sName]].count = tData.count / nLimit
     end
   end
   tRecipes.lastRecipe = sName
@@ -2264,9 +2339,15 @@ end
 
 
 ---- TEST AREA ------
---function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
+--function addRecipe(sRecipe, tRecipe, nCount)
+--getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
+
 INIT()
+local tRecipe = getInvRecipe()
+--print(getRecipeIndex("minecraft:stick",tRecipe ))
 
-print(craftRecipe("minecraft:stick", 1))
-
+local nCount = 4
+print(addRecipe("minecraft:oak_button", tRecipe, nCount))
+print(textutils.serializeJSON(tRecipes))
+--print(colLinMatch(tRecipes["minecraft:stick"][1].recipe, tRecipe))
 TERMINATE()

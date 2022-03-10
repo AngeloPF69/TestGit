@@ -3,11 +3,11 @@
     {
       recipe = {
         {
-          name = "minecraft:jungle_planks",
+          "minecraft:jungle_planks",
         },
         {
+          "minecraft:jungle_planks",
           lin = 1,
-          name = "minecraft:jungle_planks",
           col = 0,
         },
       },
@@ -15,25 +15,14 @@
     },
   },
   lastRecipe = "minecraft:oak_button",
-  [ "minecraft:jungle_button" ] = {
-    {
-      recipe = {
-        {
-          name = "minecraft:jungle_planks",
-        },
-      },
-      count = 1,
-    },
-  },
   [ "minecraft:oak_button" ] = {
     {
       recipe = {
         {
-          name = "minecraft:oak_planks",
+          "minecraft:oak_planks",
         },
       },
       count = 1,
     },
   },
-  CSlot = 16,
 }
