@@ -17,7 +17,7 @@
     
     -------------------------------------------------
     Table of recipes properties.
-    tRecipes = {} --["Name"] = {recipe = {{sItemName = "itemName"}, {sItemName = "itemName", { nCol = nColumn, nLin = nLine}}, ..., },
+    tRecipes = {} --["Name"] = {{ {"itemName", "itemName", ...}, {"itemName",  nCol = nColumn, nLin = nLine}}, ..., },
                                           count = resulting number of items, CSlot = number crafting slot}
 
     -------------------------------------------------
@@ -255,7 +255,7 @@
    <p id="getFacing"></p>
    
 - getFacing() Returns tTurtle.facing.<br>
-    <pre>Sintax: getFacing([nTurns=1])
+    <pre>Sintax: getFacing()
   Returns: tTurtle.facing
   ex: getFacing()</pre>
     
@@ -265,7 +265,7 @@
     <pre>Sintax: incFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  incFacing(1) - Increments tTurtle.facing </pre>
+  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2 </pre>
     
    <p id="setFacing"></p>
    
