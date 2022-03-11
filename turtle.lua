@@ -704,8 +704,8 @@ function getInvItems() --[[ Builds a table with the items and quantities in inve
   return tRecipe
 end
 
---not tested
-function ingredients(sRecipe) --[[ Builds a table with items and quantities in a recipe.
+--implementing
+function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.
   20/11/2021  Return: table - with ingredient name and quantity.
                       false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
                             - if sRecipe dosn't exist, (never was made).
