@@ -270,7 +270,7 @@
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
-    <pre>Sintax: setFacing(sFacing) - sFacing = {"z-"|"x+"|"z+"|"x-"|"y+"|"y-"}|[0..3]
+    <pre>Sintax: setFacing(sFacing) - sFacing = "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
                   - if sFacing is not in facingType.
@@ -284,7 +284,7 @@
      
 - getCoords() Gets coords from turtle.<br>
     <pre>Sintax: getCoords()
-  Returns: x,y,z the turtle coords.
+  Returns: tTurtle.x, tTurtle.y, tTurtle.z the turtle coords.
   ex: getCoords() </pre>
      
    <p id="setCoords"></p>
