@@ -250,13 +250,14 @@
     <pre>Sintax: decFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
+  decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0,
+  if tTurtle.facing<0 then tTurtle.facing and= 3 end</pre>
     
    <p id="getFacing"></p>
    
 - getFacing() Returns tTurtle.facing.<br>
     <pre>Sintax: getFacing()
-  Returns: tTurtle.facing
+  Returns: tTurtle.facing [0..3]
   ex: getFacing()</pre>
     
    <p id="incFacing"></p>
@@ -265,7 +266,8 @@
     <pre>Sintax: incFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2 </pre>
+  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
+  if tTurtle.facing>3 then tTurtle.facing and= 3 end</pre>
     
    <p id="setFacing"></p>
    
