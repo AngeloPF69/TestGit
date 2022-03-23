@@ -816,7 +816,7 @@
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
-   <p id="detectBelow">
+   <p id="detectDir">
    
 - detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.<br>
     <pre>Sintax: detectDir([sDir="forward"])
