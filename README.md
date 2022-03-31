@@ -10,9 +10,9 @@
     
     Table for turtle properties.
     tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-			facing = facingType["z-"], --the axis where the turtle is facing at.
-			leftHand = "empty",
-			rightHand = "empty",
+      facing = facingType["z-"], --the axis where the turtle is facing at.
+      leftHand = "empty",
+      rightHand = "empty",
     }
     
     -------------------------------------------------
