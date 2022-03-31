@@ -17,8 +17,8 @@
     
     -------------------------------------------------
     Table of recipes properties.
-    tRecipes = {} --["Name"] = {{ {"itemName", "itemName", ...}, {"itemName", itemName, ..., nCol = nColumn, nLin = nLine}}, ..., },
-                                          count = resulting number of items}
+    tRecipes = {} --["Name"][index] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, { ... },
+                                      count = resulting number of items}
                   -- ["CSlot] = number crafting slot.
                   -- ["lastRecipe"] = Last recipe name.
 
