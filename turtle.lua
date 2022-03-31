@@ -14,9 +14,10 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
+tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName", ...}, {"itemName", ..., nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
-                   ["lastRecipe"] = sLastRecipe, ["CSlot"] = Crafting slot.]]
+                   ["lastRecipe"] = sLastRecipe
+                   ["CSlot"] = Crafting slot.]]
 tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
@@ -703,8 +704,8 @@ function getInvItems() --[[ Builds a table with the items and quantities in inve
   return tRecipe
 end
 
---not tested
-function getRecItems(sRecipe) --[[ Builds a table with items and quantities in a recipe.
+--implementing
+function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.
   20/11/2021  Return: table - with ingredient name and quantity.
                       false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
                             - if sRecipe dosn't exist, (never was made).

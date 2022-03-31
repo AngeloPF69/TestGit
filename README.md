@@ -17,8 +17,10 @@
     
     -------------------------------------------------
     Table of recipes properties.
-    tRecipes = {} --["Name"] = {{ {"itemName", "itemName", ...}, {"itemName",  nCol = nColumn, nLin = nLine}}, ..., },
-                                          count = resulting number of items, CSlot = number crafting slot}
+    tRecipes = {} --["Name"] = {{ {"itemName", "itemName", ...}, {"itemName", itemName, ..., nCol = nColumn, nLin = nLine}}, ..., },
+                                          count = resulting number of items}
+                  -- ["CSlot] = number crafting slot.
+                  -- ["lastRecipe"] = Last recipe name.
 
     -------------------------------------------------
     Table of items stack.
@@ -27,7 +29,6 @@
 ## Initialize
 
   <a href="#INIT">INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.</a>
-
 ## Terminate
 
   <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.</a>
@@ -47,12 +48,12 @@
    <a href="#decFacing">decFacing(nTurns) Decrements tTurtle.facing by nTurns.</a><br>
    <a href="#getFacing">getFacing() Returns tTurtle.facing.</a><br>
    <a href="#incFacing">incFacing(nTurns) Increments tTurtle.facing by nTurns.</a><br>
-   <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing.</a>
+   <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing. sFacing= "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]</a>
     
 ## Turtle coords
 
-   <a href="#getCoords">getCoords() Gets coords from turtle.</a><br>
-   <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for turtle.</a>
+   <a href="#getCoords">getCoords() Gets coords from tTurtle.</a><br>
+   <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for tTurtle.</a>
 
 ## Equip
   
@@ -250,13 +251,14 @@
     <pre>Sintax: decFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
+  decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0,
+  if tTurtle.facing<0 then tTurtle.facing and= 3 end</pre>
     
    <p id="getFacing"></p>
    
 - getFacing() Returns tTurtle.facing.<br>
     <pre>Sintax: getFacing()
-  Returns: tTurtle.facing
+  Returns: tTurtle.facing [0..3]
   ex: getFacing()</pre>
     
    <p id="incFacing"></p>
@@ -265,12 +267,13 @@
     <pre>Sintax: incFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2 </pre>
+  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
+  if tTurtle.facing>3 then tTurtle.facing and= 3 end</pre>
     
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
-    <pre>Sintax: setFacing(sFacing) - sFacing = {"z-"|"x+"|"z+"|"x-"|"y+"|"y-"}|[0..3]
+    <pre>Sintax: setFacing(sFacing) - sFacing = "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
                   - if sFacing is not in facingType.
@@ -284,7 +287,7 @@
      
 - getCoords() Gets coords from turtle.<br>
     <pre>Sintax: getCoords()
-  Returns: x,y,z the turtle coords.
+  Returns: tTurtle.x, tTurtle.y, tTurtle.z the turtle coords.
   ex: getCoords() </pre>
      
    <p id="setCoords"></p>
@@ -812,7 +815,7 @@
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
-   <p id="detectBelow">
+   <p id="detectDir">
    
 - detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.<br>
     <pre>Sintax: detectDir([sDir="forward"])
