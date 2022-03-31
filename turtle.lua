@@ -704,11 +704,11 @@ function getInvItems() --[[ Builds a table with the items and quantities in inve
 end
 
 --not tested
-function ingredients(sRecipe) --[[ Builds a table with items and quantities in a recipe.
+function getRecItems(sRecipe) --[[ Builds a table with items and quantities in a recipe.
   20/11/2021  Return: table - with ingredient name and quantity.
                       false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
                             - if sRecipe dosn't exist, (never was made).
-              Sintax: ingredients([sRecipeName = tRecipes.lastRecipe])]]
+              Sintax: getRecItems([sRecipeName = tRecipes.lastRecipe])]]
   sRecipe = sRecipe or tRecipes.lastRecipe
   if not sRecipe then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe name not found" end
@@ -742,7 +742,7 @@ function haveIngredients(sRecipe, nLimit) --[[ Builds a table with the diference
     if not turtle.craft(0) then return nil, "This is not a recipe." 
     else tNeededIng = getInvItems()
     end
-  else tNeededIng, message = ingredients(sRecipe)
+  else tNeededIng, message = getRecItems(sRecipe)
        if not tNeededIng then return nil, message end
   end
 
@@ -835,24 +835,22 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
 	return math.floor(minCount)
 end
 
---not tested
-function getFirstItemCoords(sRecipe) --[[ Returns the column and line=0 of the first item in the recipe.
-  19/10/2021  Returns:  false - if the recipe name was not supplied.
-                              - if this recipe does not exist.
-                        col, lin - the column and line of first item.]]
-  if not sRecipe then return false, "Must supply recipe name." end
+function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 of the first item in the recipe.
+  19/10/2021  Returns:  col, lin - the column and line of first item.
+                        false - if the recipe name was not supplied and doesn't exist an last recipe.
+                              - if this recipe does not exist.]]
+  sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
+  if type(sRecipe) == "number" then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
 
   local col = 9
-  for k,v in pairs(tRecipes[sRecipe].recipe) do
-      for k1,v1 in pairs(v) do
-        for k2,v2 in pairs(v1) do
-          if k2 == "col" then
-            if v2 < col then col = v2 end
-          end
-        end
-      end
+  local tRec = tRecipes[sRecipe][nIndex].recipe
+  for iRec = 1, #tRec do
+    if tRec[iRec].col then
+      if tRec[iRec].col < col then col = tRec[iRec].col end
+    end
   end
+  if col > 0 then return 0 end
   return math.abs(col), 0
 end
 
@@ -976,25 +974,28 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
 end
 
 --not tested
-function recipeSlots(sRecipe) --[[ Builds a table with item and quantity of slots ocupied by the recipe.
+function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
   21/01/2022  Returns:  table with item and quantity of slots ocupied by it.
 							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe])
 							ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
-  sRecipe = sRecipe or tRecipes.lastRecipe
-  if not sRecipe then return false, "Must supply recipe name." end
-  if not tRecipes[sRecipe] then return false, "Recipe name not found." end
-  local tRecipe = tRecipes[sRecipe].recipe
+  sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
+  if type(sRecipe) == "number" then return false, "Must supply recipe name." end
+  if not tRecipes[sRecipe] then return false, "Recipe not found." end
+
+  local tRecipe = tRecipes[sRecipe][nIndex].recipe
   local tSlots = {}
   for i=1, #tRecipe do
-    for k,v in pairs(tRecipe[i]) do
-      if not tSlots[k] then tSlots[k] = 1
-      else tSlots[k] = tSlots[k] + 1
-      end
-    end
+  --for k,v in pairs(tRecipe[i]) do
+      --if not tSlots[tRecipe[i]] then tSlots[tRecipe[i]] = 1
+      --else tSlots[tRecipe[i]] = tSlots[tRecipe[i]] + 1
+      --end
+      print(textutils.serialize(tRecipe[i][1]))
+  --end
   end
   return tSlots
 end
 
+--not tested
 function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
   21/01/2022  Returns:  table with item and average between items and slots.
 							sintax: calcAverage(tSlots, tIng) - tSlots is a table with item and quantity of slots ocupied by it.
@@ -1151,7 +1152,6 @@ function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong
   return bExcess, tItems
 end
 
---not tested
 function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
   01/02/2022  Returns:
               Sintax:
@@ -1161,7 +1161,7 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
   else
     if not tRecipes[sRecipe] then return false, "Recipe name not found."
     elseif #tRecipe == 0 then
-      if not turtle.craft(0) then return false, "Inventory has no recipe."
+      if not turtle.craft(0) then return 1
       else
         tRecipe = getInvRecipe()
         if not tRecipe then return false, "Couldn't create recipe from inventory" end
@@ -1213,13 +1213,41 @@ function colLinMatch(tRecs, tRec)
   return bFound
 end
 
-function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.]]
-  local nIndex
+function getProdQuant() --[[Returns the quantity of products made with then recipe in inventory.
+  31/03/2022  Returns: number - quantity of products made with inventory recipe.
+              sintax: getProdQuant()
+              Note: this function crafts then recipe in inventory.
+              ex: getProdQuant()]]
+  local nCount
+  if not tRecipes["CSlot"] then tRecipes["CSlot"] = 16 end
+  turtle.select(tRecipes["CSlot"])
+  nCount = getMaxCraft()
+  turtle.craft(nCount)
+  return turtle.getItemCount(tRecipes["CSlot"])/nCount
+end
 
-  if not sRecipe then return false, "Recipe name not supplied." end
-  if not tRecipe then return false, "Recipe table not supplied." end
-  if #tRecipe == 0 then return false, "Empty recipe to add." end
-  if not nCount then return false, "Quantity of items produced not supplied." end
+function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
+  31/03/2022  Param:  sRecipe - name of recipe
+                      tRecipe - recipe table, get if from getInvRecipe.
+                      nCount - quantity of products made with this recipe.
+              Returns:  number - index of recipe (tRecipes[sRecipe][index])
+                        false - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
+                        false - if tRecipe is not supplied and there is no recipe in inventory.
+              Syntax: addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount])
+              Note: if no nCount is supplied this function crafts the recipe to obtain it.
+              ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"] ]]
+  
+  sRecipe, tRecipe, nCount = getParam("stn",{"", {}, -1}, sRecipe, tRecipe, nCount )
+
+  if sRecipe == "" then
+    sRecipe = tRecipes.lastRecipe
+    if not sRecipe then return false, "Recipe name not supplied." end
+  end
+
+  if #tRecipe == 0 then
+    tRecipe = getInvRecipe()
+    if not tRecipe then return false, "Recipe table not supplied." end
+  end
 
   if tRecipes[sRecipe] then --recipe exists
     nIndex = getRecipeIndex(sRecipe, tRecipe)
@@ -1228,30 +1256,17 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.]]
     tRecipes[sRecipe] = {}
     tRecipes[sRecipe][1] = {}
     tRecipes[sRecipe][1].recipe = tRecipe
+    if nCount == -1 then nCount = getProdQuant() end
     tRecipes[sRecipe][1].count = nCount
     tRecipes.lastRecipe = sRecipe
     return 1
   end
-  
-  --recipe exists but it is not the same as in tRecipe
-  for iRecipes = 1, #tRecipes[sRecipe] do
-    if colLinMatch(tRecipes[sRecipe][iRecipes].recipe, tRecipe) then
-      for iRecs = 1, #tRecipes[sRecipe][iRecipes].recipe do
-        for iItems = 1, #tRecipes[sRecipe][iRecipes].recipe[iRecs] do
-          if tRecipe[iRecs][iItems] ~= tRecipes[sRecipe][iRecipes].recipe[iRecs][iItems] then
-            nIndex = #tRecipes[sRecipe][iRecipes].recipe[iRecs] + 1
-            tRecipes[sRecipe][iRecipes].recipe[iRecs][nIndex] = tRecipe[iRecs][iItems]
-            break
-          end
-        end
-      end
-      return iRecipes
-    end
-  end
 
+  --recipe exists but items are not the same
   nIndex = #tRecipes[sRecipe]+1
   tRecipes[sRecipe][nIndex] = {}
   tRecipes[sRecipe][nIndex].recipe = tRecipe
+  if nCount == -1 then nCount = getProdQuant() end
   tRecipes[sRecipe][nIndex].count = nCount
   tRecipes.lastRecipe = sRecipe
   return nIndex
@@ -2339,15 +2354,14 @@ end
 
 
 ---- TEST AREA ------
---function addRecipe(sRecipe, tRecipe, nCount)
---getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
+
 
 INIT()
-local tRecipe = getInvRecipe()
---print(getRecipeIndex("minecraft:stick",tRecipe ))
 
-local nCount = 4
-print(addRecipe("minecraft:oak_button", tRecipe, nCount))
-print(textutils.serializeJSON(tRecipes))
---print(colLinMatch(tRecipes["minecraft:stick"][1].recipe, tRecipe))
+local tRecipe = getInvRecipe()
+
+--print(textutils.serializeJSON(recipeSlots("minecraft:stick")))
+print(addRecipe("minecraft:stick", tRecipe, 1))
+--print(textutils.serialize(tRecipes))
+--print(getRecipeIndex("minecraft:stick"))
 TERMINATE()

@@ -3,6 +3,19 @@
     {
       recipe = {
         {
+          "minecraft:oak_planks",
+        },
+        {
+          "minecraft:oak_planks",
+          col = 0,
+          lin = 1,
+        },
+      },
+      count = 4,
+    },
+    {
+      recipe = {
+        {
           "minecraft:jungle_planks",
         },
         {
@@ -11,10 +24,10 @@
           col = 0,
         },
       },
-      count = 4,
+      count = 1,
     },
   },
-  lastRecipe = "minecraft:oak_button",
+  CSlot = 16,
   [ "minecraft:oak_button" ] = {
     {
       recipe = {
@@ -25,4 +38,5 @@
       count = 1,
     },
   },
+  lastRecipe = "minecraft:stick",
 }
