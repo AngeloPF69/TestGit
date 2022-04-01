@@ -974,24 +974,26 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
   return tData.count
 end
 
---not tested
 function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
-  21/01/2022  Returns:  table with item and quantity of slots ocupied by it.
-							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe])
+  21/01/2022  Param:  SRecipe - recipe name.
+                      nIndex - recipe index.
+              Returns:  table with item name and quantity of slots ocupied by it.
+                        false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
+                              - if tRecipes[sRecipe] doesn't exist.
+                              - if tRecipes[sRecipe][nIndex] doesn't exist.
+							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
 							ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
   if type(sRecipe) == "number" then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
+  if not tRecipes[sRecipe][nIndex] then return false, "Recipe index doesn't exist." end
 
   local tRecipe = tRecipes[sRecipe][nIndex].recipe
-  local tSlots = {}
+    local tSlots = {}
   for i=1, #tRecipe do
-  --for k,v in pairs(tRecipe[i]) do
-      --if not tSlots[tRecipe[i]] then tSlots[tRecipe[i]] = 1
-      --else tSlots[tRecipe[i]] = tSlots[tRecipe[i]] + 1
-      --end
-      print(textutils.serialize(tRecipe[i][1]))
-  --end
+    if not tSlots[tRecipe[i][1] ] then tSlots[tRecipe[i][1] ] = 1
+    else tSlots[tRecipe[i][1] ] = tSlots[tRecipe[i][1] ] + 1
+    end
   end
   return tSlots
 end
@@ -2361,8 +2363,8 @@ INIT()
 
 local tRecipe = getInvRecipe()
 
---print(textutils.serializeJSON(recipeSlots("minecraft:stick")))
-print(addRecipe("minecraft:stick", tRecipe, 1))
---print(textutils.serialize(tRecipes))
---print(getRecipeIndex("minecraft:stick"))
-TERMINATE()
+--function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
+--function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
+--print(calcAverage())
+print(textutils.serialize(recipeSlots("minecraft:stick", 2)))
+--TERMINATE()

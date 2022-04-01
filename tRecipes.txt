@@ -7,8 +7,8 @@
         },
         {
           "minecraft:oak_planks",
-          col = 0,
           lin = 1,
+          col = 0,
         },
       },
       count = 4,
@@ -20,14 +20,15 @@
         },
         {
           "minecraft:jungle_planks",
-          lin = 1,
           col = 0,
+          lin = 1,
         },
       },
       count = 1,
     },
   },
   CSlot = 16,
+  lastRecipe = "minecraft:stick",
   [ "minecraft:oak_button" ] = {
     {
       recipe = {
@@ -38,5 +39,4 @@
       count = 1,
     },
   },
-  lastRecipe = "minecraft:stick",
 }
