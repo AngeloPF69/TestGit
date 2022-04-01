@@ -998,12 +998,15 @@ function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity
   return tSlots
 end
 
---not tested
 function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
-  21/01/2022  Returns:  table with item and average between items and slots.
-							sintax: calcAverage(tSlots, tIng) - tSlots is a table with item and quantity of slots ocupied by it.
-								- tIng is a table with item and quantity of it.
+  21/01/2022  Param:  tSlots - table with item name and quantity of slots ocupied in the recipe.
+                      tIng - table with item name and quantity in the inventory.
+              Returns:  table with item and average between items and slots.
+							sintax: calcAverage(tSlots, tIng)
 							ex: calcAverage(tSlots, tIng)]]
+  if not tSlots then return false, "Table of quantity of slots ocupied by recipe not supplied." end
+  if not tIng then return false, "Table of items in the inventory not supplied." end
+  
   local tMean = {}
   for k,v in pairs(tSlots) do
     for k1,v1 in pairs(tIng) do
@@ -2360,11 +2363,11 @@ end
 
 
 INIT()
-
-local tRecipe = getInvRecipe()
-
 --function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
---function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
---print(calcAverage())
-print(textutils.serialize(recipeSlots("minecraft:stick", 2)))
+local tIng = getInvItems()
+local tSlots = recipeSlots("minecraft:stick", 1)
+
+print(textutils.serialize(calcAverage(tSlots, tIng)))
+
+
 --TERMINATE()
