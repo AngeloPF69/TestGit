@@ -704,21 +704,28 @@ function getInvItems() --[[ Builds a table with the items and quantities in inve
   return tRecipe
 end
 
---implementing
+--not tested
 function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.
-  20/11/2021  Return: table - with ingredient name and quantity.
+  20/11/2021  Param:  sRecipe - recipe name.
+                      nIndex - recipe index
+              Return: table - with recipe ingredient name and quantity.
                       false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
                             - if sRecipe dosn't exist, (never was made).
-              Sintax: getRecItems([sRecipeName = tRecipes.lastRecipe])]]
-  sRecipe = sRecipe or tRecipes.lastRecipe
+                            - if the recipe index doesn't exist.
+              Sintax: getRecItems([sRecipeName = tRecipes.lastRecipe][, nIndex=1])
+              ex: getRecipeIndex("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2} ]]
+  sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
+
+  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
   if not sRecipe then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe name not found" end
+  if not tRecipes[sRecipe][nIndex] then return false, "Recipe index not found" end
+
   local tRecipe = {}
-  for k,v in pairs(tRecipes[sRecipe].recipe) do
-    for k1,v1 in pairs(v) do
-      if tRecipe[k1] then tRecipe[k1] = tRecipe[k1] + 1
-      else tRecipe[k1] = 1
-      end
+  local tRecs = tRecipes[sRecipe][nIndex].recipe
+  for i = 1, #tRecs do
+    if tRecipe[tRecs[1] ] then tRecipe[tRecs[1] ] = tRecipe[tRecs[1] ] + 1
+    else tRecipe[tRecs[1] ] = 1
     end
   end
   return tRecipe
@@ -1006,7 +1013,7 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
 							ex: calcAverage(tSlots, tIng)]]
   if not tSlots then return false, "Table of quantity of slots ocupied by recipe not supplied." end
   if not tIng then return false, "Table of items in the inventory not supplied." end
-  
+
   local tMean = {}
   for k,v in pairs(tSlots) do
     for k1,v1 in pairs(tIng) do
@@ -1019,7 +1026,7 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
 end
 
 --not tested
-function arrangeRecipe(sRecipe) --[[ Arranges items in inventory to craft a recipe.
+function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
   21/01/2022  Returns:  true - if items from the recipe was arranged.
                         false - if no recipe name was supplied
                               - if the recipe is not registered.
@@ -2363,11 +2370,9 @@ end
 
 
 INIT()
---function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
-local tIng = getInvItems()
-local tSlots = recipeSlots("minecraft:stick", 1)
 
-print(textutils.serialize(calcAverage(tSlots, tIng)))
+--function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.]]
 
+print(textutils.serialize(getRecipeItems("minecraft:stick", 1)))
 
 --TERMINATE()
