@@ -962,7 +962,8 @@
    <p id="itemSpace">
    
 - itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
-    <pre>Sintax: itemSpace([Slot/itemName=Selected slot])
+    <pre>Param: slot|item Name - the number of the slot or the item name.
+  Sintax: itemSpace([Slot/itemName=Selected slot])
   Returns: number of items you can store more in inventory.
            false - if item is not in inventory.
                  - if slot is empty.
@@ -972,9 +973,10 @@
    
    <p id="search">
    
-- search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.<br>
+- search(sItemName, nStartSlot, bWrap) Search inventory for ItemName, starting at startSlot, and if search wrap.<br>
     <pre>Param: sItemName - name of item to search.
          nStartSlot - number of slot where to start the search.
+         bWrap - if the search wraps around the inventory.
   Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
   Returns: The first slot where the item was found, and the quantity
            False - if the item was not found
