@@ -973,7 +973,9 @@
    <p id="search">
    
 - search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.<br>
-    <pre>Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
+    <pre>Param: sItemName - name of item to search.
+         nStartSlot - number of slot where to start the search.
+  Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
   Returns: The first slot where the item was found, and the quantity
            False - if the item was not found
                  - if sItemName not supplied.
@@ -982,7 +984,9 @@
   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
-    <pre>Sintax: transferFrom(nSlot, nItems)
+    <pre>Param: nSlot - slot where to transfer items from.
+         nItems - quantity of items to transfer.
+  Sintax: transferFrom(nSlot, nItems)
   Returns: number of items in selected slot.
            nil - if nSlot is not supplied.
            false - if nSlot is empty.
@@ -995,8 +999,10 @@
 
    <p id="suckDir">
    
-- suckDir(sDir, nItems) Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
-    <pre>Sintax: suckDir([sDir="forward][,nItems=all the items])
+- suckDir(sDir, nItems) Sucks or drops nItems into sDir direction.<br>
+    <pre>Param: sDir = "forward"|"right"|"back"|"left"|"up"|"down"
+         nItems = quantity of items to drop.
+  Sintax: suckDir([sDir="forward][,nItems=all the items])
   Returns: true - if turtle collects some items.
            false - if there are no items to take.
   ex: suckDir() - Turtle sucks all the items forward.</pre>
