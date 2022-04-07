@@ -922,17 +922,20 @@
   Returns: true.
   ex: groupItems() - Stacks the same items.</pre>
    
-   <p id="indSlot">
+   <p id="incSlot">
    
-- incSlot(nSlot) Increases nSlot in range [1..16].<br>
-    <pre>Sintax: incSlot(nSlot)
+- incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].<br>
+    <pre>Param: nSlot - the slot number.
+         bWrap - true or false, if the search wraps around.
+  Sintax: incSlot(nSlot)
   Returns: The number of slot increased by 1.
   ex: incSlot(16) - Returns 1</pre>
    
    <p id="itemCount">
    
 - itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
-    <pre>Sintax: itemCount([slot/"inventory"/item name=Selected slot])
+    <pre>Param: slot|"inventory"|item name - the slot number or the inventory as a all or a item name.
+  Sintax: itemCount([slot|"inventory"|item name=Selected slot])
   Returns: number of items counted.
            false - if nSlot <0 or > 16.
                  - if nSlot is neither a string nor a number.
@@ -943,7 +946,8 @@
    <p id="itemName">
    
 - itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
-    <pre>Sintax: itemName([Slot=Selected slot])
+    <pre>Param: Slot - the slot number.
+  Sintax: itemName([Slot=Selected slot])
   Returns: item name - if selected slot/slot is not empty.
            false - if selected slot/slot is empty.
   ex: itemName(1) - Returns the name of item in slot 1.</pre>
@@ -951,7 +955,8 @@
    <p id="itemSelect">
    
 - itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
-    <pre>Sintax: itemSelect([Slot/itemName=Selected slot])
+    <pre>Param: slot/itemName - the slot number or the item name.
+  Sintax: itemSelect([Slot/itemName=Selected slot])
   Returns: The selected slot, and items in that slot.
            False - if the item was not found
                  - if nStartSlot is not a number or a string.
@@ -1003,10 +1008,11 @@
    
 - suckDir(sDir, nItems) Sucks or drops nItems into sDir direction.<br>
     <pre>Param: sDir = "forward"|"right"|"back"|"left"|"up"|"down"
-         nItems = quantity of items to drop.
+         nItems = quantity of items to suck/drop.
   Sintax: suckDir([sDir="forward][,nItems=all the items])
   Returns: true - if turtle collects some items.
            false - if there are no items to take.
+  Note: if nItems < 0 it drops items.
   ex: suckDir() - Turtle sucks all the items forward.</pre>
 
    <a href="#top">Top of page</a>
