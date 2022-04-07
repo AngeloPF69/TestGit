@@ -839,10 +839,11 @@
     
    <p id="inspectDir">
 
-- inspectDir([sDir="forward"]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.<br>
-    <pre>Sintax: inspectDir([sDir="forward"])
-  Returns: true, table with data - If turtle detects a block.
-           false, message - if turtle didn't detect a block.
+- inspectDir([sDir="forward"]) Turtle inspect block in sDir direction.<br>
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+  Sintax: inspectDir([sDir="forward"])
+  Returns: true, table with data from original turtle.inspect functions - If turtle detects a block.
+           false, message from the original turtle.inspect functions - if turtle didn't detect a block.
   ex: detectDir([sDir="forward"]) - Inspects a block forward.</pre>
    
 
@@ -851,7 +852,8 @@
    <p id="compareAbove">
    
 - compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
-    <pre>Sintax: compareAbove([Blocks=1])
+    <pre>Param: Blocks - the number of blocks to compare.
+  Sintax: compareAbove([Blocks=1])
   Returns: true - if all the blocks are the same.
            false - if blocked, empty space, or found a diferent block.
            nil - if invalid parameter.
@@ -861,7 +863,8 @@
    <p id="compareBelow">
    
 - compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.<br>
-    <pre>Sintax: compareBelow([Blocks=1])
+    <pre>Param: Blocks - number of blocks to compare.
+  Sintax: compareBelow([Blocks=1])
   Returns: true - if all the blocks are the same.
            false - if blocked, empty space, or found a diferent block.
 					nil if invalid parameter.
@@ -871,7 +874,9 @@
     <p id="compareDir">
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
-    <pre>Sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+         nSlot - slot number where is the item to compare to the world. 
+  Sintax: compareDir([sDir="forward"][, nSlot=selected slot])
   Returns: true - if the item in slot and in the world is the same.
            false - if block in slot and in the world are not the same,
                  - if invalid direction,
@@ -887,7 +892,8 @@
    <p id="clearSlot">
     
 - clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
-    <pre>Sintax: compareBelow([Blocks=1])
+    <pre>Param: nSlot - slot number to clear.
+  Sintax: compareBelow([Blocks=1])
   Returns: false - if there is no space to tranfer items.
            true - if the slot is empty.
   ex: clearSlot() - Clears the selected slot.</pre>
@@ -895,7 +901,8 @@
    <p id="decSlot">
    
 - decSlot(nSlot) Decreases nSlot in range [1..16].<br>
-    <pre>Sintax: decSlot(nSlot)
+    <pre>Param: nSlot - number of slot to decrement.
+  Sintax: decSlot(nSlot)
   Returns: the number of slot increased by 1.
   ex: decSlot(1) - Returns 16.</pre>
    
@@ -909,9 +916,13 @@
    <p id="getFreeSlot">
    
 - getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
-    <pre>Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
+    <pre>Param: nStartSlot - start slot number.
+         bWrap - true or false, if the search wraps around.
+  Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
   Returns: first free slot number.
+  Note: if nStartSlot < 0 search backwards
   ex: getFreeSlot() - Returns the first empty slot startint at slot 1.
+      getFreeSlot(-16) - Returns the first empty slot starting at slot 16, searching backwards.
       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
    
