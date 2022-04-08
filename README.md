@@ -607,7 +607,9 @@
   <p id="digDir"></p>
   
 - digDir(sDir, nBlocks) Turtle digs in sDir direction nBlocks.<br>
-    <pre>Sintax: digDir([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+         nBlocks . number of blocks to dig.
+  Sintax: digDir([sDir="forward"], [nBlocks=1])
   Returns: true - if turtle digs all way.
            false - if blocked, empty space, can't turn that way.
            nil if invalid parameter
@@ -618,7 +620,8 @@
    <p id="digDown"></p>
    
 - digDown([Blocks=1]) Dig Blocks downwards or upwards with equiped tool.<br>
-    <pre>Sintax: digDown([Blocks=1])
+    <pre>Param: Blocks - number of blocks to dig.
+  Sintax: digDown([Blocks=1])
   Returns: true - if turtle digs all way.
            false - if bllocked, empty space, or invalid parameter.
   Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
@@ -627,7 +630,8 @@
    <p id="digLeft"></p>
    
 - digLeft([Blocks=1]) Rotates turtle left or right, and dig Blocks forward with equiped tool.<br>
-    <pre>Sintax: digLeft([Blocks=1])
+    <pre>Param: Blocks - number of blocks to dig.
+  Sintax: digLeft([Blocks=1])
   Returns: true - if turtle digs all way.
            false - if bllocked, empty space, or invalid parameter.
   Note: nBlocks < 0 digs right, nBlocks > 0 digs left.
@@ -636,7 +640,8 @@
    <p id="digRight"></p>
    
 - digRight([Blocks=1]) Rotates turtle Right or left, and dig Blocks forward with equiped tool.<br>
-    <pre>Sintax: digRight([Blocks=1])
+    <pre>Param: Blocks - number of blocks to dig.
+  Sintax: digRight([Blocks=1])
   Returns: true - if turtle digs all way.
            false - if bllocked, empty space, or invalid parameter.
   Note: nBlocks < 0 digs left, nBlocks > 0 digs left.
@@ -645,7 +650,8 @@
    <p id="digUp"></p>
    
 - digUp([Blocks=1]) Dig Blocks upwards or downwards with equiped tool.
-    <pre>Sintax: digUp([Blocks=1])
+    <pre>Param: Blocks - number of blocks to dig.
+  Sintax: digUp([Blocks=1])
   Returns: true - if turtle digs all way.
            false - if bllocked, empty space, or invalid parameter.
   Note: nBlocks < 0 digs down, nBlocks > 0 digs Up.
@@ -657,7 +663,8 @@
    <p id="drop"></p>
 
 - drop([Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front of the turtle.<br>
-    <pre>Sintax: drop([Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: drop([Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from the front.
   ex: drop(2) - Drops 2 blocks forward.</pre>
@@ -665,7 +672,8 @@
    <p id="dropBack"></p>
    
 - dropBack([Blocks=stack]) Rotate back and drops or sucks Blocks forward.<br>
-    <pre>Sintax: dropBack([Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: dropBack([Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from the back.
   ex: dropBack(-2) - Sucks 2 blocks from the back.</pre>
@@ -673,7 +681,8 @@
    <p id="dropDir"></p>
    
 - dropDir([sDir="forward"][, Blocks=stack]) Drops Blocks from selected slot and inventory in the world in front, up or down the turtle.<br>
-    <pre>Sintax: dropDir([sDir="forward"][, Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: dropDir([sDir="forward"][, Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from sDir direction.
   ex: dropDir(-2) - Sucks 2 blocks from the front.</pre>
@@ -681,7 +690,8 @@
    <p id="dropDown"></p>
    
 - dropDown([Blocks=stack]) Drops nBlocks from selected slot and inventory in the world downwards.<br>
-    <pre>Sintax: dropDown([Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: dropDown([Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from down.
   ex: dropDown() - Drops 1 block down.</pre>
@@ -689,7 +699,8 @@
    <p id="dropLeft"></p>
    
 - dropLeft([nBlocks=stack]) Rotate left and drops or sucks nBlocks forward.<br>
-    <pre>Sintax: dropLeft([Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: dropLeft([Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from the left.
   ex: dropLeft() - Drops 1 block to the left.</pre>
@@ -697,7 +708,8 @@
    <p id="dropRight"></p>
    
 - dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.<br>
-    <pre>Sintax: dropRight([Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: dropRight([Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from the right.
   ex: dropRight() - Drops 1 block to the right.</pre>
@@ -705,7 +717,8 @@
    <p id="dropUp"></p>
    
 - dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.<br>
-    <pre>Sintax: dropUp([Blocks=stack])
+    <pre>Param: Blocks - number of blocks to drop.
+  Sintax: dropUp([Blocks=stack])
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from up.
   ex: dropUp() - Drops 1 block upwards.</pre>
@@ -716,7 +729,8 @@
    <p id="place">
    
 - place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.<br>
-    <pre>Sintax: place([Blocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: place([Blocks=1])
   Returns: number of blocks placed.
            false - invalid parameter.
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards
@@ -725,7 +739,8 @@
    <p id="placeAbove">
    
 - placeAbove([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.<br>
-    <pre>Sintax: placeAbove([nBlocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: placeAbove([nBlocks=1])
   Returns: number of placed blocks.
            false - if turtle was blocked on the way back.
                  - couldn't place block.
@@ -735,7 +750,8 @@
    <p id="placeBelow">
    
 - placeBelow([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.<br>
-    <pre>Sintax: placeAbove([nBlocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: placeAbove([nBlocks=1])
   Returns:  number of blocks placed
             false - if turtle was blocked on the way back.
                   - couldn't place block.
@@ -744,8 +760,9 @@
    
    <p id="placeDir">
    
-- placeDir([sDir="forward"]) Places inventory selected Block in sDir { "forward", "right", "back", "left", "up", "down" }.<br>
-    <pre>Sintax: placeDir([sDir="forward"])
+- placeDir([sDir="forward"]) Places inventory selected Block in sDir.<br>
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+  Sintax: placeDir([sDir="forward"])
   Returns: true if turtle places the selected block.
            false if turtle doesn't place the selected block, or invalid parameter.
   ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.</pre>
@@ -753,7 +770,8 @@
    <p id="placeDown">
    
 - placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.<br>
-    <pre>Sintax: placeDown([Blocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: placeDown([Blocks=1])
   Returns: number of blocks placed.
            false - if turtle was blocked on the way back.
                  - invalid parameter.
@@ -763,7 +781,8 @@
    <p id="placeLeft">
    
 - placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.<br>
-    <pre>Sintax: placeLeft([Blocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: placeLeft([Blocks=1])
   Returns: number of placed blocks.
            false - if turtle was blocked on the way back.
                  - invalid parameter.
@@ -774,7 +793,8 @@
    <p id="placeRight">
    
 - placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.<br>
-    <pre>Sintax: placeRight([Blocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: placeRight([Blocks=1])
   Returns: true if turtle places all blocks all the way.
            false - if turtle was blocked on the way back.
                  - invalid parameter.
@@ -785,7 +805,8 @@
    <p id="placeUp">
    
 - placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.<br>
-    <pre>Sintax: placeUp([Blocks=1])
+    <pre>Param: Blocks - number of blocks to place.
+  Sintax: placeUp([Blocks=1])
   Returns: number os blocks placed.
            false - if turtle was blocked on the way back.
                  - invalid parameter.
@@ -798,7 +819,8 @@
    <p id="detectAbove">
    
 - detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.<br>
-    <pre>Sintax: detectAbose([Blocks=1])
+    <pre>Param: Blocks - number of blocks to detect.
+  Sintax: detectAbose([Blocks=1])
   Returns: true - if turtle detects a line of nBlocks above it.
            false - if blocked, empty space.
 					nil - if invalid parameter.
@@ -808,21 +830,23 @@
    <p id="detectBelow">
    
 - detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.<br>
-    <pre>Sintax: detectBelow([Blocks=1])
+    <pre>Param: Blocks - number of blocks to detect.
+  Sintax: detectBelow([Blocks=1])
   Returns: true - if turtle detects a line of nBlocks below.
            false - if blocked, empty space.
-					nil - if invalid parameter
+					 nil - if invalid parameter
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
    <p id="detectDir">
    
-- detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.<br>
-    <pre>Sintax: detectDir([sDir="forward"])
+- detectDir(sDir) Detects if is a block in sDir direction.<br>
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down" 
+  Sintax: detectDir([sDir="forward"])
   Returns: true - If turtle detects a block.
            false - if turtle didn't detect a block.
            nil - invalid parameter.
-  ex: detectDir([sDir="forward"]) - Detect blocks forward.</pre>
+  ex: detectDir() - Detect blocks forward.</pre>
 
 
 ## Disk
