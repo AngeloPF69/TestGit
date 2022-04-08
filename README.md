@@ -365,8 +365,9 @@
    <p id="loadTable"></p>
    
 - loadTable(sFileName) Loads a text file into a table.</a><br>
-    <pre>Sintax: loadTable(sFileName)
-  Returns: true - if could read a text file into a table.
+    <pre>Param: sFileName - name of the file to serialize into a table.
+  Sintax: loadTable(sFileName)
+  Returns: table - if could read a text file into a table.
            false - if sFileName is not supplied,
                  - if the file couldn't be opened for reading,
                  - if the file is empty.
@@ -375,7 +376,9 @@
    <p id="saveTable"></p>
    
 - saveTable(t, sFileName) Saves a table into a text file.</a><br>
-    <pre>Sintax: saveTable(t, sFileName)
+    <pre>Param: t - table to unserialize.
+         sFileName - name of the file.
+  Sintax: saveTable(t, sFileName)
   Returns: true - if saving file was a success.
            false - if t or sFileName not supplied,
                  - if no disk space,
@@ -386,14 +389,17 @@
    <p id="sign"></p>
    
 - sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
-    <pre>Sintax: sign(value)
+    <pre>Param: value - a number.
+  Sintax: sign(value)
   Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
   ex: sign(-1) - Returns -1</pre>
   
   <p id="tableInTable"></p>
   
 - tableInTable(tSearch, t) Verifies if tSearch is in table t.</a>
-    <pre>Sintax: tableInTable(tSearch, t)
+    <pre>Param: tSearch - table of elements to search.
+         t - table to be searched.
+  Sintax: tableInTable(tSearch, t)
   Returns: true - tSearch is in t.
            false - at the least one element of tSearch is not in table t.
   ex: tableInTable("forward", {"forward", "left", "right"}) - Returns true.</pre>
@@ -403,8 +409,9 @@
 
    <p id="attackDir"></p>
 
-- attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}
-    <pre>Sintax: attackDir([sDir="forward"])
+- attackDir([sDir="forward"]) Turtle attack in sDir direction.
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"}
+  Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
            false - if there is nothing to attack, or no weapon.
            nil - if invalid parameter.
@@ -480,7 +487,7 @@
   
 - turnDir([sDir="back"]) Rotates turtle back, left or right.<br>
     <pre>Param: sDir - "back"|"left"|"right"
-  Sintax: turnDir([Direction="back"])
+  Sintax: turnDir([sDir="back"])
   Returns: true if sDir is a valid direction.
            false if sDir is not a valid direction.
   ex: turnDir("left") - Turtle turns left.</pre>
