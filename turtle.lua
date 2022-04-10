@@ -2368,7 +2368,10 @@ end
 
 INIT()
 
+local success, t = haveItems("minecraft:stick")
 --function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
-print(arrangeRecipe("minecraft:stick", 1))
+--print(arrangeRecipe("minecraft:stick", 1))
+print(success)
+print(textutils.serialize(t))
 
 --TERMINATE()
