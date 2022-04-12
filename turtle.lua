@@ -730,6 +730,24 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
   return tRecipe
 end
 
+--implementing
+function canCraft()
+	local tCRecipes = {} --recipes i can make with items in inventory
+	local bFound = false
+	local tInvItems = getInvItems() --items in inventory
+	for k, v in pairs(tRecipes) do
+		for i = 1, #v do
+			local tRecipeItems = getRecipeItems(k, i)
+			if #tRecipeItems == #tInvItems then
+				bFound = true --at least 1 recipe it can craft
+				tCRecipes = tRecipes[k][i]
+			end
+		end
+	end
+	if (not bFound) and turtle.craft(0) then bFound = true end
+	return bFound,tCRecipes
+end
+
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
   23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
                       nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
