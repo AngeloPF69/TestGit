@@ -690,6 +690,12 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
+--implementing
+function identifyRecipe()
+  local tRecipe = getInvRecipe()
+
+end
+
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021  Return: table - with ingredient name and quantity.]]
   local tRecipe = {}
@@ -730,13 +736,14 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
   return tRecipe
 end
 
+--implementing
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
   23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
                       nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
                           - if sRecipe dosn't exist, (never was made).
               Note: on the table, negative values indicate missing items.
                     if not it returns true and the table.
-              Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nLimit =1])]]
+              Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])]]
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
   if not sRecipe then return false, "Recipe name not supplied." end
