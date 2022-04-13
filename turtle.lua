@@ -812,6 +812,16 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
   return true
 end
 
+--not tested
+function getRecipe(sRecipe, nIndex)
+  sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
+  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
+  if not sRecipe then return false, "Must supply recipe name." end
+  if not tRecipes[sRecipe] then return false, "Recipe name not found." end
+  if not tRecipes[sRecipe][nIndex] then return false, "Recipe index not found." end
+  return tRecipes[sRecipe][nIndex]
+end
+
 function getInvRecipe() --[[ Builds a table with items and their position from inventory (the recipe).
   19/10/2021  Returns false - if it is not a recipe in the inventory.
                       tRecipe - the recipe with items and positions.
