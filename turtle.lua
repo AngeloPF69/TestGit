@@ -736,16 +736,23 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
   return tRecipe
 end
 
+--not tested
 function canCraft()
+--returns: true/false, table = {recipe name, index}
 	local tCRecipes = {} --recipes i can make with items in inventory
-	local bFound = false
+	local bFound = true
 	local tInvItems = getInvItems() --items in inventory
 	for k, v in pairs(tRecipes) do
-		for i = 1, #v do
-			local tRecipeItems = getRecipeItems(k, i)
-			if #tRecipeItems == #tInvItems then
-				bFound = true --at least 1 recipe it can craft
-				tCRecipes = tRecipes[k][i]
+		for iRecipes = 1, #v do
+			local tRecipeItems = getRecipeItems(k, iRecipes)
+			if #tRecipeItems == #v then
+				for iItems = 1, #v[iRecipes] do
+					if tRecipeItems[iItems] ~= v[iRecipes][iItems] then
+						bFound =false
+						break
+					end
+				end
+				if bFound then tCRecipes = tRecipes[k][iRecipes] end
 			end
 		end
 	end
