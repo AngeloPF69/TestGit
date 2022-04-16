@@ -24,7 +24,7 @@
           lin = 1,
         },
       },
-      count = 1,
+      count = 4,
     },
   },
   CSlot = 16,

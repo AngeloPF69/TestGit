@@ -690,12 +690,6 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
---implementing
-function identifyRecipe()
-  local tRecipe = getInvRecipe()
-
-end
-
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021  Return: table - with ingredient name and quantity.]]
   local tRecipe = {}
@@ -736,31 +730,36 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
   return tRecipe
 end
 
---not tested
-function canCraft()
---returns: true/false, table = {recipe name, index}
+function canCraft() --[[ Retuns a table with recipe name and index that you can craft from inventory.
+  20/11/2021  Return: true, table - with recipe name and index.
+                      false - if no recipe can be crafted.
+              Sintax: canCraft()
+              ex: canCraft()]]
 	local tCRecipes = {} --recipes i can make with items in inventory
-	local bFound = true
 	local tInvItems = getInvItems() --items in inventory
 	for k, v in pairs(tRecipes) do
-		for iRecipes = 1, #v do
-			local tRecipeItems = getRecipeItems(k, iRecipes)
-			if #tRecipeItems == #v then
-				for iItems = 1, #v[iRecipes] do
-					if tRecipeItems[iItems] ~= v[iRecipes][iItems] then
-						bFound =false
-						break
-					end
-				end
-				if bFound then tCRecipes = tRecipes[k][iRecipes] end
-			end
-		end
-	end
-	if (not bFound) and turtle.craft(0) then bFound = true end
-	return bFound,tCRecipes
+    if type(v)=="table" then
+      for iRecipe = 1, #v do
+        bFound = true
+        local tRecipeItems = getRecipeItems(k, iRecipe)
+        for k1, v1 in pairs(tRecipeItems) do
+          if not tInvItems[k1] then
+            bFound = false
+            break
+          else
+            if tInvItems[k1]<v1 then
+              bFound = false
+              break
+            end
+          end
+        end
+        if bFound then tCRecipes[#tCRecipes+1] = {[k]=iRecipe} end
+      end  
+    end
+  end
+  return #tCRecipes~=0, tCRecipes
 end
 
---implementing
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
   23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
                       nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
@@ -773,13 +772,8 @@ function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference betwe
   if not sRecipe then return false, "Recipe name not supplied." end
 
   local tNeededIng
-  if sRecipe == "" then --there was no last recipe
-    if not turtle.craft(0) then return nil, "This is not a recipe." 
-    else tNeededIng = getInvItems()
-    end
-  else tNeededIng, message = getRecipeItems(sRecipe, nIndex)
-       if not tNeededIng then return nil, message end
-  end
+  tNeededIng, message = getRecipeItems(sRecipe, nIndex)
+  if not tNeededIng then return nil, message end
 
   local tInvIng = getInvItems()
   local tIngredients = {}
@@ -812,8 +806,14 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
   return true
 end
 
---not tested
-function getRecipe(sRecipe, nIndex)
+function getRecipe(sRecipe, nIndex) --[[ Gets the recipe from tRecipes.
+  14/4/2022 Param:  sRecipe - recipe name.
+                    nIndex - recipe index.
+            Returns: table - the recipe.
+                     false - if recipe name is not supplied and doesn't exist last recipe.
+                           - if recipe name doesn't exist.
+                           - if recipe index doesn't existy.
+            Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) ]]
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
   if not sRecipe then return false, "Must supply recipe name." end
@@ -1063,50 +1063,50 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
   return tMean
 end
 
---not tested
 function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
-  21/01/2022  Returns:  true - if items from the recipe was arranged.
-                        false - if no recipe name was supplied
-                              - if the recipe is not registered.
-                              - if some slot couldn't be cleared.
-                              - if it couldn't leave the exact number of items in a slot.
-                              - if it dowsn't have enough items to craft recipe.
-							sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe])
-							ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
-  sRecipe = sRecipe or tRecipes.lastRecipe
-  if not sRecipe then return false, "Must supply recipe name."
-  elseif not tRecipes[sRecipe] then return false, "Recipe name does not exist."
-  end
+  21/01/2022 Param: sRecipe - recipe name.
+                    nIndex - recipe index (tRecipes[recipeName][index])
+             Returns:  true - if items from the recipe was arranged.
+                      false - if no recipe name was supplied and there isn't tRecipes.lastRecipe.
+                            - if the recipe is not registered.
+                            - if the recipe index doesn't exist.
+                            - if some slot couldn't be cleared.
+                            - if it couldn't leave the exact number of items in a slot.
+                            - if it doesn't have enough items to craft recipe.
+             sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+						 ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
+  sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)              
+  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
+  if not sRecipe then return false, "Must supply recipe name." end
+  if not tRecipes[sRecipe] then return false, "Recipe name does not exist." end
+  if not tRecipes[sRecipe][nIndex] then return false, "Recipe index doesn't exist." end
 
-  if not haveItems(sRecipe) then return false, "Don't have anough ingredients." end
+  if not haveItems(sRecipe, nIndex) then return false, "Don't have anough ingredients." end
 
   local tAverage = calcAverage(recipeSlots(sRecipe), getInvItems())
   local nRCol, nRLin = getFirstItemCoords(sRecipe)
   local nSlot, nRSlot = 1, nRLin * 4 + nRCol + 1
-  local tRecipe = tRecipes[sRecipe].recipe
+  local tRecipe = tRecipes[sRecipe][nIndex].recipe
   local tTmpLeave = {}
-  for i=1, #tRecipe do
-    for k, v in pairs(tRecipe[i]) do
-      if v.lin then nRSlot = v.lin * 4 + v.col + 1 end
-
-      while nSlot < nRSlot do
-        if not clearSlot(nSlot, false) then return
-          false, "Couldn't clear slot, "..tostring(nSlot)
-        end
-        nSlot = incSlot(nSlot, false)
+  for iItems=1, #tRecipe do
+    local sItem = tRecipe[iItems][1]
+    if tRecipe[iItems].col then nRSlot = tRecipe[iItems].lin * 4 + tRecipe[iItems].col + 1 end
+    while nSlot < nRSlot do
+      if not clearSlot(nSlot, false) then
+        return false, "Couldn't clear slot, "..tostring(nSlot)
       end
       nSlot = incSlot(nSlot, false)
-			if not tTmpLeave[k] then tTmpLeave[k] = tAverage[k]
-      else tTmpLeave[k] = tTmpLeave[k] + tAverage[k]
-      end
-
-      turtle.select(nRSlot)
-      local nLeaveItem = math.floor(tTmpLeave[k])
-      if not leaveItems(k, nLeaveItem, false) then
-        return false, "Couldn't leave only "..tostring(nLeaveItem).." "..k.." items."
-      end
-      tTmpLeave[k] = tTmpLeave[k] - nLeaveItem
     end
+    nSlot = incSlot(nSlot, false)
+    if not tTmpLeave[sItem] then tTmpLeave[sItem] = tAverage[sItem]
+    else tTmpLeave[sItem] = tTmpLeave[sItem] + tAverage[sItem]
+    end
+    turtle.select(nRSlot)
+    local nLeaveItem = math.floor(tTmpLeave[sItem])
+    if not leaveItems(sItem, nLeaveItem, false) then
+      return false, "Couldn't leave only "..tostring(nLeaveItem).." "..sItem.." items."
+    end
+    tTmpLeave[sItem] = tTmpLeave[sItem] - nLeaveItem
   end
   return true
 end
@@ -2409,10 +2409,6 @@ end
 
 INIT()
 
-local success, t = haveItems("minecraft:stick")
---function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
---print(arrangeRecipe("minecraft:stick", 1))
-print(success)
-print(textutils.serialize(t))
+print(arrangeRecipe("minecraft:stick", 1))
 
 --TERMINATE()
