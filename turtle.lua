@@ -67,6 +67,7 @@ function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
 	return false
 end
 
+--not tested
 function equip(sSide) --[[ Equip tool from the selected slot.
   23/09/2021  Returns:	true - if it was equiped.
 												false - if no empty hand.
@@ -76,11 +77,11 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 							sintax: equip([Side=first free hand(left, right)])
               ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
 	sSide = sSide or getFreeHand()
-	if not sSide then return false, "No empty hand." end
+	if not sSide then sSide = "right" end
+  sSide = string.lower(sSide)
+  if not isValue(sSide, {"left", "right"}) then return false, "Invalid side." end
 	local tData
 	
-	if not isValue(sSide, {"left", "right"}) then return false, "Invalid side." end
-
 	tData = turtle.getItemDetail()
 	if not tData then return false, "Empty selected slot." end
 	
@@ -137,8 +138,10 @@ end
 
 ------ TURTLE STATUS FUNCTIONS ----
 
+--not tested
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
-  02/10/2021  Returns:  false - if no parameter was supplied.
+  02/10/2021  Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
+              Returns:  false - if no parameter was supplied.
                               - if sFacing is not in facingType.
               ex: setFacing("z+") - Sets the tTurtle.facing to "z+"]]
   if not sFacing then return false end
@@ -160,9 +163,11 @@ function getFacing() --[[ Returns tTurtle.facing.
   return tTurtle.facing
 end
 
+--not tested
 function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
   03/09/2021  Returns:  true.
               ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
+  if not allNumbers(x,y,z) then return false, "Coords must be numbers." end
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
   return true
 end
@@ -176,6 +181,7 @@ end
 
 ------ ATTACK FUCTIONS ------
 
+--not tested
 function attackDir(sDir) --[[ Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
   05/09/2021  Returns:  true if turtle attack something.
                         false if there is nothing to attack, or no weapon.
@@ -183,7 +189,9 @@ function attackDir(sDir) --[[ Turtle attack in sDir direction {"forward", "right
               sintax: attackDir([sDir="forward"]) - sDir {"forward", "right", "back", "left", "up", "down"}
               ex: attackDir("left") - Rotates left and attacks. ]]
   sDir = sDir or "forward"
-
+  if not type(sDir) == "string" then return nil,"Direction must be a string." end
+  sDir = string.lower(sDir)
+  
   if sDir == "forward" then return turtle.attack()
   elseif sDir == "right" then
     turnDir("right")
@@ -209,7 +217,7 @@ function addSteps(nSteps) --[[ Adds nSteps to coords of turtle.
               ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
   nSteps = nSteps or 1
 
-  if type(nSteps) ~= "number" then return false end
+  if type(nSteps) ~= "number" then return false, "nSteps must be a number." end
 
 	local x, y, z, facing = tTurtle.x, tTurtle.y, tTurtle.z, tTurtle.facing
 		x = x+(facing == 1 and nSteps or 0)+(facing == 3 and -nSteps or 0)
@@ -218,10 +226,12 @@ function addSteps(nSteps) --[[ Adds nSteps to coords of turtle.
   return x, y, z --returns the new point
 end
 
+--not tested
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
   03/09/2021  Returns:  the distance vector3 from turtle to coords x, y, z.
               Note: returns a negative value if turtle is further away than the point x, y, z.
               ex: distTo(1, 10, 34) - Returns 3 values.]] 
+  if not isNumber(x,y,z) then return false, "Coords must be numbers." end
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
