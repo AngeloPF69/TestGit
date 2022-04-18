@@ -17,10 +17,10 @@
     
     -------------------------------------------------
     Table of recipes properties.
-    tRecipes = {} --["Name"][index] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, { ... },
-                                      count = resulting number of items}
-                  -- ["CSlot] = number crafting slot.
-                  -- ["lastRecipe"] = Last recipe name.
+    tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, }
+                       ["Name"][index]["count"] = resulting number of items}
+                       ["lastRecipe"] = sLastRecipe
+                       ["CSlot"] = Crafting slot.]]
 
     -------------------------------------------------
     Table of items stack.
@@ -31,11 +31,11 @@
   <a href="#INIT">INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.</a>
 ## Terminate
 
-  <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.</a>
+  <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes, tStacks from tables to text files.</a>
   
 ## Measurements
 
-   <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle.</a><br>
+   <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle, where it is facing.</a><br>
    <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
     
 ## Turtle
