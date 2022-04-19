@@ -2409,6 +2409,6 @@ end
 
 INIT()
 
-print(arrangeRecipe("minecraft:stick", 1))
+print(craftRecipe("minecraft:stick", 1))
 
 --TERMINATE()
