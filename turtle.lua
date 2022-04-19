@@ -22,13 +22,16 @@ tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
 
-function refuel(nCount) --[[ Refuels the turtle with nCount items.
-  23/09/2021  Returns:	number of items refueled.
+--not tested
+function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
+  23/09/2021  Param: nCount - number of items to refuel.
+              Returns:	number of items refueled.
 												false - "Empty selected slot."
 															-	"Item is not fuel."
 															- "Turtle doesn't need fuel."
 															- "Turtle is at maximum fuel."
-							sintax: refuel([nCount=stack])
+                              - "refuel(nItems) - nItems must be a number."
+							sintax: refuel([nCount=stack of items])
               ex: refuel(123) - Fuels the turtle with 123 items.]] 
 	local fuelLimit = turtle.getFuelLimit()
 	if type(fuelLimit) == "string" then return false, "Turtle doesn't need fuel." end
@@ -40,6 +43,7 @@ function refuel(nCount) --[[ Refuels the turtle with nCount items.
 	
 	if not tData then return false, "Empty selected slot." end
 	if not nCount then nCount = tData.count end
+  if type(nCount) ~="number" then return false, "refuel(nItems) - nItems must be a number." end
 	if not turtle.refuel(0) then return false, "Item is not fuel." end
 	
 	totRefuel = 0
@@ -69,12 +73,12 @@ end
 
 --not tested
 function equip(sSide) --[[ Equip tool from the selected slot.
-  23/09/2021  Returns:	true - if it was equiped.
-												false - if no empty hand.
-															- if invalid parameter.
-															- if empty selected slot.
+  23/09/2021  Param: sSide - String: "left"|"right"
+              Returns:	true - if it was equiped.
+												false - "Invalid side."
+															- "Empty selected slot."
 															- if it can't equip tool.
-							sintax: equip([Side=first free hand(left, right)])
+							sintax: equip([Side=first free hand(left|right)])
               ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
 	sSide = sSide or getFreeHand()
 	if not sSide then sSide = "right" end
@@ -182,14 +186,15 @@ end
 ------ ATTACK FUCTIONS ------
 
 --not tested
-function attackDir(sDir) --[[ Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}.
-  05/09/2021  Returns:  true if turtle attack something.
+function attackDir(sDir) --[[ Turtle attack in sDir direction.
+  05/09/2021  Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down".
+              Returns:  true if turtle attack something.
                         false if there is nothing to attack, or no weapon.
                         nil if invalid parameter.
-              sintax: attackDir([sDir="forward"]) - sDir {"forward", "right", "back", "left", "up", "down"}
+              sintax: attackDir([sDir="forward"])
               ex: attackDir("left") - Rotates left and attacks. ]]
   sDir = sDir or "forward"
-  if not type(sDir) == "string" then return nil,"Direction must be a string." end
+  if not (type(sDir) == "string") then return nil,'attackDir(sDir) - sDir must be "forward"|"right"|"back"|"left"|"up"|"down"' end
   sDir = string.lower(sDir)
   
   if sDir == "forward" then return turtle.attack()
@@ -211,9 +216,12 @@ end
 
 ------ MEASUREMENTS FUNCTIONS ------
 
-function addSteps(nSteps) --[[ Adds nSteps to coords of turtle.
-  24/09/2021  Returns:  x,y,z adding nSteps in direction turtle is facing.
+--not tested
+function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
+  24/09/2021  Param: nSteps - number of waking steps for turtle.
+              Returns:  x,y,z adding nSteps in direction turtle is facing.
                         false - if nSteps is not a number.
+              Note: accepts positive and negative numbers.
               ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
   nSteps = nSteps or 1
 
@@ -223,12 +231,12 @@ function addSteps(nSteps) --[[ Adds nSteps to coords of turtle.
 		x = x+(facing == 1 and nSteps or 0)+(facing == 3 and -nSteps or 0)
 		y = y+(facing == 4 and nSteps or 0)+(facing == 8 and -nSteps or 0)
 		z = z+(facing == 2 and nSteps or 0)+(facing == 0 and -nSteps or 0)
-  return x, y, z --returns the new point
+  return x, y, z
 end
 
 --not tested
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
-  03/09/2021  Returns:  the distance vector3 from turtle to coords x, y, z.
+  03/09/2021  Returns:  the x,y,z distance from turtle to coords x, y, z.
               Note: returns a negative value if turtle is further away than the point x, y, z.
               ex: distTo(1, 10, 34) - Returns 3 values.]] 
   if not isNumber(x,y,z) then return false, "Coords must be numbers." end
