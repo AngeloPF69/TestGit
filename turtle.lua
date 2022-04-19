@@ -247,8 +247,11 @@ end
 
 ------ COMPARE FUNCTIONS ------
 
+--not tested
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
-  21/09/2021  Returns: true - if the item in slot and in the world is the same.
+  21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+                     nSlot - number 1..16
+              Returns: true - if the item in slot and in the world is the same.
                       false - if block in slot and in the world are not the same,
                               invalid direction,
                               if nSlot is not a number,
@@ -257,9 +260,11 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
               ex: compareDir() compares selected slot with block in front of turtle.
                   compareDir("left", 2) - compares item in slot 2 with block on the left.]]
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
-	
+	sDir  = string.lower(sDir)
 	if not dirType[sDir] then return false, "Invalid direction." end
 	if type(nSlot) ~= "number" then return false, "Slot is not a number." end
+  nSlot = math.abs(nSlot)
+  nSlot = bit.band(nSlot-1, 3)+1
 	local invData = turtle.getItemDetail(nSlot)
 	if not invData then return false, "Empty slot." end
 	
@@ -274,7 +279,8 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 end
 
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
-  04/09/2021  Returns:  true - if all the blocks are the same.
+  04/09/2021  Param: nBlocks - number of blocks to compare.
+              Returns:  true - if all the blocks are the same.
                         false - if blocked, empty space, or found a diferent block.
 												nil if invalid parameter.
               sintax: compareAbove([nBlocks=1])
@@ -297,7 +303,8 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
 end
 
 function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
-  04/09/2021  Returns:  true - if all the blocks are the same.
+  04/09/2021  Param: nBlocks - number of blocks to compare.
+              Returns:  true - if all the blocks are the same.
                         false - if blocked, empty space, or found a diferent block.
 												nil if invalid parameter.
               sintax: compareBelow([nBlocks=1])
@@ -322,8 +329,9 @@ end
 
 ------ DETECT FUNCTIONS ------
 
-function detectDir(sDir) --[[ Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
-  03/09/2021  Returns:  true - If turtle detects a block.
+function detectDir(sDir) --[[ Detects if is a block in sDir direction.
+  03/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+              Returns:  true - If turtle detects a block.
                         false - if turtle didn't detect a block.
                         nil - invalid parameter.
               ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
@@ -346,7 +354,8 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction {"forward"
 end
 
 function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block above the turtle.
-  03/09/2021  Returns:  true - if turtle detects a line of nBlocks above it.
+  03/09/2021  Param: nBlocks - number of blocks to detect.
+              Returns:  true - if turtle detects a line of nBlocks above it.
                         false - if blocked, empty space.
 												nil - if invalid parameter.
               sintax: detectAbove([nBlocks=1])
@@ -367,7 +376,8 @@ function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
 end
 
 function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block below the turtle.
-  03/09/2021  Returns:  true - if turtle detects a line of nBlocks below.
+  03/09/2021  Param: nBlocks - number of blocks to detect.
+              Returns:  true - if turtle detects a line of nBlocks below.
                         false - if blocked, empty space.
 												nil - if invalid parameter
               sintax: detectBelow([nBlocks=1])
@@ -391,7 +401,8 @@ end
 ------ INSPECT FUNCTIONS ------
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
-  05/09/2021  Returns:  true, table with data - If turtle detects a block.
+  05/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+              Returns:  true, table with data - If turtle detects a block.
                         false, message - if turtle didn't detect a block.
               ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
 	sDir = sDir or "forward"
@@ -414,7 +425,8 @@ end
 ------ MOVING FUNCTIONS ------
 
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
-  27/08/2021  Returns:  true - if turtle goes all way.
+  27/08/2021  Param: nBlocks - number of blocks to walk.
+              Returns:  true - if turtle goes all way.
                         false - if turtle was blocked.
               Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
               ex: forward(3) - Moves 3 blocks forward.]] 
@@ -431,10 +443,11 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
 end
 
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
-  27/08/2021 -  Returns:  true - if turtle goes all way.
-                          false - if turtle was blocked.
-                Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
-                ex: back(-3) - Moves 3 blocks forward.]]
+  27/08/2021  Param: nBlocks - number of blocks to walk backwards. 
+              Returns:  true - if turtle goes all way.
+                        false - if turtle was blocked.
+              Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
+              ex: back(-3) - Moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
@@ -448,10 +461,11 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
 end
 
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
-  27/08/2021 -  Returns:  true - if turtle goes all way.
-                          false - if turtle was blocked.
-                Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
-                ex: up(3) - Moves 3 blocks up.]]
+  27/08/2021 Param: nBlocks - number of blocks to walk up.
+             Returns:  true - if turtle goes all way.
+                       false - if turtle was blocked.
+             Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
+             ex: up(3) - Moves 3 blocks up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false end
