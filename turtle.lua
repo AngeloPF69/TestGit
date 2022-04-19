@@ -169,9 +169,10 @@ end
 
 --not tested
 function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
-  03/09/2021  Returns:  true.
+  03/09/2021  Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
+              Returns:  true.
               ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
-  if not allNumbers(x,y,z) then return false, "Coords must be numbers." end
+  if not isNumber(x,y,z) then return false, "Coords must be numbers." end
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
   return true
 end
@@ -581,6 +582,15 @@ function isValue(value, t) --[[ Checks if value is in t table.
     if v == value then return true end
   end
   return false
+end
+
+function isNumber(...)
+  Args = {...}
+  if #Args == 0 then return false end
+  for i = 1, #Args do
+    if type(Args[i]) ~= "number" then return false end
+  end
+  return true
 end
 
 function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in table t.
