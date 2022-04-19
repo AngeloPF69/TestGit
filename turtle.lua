@@ -22,7 +22,6 @@ tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
 
---not tested
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
   23/09/2021  Param: nCount - number of items to refuel.
               Returns:	number of items refueled.
@@ -71,7 +70,6 @@ function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
 	return false
 end
 
---not tested
 function equip(sSide) --[[ Equip tool from the selected slot.
   23/09/2021  Param: sSide - String: "left"|"right"
               Returns:	true - if it was equiped.
@@ -83,7 +81,7 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 	sSide = sSide or getFreeHand()
 	if not sSide then sSide = "right" end
   sSide = string.lower(sSide)
-  if not isValue(sSide, {"left", "right"}) then return false, "Invalid side." end
+  if not isValue(sSide, {"left", "right"}) then return false, 'equip([Side=free hand]) - Invalid side("left"|"right").' end
 	local tData
 	
 	tData = turtle.getItemDetail()
@@ -142,20 +140,21 @@ end
 
 ------ TURTLE STATUS FUNCTIONS ----
 
---not tested
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021  Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
-              Returns:  false - if no parameter was supplied.
+              Returns:  number - tTurtle.facing
+                        false - if no parameter was supplied.
                               - if sFacing is not in facingType.
-              ex: setFacing("z+") - Sets the tTurtle.facing to "z+"]]
-  if not sFacing then return false end
+                              - if sFacing is not a string.
+              ex: setFacing("z+") - Sets the tTurtle.facing to "z+"=2]]
+  if not sFacing then return false, 'setFacing(Facing) - Must supply facing ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).' end
   if type(sFacing) == "number" then
     sFacing = bit32.band(sFacing, 3)
   elseif type(sFacing) == "string" then
     if facingType[sFacing] then sFacing = facingType[sFacing]
-    else return false
+    else return false, 'setFacing(Facing) - Invalid facing ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).'
     end
-  else return false
+  else return false, 'setFacing(Facing) - Invalid facing type, must be a string ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).'
   end
   tTurtle.facing = sFacing
   return tTurtle.facing
@@ -167,12 +166,11 @@ function getFacing() --[[ Returns tTurtle.facing.
   return tTurtle.facing
 end
 
---not tested
 function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
   03/09/2021  Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
               Returns:  true.
               ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
-  if not isNumber(x,y,z) then return false, "Coords must be numbers." end
+  if not isNumber(x,y,z) then return false, "setCoords(x, y, z) - Coords must be numbers." end
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
   return true
 end
@@ -186,16 +184,15 @@ end
 
 ------ ATTACK FUCTIONS ------
 
---not tested
 function attackDir(sDir) --[[ Turtle attack in sDir direction.
   05/09/2021  Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down".
               Returns:  true if turtle attack something.
-                        false if there is nothing to attack, or no weapon.
-                        nil if invalid parameter.
+                        false - if there is nothing to attack, or no weapon.
+                              - if invalid parameter.
               sintax: attackDir([sDir="forward"])
               ex: attackDir("left") - Rotates left and attacks. ]]
   sDir = sDir or "forward"
-  if not (type(sDir) == "string") then return nil,'attackDir(sDir) - sDir must be "forward"|"right"|"back"|"left"|"up"|"down"' end
+  if not (type(sDir) == "string") then return nil,'attackDir([Direction="forward"]) - Diretion must be a string: "forward"|"right"|"back"|"left"|"up"|"down"' end
   sDir = string.lower(sDir)
   
   if sDir == "forward" then return turtle.attack()
@@ -211,13 +208,12 @@ function attackDir(sDir) --[[ Turtle attack in sDir direction.
   elseif sDir == "up" then return turtle.attackUp()
   elseif sDir == "down" then return turtle.attackDown()
   end
-  return nil
+  return nil, 'attackDir([Direction="forward"]) - Diretion must be "forward"|"right"|"back"|"left"|"up"|"down"'
 end
 
 
 ------ MEASUREMENTS FUNCTIONS ------
 
---not tested
 function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
   24/09/2021  Param: nSteps - number of waking steps for turtle.
               Returns:  x,y,z adding nSteps in direction turtle is facing.
@@ -226,7 +222,7 @@ function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
               ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
   nSteps = nSteps or 1
 
-  if type(nSteps) ~= "number" then return false, "nSteps must be a number." end
+  if type(nSteps) ~= "number" then return false, "addSteps([Steps=1]) - Steps must be a number." end
 
 	local x, y, z, facing = tTurtle.x, tTurtle.y, tTurtle.z, tTurtle.facing
 		x = x+(facing == 1 and nSteps or 0)+(facing == 3 and -nSteps or 0)
@@ -235,19 +231,18 @@ function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
   return x, y, z
 end
 
---not tested
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
-  03/09/2021  Returns:  the x,y,z distance from turtle to coords x, y, z.
+  03/09/2021  Param: x, y, z - coords of point to calculate distance to turtle.
+              Returns:  the x,y,z distance from turtle to coords x, y, z.
               Note: returns a negative value if turtle is further away than the point x, y, z.
               ex: distTo(1, 10, 34) - Returns 3 values.]] 
-  if not isNumber(x,y,z) then return false, "Coords must be numbers." end
+  if not isNumber(x,y,z) then return false, "distTo(x, y, z) - Coords must be numbers." end
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
 
 ------ COMPARE FUNCTIONS ------
 
---not tested
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
   21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
                      nSlot - number 1..16
@@ -261,12 +256,12 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
                   compareDir("left", 2) - compares item in slot 2 with block on the left.]]
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	sDir  = string.lower(sDir)
-	if not dirType[sDir] then return false, "Invalid direction." end
-	if type(nSlot) ~= "number" then return false, "Slot is not a number." end
+	if not dirType[sDir] then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
+	if type(nSlot) ~= "number" then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
   nSlot = math.abs(nSlot)
-  nSlot = bit.band(nSlot-1, 3)+1
+  nSlot = bit.band(nSlot-1, 15)+1
 	local invData = turtle.getItemDetail(nSlot)
-	if not invData then return false, "Empty slot." end
+	if not invData then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Empty slot.' end
 	
 	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
 		turnDir(sDir)
@@ -275,28 +270,29 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	
 	local success, worlData = insF[sDir]()
 	if worlData.name == invData.name then return true end
-	return false
+	return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Nothing to compare in the world.'
 end
 
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
   04/09/2021  Param: nBlocks - number of blocks to compare.
               Returns:  true - if all the blocks are the same.
-                        false - if blocked, empty space, or found a diferent block.
+                        false - "Found a diferent block or a empty space."
+                              - "Can't advance forward."
 												nil if invalid parameter.
               sintax: compareAbove([nBlocks=1])
               Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
               ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return nil end  --nBlocks must be a number.
+  if type(nBlocks) ~= "number" then return nil, "compareAbove([Blocks=1]) - Blocks must be a number." end  --nBlocks must be a number.
   local dir = sign(nBlocks)
   if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
-    if not turtle.compareUp() then return false end
+    if not turtle.compareUp() then return false, "Found a diferent block or a empty space." end
     if nBlocks ~= i then
-			if not forward() then return false end
+			if not forward() then return false, "Can't advance forward." end
 		end
   end
   return true
@@ -312,15 +308,15 @@ function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strai
               ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return nil end
+  if type(nBlocks) ~= "number" then return nil, "compareBelow([Blocks=1]) - Blocks must be a number." end
   local dir = sign(nBlocks)
   if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
-    if not turtle.compareDown() then return false end
+    if not turtle.compareDown() then return false, "Found a diferent block or a empty space." end
     if nBlocks ~= i then
-			if not forward() then return false end
+			if not forward() then return false, "Can't advance forward." end
 		end
   end
   return true
@@ -336,6 +332,7 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction.
                         nil - invalid parameter.
               ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
 	sDir = sDir or "forward"
+  sDir = string.lower(sDir)
 
 	if sDir == "up" then return turtle.detectUp()
 	elseif sDir == "down" then return turtle.detectDown()
@@ -350,7 +347,7 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction.
     sDir = "forward"
 	end
 	if sDir == "forward" then return turtle.detect() end
-  return nil
+  return nil, 'detectDir([Dir="forward"]) - Invalid Direction'
 end
 
 function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block above the turtle.
@@ -363,13 +360,13 @@ function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
               ex: detectAbove() or detectAbove(1) - Detects 1 block up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return nil end
+  if type(nBlocks) ~= "number" then return nil, "detectAbove([Blocks=1]) - Blocks must be a number." end
   local dir = sign(nBlocks)
 
   for i = 1, nBlocks, dir do
-    if not turtle.detectUp() then return false end
+    if not turtle.detectUp() then return false, "Didn't detect a block." end
     if nBlocks ~= i then
-			if not forward(dir) then return false end
+			if not forward(dir) then return false, "Can't advance forward."  end
 		end
   end
   return true
@@ -385,13 +382,13 @@ function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
               ex: detectBelow() or detectBelow(1) - Detect 1 block down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return nil end
+  if type(nBlocks) ~= "number" then return nil, "detectBelow([Blocks=1]) - Blocks must be a number." end
   local dir = sign(nBlocks)
 
   for i = 1, nBlocks, dir do
-    if not turtle.detectDown() then return false end
+    if not turtle.detectDown() then return false, "Didn't detect a block." end
     if i ~= nBlocks then
-			if not forward(dir) then return false end
+			if not forward(dir) then return false, "Can't advance forward." end
 		end
   end
   return true
@@ -404,9 +401,11 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "ri
   05/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
               Returns:  true, table with data - If turtle detects a block.
                         false, message - if turtle didn't detect a block.
+                        nil - 
               ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
 	sDir = sDir or "forward"
-  
+  sDir = string.lower(sDir)
+
 	if sDir == "right" then
       turnDir("right")
       sDir = "forward"
@@ -418,24 +417,27 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "ri
     sDir = "forward"
 	end
 	if insF[sDir] then return insF[sDir]() end
-  return false
+  return nil, 'detectDir([Dir="forward"]) - Invalid parameter: Dir - "forward"|"right"|"back"|"left"|"up"|"down".'
 end
 
 
 ------ MOVING FUNCTIONS ------
 
+--not tested
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
   27/08/2021  Param: nBlocks - number of blocks to walk.
               Returns:  true - if turtle goes all way.
-                        false - if turtle was blocked.
+                        false - "Can't advance forward."
+                        nil - invalid parameter.
+              Sintax: forward([nBlocks=1])
               Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
               ex: forward(3) - Moves 3 blocks forward.]] 
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return nil, "forward([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-    if not turtle.forward() then return false
+    if not turtle.forward() then return false, "Can't advance forward."
     else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
     end
   end
@@ -2484,6 +2486,6 @@ end
 
 INIT()
 
-print(craftRecipe("minecraft:stick", 1))
+print(inspectDir())
 
---TERMINATE()
+TERMINATE()
