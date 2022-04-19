@@ -1806,6 +1806,39 @@ function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or b
   return placed
 end
 
+--not tested
+function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
+  27/08/2021  Returns:  number of blocks placed.
+                        false - invalid parameter.
+              sintax: place([nBlocks=1])
+              Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
+              ex: place(1) or place() - Places 1 Block in front of turtle.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return false, "Blocks must be a number." end
+  if nBlocks > 0 then
+    turnBack()
+    nBlocks=math.abs(nBlocks)
+  end
+
+  for i = 2, nBlocks do
+    if not forward() then
+      nBlocks = i - 2
+      back(sign(nBlocks))
+      break
+    end
+  end
+
+  local placed = 0
+  for i = 1, nBlocks do
+    if turtle.place() then placed = placed + 1 end
+    if i ~= nBlocks then
+      if not back() then return placed end
+    end
+  end
+  return placed
+end
+
 function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns to starting point.
   27/08/2021  Returns:  number os blocks placed.
                         false - if turtle was blocked on the way back.
