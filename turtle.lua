@@ -444,6 +444,7 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   return true
 end
 
+--not tested
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   27/08/2021  Param: nBlocks - number of blocks to walk backwards. 
               Returns:  true - if turtle goes all way.
@@ -452,16 +453,17 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
               ex: back(-3) - Moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "back([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-    if not turtle.back() then return false
+    if not turtle.back() then return false, "Can't go backward."
     else tTurtle.x, tTurtle.y, tTurtle.z = addSteps(-1)
     end
   end
   return true
 end
 
+--not tested
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   27/08/2021 Param: nBlocks - number of blocks to walk up.
              Returns:  true - if turtle goes all way.
@@ -470,27 +472,29 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
              ex: up(3) - Moves 3 blocks up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "up([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-    if not turtle.up() then return false
+    if not turtle.up() then return false, "Can't move up."
     else  tTurtle.y = tTurtle.y + 1
     end
   end
   return true
 end
 
+--not tested
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
-  27/08/2021 -  Returns:  true - if turtle goes all way.
+  27/08/2021 -  Param: nBlocks - number of blocks to walk down.
+                Returns:  true - if turtle goes all way.
                           false - if turtle was blocked.
                 Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
                 ex: down(3) - Moves 3 blocks down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false end
+  if type(nBlocks) ~= "number" then return false, "down([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-      if not turtle.down() then return false
+      if not turtle.down() then return false, "I can't go down anymore."
       else  tTurtle.y = tTurtle.y -1
       end
   end
@@ -500,15 +504,19 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+--not tested
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
-  27/09/2021 -  Returns:  true - if saving file was a success.
+  27/09/2021 - Param: t - table to save.
+                      sFileName - string filename.
+               Returns:  true - if saving file was a success.
                           false - if t or sFileName not supplied,
                                   if no disk space,
                                   if it couldn't create file.
-              Note: if not supplied extension it adds ".txt" to the file name.
-              ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.]]
-	if not t or not sFileName then return false, "table or filename not supplied." end --no arguments
-	if string.sub(sFileName, -4, -4) ~= "." then sFileName=sFileName..".txt" end --if no extension add 1
+               Note: if not supplied extension it adds ".txt" to the file name.
+               ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.]]
+	if not t or not sFileName then return false, "Table or filename not supplied." end --no arguments
+	--if string.sub(sFileName, -4, -4) ~= "." then sFileName=sFileName..".txt" end --if no extension add 1
+  if not string.find(sFileName, ".") then sFileName=sFileName..".txt" end --if no extension add 1
 	local str2Save = textutils.serialize(t)
 	if string.len(str2Save) > fsGetFreeSpace("/") then return false,"no disk space" end
 	
@@ -521,25 +529,28 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
 end
 
 function loadTable(sFileName) --[[ Loads a text file into a table.
-  27/09/2021 -  Returns:  true - if could read a text file into a table.
-                          false - if sFileName is not supplied,
-                                  if the file couldn't be opened for reading,
-                                  if the file is empty.
+  27/09/2021 -  Param: sFileName - string the file name.
+                Returns: table - if could read a text file into a table.
+                         false - if sFileName is not supplied,
+                               - if the file couldn't be opened for reading,
+                               - if the file is empty.
                 ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.]]
-	if not sFileName then return false end
+	if not sFileName then return false, "loadTable(FileName) - Must supply file name." end
 	
   local fh,t
-  if not fs.exists(sFileName) then return false,"loadTable - file not found" end
+  if not fs.exists(sFileName) then return false, "loadTable - file not found" end
   fh=fs.open(sFileName, "r")
-	if not fh then return false,"loadTable - can't open file "..sFileName end
+	if not fh then return false, "loadTable - can't open file "..sFileName end
   t=textutils.unserialize(fh.readAll())
-	if not t then return false,"loadTable - empty file "..sFileName end
+	if not t then return false, "loadTable - empty file "..sFileName end
   fh.close()
   return t
 end
 
 function checkType(sType, ...) --[[ Checks if parameters are from sType.
-  03/09/2021  Returns: true - if all parameters match the sType.
+  03/09/2021  Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+                     ... - the paremeters to check.
+              Returns: true - if all parameters match the sType.
               ex: checkType("snt", "hello", number1, tTable) - Outputs: true.]]
 	Args = { ... }
   
@@ -550,15 +561,22 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 	return true
 end
 
+--not tested
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
-  27/08/2021  Returns:  Parameters sorted by type, nil if no parameters.
-                        nil - nil - if no parameters.
+  27/08/2021  Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+                     tDefault - table with default values.
+                     ... - parameters to order.
+              Returns:  Parameters sorted by type, nil if no parameters.
+                        nil - if no parameters.
+              sintax: getParam(sParamOrder, tDefault, ...)
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
-              Note: Only sorts three parameters type (string, table, number and boolean).]]
-  if not sParamOrder then return nil end
-  
+              Note: Only sorts parameters type (string, table, number and boolean).]]
+  if not sParamOrder then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply string with parameters order." end
+  if not tDefault then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply table with default values." end
   local Args={...}
-  local retTable = {}
+  if #Args == 0 then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply parameters to order." end
+  
+    local retTable = {}
   local checked={}
 
   function addParam(sType) --add parameter do returning table
@@ -591,7 +609,9 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
 end
 
 function isValue(value, t) --[[ Checks if value is in t table.
-  21/09/2021  Returns:  true - if value is in t.
+  21/09/2021  Param:  value - any type of value.
+                      t - table with values to compare.
+              Returns:  true - if value is in t.
                         false - if value is not in t.
               ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
   for k,v in pairs(t) do
@@ -600,7 +620,12 @@ function isValue(value, t) --[[ Checks if value is in t table.
   return false
 end
 
-function isNumber(...)
+--not tested
+function isNumber(...) --[[ Checks if any parameter is a number.
+  20/04/2022  Param:  parameters to check
+              Returns:  true - if all parameters are numbers.
+                        false - if at least one parameter is not a number.
+              ex: isNumber(2, "hello", 4}) - Outputs: false.]]
   Args = {...}
   if #Args == 0 then return false end
   for i = 1, #Args do
@@ -610,10 +635,13 @@ function isNumber(...)
 end
 
 function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in table t.
-  27/08/2021  Returns:  true - tSearch is in t.
+  27/08/2021  Param: tSearch - table contains values to search in table t.
+                     t - table to search.
+              Returns:  true - tSearch is in t.
                         false - at the least one element of tSearch is not in table t.
+              Sintax: tableInTable(tSearch, t)
               ex: tableInTable("forward", lookingType) - outputs true.]]
-  if type(tSearch) ~= "table" then return nil end
+  if type(tSearch) ~= "table" then return nil, "tableInTable(tSearch, t) - tSearch (items to search in t) must be a table." end
 
   totMatch = 0
 
@@ -626,13 +654,14 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
     end
   end
 
-  if #tSearch ~= totMatch then return false end
+  if #tSearch ~= totMatch then return false, "There are at least 1 item not present in t." end
   return true
 end
 
+--not tested
 function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
   28/08/2021  Returns false if value is not a number, or not supplied.]]
-  if type(value) ~= "number" then return false end
+  if type(value) ~= "number" then return false, "sign(value) - Is not a number or not supplied." end
   if value < 0 then return -1 end
   if value == 0  then return 0 end
   return 1
@@ -651,13 +680,15 @@ function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
   10/11/2021  Returns false - if it couldn't load file.
                       true - if it could load file.]]
   local t = loadTable("tStacks.txt")
-	if not t then return false end
+	if not t then return false, "loadStacks() - Couldn't load tStacks.txt" end
 	tStacks = t
   return true
 end
 
+--not tested
 function getStack(nSlot) --[[ Returns how many items can stack.
-  10/11/2021  Return: quantity a item can stack.
+  10/11/2021  Param: nSlot - slot number 1..16, or the item name.
+              Return: quantity a item can stack.
                       nil - if slot is out of range[1..16].
                       false - if slot is empty.
                             - if item was not found in inventory.
@@ -668,27 +699,30 @@ function getStack(nSlot) --[[ Returns how many items can stack.
 
   local tData, nStack
   if type(nSlot) == "number" then
-    if nSlot < 1 or nSlot > 16 then return nil, "Slot out of range[1..16]." end
+    if nSlot < 1 or nSlot > 16 then return nil, "getStack(Slot/ItemName) - Slot out of range[1..16]." end
     tData = turtle.getItemDetail(nSlot)
-    if not tData then return false, "Empty slot." end
+    if not tData then return false, "getStack(Slot/ItemName) - Empty slot." end
     nStack = turtle.getItemSpace(nSlot) + tData.count
     if not tStacks[tData.name] then tStacks[tData.name] = nStack  end
-  end
-  if type(nSlot) == "string" then
-    if tStacks[nSlot] then nStack = tStacks[nSlot]
-    else
-      nSlot = search(nSlot)
-      if not nSlot then return false, "Item not found" end
-      tData = turtle.getItemDetail(nSlot)
-      nStack = tData.count + turtle.getItemSpace(nSlot)
-      tStacks[tData.name] = nStack
-    end
+  elseif type(nSlot) == "string" then
+      if tStacks[nSlot] then nStack = tStacks[nSlot]
+      else
+        nSlot = search(nSlot)
+        if not nSlot then return false, "getStack(Slot/ItemName) - Item not found" end
+        tData = turtle.getItemDetail(nSlot)
+        nStack = tData.count + turtle.getItemSpace(nSlot)
+        tStacks[tData.name] = nStack
+      end
+  else
+    return false, "getStack(Slot/ItemName) - Slot/ItemName must be a string/number"
   end
   return nStack
 end
 
+--not tested
 function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory, the slot and the name of item.
-  17/12/2021  Return: number the lower stack of items in inventory, the Slot, the name of item.
+  17/12/2021  Param: sItem - string - item name.
+              Return: number - the lower stack of items in inventory, the Slot, the name of item.
                       false - if item not found.
               sintax: invLowerStack([sItemName]).
               ex: invLowerStack() - gets the lowest stack of items in inventory, the slot, and the item name.
@@ -720,7 +754,9 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
-  10/11/2021  Return: true - if it could set the stack for item.
+  10/11/2021  Param: sItemName - string item name.
+                     nStack - number how much item can stack.
+              Return: true - if it could set the stack for item.
                       nil - if no item name supplied.
                           - if no stack number is supplied.
               sintax: setStack(sItemName = selected slot) ]]
@@ -734,18 +770,19 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
+--not tested
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021  Return: table - with ingredient name and quantity.]]
-  local tRecipe = {}
+  local tQuant = {}
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
-      if tRecipe[tData.name] then tRecipe[tData.name] = tRecipe[tData.name] + tData.count
-      else tRecipe[tData.name] = tData.count
+      if tQuant[tData.name] then tQuant[tData.name] = tQuant[tData.name] + tData.count
+      else tQuant[tData.name] = tData.count
       end
     end
   end
-  return tRecipe
+  return tQuant
 end
 
 function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.
@@ -926,7 +963,9 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
 end
 
 function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 of the first item in the recipe.
-  19/10/2021  Returns:  col, lin - the column and line of first item.
+  19/10/2021  Param: sRecipe - stringh recipe name.
+                     nIndex - number index of the recipe tRecipes[sRecipe][nIndex].
+              Returns:  col, lin - the column and line of first item.
                         false - if the recipe name was not supplied and doesn't exist an last recipe.
                               - if this recipe does not exist.]]
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
@@ -945,7 +984,10 @@ function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 
 end
 
 function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a slot that has sItemName.
-  19/10/2021  Returns:  nSlot, nSpace - Slot where is this item, and number of space.
+  19/10/2021  Param: sItemName - string item name.
+                     nStartSlot - number starting slot.
+                     bWrap - boolean if search wraps around the inventory.
+              Returns:  nSlot, nSpace - Slot where is this item, and number of space.
                         false - if it didn't find a slot with sItemName and some space.
               sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
               ex: searchSpace("minecraft:oak_planks") - Search for a not complete stack of oak boards.
