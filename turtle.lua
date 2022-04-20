@@ -621,8 +621,8 @@ function isValue(value, t) --[[ Checks if value is in t table.
 end
 
 --not tested
-function isNumber(...) --[[ Checks if any parameter is a number.
-  20/04/2022  Param:  parameters to check
+function isNumber(...) --[[ Checks if all parameters are numbers.
+  20/04/2022  Param:  ... - parameters to check
               Returns:  true - if all parameters are numbers.
                         false - if at least one parameter is not a number.
               ex: isNumber(2, "hello", 4}) - Outputs: false.]]
@@ -841,20 +841,24 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
   return #tCRecipes~=0, tCRecipes
 end
 
+--not tested
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
-  23/11/2021  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
+  23/11/2021  Param: sRecipe - string recipe name.
+                     nIndex - number index of the recipe
+              Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
                       nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
                           - if sRecipe dosn't exist, (never was made).
               Note: on the table, negative values indicate missing items.
                     if not it returns true and the table.
-              Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])]]
+              Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])
+              ex: haveItems() - ]]
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
-  if not sRecipe then return false, "Recipe name not supplied." end
+  if not sRecipe then return false, "haveItems(RecipeName, Index) - Recipe name not supplied." end
 
   local tNeededIng
   tNeededIng, message = getRecipeItems(sRecipe, nIndex)
-  if not tNeededIng then return nil, message end
+  if not tNeededIng then return nil, "haveItems(sRecipe, nIndex) - "..message end
 
   local tInvIng = getInvItems()
   local tIngredients = {}
@@ -882,7 +886,7 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
   19/10/2021  Returns false - if it couldn't load file.
                       true - if it could load file.]]
 	local t = loadTable("tRecipes.txt")
-	if not t then return false end
+	if not t then return false,"loadRecipes() - Couldn't load tRecipes.txt" end
 	tRecipes = t
   return true
 end
@@ -907,10 +911,12 @@ function getInvRecipe() --[[ Builds a table with items and their position from i
   19/10/2021  Returns false - if it is not a recipe in the inventory.
                       tRecipe - the recipe with items and positions.
               Sintax: getInvRecipe()
-  Note: Trecipe[Ingredient number].name = item name
-        Trecipe[Ingredient number ~= 1].name = item name
-        Trecipe[Ingredient number ~= 1].col = distance to first item col
-        Trecipe[Ingredient number ~= 1].lin = distance to first item lin]]
+              Note: Trecipe[item number].name = item name
+                    (the first item in table only have the item name)
+                    Trecipe[item number > 1].name = item name
+                    Trecipe[item number > 1].col = distance to first item col
+                    Trecipe[item number > 1].lin = distance to first item lin
+                    (the 2nd and posterior items have name, col and lin indexes in table)]]
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
 	local index, tFirstItem, tData, tRecipe = 1
@@ -1006,8 +1012,11 @@ function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a sl
 end
 
 function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
-  19/10/2021  Returns:  true - if there is nQuant of items.
-                        false - of sItemName not supplied.
+  19/10/2021  Param: sItemName - string name of the item.
+                     nQuant - number quantity of items to leave in selected slot.
+                     bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
+              Returns:  true - if there is nQuant of items in selected slot.
+                        false - if sItemName not supplied.
                         false - if there is no items to tranfer to selected slot or no space to tranfer items to.
               Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
               ex: leaveItems() - Removes items from selected slot.
@@ -1070,29 +1079,33 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
 end
 
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
-  19/10/2021  Returns:  false - if there is no space to tranfer items.
+  19/10/2021  Param: nSlot - number slot to clear.
+                     bWrap - slot where to put excess items can be lower than nSlot(wrap around inventory).
+              Returns:  false - if there is no space to tranfer items.
                         true - if the slot is empty.
                         nil - if nSlot is out of range [1..16].
               Sintax: clearSlot([nSlot=selected slot][], bWrap)]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
-  if nSlot > 16 or nSlot < 1 then return nil, "Slot out of range." end
+  if nSlot > 16 or nSlot < 1 then return nil, "clearSlot(Slot, Wrap) - Slot out of range." end
   if isEmptySlot(nSlot) then return true end
   if turtle.getSelectedSlot() ~= nSlot then turtle.select(nSlot) end 
   return leaveItems(0, bWrap)
 end  
     
 function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
-  02/11/2021  Returns:  number of items in selected slot.
+  02/11/2021  Param: nSlot - number slot where to transfer from.
+                     nItems - number items to transfer from.
+              Returns:  number of items in selected slot.
                         nil - if nSlot is not supplied.
                         false - if nSlot is empty.
                               - if nSlot is out of range [1..16].
                               - if selected slot is full.]]
-  if not nSlot then return nil, "Must supply origin slot." end
+  if not nSlot then return nil, "transferFrom(nSlot, nItems) - Must supply origin slot." end
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return false, "Empty origin slot." end
   local destSlot = turtle.getSelectedSlot()
 
-  if nSlot < 1 or nSlot > 16 then return false, "Slot out of range [1..16]." end
+  if nSlot < 1 or nSlot > 16 then return false, "transferFrom(nSlot, nItems) - Slot out of range [1..16]." end
   turtle.select(nSlot)
 
   if not turtle.transferTo(destSlot, nItems) then
@@ -1106,8 +1119,8 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
 end
 
 function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
-  21/01/2022  Param:  SRecipe - recipe name.
-                      nIndex - recipe index.
+  21/01/2022  Param:  SRecipe - string recipe name.
+                      nIndex - number recipe index.
               Returns:  table with item name and quantity of slots ocupied by it.
                         false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
                               - if tRecipes[sRecipe] doesn't exist.
@@ -1115,7 +1128,7 @@ function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity
 							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
 							ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
-  if type(sRecipe) == "number" then return false, "Must supply recipe name." end
+  if type(sRecipe) == "number" then return false, "recipeSlots(sRecipe, nIndex) - Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
   if not tRecipes[sRecipe][nIndex] then return false, "Recipe index doesn't exist." end
 
@@ -1135,8 +1148,8 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
               Returns:  table with item and average between items and slots.
 							sintax: calcAverage(tSlots, tIng)
 							ex: calcAverage(tSlots, tIng)]]
-  if not tSlots then return false, "Table of quantity of slots ocupied by recipe not supplied." end
-  if not tIng then return false, "Table of items in the inventory not supplied." end
+  if not tSlots then return false, "calcAverage(tSlots, tIng) - Table of quantity of slots ocupied by recipe not supplied." end
+  if not tIng then return false, "calcAverage(tSlots, tIng) - Table of items in the inventory not supplied." end
 
   local tMean = {}
   for k,v in pairs(tSlots) do
@@ -1163,7 +1176,7 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
 						 ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)              
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
-  if not sRecipe then return false, "Must supply recipe name." end
+  if not sRecipe then return false, "arrangeRecipe(sRecipe, nIndex) - Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe name does not exist." end
   if not tRecipes[sRecipe][nIndex] then return false, "Recipe index doesn't exist." end
 
@@ -1198,10 +1211,11 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
 end
 
 function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
-  03/11/2021  Returns:  nil - if nSlot is not in range[1..16].
+  03/11/2021  Param: nSlot - number slot where the product of the recipe is put.
+              Returns:  nil - if nSlot is not in range[1..16].
                         true - if was set tRecipes["CSlot"].]]
   nSlot = nSlot or turtle.selectedSlot()
-  if nSlot < 0 or nSlot > 16 then return nil, "nSlot out of range." end
+  if nSlot < 0 or nSlot > 16 then return nil, "setCraftSlot(nSlot) - nSlot out of range." end
   tRecipes["CSlot"] = nSlot
   return true
 end
@@ -1258,8 +1272,10 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
   return true
 end
 
+--not tested
 function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong to a recipe.
-  26/01/2022  Returns:  true, table of items that dont belong to recipe {itemname=quantity,...}.
+  26/01/2022  Param: sRecipe - string recipe name.
+              Returns:  true, table of items that dont belong to recipe {itemname=quantity,...}.
                         false - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
                               - if sRecipe is not in tRecipes.
               Sintax: ingDontBelong([sRecipe=tRecipes.lastRecipe])
@@ -1290,11 +1306,13 @@ function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong
 end
 
 function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
-  01/02/2022  Returns:
-              Sintax:
-              ex:]]
+  01/02/2022  Param: sRecipe - string recipe name.
+                     tRecipe - table with a recipe from inventory.
+              Returns: number - index of the recipe in tRecipes.
+              Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
+              ex:getRecipeIndex()]]
   sRecipe, tRecipe = getParam("st", {tRecipes.lastRecipe,{}}, sRecipe, tRecipe)
-  if not sRecipe then return false, "Recipe name not supplied."
+  if not sRecipe then return false, "getRecipeIndex(sRecipe, tRecipe) - Recipe name not supplied."
   else
     if not tRecipes[sRecipe] then return false, "Recipe name not found."
     elseif #tRecipe == 0 then
