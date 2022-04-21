@@ -1354,7 +1354,14 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
   return false
 end
 
-function colLinMatch(tRecs, tRec)
+--not tested
+function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns true if is the same.
+  21/04/2022  Param: tRecs - recipe from tRecipes.
+                     tRec - recipe to compare.
+              Returns: true - if items in recipes have the same position.
+                       false - if items in recipes have the diferent position.
+              Sintax: colLinMatch(tRecs, tRec)
+              ex:getRecipeIndex()]]
   if #tRecs ~= tRec then return false end
   local bFound = true
   for iRecs = 1, #tRecs do
@@ -1368,6 +1375,7 @@ function colLinMatch(tRecs, tRec)
   return bFound
 end
 
+--not tested
 function getProdQuant() --[[Returns the quantity of products made with then recipe in inventory.
   31/03/2022  Returns: number - quantity of products made with inventory recipe.
               sintax: getProdQuant()
@@ -1429,7 +1437,9 @@ end
 
 --not tested
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
-  26/01/2022  Returns: Name of the item craft, and the quantity.
+  26/01/2022  Param: sRecipe - string recipe name.
+                     nLimit - number recipes to craft.
+              Returns: Name of the item craft, and the quantity.
                        true - if nLimit == 0 and could craft a recipe.
                        false - if the recipe name was not supplied, this is the first recipe craft, and items are not arranged to craft a recipe.
                              - if couln't find a empty slot where to craft recipe.
@@ -1492,7 +1502,8 @@ end
 ------ ROTATING FUNCTIONS ------  
 
 function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
-  02/10/2021  returns: true
+  02/10/2021  Param: nTurns - number of 90 degrees turns to the right.
+              returns: true
               sintax: incFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing + nTurns
@@ -1501,7 +1512,8 @@ function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
 end
 
 function decFacing(nTurns) --[[ Decrements tTurtle.facing by nTurns
-  02/10/2021  returns: true
+  02/10/2021  Param: nTurns - number of 90 degrees turns to the left.
+              returns: true
               sintax: decFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing - nTurns
@@ -1519,11 +1531,12 @@ function turnBack() --[[ Turtle turns back.
   return true
 end
 
-function turnDir(sDir) --[[ Turtle turns to sDir direction {"back", "right", "left"}.
-  27/08/2021  Returns:  true if sDir is a valid direction.
-                        false if sDir is not a valid direction.
-              sintax: turn([sDir="back"]) - sDir {"right", "back", "left"}
-              ex: turn("back") or turn() - Turns the turtle back.]]
+function turnDir(sDir) --[[ Turtle turns to sDir direction.
+  27/08/2021  Param: sDir - string diretion |"back"|"right"|"left".
+              Returns:  true - if sDir is a valid direction.
+                        false - if sDir is not a valid direction.
+              sintax: turn([sDir="back"])
+              ex: turnDir("back") or turnDir() - Turns the turtle back.]]
   sDir = sDir or "back"
 
   if not dirType[sDir] then return false, "Invalid direction." end
