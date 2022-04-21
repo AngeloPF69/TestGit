@@ -1555,9 +1555,11 @@ end
 ------ MOVING AND ROTATING FUNCTIONS ------
 
 function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
-  27/08/2021  Returns:  true if turtle goes all way.
+  27/08/2021  Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"
+                     nBlocks - number of blocks to walk.
+              Returns:  true if turtle goes all way.
                         false if blocked.
-              sintax: go([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
+              sintax: go([sDir="forward"], [nBlocks=1])
               ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
               ex: go() - Moves 1 block forward.
               ex: go(-3, "up") - moves 3 blocks down.]]
@@ -1574,7 +1576,8 @@ function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
 end
 
 function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until blocked.
-  27/08/2021  Returns:  true if turtle goes all way.
+  27/08/2021  Param: nBlocks - number of blocks to walk left.
+              Returns:  true if turtle goes all way.
                         false if bllocked, or invalid parameter.
               Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
               ex: goLeft(3) - Moves 3 Blocks to the left.]]
@@ -1596,7 +1599,8 @@ end
 
 
 function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until blocked.
-  27/08/2021  Returns:  true if turtle goes all way.
+  27/08/2021  Param: nBlocks - number of blocks to walk right.
+              Returns:  true if turtle goes all way.
                         false if bllocked, or invalid parameter.
               Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
               ex: goRight(3) - Moves 3 Blocks to the right.]]
@@ -1617,7 +1621,8 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
 end
 
 function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
-  27/08/2021  Returns:  true if turtle goes all way.
+  27/08/2021  Param: nBlocks - number of blocks to walk back.
+              Returns:  true if turtle goes all way.
                         false if blocked, or invalid parameter.
               Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
               ex: goBack(3) - Turns back and moves 3 blocks forward.]]
@@ -1637,11 +1642,12 @@ end
 ------ DIG FUNCTIONS ------  
 
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
-  08/09/2021  Returns:  true if turtle digs all way.
+  08/09/2021  Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"
+                     nBlocks - number of blocks to walk in sDir direction. 
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, can't turn that way.
                         nil if invalid parameter
-              sintax: digDir([sDir="forward"], [nBlocks=1]) - sDir {"forward", "right", "back", "left", "up", "down"}
-              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
+              sintax: digDir([sDir="forward"], [nBlocks=1])              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
               ex: digDir() - Digs 1 block forward.
               ex: digDir(-3, "up") - Digs 3 blocks down.]]
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
@@ -1677,7 +1683,8 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
 end
 
 function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param: nBlocks - number of blocks to dig.
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: dig([nBlocks=1])
               Note: nBlocks < 0 turns back and digs forward, nBlocks > 0 digs forward.
@@ -1700,7 +1707,8 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
 end
 
 function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param: nBlocks - number of blocks to dig left.
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digLeft([nBlocks=1])
               Note: nBlocks < 0 digs to the right, nBlocks > 0 digs to the left
@@ -1715,7 +1723,8 @@ function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must ha
 end
 
 function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param nBlocks - number of blocks to dig right.
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digRight([nBlocks=1])
               Note: nBlocks < 0 digs to the left, nBlocks > 0 digs to the Right.
@@ -1730,7 +1739,8 @@ function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must h
 end
 
 function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param nBlocks - number of blocks to dig up.
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digUp([nBlocks=1])
               Note: nBlocks < 0 digs downwards, nBlocks > 0 digs upwards.
@@ -1752,7 +1762,8 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
 end
 
 function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param nBlocks - number of blocks to dig down.
+              Returns:  true if turtle digs all way.
                         false if bllocked, empty space, or invalid parameter.
               sintax: digDown([nBlocks=1])
               Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
@@ -1774,7 +1785,8 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
 end
 
 function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param nBlocks - number of blocks to dig forward 1 block above turtle.
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digAbove([nBlocks=1])
               Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
@@ -1794,7 +1806,8 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
 end
 
 function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
-  27/08/2021  Returns:  true if turtle digs all way.
+  27/08/2021  Param nBlocks - number of blocks to dig forward and below turtle.
+              Returns:  true if turtle digs all way.
                         false if blocked, empty space, or invalid parameter.
               sintax: digBelow([nBlocks=1])
               Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
