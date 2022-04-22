@@ -2156,7 +2156,7 @@ function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
                      bWrap - boolean if slot wraps around inventory.
               Returns:  the number of slot decreased by 1.
                         nil - if nSlot if not a number.
-                        false - if bWrap and nSlot < 1.
+                        false - if bWrap and nSlot = 1.
               Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
               ex: decSlot() - Decrements the selected slot.
                   decSlot(1, false) - Returns false.
@@ -2179,12 +2179,15 @@ function freeCount() --[[ Get number of free slots in turtle's inventory.
 end
 
 function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the search or not.
-  07/10/2021  Returns:  first free slot number.
+  07/10/2021  Param:  nStartSlot - number slot where to start the search.
+                      bWrap - boolean if the search wraps around the inventory.
+              Returns:  number - first free slot number.
+                        false - if no free slot.
               sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
               Note: if nStartSlot<0 search backwards--]]
 	nStartSlot, bWrap = getParam("nb",{1, true}, nStartSlot, bWrap)
 
-  if not type(nStartSlot) == "number" then return false end
+  if not type(nStartSlot) == "number" then return false, "getFreeSlot([StartSlot=1][, Wrap=true]) - Slot must be a number." end
   local dir = sign(nStartSlot)
   nStartSlot = math.abs(nStartSlot)
   local nEndSlot = nStartSlot
@@ -2240,17 +2243,23 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 end
 
 function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Returns:  the number of slot increased by 1.
-                        ]]
+  02/11/2021  Param:  nSlot - number slot to be increased.
+                      bWrap - boolean true if the slot number wraps around inventory.
+              Returns:  the number of slot increased by 1.
+                        false - if it couldn't increase slot.
+              sintax: incSlot([Slot.selecetd slot][, Wrap=true])
+              ex: incSlot(16) - returns false.]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
-  if type(nSlot) ~= "number" then return nil, "Invalid slot number" end
+  if type(nSlot) ~= "number" then return nil, "incSlot([Slot.selecetd slot][, Wrap=true]) - Slot must be a number." end
   nSlot = nSlot + 1
   if not bWrap and (nSlot > 16) then return false end
   return bit.band(nSlot-1, 15) + 1
 end
 
+--not testesd
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
-  23/09/2021  Returns: number of items you can store more in inventory.
+  23/09/2021  Param: nSlot/sItemName - number of slot/string item name.
+              Returns: number of items you can store more in inventory/slot.
                       false - if item is not in inventory.
                             - if slot is empty.
               sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
@@ -2285,17 +2294,21 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 end
 
 function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
-  23/09/2021  Returns: true - if nSlot is empty.
+  23/09/2021  Param: nSlot - number slot to check.
+              Returns: true - if nSlot is empty.
                       false - if nSlot is not empty.
               sintax: isEmpty([nSlot=selected slot])
               ex: isEmpty() - Checks if selected slot is empty.
                   isEmpty(12) - checks if slot 12 is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
+  if type(nSlot) == "number" then return nil end
   return turtle.getItemDetail(nSlot) == nil
 end
 
+--not tested
 function itemCount(nSlot) --[[ Counts items in inventory
-  31/08/2021  Returns: number of items counted.
+  31/08/2021  Param: nSlot/"inventory"/item name - number slot/string "inventory"/string item name.
+              Returns: number of items counted.
                       false - if nSlot <0 or > 16.
                             - if nSlot is neither a string nor a number.
               sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
@@ -2310,7 +2323,7 @@ function itemCount(nSlot) --[[ Counts items in inventory
     tData = turtle.getItemDetail(nSlot)
     if tData then totItems = tData.count end
   else
-    if type(nSlot) ~= "string" then return false end
+    if type(nSlot) ~= "string" then return false, "itemCount(nSlot) - Invalid parameter type." end
     for i = 1, 16 do
       tData = turtle.getItemDetail(i)
       if tData then
