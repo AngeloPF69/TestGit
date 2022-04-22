@@ -2242,6 +2242,7 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 	return true
 end
 
+--not tested
 function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
   02/11/2021  Param:  nSlot - number slot to be increased.
                       bWrap - boolean true if the slot number wraps around inventory.
@@ -2337,11 +2338,14 @@ function itemCount(nSlot) --[[ Counts items in inventory
 end
 
 function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
-  05/09/2021  Returns: item name - if selected slot/slot is not empty.
-                        false - if selected slot/slot is empty. ]]
+  05/09/2021  Param: nSlot - number slot where to get the item name.
+              Returns: item name - if slot is not empty.
+                        false - if slot is empty.
+              Sintax: itemName([nSlot=selected slot])
+              ex: itemName() - retuns the name of item in selected slot.]]
   nSlot = nSlot or turtle.getSelectedSlot()
 
-  if type(nSlot) ~= "number" then return nil end
+  if type(nSlot) ~= "number" then return nil, "itemName([Slot=selected slot]) - Slot must be a number." end
   if (nSlot <1 ) or (nSlot > 16) then return false, "Slot "..nSlot.." out of range." end
 
   local tData = turtle.getItemDetail(nSlot)
@@ -2349,8 +2353,10 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   return tData.name
 end
 
+--not tested
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-  29/08/2021  returns:  The selected slot, and items in that slot.
+  29/08/2021  Param: slot/itemName - number slot/string name of the item to select.
+              Returns:  The selected slot, and items in that slot.
                         False - if the item was not found
                               - if nStartSlot is not a number or a string.
                               - if value is a number and ( < 1 or > 16 )
@@ -2385,8 +2391,12 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
   return false
 end
 
+--not tested
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
-  28/08/2021  returns:  The first slot where the item was found, and the quantity
+  28/08/2021  Param: sItemName - string the item name.
+                     nStartSlot - number slot where to start the search.
+                     bWrap - boolean true if the search wraps around inventory.
+              Returns:  The first slot where the item was found, and the quantity
                         False - if the item was not found
                               - if sItemName not supplied.
                               - if nStartSlot is not a number.
@@ -2423,8 +2433,11 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
   return false
 end
 
+--not tested
 function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
-  07/10/2021  Returns:  free slot number.
+  07/10/2021  Param: nStartSlot - number slot where to start search for free slot.
+                     bWrap - boolean true if the search wraps around inventory.
+              Returns:  free slot number.
                         false - if no free slot.
               sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
               ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
