@@ -423,7 +423,6 @@ end
 
 ------ MOVING FUNCTIONS ------
 
---not tested
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
   27/08/2021  Param: nBlocks - number of blocks to walk.
               Returns:  true - if turtle goes all way.
@@ -444,7 +443,6 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   return true
 end
 
---not tested
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   27/08/2021  Param: nBlocks - number of blocks to walk backwards. 
               Returns:  true - if turtle goes all way.
@@ -463,7 +461,6 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   return true
 end
 
---not tested
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   27/08/2021 Param: nBlocks - number of blocks to walk up.
              Returns:  true - if turtle goes all way.
@@ -482,7 +479,6 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   return true
 end
 
---not tested
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   27/08/2021 -  Param: nBlocks - number of blocks to walk down.
                 Returns:  true - if turtle goes all way.
@@ -504,7 +500,6 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
---not tested
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
   27/09/2021 - Param: t - table to save.
                       sFileName - string filename.
@@ -515,8 +510,8 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
                Note: if not supplied extension it adds ".txt" to the file name.
                ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.]]
 	if not t or not sFileName then return false, "Table or filename not supplied." end --no arguments
-	--if string.sub(sFileName, -4, -4) ~= "." then sFileName=sFileName..".txt" end --if no extension add 1
-  if not string.find(sFileName, ".") then sFileName=sFileName..".txt" end --if no extension add 1
+	
+  if not string.find(sFileName, "[.]") then sFileName=sFileName..".txt" end --if no extension add 1
 	local str2Save = textutils.serialize(t)
 	if string.len(str2Save) > fsGetFreeSpace("/") then return false,"no disk space" end
 	
@@ -561,7 +556,6 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 	return true
 end
 
---not tested
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   27/08/2021  Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
                      tDefault - table with default values.
@@ -576,7 +570,7 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   local Args={...}
   if #Args == 0 then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply parameters to order." end
   
-    local retTable = {}
+  local retTable = {}
   local checked={}
 
   function addParam(sType) --add parameter do returning table
@@ -620,7 +614,6 @@ function isValue(value, t) --[[ Checks if value is in t table.
   return false
 end
 
---not tested
 function isNumber(...) --[[ Checks if all parameters are numbers.
   20/04/2022  Param:  ... - parameters to check
               Returns:  true - if all parameters are numbers.
@@ -658,15 +651,14 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
   return true
 end
 
---not tested
 function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-  28/08/2021  Returns false if value is not a number, or not supplied.]]
+  28/08/2021  Param: value - number to evaluate.
+              Returns false if value is not a number, or not supplied.]]
   if type(value) ~= "number" then return false, "sign(value) - Is not a number or not supplied." end
   if value < 0 then return -1 end
   if value == 0  then return 0 end
   return 1
 end
-
 
 ------ STACK FUNCTIONS ------
 
@@ -685,7 +677,6 @@ function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
   return true
 end
 
---not tested
 function getStack(nSlot) --[[ Returns how many items can stack.
   10/11/2021  Param: nSlot - slot number 1..16, or the item name.
               Return: quantity a item can stack.
@@ -707,8 +698,9 @@ function getStack(nSlot) --[[ Returns how many items can stack.
   elseif type(nSlot) == "string" then
       if tStacks[nSlot] then nStack = tStacks[nSlot]
       else
+        print(nSlot)
         nSlot = search(nSlot)
-        if not nSlot then return false, "getStack(Slot/ItemName) - Item not found" end
+        if not nSlot then return false, "Item not found" end
         tData = turtle.getItemDetail(nSlot)
         nStack = tData.count + turtle.getItemSpace(nSlot)
         tStacks[tData.name] = nStack
@@ -719,12 +711,11 @@ function getStack(nSlot) --[[ Returns how many items can stack.
   return nStack
 end
 
---not tested
 function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory, the slot and the name of item.
   17/12/2021  Param: sItem - string - item name.
-              Return: number - the lower stack of items in inventory, the Slot, the name of item.
+              Return: number, number, string - the lowerstack of items in inventory, the Slot, the name of item.
                       false - if item not found.
-              sintax: invLowerStack([sItemName]).
+              sintax: invLowerStack([sItem]).
               ex: invLowerStack() - gets the lowest stack of items in inventory, the slot, and the item name.
                   invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks in inventory, the slot and the item name.]]
   local nLower, nRSlot = false
@@ -750,7 +741,9 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
       end
     end
   end
-  return nLower, nRSlot, sName
+  if nLower == 9999 then return false, "Item not found."
+  else return nLower, nRSlot, sName
+  end
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
@@ -770,7 +763,6 @@ end
 
 ------ RECIPES FUNCTIONS ------
 
---not tested
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021  Return: table - with ingredient name and quantity.]]
   local tQuant = {}
@@ -841,7 +833,6 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
   return #tCRecipes~=0, tCRecipes
 end
 
---not tested
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
   23/11/2021  Param: sRecipe - string recipe name.
                      nIndex - number index of the recipe
@@ -1273,15 +1264,16 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
 end
 
 --not tested
-function ingDontBelong(sRecipe) --[[ Checks if all the items in inventory belong to a recipe.
-  26/01/2022  Param: sRecipe - string recipe name.
-              Returns:  true, table of items that dont belong to recipe {itemname=quantity,...}.
-                        false - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
-                              - if sRecipe is not in tRecipes.
-              Sintax: ingDontBelong([sRecipe=tRecipes.lastRecipe])
-              ex: ingDontBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
-  sRecipe = sRecipe or tRecipes.lastRecipe
-  if not sRecipe then return false, "Recipe name not supplied." end
+function itemBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory belong to a recipe.
+  26/01/2022  Param:  sRecipe - string recipe name.
+                      nIndex - index of tReecipes[sRecipe][nIndex].
+              Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
+                        nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
+                        false - if sRecipe is not in tRecipes.
+              Sintax: itemBelong([sRecipe=tRecipes.lastRecipe])
+              ex: itemBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
+  sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)
+  if not sRecipe then return nil, "itemBelong([sRecipe=tRecipes.lastRecipe]) - Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
   local tRecipe = tRecipes[sRecipe]
   local tItems, bExcess = {}, false
@@ -1474,7 +1466,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
   
   turtle.select(tRecipes["CSlot"])
   if not turtle.craft(nLimit) then
-    local success, tItems = ingDontBelong(sRecipe)
+    local success, tItems = itemBelong(sRecipe)
     if success then return false, "Remove items that do not belong to the recipe." end
   end
 	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
@@ -1843,7 +1835,7 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
   for i = 1, math.abs(nBlocks) do
     if not turtle.dig() then return false, "Can't dig." end
     if i ~= nBlocks then
-			if not forward() then return, "Can't go forward." false end
+			if not forward() then return false, "Can't go forward." end
 		end
   end
   return true
@@ -2405,7 +2397,7 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
                     if not supplied bWrap, it defaults to true.
               sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
 	if not sItemName then return false end
-	sItemName, nStartSlot = getParam("snb", {turtle.getSelectedSlot(), true}, sItemName, nStartSlot)
+	sItemName, nStartSlot , bWrap= getParam("snb", {turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
   if type(nStartSlot) ~= "number" then return false end
   dir = sign(nStartSlot)
   nStartSlot = math.abs(nStartSlot)-1
@@ -2452,12 +2444,18 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction {"forward", "right", "back", "left", "up", "down"}.
-  05/09/2021  Returns:  true if turtle collects some items.
+--not tested
+function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
+  05/09/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+                      nItems - number of items to suck.
+              Returns:  true if turtle collects some items.
                         false if there are no items to take.
               sintax: suckDir([sDir="forward][,nItems=all the items])
+              Note: if nItems < 0 it drops nItems from selected slot.
               ex: suckDir() - Turtle sucks all the items forward.]]
   sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
+  sDir = string.lower(sDir)
+
   if nItems and nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
   if type(sDir) ~= "string" then return false end
 
@@ -2488,13 +2486,17 @@ end
 
 ------ DROP FUNCTIONS ------  
 
-function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory in the world in front, up or down the turtle.
-  29/08/2021  Returns:  number of dropped items.
+--not tested
+function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
+  29/08/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+                      nBlocks - number of blocks to drop/suck
+              Returns:  number of dropped items.
                         true - if suck some items.
                         false - empty selected slot.
                         nil - if invalid direction.
               Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
               Note: if nBlocks not supplied, drops all items in selected slot.
+                    if nBlocks < 0 sucks nBlocks.
               ex: dropDir() - Drops all blocks from selected slot, forward.
                   dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
                   drop(-5, "down") - Suck 5 items from down.]]
@@ -2502,6 +2504,7 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
   selectedSlot = turtle.getSelectedSlot() --save selected slot
   tData = turtle.getItemDetail() --check the selected slot for items
   sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
+  sDir = string.lower(sDir)
 
   if not dirType[sDir] then return nil, "Invalid direction." end --invalid direction
 
@@ -2543,7 +2546,8 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
 end
 
 function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
-  29/08/2021  Returns:  number of dropped items.
+  29/08/2021  Param: nBlocks - number of blocks to drop forward.
+              Returns:  number of dropped items.
                         false - empty selected slot.
                         true - if suck some items.
               Sintax: drop([nBlocks])
@@ -2554,7 +2558,8 @@ function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
 end
 
 function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
-  29/08/2021  Returns:  number of dropped items.
+  29/08/2021  Param: nBlocks - number of blocks to drop up.
+              Returns:  number of dropped items.
                         false - empty selected slot.
                         true - if suck some items.
               Sintax: dropUp([nBlocks])
@@ -2565,7 +2570,8 @@ function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
 end
 
 function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
-  29/08/2021  Returns:  number of dropped items.
+  29/08/2021  Param: nBlocks - number of blocks to drop down.
+              Returns:  number of dropped items.
                         false - empty selected slot.
                         true - if suck some items.          
               Sintax: dropDown([nBlocks])
@@ -2576,7 +2582,8 @@ function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
 end
 
 function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
-  11/09/2021  Returns:  number of dropped items.
+  11/09/2021  Param: nBlocks - number of blocks to drop left.
+              Returns:  number of dropped items.
                         false - empty selected slot.
                         true - if suck some items.
               Sintax: dropLeft([nBlocks])
@@ -2587,7 +2594,8 @@ function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
 end
 
 function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward.
-  11/09/2021  Returns:  number of dropped items.
+  11/09/2021  Param: nBlocks - number of blocks to drop right.
+              Returns:  number of dropped items.
                         false - empty selected slot.
                         true - if suck some items.
               Sintax: dropRight([nBlocks])
@@ -2598,7 +2606,8 @@ function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward
 end
 
 function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
-  29/08/2021  Returns:  number of dropped items.
+  29/08/2021  Param: nBlocks - number of blocks to drop back.
+              Returns:  number of dropped items.
                         false - empty selected slot.
                         true - if suck some items.
               Sintax: dropBack([nBlocks])
@@ -2614,6 +2623,8 @@ end
 
 INIT()
 
-print(inspectDir())
+local b, t = itemBelong("minecraft:stick", 1)
 
-TERMINATE()
+print(b, textutils.serialize(t))
+
+--TERMINATE()
