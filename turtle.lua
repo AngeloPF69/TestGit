@@ -1577,11 +1577,12 @@ function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until bl
   27/08/2021  Param: nBlocks - number of blocks to walk left.
               Returns:  true if turtle goes all way.
                         false if bllocked, or invalid parameter.
+                        nil - if nBlocks is not a number.
               Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
               ex: goLeft(3) - Moves 3 Blocks to the left.]]
   nBlocks = nBlocks or 1
 
-  if type(nBlocks) ~= "number" then return false, "goLeft(Blocks) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "goLeft(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turtle.turnRight()
   else  turtle.turnLeft()
   end
