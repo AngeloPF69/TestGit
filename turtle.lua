@@ -273,6 +273,7 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Nothing to compare in the world.'
 end
 
+--not tested
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
   04/09/2021  Param: nBlocks - number of blocks to compare.
               Returns:  true - if all the blocks are the same.
@@ -286,13 +287,13 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
   
   if type(nBlocks) ~= "number" then return nil, "compareAbove([Blocks=1]) - Blocks must be a number." end  --nBlocks must be a number.
   local dir = sign(nBlocks)
-  if nBlocks < 0 then turnBack() end
+  --if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
     if not turtle.compareUp() then return false, "Found a diferent block or a empty space." end
     if nBlocks ~= i then
-			if not forward() then return false, "Can't advance forward." end
+			if not forward(dir) then return false, "Can't advance forward." end
 		end
   end
   return true
