@@ -322,13 +322,13 @@ function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strai
   
   if type(nBlocks) ~= "number" then return nil, "compareBelow([Blocks=1]) - Blocks must be a number." end
   local dir = sign(nBlocks)
-  if nBlocks < 0 then turnBack() end
+  --if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
     if not turtle.compareDown() then return false, "Found a diferent block or a empty space." end
     if nBlocks ~= i then
-			if not forward() then return false, "Can't advance forward." end
+			if not forward(dir) then return false, "Can't advance forward." end
 		end
   end
   return true
