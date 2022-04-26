@@ -427,7 +427,7 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   27/08/2021  Param: nBlocks - number of blocks to walk.
               Returns:  true - if turtle goes all way.
                         false - "Can't advance forward."
-                        nil - invalid parameter.
+                        nil - invalid nBlocks type.
               Sintax: forward([nBlocks=1])
               Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
               ex: forward(3) - Moves 3 blocks forward.]] 
@@ -447,11 +447,12 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   27/08/2021  Param: nBlocks - number of blocks to walk backwards. 
               Returns:  true - if turtle goes all way.
                         false - if turtle was blocked.
+                        nil - if nBlocks is not a number.
               Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
               ex: back(-3) - Moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "back([Blocks=1]) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "back([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.back() then return false, "Can't go backward."
@@ -465,11 +466,12 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   27/08/2021 Param: nBlocks - number of blocks to walk up.
              Returns:  true - if turtle goes all way.
                        false - if turtle was blocked.
+                       nil - if nBlocks is not a number.
              Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
              ex: up(3) - Moves 3 blocks up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "up([Blocks=1]) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "up([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.up() then return false, "Can't move up."
@@ -483,11 +485,12 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   27/08/2021 -  Param: nBlocks - number of blocks to walk down.
                 Returns:  true - if turtle goes all way.
                           false - if turtle was blocked.
+                          nil - if nBlocks is not a number.
                 Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
                 ex: down(3) - Moves 3 blocks down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "down([Blocks=1]) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "down([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
       if not turtle.down() then return false, "I can't go down anymore."
