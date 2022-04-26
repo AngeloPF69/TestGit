@@ -243,6 +243,7 @@ end
 
 ------ COMPARE FUNCTIONS ------
 
+--not tested
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
   21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
                      nSlot - number 1..16
@@ -256,12 +257,12 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
                   compareDir("left", 2) - compares item in slot 2 with block on the left.]]
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	sDir  = string.lower(sDir)
-	if not dirType[sDir] then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
-	if type(nSlot) ~= "number" then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
+	if not dirType[sDir] then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
+	if type(nSlot) ~= "number" then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
   nSlot = math.abs(nSlot)
   nSlot = bit.band(nSlot-1, 15)+1
 	local invData = turtle.getItemDetail(nSlot)
-	if not invData then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Empty slot.' end
+	if not invData then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Empty slot.' end
 	
 	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
 		turnDir(sDir)
