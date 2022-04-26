@@ -62,7 +62,7 @@
     
 ## Fuel
 
-   <a href="#refuel">refuel([nItems=stack]) Refuels the turtle with nItems.</a>
+   <a href="#refuel">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a>
 
 ## General
 
@@ -325,8 +325,8 @@
   
    <p id="refuel"></p>
 
-- refuel([nItems=stack]) Refuels the turtle with nItems.
-    <pre>Sintax: refuel([nItems=all items in selected slot])
+- refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.
+    <pre>Sintax: refuel([nCount = all items in selected slot])
   Returns: number of items refueled.
            false - "Empty selected slot."
                  - "Item is not fuel."

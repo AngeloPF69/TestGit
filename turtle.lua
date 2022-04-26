@@ -14,7 +14,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName", ...}, {"itemName", ..., nCol = nColumn, nLin = nLine}, ...}
+tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
                    ["lastRecipe"] = sLastRecipe
                    ["CSlot"] = Crafting slot.]]
@@ -243,25 +243,26 @@ end
 
 ------ COMPARE FUNCTIONS ------
 
+--not tested
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
   21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
                      nSlot - number 1..16
               Returns: true - if the item in slot and in the world is the same.
-                      false - if block in slot and in the world are not the same,
-                              invalid direction,
-                              if nSlot is not a number,
-                              if empty slot.
+                      false - if block in slot and in the world are not the same, or in the world is a empty space.
+                        nil - invalid direction,
+                            - if nSlot is not a number,
+                            - if empty slot.
               sintax: compareDir([sDir="forward"][, nSlot=selected slot])
               ex: compareDir() compares selected slot with block in front of turtle.
                   compareDir("left", 2) - compares item in slot 2 with block on the left.]]
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	sDir  = string.lower(sDir)
-	if not dirType[sDir] then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
-	if type(nSlot) ~= "number" then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
+	if not dirType[sDir] then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
+	if type(nSlot) ~= "number" then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
   nSlot = math.abs(nSlot)
   nSlot = bit.band(nSlot-1, 15)+1
 	local invData = turtle.getItemDetail(nSlot)
-	if not invData then return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Empty slot.' end
+	if not invData then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Empty slot.' end
 	
 	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
 		turnDir(sDir)
@@ -269,15 +270,22 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	end
 	
 	local success, worlData = insF[sDir]()
-	if worlData.name == invData.name then return true end
-	return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Nothing to compare in the world.'
+  if success then
+	  if worlData.name == invData.name then return true
+    else return false, "Selected slot and the world are diferent."
+    end
+  else
+	  return false, "Nothing to compare in the world."
+  end
 end
 
+--not tested
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
   04/09/2021  Param: nBlocks - number of blocks to compare.
               Returns:  true - if all the blocks are the same.
-                        false - "Found a diferent block or a empty space."
-                              - "Can't advance forward."
+                        false, "blocked" - if it can't advance.
+                        false, "empty" - if it found a empty space.
+                        false, "diferent" - if it found a diferent block.
 												nil if invalid parameter.
               sintax: compareAbove([nBlocks=1])
               Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
@@ -286,13 +294,17 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
   
   if type(nBlocks) ~= "number" then return nil, "compareAbove([Blocks=1]) - Blocks must be a number." end  --nBlocks must be a number.
   local dir = sign(nBlocks)
-  if nBlocks < 0 then turnBack() end
+  --if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
-    if not turtle.compareUp() then return false, "Found a diferent block or a empty space." end
+    if not turtle.compareUp() then
+      if not turtle.detectUp() then return false, "empty"
+      else return false, "diferent"
+      end
+    end
     if nBlocks ~= i then
-			if not forward() then return false, "Can't advance forward." end
+			if not forward(dir) then return false, "blocked" end
 		end
   end
   return true
@@ -310,13 +322,13 @@ function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strai
   
   if type(nBlocks) ~= "number" then return nil, "compareBelow([Blocks=1]) - Blocks must be a number." end
   local dir = sign(nBlocks)
-  if nBlocks < 0 then turnBack() end
+  --if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
     if not turtle.compareDown() then return false, "Found a diferent block or a empty space." end
     if nBlocks ~= i then
-			if not forward() then return false, "Can't advance forward." end
+			if not forward(dir) then return false, "Can't advance forward." end
 		end
   end
   return true
@@ -427,7 +439,7 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   27/08/2021  Param: nBlocks - number of blocks to walk.
               Returns:  true - if turtle goes all way.
                         false - "Can't advance forward."
-                        nil - invalid parameter.
+                        nil - invalid nBlocks type.
               Sintax: forward([nBlocks=1])
               Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
               ex: forward(3) - Moves 3 blocks forward.]] 
@@ -447,11 +459,12 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   27/08/2021  Param: nBlocks - number of blocks to walk backwards. 
               Returns:  true - if turtle goes all way.
                         false - if turtle was blocked.
+                        nil - if nBlocks is not a number.
               Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
               ex: back(-3) - Moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "back([Blocks=1]) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "back([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.back() then return false, "Can't go backward."
@@ -465,11 +478,12 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   27/08/2021 Param: nBlocks - number of blocks to walk up.
              Returns:  true - if turtle goes all way.
                        false - if turtle was blocked.
+                       nil - if nBlocks is not a number.
              Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
              ex: up(3) - Moves 3 blocks up.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "up([Blocks=1]) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "up([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.up() then return false, "Can't move up."
@@ -483,11 +497,12 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   27/08/2021 -  Param: nBlocks - number of blocks to walk down.
                 Returns:  true - if turtle goes all way.
                           false - if turtle was blocked.
+                          nil - if nBlocks is not a number.
                 Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
                 ex: down(3) - Moves 3 blocks down.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "down([Blocks=1]) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "down([Blocks=1]) - Blocks must be a number." end
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
       if not turtle.down() then return false, "I can't go down anymore."
@@ -605,11 +620,11 @@ end
 function isValue(value, t) --[[ Checks if value is in t table.
   21/09/2021  Param:  value - any type of value.
                       t - table with values to compare.
-              Returns:  true - if value is in t.
+              Returns:  true, key - if value is in t, key corresponding to value.
                         false - if value is not in t.
-              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
+              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".]]
   for k,v in pairs(t) do
-    if v == value then return true end
+    if v == value then return true, k end
   end
   return false
 end
@@ -1581,11 +1596,12 @@ function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until bl
   27/08/2021  Param: nBlocks - number of blocks to walk left.
               Returns:  true if turtle goes all way.
                         false if bllocked, or invalid parameter.
+                        nil - if nBlocks is not a number.
               Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
               ex: goLeft(3) - Moves 3 Blocks to the left.]]
   nBlocks = nBlocks or 1
 
-  if type(nBlocks) ~= "number" then return false, "goLeft(Blocks) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "goLeft(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turtle.turnRight()
   else  turtle.turnLeft()
   end
@@ -1604,11 +1620,12 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
   27/08/2021  Param: nBlocks - number of blocks to walk right.
               Returns:  true if turtle goes all way.
                         false if bllocked, or invalid parameter.
+                        nil - if nBlocks is not a number.
               Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
               ex: goRight(3) - Moves 3 Blocks to the right.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "goRight(Blocks) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "goRight(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turtle.turnLeft()
   else  turtle.turnRight()
   end
@@ -1626,11 +1643,12 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
   27/08/2021  Param: nBlocks - number of blocks to walk back.
               Returns:  true if turtle goes all way.
                         false if blocked, or invalid parameter.
+                        nil - if nBlocks type is not a number.
               Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
               ex: goBack(3) - Turns back and moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "goBack(Blocks) - Blocks must be anumber." end
+  if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
   if nBlocks >= 0  then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.forward() then return false, "I can't go back."
@@ -1654,6 +1672,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
               ex: digDir(-3, "up") - Digs 3 blocks down.]]
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
   negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
+  sDir = string.lower(sDir)
   
   if type(nBlocks) ~= "number" then return nil, 'digDir([Dir="foreward"][, Blocks=1]) - Blocks must be a number.' end
   if nBlocks < 0 then
@@ -2355,10 +2374,10 @@ end
 --not tested
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
   29/08/2021  Param: slot/itemName - number slot/string name of the item to select.
-              Returns:  The selected slot, and items in that slot.
-                        False - if the item was not found
-                              - if nStartSlot is not a number or a string.
-                              - if value is a number and ( < 1 or > 16 )
+              Returns:  The selected slot, and number of items in that slot.
+                        False - if it didn't find the item name.
+                          nil - if type of itemName/Slot is not a number or string.
+                              - if itemName/Slot is a number out of range [1..16].
               Note: if executed select() is the same as turtle.getSelectedSlot()
               sintax: select([Slot/Item Name])
               ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
@@ -2367,27 +2386,20 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
 
   if not itemName then
     nSlot = turtle.getSelectedSlot()
-    tData = turtle.getItemDetail()
-    if tData then return nSlot, tData.count
-    else return nSlot
-    end
+  elseif type(itemName) == "number" then
+    if (itemName < 1) or (itemName > 16) then return nil, "itemSelect([itemName/slot]=selected slot) - Slot must be number 1..16." end
+    nSlot = itemName
+  elseif type(itemName) == "string" then
+      nSlot = search(itemName)
+      if not nSlot then return false, "Item name not found." end
+  else
+    return nil, "itemSelect([itemName/slot]=selected slot) - Slot/itemName must be a number 1..16 or a string (item name)."
   end
-  if type(itemName) == "number" then
-    if (itemName < 1) or (itemName > 16) then return false end
-    if turtle.select(itemName) then return itemName end
+  
+  tData = turtle.getItemDetail(nSlot)
+  if tData then return nSlot, tData.count
+  else return nSlot, 0
   end
-
-  if type(itemName) ~= "string" then return false end
-  nSlot = search(itemName)
-
-  if nSlot then
-    turtle.select(nSlot)
-    tData = turtle.getItemDetail()
-    if tData then return nSlot, tData.count
-    else return nSlot
-    end
-  end
-  return false
 end
 
 --not tested
@@ -2508,13 +2520,12 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
                   dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
                   drop(-5, "down") - Suck 5 items from down.]]
 
-  selectedSlot = turtle.getSelectedSlot() --save selected slot
-  tData = turtle.getItemDetail() --check the selected slot for items
   sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
   sDir = string.lower(sDir)
-
   if not dirType[sDir] then return nil, "Invalid direction." end --invalid direction
-
+  selectedSlot = turtle.getSelectedSlot() --save selected slot
+  tData = turtle.getItemDetail() --check the selected slot for items
+  
   if not lookingType[sDir] then
     turnDir(sDir) --turn if it must
     sDir = "forward"
