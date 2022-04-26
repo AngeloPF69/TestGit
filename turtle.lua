@@ -1653,6 +1653,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
               ex: digDir(-3, "up") - Digs 3 blocks down.]]
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
   negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
+  sDir = string.lower(sDir)
   
   if type(nBlocks) ~= "number" then return nil, 'digDir([Dir="foreward"][, Blocks=1]) - Blocks must be a number.' end
   if nBlocks < 0 then
