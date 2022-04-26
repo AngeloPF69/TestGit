@@ -2501,13 +2501,12 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
                   dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
                   drop(-5, "down") - Suck 5 items from down.]]
 
-  selectedSlot = turtle.getSelectedSlot() --save selected slot
-  tData = turtle.getItemDetail() --check the selected slot for items
   sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
   sDir = string.lower(sDir)
-
   if not dirType[sDir] then return nil, "Invalid direction." end --invalid direction
-
+  selectedSlot = turtle.getSelectedSlot() --save selected slot
+  tData = turtle.getItemDetail() --check the selected slot for items
+  
   if not lookingType[sDir] then
     turnDir(sDir) --turn if it must
     sDir = "forward"
