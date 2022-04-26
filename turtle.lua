@@ -620,11 +620,11 @@ end
 function isValue(value, t) --[[ Checks if value is in t table.
   21/09/2021  Param:  value - any type of value.
                       t - table with values to compare.
-              Returns:  true - if value is in t.
+              Returns:  true, key - if value is in t, key corresponding to value.
                         false - if value is not in t.
-              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.]]
+              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".]]
   for k,v in pairs(t) do
-    if v == value then return true end
+    if v == value then return true, k end
   end
   return false
 end
