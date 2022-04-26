@@ -272,10 +272,10 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	local success, worlData = insF[sDir]()
   if success then
 	  if worlData.name == invData.name then return true
-    else return false, "
+    else return false, "Selected slot and the world are diferent."
     end
   else
-	  return false, 'Nothing to compare in the world.'
+	  return false, "Nothing to compare in the world."
   end
 end
 
