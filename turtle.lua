@@ -14,7 +14,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName", ...}, {"itemName", ..., nCol = nColumn, nLin = nLine}, ...}
+tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
                    ["lastRecipe"] = sLastRecipe
                    ["CSlot"] = Crafting slot.]]
@@ -248,10 +248,10 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
   21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
                      nSlot - number 1..16
               Returns: true - if the item in slot and in the world is the same.
-                      false - if block in slot and in the world are not the same,
-                              invalid direction,
-                              if nSlot is not a number,
-                              if empty slot.
+                      false - if block in slot and in the world are not the same, or in the world is a empty space.
+                        nil - invalid direction,
+                            - if nSlot is not a number,
+                            - if empty slot.
               sintax: compareDir([sDir="forward"][, nSlot=selected slot])
               ex: compareDir() compares selected slot with block in front of turtle.
                   compareDir("left", 2) - compares item in slot 2 with block on the left.]]
@@ -270,8 +270,13 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	end
 	
 	local success, worlData = insF[sDir]()
-	if worlData.name == invData.name then return true end
-	return false, 'compareDir([Dir="forward"][, Slot=selected slot]) - Nothing to compare in the world.'
+  if success then
+	  if worlData.name == invData.name then return true
+    else return false, "
+    end
+  else
+	  return false, 'Nothing to compare in the world.'
+  end
 end
 
 --not tested
