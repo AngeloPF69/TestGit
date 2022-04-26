@@ -1263,33 +1263,36 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
   return true
 end
 
---not tested
-function itemBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory belong to a recipe.
+function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory belong to a recipe.
   26/01/2022  Param:  sRecipe - string recipe name.
                       nIndex - index of tReecipes[sRecipe][nIndex].
               Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
                         nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
-                        false - if sRecipe is not in tRecipes.
-              Sintax: itemBelong([sRecipe=tRecipes.lastRecipe])
-              ex: itemBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
+                        false - if sRecipe is not in tRecipes or recipe index not found.
+              Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
+              ex: itemsBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)
-  if not sRecipe then return nil, "itemBelong([sRecipe=tRecipes.lastRecipe]) - Recipe name not supplied." end
+  if not sRecipe then return nil, "itemsBelong([sRecipe=tRecipes.lastRecipe]) - Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
-  local tRecipe = tRecipes[sRecipe]
-  local tItems, bExcess = {}, false
+  if not tRecipes[sRecipe][nIndex] then return false, "Recipe index not found." end
+
+  local tRecipe = tRecipes[sRecipe][nIndex].recipe
+  local tItems, bExcess = {}, true
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
       local bFound = false
       for iRec = 1, #tRecipe do
-        for iItems = 1, #tRecipe[iRec].recipe do
-          for k,v in pairs(tRecipe[iRec].recipe[iItems]) do
-            if v == tData.name then bFound = true end
-          end
+        if tRecipe[iRec][1] == tData.name then
+          bFound = true
+          break
         end
-        if not bFound then
+      end
+      if not bFound then
+        if tItems[tData.name] then tItems[tData.name] = tItems[tData.name]+ tData.count
+        else
           tItems[tData.name] = tData.count
-          bExcess = true
+          bExcess = false
         end
       end
     end
@@ -1346,15 +1349,19 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
   return false
 end
 
---not tested
 function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns true if is the same.
   21/04/2022  Param: tRecs - recipe from tRecipes.
                      tRec - recipe to compare.
               Returns: true - if items in recipes have the same position.
                        false - if items in recipes have the diferent position or diferent number of items.
+                       nil - if invalid parameter type.
               Sintax: colLinMatch(tRecs, tRec)
+              Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
               ex:getRecipeIndex()]]
-  if #tRecs ~= tRec then return false end
+  if (type(tRecs) ~= "table") or (type(tRec) ~= "table") then
+    return nil, "colLinMatch(tRecs, tRec) - tRecs and tRec must be tables."
+  end
+  if #tRecs.recipe ~= #tRec then return false end
   local bFound = true
   for iRecs = 1, #tRecs do
     if tRec[iRecs].col then
@@ -1368,7 +1375,7 @@ function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns 
 end
 
 --not tested
-function getProdQuant() --[[Returns the quantity of products made with then recipe in inventory.
+function getProdQuant() --[[Returns the quantity of products made with the recipe in inventory.
   31/03/2022  Returns: number - quantity of products made with inventory recipe.
               sintax: getProdQuant()
               Note: this function crafts then recipe in inventory.
@@ -1466,7 +1473,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
   
   turtle.select(tRecipes["CSlot"])
   if not turtle.craft(nLimit) then
-    local success, tItems = itemBelong(sRecipe)
+    local success, tItems = itemsBelong(sRecipe)
     if success then return false, "Remove items that do not belong to the recipe." end
   end
 	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
@@ -2623,8 +2630,6 @@ end
 
 INIT()
 
-local b, t = itemBelong("minecraft:stick", 1)
-
-print(b, textutils.serialize(t))
+print(getProdQuant())
 
 --TERMINATE()
