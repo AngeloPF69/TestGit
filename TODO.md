@@ -2,6 +2,11 @@
 
 improving commands in lua for computer craft turtle.
 
+## TODO TO VERSION 0.3.0
+
+- [ ] refuel(quantity of fuel/item Name)
+- [ ] checkfuel(nActions) check if the fuel is enough for that action.
+
 ## TODO TO VERSION 0.2.0
 
 ### OPTIONAL
