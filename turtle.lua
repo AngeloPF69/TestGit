@@ -1622,11 +1622,12 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
   27/08/2021  Param: nBlocks - number of blocks to walk back.
               Returns:  true if turtle goes all way.
                         false if blocked, or invalid parameter.
+                        nil - if nBlocks type is not a number.
               Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
               ex: goBack(3) - Turns back and moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "goBack(Blocks) - Blocks must be anumber." end
+  if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
   if nBlocks >= 0  then turnBack() end
   for i = 1, math.abs(nBlocks) do
     if not turtle.forward() then return false, "I can't go back."
