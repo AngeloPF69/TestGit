@@ -107,7 +107,6 @@ improving commands in lua for computer craft turtle.
 - [x] refuel(\[nItems=stack\]) refuels the turtle with nItems.
 - [x] itemSpace(\[slot/item Name=selected slot\]) get the how many items more you can store in inventory.
 - [x] equip(\[side=empty hand\]) equip tool to left or right hand, from selected slot.
-- [x] refuel([nCount=stack]) Refuels the turtle with nCount items.
 - [x] itemName([Slot=Selected slot]) gets the item name from Slot.
 - [x] inspectDir([sDir="forward]) turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.
 - [x] suckDir([sDir="forward"][,count=all the items]) sucks items from sDir direction {"forward", "right", "back", "left", "up", "down"}.
