@@ -577,13 +577,13 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
                      ... - parameters to order.
               Returns:  Parameters sorted by type, nil if no parameters.
                         nil - if no parameters.
-              sintax: getParam(sParamOrder, tDefault, ...)
+              sintax: getParam(sParamOrder, tDefault[, ...])
               ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
               Note: Only sorts parameters type (string, table, number and boolean).]]
   if not sParamOrder then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply string with parameters order." end
   if not tDefault then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply table with default values." end
   local Args={...}
-  if #Args == 0 then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply parameters to order." end
+  --if #Args == 0 then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply parameters to order." end
   
   local retTable = {}
   local checked={}
@@ -1393,23 +1393,26 @@ end
 function getProdQuant() --[[Returns the quantity of products made with the recipe in inventory.
   31/03/2022  Returns: number - quantity of products made with inventory recipe.
               sintax: getProdQuant()
-              Note: this function crafts then recipe in inventory.
+              Note: this function crafts the recipe in inventory.
               ex: getProdQuant()]]
+  if not turtle.craft(0) then return false, "Inventory doesn't contain a recipe." end
   local nCount
   if not tRecipes["CSlot"] then tRecipes["CSlot"] = 16 end
   turtle.select(tRecipes["CSlot"])
   nCount = getMaxCraft()
+  print(nCount)
   turtle.craft(nCount)
   return turtle.getItemCount(tRecipes["CSlot"])/nCount
 end
 
+--not tested
 function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   31/03/2022  Param:  sRecipe - name of recipe
                       tRecipe - recipe table, get if from getInvRecipe.
                       nCount - quantity of products made with this recipe.
               Returns:  number - index of recipe (tRecipes[sRecipe][index])
                         false - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
-                        false - if tRecipe is not supplied and there is no recipe in inventory.
+                              - if tRecipe is not supplied and there is no recipe in inventory.
               Syntax: addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount])
               Note: if no nCount is supplied this function crafts the recipe to obtain it.
               ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"] ]]
@@ -1545,7 +1548,6 @@ function turnBack() --[[ Turtle turns back.
   return true
 end
 
---not tested
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
   27/08/2021  Param: sDir - string diretion "back"|"right"|"left".
               Returns:  true - if sDir is a valid direction.
@@ -1555,7 +1557,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
   sDir = sDir or "back"
   sDir = string.lower(sDir)
   
-  if not dirType[sDir] then return false, "Invalid direction." end
+  if not dirType[sDir] then return nil, 'turn([sDir="back"]) - Invalid direction.' end
   if sDir == "back" then return turnBack()
   elseif sDir == "left" then
     decFacing()
@@ -1933,17 +1935,16 @@ function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or b
   return placed
 end
 
---not tested
 function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021  Param: nBlocks - number of blocks to place.
               Returns:  number of blocks placed.
-                        false - invalid parameter.
+                        nil - invalid parameter.
               sintax: place([nBlocks=1])
               Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
               ex: place(1) or place() - Places 1 Block in front of turtle.]]
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "placeBack(Blocks) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return nil, "placeBack(Blocks) - Blocks must be a number." end
   if nBlocks > 0 then
     turnBack()
     nBlocks=math.abs(nBlocks)
@@ -2260,7 +2261,6 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 	return true
 end
 
---not tested
 function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
   02/11/2021  Param:  nSlot - number slot to be increased.
                       bWrap - boolean true if the slot number wraps around inventory.
@@ -2275,12 +2275,11 @@ function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
   return bit.band(nSlot-1, 15) + 1
 end
 
---not testesd
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
   23/09/2021  Param: nSlot/sItemName - number of slot/string item name.
               Returns: number of items you can store more in inventory/slot.
                       false - if item is not in inventory.
-                            - if slot is empty.
+                         -1 - if slot is empty.
               sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
               ex: itemSpace() gets how many items you can store, like the item in selected slot.
                   itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
@@ -2294,7 +2293,7 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 	end
 	
 	local tData = turtle.getItemDetail(nSlot)
-	if not tData then return false, "Empty slot "..nSlot.."." end
+	if not tData then return -1 end
   local itemName = tData.name
 	stack = turtle.getItemSpace(nSlot) + tData.count
 	
@@ -2324,12 +2323,11 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
   return turtle.getItemDetail(nSlot) == nil
 end
 
---not tested
 function itemCount(nSlot) --[[ Counts items in inventory
   31/08/2021  Param: nSlot/"inventory"/item name - number slot/string "inventory"/string item name.
               Returns: number of items counted.
-                      false - if nSlot <0 or > 16.
-                            - if nSlot is neither a string nor a number.
+                      nil - if nSlot <0 or > 16.
+                          - if nSlot is neither a string nor a number.
               sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
               ex: itemCount() counts items in selected slot.
                   itemCount("inventory") - counts items in inventory.
@@ -2338,11 +2336,11 @@ function itemCount(nSlot) --[[ Counts items in inventory
   totItems = 0
 
   if type(nSlot) == "number" then
-    if (nSlot < 1) or (nSlot > 16) then return false end
+    if (nSlot < 1) or (nSlot > 16) then return nil, 'itemCount(nSlot/itemName/"inventory") - Slot must be a number [1..16].' end
     tData = turtle.getItemDetail(nSlot)
     if tData then totItems = tData.count end
   else
-    if type(nSlot) ~= "string" then return false, "itemCount(nSlot) - Invalid parameter type." end
+    if type(nSlot) ~= "string" then return nil, 'itemCount(nSlot/itemName/"inventory") - Invalid parameter type [number|string].' end
     for i = 1, 16 do
       tData = turtle.getItemDetail(i)
       if tData then
@@ -2371,10 +2369,9 @@ function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   return tData.name
 end
 
---not tested
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
   29/08/2021  Param: slot/itemName - number slot/string name of the item to select.
-              Returns:  The selected slot, and number of items in that slot.
+              Returns:  number, number - The selected slot, and number of items in that slot.
                         False - if it didn't find the item name.
                           nil - if type of itemName/Slot is not a number or string.
                               - if itemName/Slot is a number out of range [1..16].
@@ -2402,22 +2399,21 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
   end
 end
 
---not tested
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
   28/08/2021  Param: sItemName - string the item name.
                      nStartSlot - number slot where to start the search.
                      bWrap - boolean true if the search wraps around inventory.
-              Returns:  The first slot where the item was found, and the quantity
+              Returns:  number, number - first slot where the item was found, and the quantity.
+                        nil - if sItemName not supplied.
+                            - if nStartSlot is not a number.
                         False - if the item was not found
-                              - if sItemName not supplied.
-                              - if nStartSlot is not a number.
               Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
                     if not supplied nStartSlot, default is the selected slot.
                     if not supplied bWrap, it defaults to true.
               sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
-	if not sItemName then return false end
-	sItemName, nStartSlot , bWrap= getParam("snb", {turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
-  if type(nStartSlot) ~= "number" then return false end
+	sItemName, nStartSlot , bWrap= getParam("snb", {"", turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
+  if sItemName == "" then return nil, "search(sItemName, nStartSlot, bWrap) - Item name must be supplied." end
+  if type(nStartSlot) ~= "number" then return nil, "search(sItemName, nStartSlot, bWrap) - Start slot must be a number." end
   dir = sign(nStartSlot)
   nStartSlot = math.abs(nStartSlot)-1
   nStartSlot = bit32.band(nStartSlot, 15)
@@ -2444,7 +2440,6 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
   return false
 end
 
---not tested
 function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
   07/10/2021  Param: nStartSlot - number slot where to start search for free slot.
                      bWrap - boolean true if the search wraps around inventory.
@@ -2463,12 +2458,11 @@ end
 
 ------ SUCK FUNCTIONS ------
 
---not tested
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   05/09/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
                       nItems - number of items to suck.
-              Returns:  true if turtle collects some items.
-                        false if there are no items to take.
+              Returns:  true - if turtle collects some items.
+                        false - if there are no items to take.
               sintax: suckDir([sDir="forward][,nItems=all the items])
               Note: if nItems < 0 it drops nItems from selected slot.
               ex: suckDir() - Turtle sucks all the items forward.]]
@@ -2476,7 +2470,7 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   sDir = string.lower(sDir)
 
   if nItems and nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
-  if type(sDir) ~= "string" then return false end
+  if type(sDir) ~= "string" then return nil, "suckDir(sDir, nItems) - sDir must be a string." end
 
   if sDir == "right" then
     turnDir("right")
@@ -2488,7 +2482,7 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
     turnDir("left")
     sDir = "forward"
   end
-
+  
   if not suckF[sDir] then return false, "Invalid direction." end
   return suckF[sDir](nItems)
 end
@@ -2505,7 +2499,6 @@ end
 
 ------ DROP FUNCTIONS ------  
 
---not tested
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
   29/08/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
                       nBlocks - number of blocks to drop/suck
@@ -2642,5 +2635,5 @@ end
 INIT()
 
 print(getProdQuant())
-
+--print(getParam("sn", {"forward"}, nil, nil))
 --TERMINATE()
