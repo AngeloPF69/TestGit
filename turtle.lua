@@ -2362,10 +2362,10 @@ end
 --not tested
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
   29/08/2021  Param: slot/itemName - number slot/string name of the item to select.
-              Returns:  The selected slot, and items in that slot.
-                        False - if the item was not found
-                              - if nStartSlot is not a number or a string.
-                              - if value is a number and ( < 1 or > 16 )
+              Returns:  The selected slot, and number of items in that slot.
+                        False - if it didn't find the item name.
+                          nil - if type of itemName/Slot is not a number or string.
+                              - if itemName/Slot is a number out of range [1..16].
               Note: if executed select() is the same as turtle.getSelectedSlot()
               sintax: select([Slot/Item Name])
               ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
@@ -2374,27 +2374,20 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
 
   if not itemName then
     nSlot = turtle.getSelectedSlot()
-    tData = turtle.getItemDetail()
-    if tData then return nSlot, tData.count
-    else return nSlot
-    end
+  elseif type(itemName) == "number" then
+    if (itemName < 1) or (itemName > 16) then return nil, "itemSelect([itemName/slot]=selected slot) - Slot must be number 1..16." end
+    nSlot = itemName
+  elseif type(itemName) == "string" then
+      nSlot = search(itemName)
+      if not nSlot then return false, "Item name not found." end
+  else
+    return nil, "itemSelect([itemName/slot]=selected slot) - Slot/itemName must be a number 1..16 or a string (item name)."
   end
-  if type(itemName) == "number" then
-    if (itemName < 1) or (itemName > 16) then return false end
-    if turtle.select(itemName) then return itemName end
+  
+  tData = turtle.getItemDetail(nSlot)
+  if tData then return nSlot, tData.count
+  else return nSlot, 0
   end
-
-  if type(itemName) ~= "string" then return false end
-  nSlot = search(itemName)
-
-  if nSlot then
-    turtle.select(nSlot)
-    tData = turtle.getItemDetail()
-    if tData then return nSlot, tData.count
-    else return nSlot
-    end
-  end
-  return false
 end
 
 --not tested
