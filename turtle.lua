@@ -310,11 +310,14 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
   return true
 end
 
+--not tested
 function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
   04/09/2021  Param: nBlocks - number of blocks to compare.
               Returns:  true - if all the blocks are the same.
-                        false - if blocked, empty space, or found a diferent block.
-												nil if invalid parameter.
+                        false, "blocked" - if blocked.
+                        false, "empty" - if it found a empty space.
+                        false, "diferent" - it found a diferent block.
+												nil - if invalid parameter.
               sintax: compareBelow([nBlocks=1])
               Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
               ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
@@ -326,9 +329,12 @@ function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strai
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
-    if not turtle.compareDown() then return false, "Found a diferent block or a empty space." end
+    if not turtle.compareDown() then
+      if not turtle.detectDown() then return false, "empty"
+      else return false, "diferent"
+      end
     if nBlocks ~= i then
-			if not forward(dir) then return false, "Can't advance forward." end
+			if not forward(dir) then return false, "blocked" end
 		end
   end
   return true
