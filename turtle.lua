@@ -1389,44 +1389,48 @@ function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns 
   return bFound
 end
 
---not tested
 function getProdQuant() --[[Returns the quantity of products made with the recipe in inventory.
   31/03/2022  Returns: number - quantity of products made with inventory recipe.
               sintax: getProdQuant()
               Note: this function crafts the recipe in inventory.
               ex: getProdQuant()]]
-  if not turtle.craft(0) then return false, "Inventory doesn't contain a recipe." end
   local nCount
+  if not turtle.craft(0) then return false, "Inventory doesn't contain a recipe." end
+
+  nCount = getMaxCraft()
+  if nCount > invLowerStack() then flattenInventory() end
+
   if not tRecipes["CSlot"] then tRecipes["CSlot"] = 16 end
   turtle.select(tRecipes["CSlot"])
-  nCount = getMaxCraft()
-  print(nCount)
+
   turtle.craft(nCount)
-  return turtle.getItemCount(tRecipes["CSlot"])/nCount
+  return turtle.getItemCount()/nCount
 end
 
---not tested
 function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   31/03/2022  Param:  sRecipe - name of recipe
                       tRecipe - recipe table, get if from getInvRecipe.
                       nCount - quantity of products made with this recipe.
               Returns:  number - index of recipe (tRecipes[sRecipe][index])
-                        false - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
-                              - if tRecipe is not supplied and there is no recipe in inventory.
+                        nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
+                            - if tRecipe is not supplied and there is no recipe in inventory.
               Syntax: addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount])
               Note: if no nCount is supplied this function crafts the recipe to obtain it.
               ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"] ]]
   
   sRecipe, tRecipe, nCount = getParam("stn",{"", {}, -1}, sRecipe, tRecipe, nCount )
 
-  if sRecipe == "" then
-    sRecipe = tRecipes.lastRecipe
-    if not sRecipe then return false, "Recipe name not supplied." end
-  end
+  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
 
   if #tRecipe == 0 then
     tRecipe = getInvRecipe()
-    if not tRecipe then return false, "Recipe table not supplied." end
+    if not tRecipe then return nil, "addRecipe(sRecipe, tRecipe, nCount) - Recipe table not supplied." end
+  end
+
+  if (nCount == -1) or (not sRecipe) then
+    nCount = getProdQuant()
+    if not nCount then return nil, "addRecipe(sRecipe, tRecipe, nCount) - Recipe name not supplied." end
+    sRecipe = getItemName()
   end
 
   if tRecipes[sRecipe] then --recipe exists
@@ -1436,7 +1440,6 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
     tRecipes[sRecipe] = {}
     tRecipes[sRecipe][1] = {}
     tRecipes[sRecipe][1].recipe = tRecipe
-    if nCount == -1 then nCount = getProdQuant() end
     tRecipes[sRecipe][1].count = nCount
     tRecipes.lastRecipe = sRecipe
     return 1
@@ -1446,7 +1449,6 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   nIndex = #tRecipes[sRecipe]+1
   tRecipes[sRecipe][nIndex] = {}
   tRecipes[sRecipe][nIndex].recipe = tRecipe
-  if nCount == -1 then nCount = getProdQuant() end
   tRecipes[sRecipe][nIndex].count = nCount
   tRecipes.lastRecipe = sRecipe
   return nIndex
@@ -1464,10 +1466,11 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
                               - if turtle couldn't craft.
               Sintax: craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible])
               ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
-  sRecipe = sRecipe or tRecipes.lastRecipe
-	sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
+  sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
+  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
+	
 	if not turtle.craft(0) then
-    if #sRecipe > 0 then
+    if not sRecipe then
       local success, message = arrangeRecipe(sRecipe)
       if not success then return success, message end
     else return false, "Inventory doesn't have items to craft a recipe."
@@ -2353,15 +2356,15 @@ function itemCount(nSlot) --[[ Counts items in inventory
   return totItems
 end
 
-function itemName(nSlot) --[[ Gets the item name from Slot/selected slot.
+function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   05/09/2021  Param: nSlot - number slot where to get the item name.
               Returns: item name - if slot is not empty.
                         false - if slot is empty.
-              Sintax: itemName([nSlot=selected slot])
-              ex: itemName() - retuns the name of item in selected slot.]]
+              Sintax: getItemName([nSlot=selected slot])
+              ex: getItemName() - retuns the name of item in selected slot.]]
   nSlot = nSlot or turtle.getSelectedSlot()
 
-  if type(nSlot) ~= "number" then return nil, "itemName([Slot=selected slot]) - Slot must be a number." end
+  if type(nSlot) ~= "number" then return nil, "getItemName([Slot=selected slot]) - Slot must be a number." end
   if (nSlot <1 ) or (nSlot > 16) then return false, "Slot "..nSlot.." out of range." end
 
   local tData = turtle.getItemDetail(nSlot)
@@ -2634,6 +2637,6 @@ end
 
 INIT()
 
-print(getProdQuant())
---print(getParam("sn", {"forward"}, nil, nil))
+print(craftRecipe())
+print(textutils.serializeJSON(tRecipes))
 --TERMINATE()
