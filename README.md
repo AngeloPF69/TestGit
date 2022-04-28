@@ -188,9 +188,9 @@
   <p id="INIT"></p>
   
 - INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.<br>
-    <pre>Sintax: INIT() - Loads turtle coords, facing, equiped tool,
-                   table of recipes,
-                   table of items stacks.
+    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tool name,
+                   tRecipes - table of recipes,
+                   tStacks - table of items stacks.
   Returns:  true
   ex: INIT()</pre>
   
@@ -199,9 +199,9 @@
   <p id="TERMINATE"></p>
   
 - TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
-    <pre>Sintax: TERMINATE() - Saves turtle coords, facing, equiped tool,
-                        table of recipes,
-                        table of items stacks.
+    <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tool name,
+                        tRecipes - table of recipes,
+                        tStacks - table of items stacks.
   Returns:  true
   ex: TERMINATE()</pre>
   
@@ -209,20 +209,23 @@
 
    <p id="addSteps"></p>
    
-- addSteps(nSteps) Adds nSteps to coords of turtle.<br>
-    <pre>Sintax: addSteps([nSteps=1])
+- addSteps(nSteps) Returns nSteps added to turtle coords.<br>
+    <pre>Param: nSteps - number of waking steps for turtle.
+  Sintax: addSteps([nSteps=1])
   Returns:  x, y, z adding nSteps in direction turtle is facing.
+            false - if nSteps is not a number.
   ex: if tTurtle x=0, y=0, z=0, facing="x+"
-  addSteps() - Returns 1,0,0.
-  ex: addSteps(-1) - Returns -1,0,0.</pre>
+    addSteps() - Returns 1,0,0.
+    addSteps(-1) - Returns -1,0,0.</pre>
   
    <p id="distTo"></p>
 
 - distTo(x, y, z) Gets the three components of the distance from the turtle to point.<br>
-    <pre>Sintax: distTo(x, y, z)
+    <pre>Param: x, y, z - coords of point to calculate distance to turtle.
+  Sintax: distTo(x, y, z)
   Returns: distX, distY, distZ From turtle to point x, y, z.
   ex: if turtle x=0, y=0, z=0
-  distTo(10,10,10) Returns 10, 10, 10</pre>
+    distTo(10,10,10) Returns 10, 10, 10</pre>
 
 ## Turtle
 
@@ -248,11 +251,11 @@
    <p id="decFacing"></p>
    
 - decFacing(nTurns) Decrements tTurtle.facing by nTurns.<br>
-    <pre>Sintax: decFacing([nTurns=1])
+    <pre>Param: nTurns - number of 90 degrees turns to the left.
+  Sintax: decFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
-  decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0,
-  if tTurtle.facing<0 then tTurtle.facing and= 3 end</pre>
+    decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
    <p id="getFacing"></p>
    
@@ -264,7 +267,8 @@
    <p id="incFacing"></p>
    
 - incFacing(nTurns) Increments tTurtle.facing by nTurns.<br>
-    <pre>Sintax: incFacing([nTurns=1])
+    <pre>Param: nTurns - number of 90 degrees turns to the right.
+  Sintax: incFacing([nTurns=1])
   Returns: true
   ex: if turtle is facing "x+"=1
   incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
@@ -273,10 +277,12 @@
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
-    <pre>Sintax: setFacing(sFacing) - sFacing = "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]
+    <pre>Param: sFacing:string/number = "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]
+  Sintax: setFacing(sFacing)
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
                   - if sFacing is not in facingType.
+                  - if sFacing is not a number neither a string.
   ex: setFacing("z+") - Sets tTurtle.facing = 2
       setFacing(1) - sets tTurtle.facing = 1</pre>
 
@@ -293,7 +299,8 @@
    <p id="setCoords"></p>
       
 - setCoords(x, y, z) Set coords x, y, z for turtle.<br>
-    <pre>Sintax: setCoords(x, y, z)
+    <pre>Param: number: x,y,z - new coords for tTurtle.x, tTurtle.y, tTurtle.z
+  Sintax: setCoords(x, y, z)
   Returns: true
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
 
@@ -303,7 +310,8 @@
    <p id="equip"></p>
      
 - equip(Side) Equip tool from the selected slot.<br>
-    <pre>Sintax:equip([Side=free hand = {"left"|"right"}])
+    <pre>Param: sSide - String: "left"|"right"
+  Sintax:equip([Side=free hand = "left"|"right"])
   Returns: true - if it was equiped.
            false - if no empty hand.
                  - if invalid parameter.
@@ -326,12 +334,14 @@
    <p id="refuel"></p>
 
 - refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.
-    <pre>Sintax: refuel([nCount = all items in selected slot])
+    <pre>Param: nCount - number of items to refuel.
+  Sintax: refuel([nCount = all items in selected slot])
   Returns: number of items refueled.
            false - "Empty selected slot."
                  - "Item is not fuel."
                  - "Turtle doesn't need fuel."
                  - "Turtle is at maximum fuel."
+                 - "refuel(nItems) - nItems must be a number."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   
