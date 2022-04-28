@@ -69,11 +69,19 @@
    <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
    <a href="#getParam">getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
    <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
+   <a href="#isNumber">isNumber(...) Checks if all parameters are numbers.</a><br>
    <a href="#loadTable">loadTable(sFileName) Loads a text file into a table.</a><br>
    <a href="#saveTable">saveTable(t, sFileName) Saves a table into a text file.</a><br>
    <a href="#sign">sign(value) Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0</a><br>
    <a href="#tableInTable">tableInTable(tSearch, t) Verifies if tSearch is in table t.</a>
-
+  
+## Stacks
+   
+   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
+   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a>
+   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a>
+   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a>
+  
 ## Attack
 
    <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}</a>
@@ -167,6 +175,7 @@
    <a href="#getFreeSlot">getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.</a><br>
    <a href="#groupItems">groupItems() Groups the same type of items in one slot in inventory.</a><br>
    <a href="#incSlot">incSlot(nSlot) Increases nSlot in range [1..16].</a><br>
+   <a href="#invLowerStack">invLowerStack(sItem) gets lower stack in inventory, the slot and the name of item.</a><br>
    <a href="#itemCount">itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.</a><br>
    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
@@ -371,6 +380,15 @@
   Returns: true - if value is in t.
            false - if value is not in t.
   ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
+  
+   <p id="isNumber"></p>
+   
+- isNumber(...) Checks if all parameters are numbers.</a><br>
+    <pre>Param: ... - all the parameters to check.
+  Sintax: isNumber(...)
+  Returns: true - if all parameters are numbers.
+           false - if at least one parameter is not a number.
+  ex: isNumber(2, "hello", 4}) - Outputs: false.</pre>
   
    <p id="loadTable"></p>
    
