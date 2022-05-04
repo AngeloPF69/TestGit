@@ -88,13 +88,18 @@
 
 ## Recipes
 
+   <a href="#addRecipe">addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount]) Returns index of recipe.</a><br>
    <a href="#arrangeRecipe">arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
    <a href="#canCraft">canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
-   <a href="#flattenInventory">flattenInventory() Averages all the item stacks in inventory.
+   <a href="#colLinMatch">colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.</a><br>
+   <a href="#craftRecipe">craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible]) Craft a recipe already stored or not.</a><br>
+   <a href="#flattenInventory">flattenInventory() Averages all the item stacks in inventory.</a><br>
    <a href="#getFirstItemCoords">getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.</a><br>
    <a href="#getInvRecipe">getInvRecipe() Builds a table with items and their position (the recipe).</a><br>
    <a href="#getMaxCraft">getMaxCraft() Returns maximum limit to craft the recipe on inventory.</a><br>
+   <a href="#getProdQuant">getProdQuant() Returns maximum limit to craft the recipe on inventory.</a><br>
    <a href="#getRecipe">getMaxCraft() Gets the recipe from tRecipes.</a><br>
+   <a href="#getRecipeIndex">getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.</a><br>
    <a href="#getRecipeItems">getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.</a><br>
    <a href="#haveItems">haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1]) Builds a table with the diference between the recipe and the inventory.</a><br>
    <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>  
