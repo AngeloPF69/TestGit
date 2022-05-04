@@ -122,7 +122,7 @@
   
 ## Rotations and Moving
   
-   <a href="#goDir">goDir([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
+   <a href="#goDir">goDir([sDir="forward", [Blocks=1]) Turtle advances blocks, in sDir "forward"|"right"|"back"|"left"|"up"|"down".</a><br>
    <a href="#goBack">goBack([Blocks=1]) Rotates turtle back or not, and moves blocks forward.</a><br>
    <a href="#goLeft">goLeft([Blocks=1]) Rotates turtle to the left or right, and moves blocks forward.</a><br>
    <a href="#goRight">goRight([Blocks=1]) Rotates turtle to the right or left, and moves blocks forward.</a>
@@ -153,8 +153,9 @@
 
    <a href="#place">place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.</a><br>
    <a href="#placeAbove">placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.</a><br>
+   <a href="#placeBack">placeBack([Blocks=1]) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.</a><br>
    <a href="#placeBelow">placeBelow([Blocks=1]) Places selected Blocks forwards or backwards, 1 block below the turtle, and returns to initial position.</a><br>
-   <a href="#placeDir">placeDir([sDir="forward"]) Places inventory selected Block in sDir { "forward", "right", "back", "left", "up", "down" }.</a><br>
+   <a href="#placeDir">placeDir([sDir="forward"]) Places inventory selected Block in sDir "forward"|"right"|"back"|"left"|"up"|"down".</a><br>
    <a href="#placeDown">placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.</a><br>
    <a href="#placeLeft">placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.</a><br>
    <a href="#placeRight">placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.</a><br>
@@ -184,13 +185,17 @@
     
    <a href="#calcAverage">calcAverage(tSlots, tIng) Builds a table with item and average between items and slots.</a><br>
    <a href="#clearSlot">clearSlot([nSlot=selected slot][, bWrap=true]) Clears content of slot, moving items to another slot.</a><br>
+   <a href="#countItemSlots">countItemSlots() Counts how many slots is ocupied with each item.</a><br>
    <a href="#decSlot">decSlot(nSlot) Decreases nSlot in range [1..16].</a><br>
    <a href="#freeCount">freeCount() Get number of free slots in turtle's inventory.</a><br>
    <a href="#getFreeSlot">getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.</a><br>
+   <a href="#getInventory">getInventory() Builds a table with the slot, the name and quantity of items in inventory.</a><br>
    <a href="#geInvItems">getInvItems() Builds a table with the items and quantities in inventory.</a><br>
+   <a href="#getItemName">getItemName([nSlot=selected slot]) Gets the item name from Slot/selected slot.</a><br>
    <a href="#groupItems">groupItems() Groups the same type of items in one slot in inventory.</a><br>
    <a href="#incSlot">incSlot(nSlot) Increases nSlot in range [1..16].</a><br>
    <a href="#invLowerStack">invLowerStack(sItem) Gets lower stack in inventory, the slot and the name of item.</a><br>
+   <a href="#isEmptySlot">isEmpty([nSlot=selected slot]) Checks if nSlot is empty.</a><br>
    <a href="#itemCount">itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.</a><br>
    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
@@ -198,6 +203,7 @@
    <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot, moving item from or to another slot.</a><br>
    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
    <a href="#searchSpace">searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]) Search for space in a slot that has sItemName.</a><br>
+   <a href="#selectFreeSlot">selectFreeSlot([StartSlot=1][, Wrap=true]) Selects the first free slot starting at nStartSlot, and if the search wraps or not.</a>
    <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
 
 ## Suck
