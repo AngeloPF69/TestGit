@@ -35,7 +35,7 @@
   
 ## Measurements
 
-   <a href="#addSteps">addSteps(nSteps) Adds nSteps to coords of turtle, where it is facing.</a><br>
+   <a href="#addSteps">addSteps(nSteps) Returns nSteps added to turtle coords, where it is facing.</a><br>
    <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
     
 ## Turtle
@@ -48,7 +48,7 @@
    <a href="#decFacing">decFacing(nTurns) Decrements tTurtle.facing by nTurns.</a><br>
    <a href="#getFacing">getFacing() Returns tTurtle.facing.</a><br>
    <a href="#incFacing">incFacing(nTurns) Increments tTurtle.facing by nTurns.</a><br>
-   <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing. sFacing= "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]</a>
+   <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing. sFacing= "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|0..3</a>
     
 ## Turtle coords
 
@@ -84,14 +84,22 @@
   
 ## Attack
 
-   <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction {"forward", "right", "back", "left", "up", "down"}</a>
+   <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction "forward"|"right"|"back"|"left"|"up"|"down"</a>
 
 ## Recipes
 
+   <a href="#arrangeRecipe">arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
+   <a href="#canCraft">canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
+   <a href="#flattenInventory">flattenInventory() Averages all the item stacks in inventory.
    <a href="#getFirstItemCoords">getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.</a><br>
    <a href="#getInvRecipe">getInvRecipe() Builds a table with items and their position (the recipe).</a><br>
    <a href="#getMaxCraft">getMaxCraft() Returns maximum limit to craft the recipe on inventory.</a><br>
+   <a href="#getRecipe">getMaxCraft() Gets the recipe from tRecipes.</a><br>
+   <a href="#getRecipeItems">getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.</a><br>
+   <a href="#haveItems">haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1]) Builds a table with the diference between the recipe and the inventory.</a><br>
+   <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>  
    <a href="#loadRecipes">loadRecipes() Loads tRecipes from file "tRecipes.txt".</a><br>
+   <a href="#recipeSlots">recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.</a><br>
    <a href="#saveRecipes">saveRecipes() Saves tRecipes in a file as "tRecipes.txt".</a><br>
    <a href="#setCraftSlot">setCraftSlot(nSlot) Sets the craft resulting slot, in tRecipes CSlot.</a>
     
@@ -102,10 +110,10 @@
     
 ## Moving
   
-   <a href="#back">back([Blocks=1]) Moves the turtle backwards or forward blocks.</a><br>
-   <a href="#down">down([Blocks=1]) Moves the turtle down or up blocks.</a><br>
-   <a href="#forward">forward([Blocks=1]) Moves the turtle forward or backwards blocks.</a><br>
-   <a href="#up">up([Blocks=1]) Moves the turtle up or down blocks.</a>
+   <a href="#back">back([Blocks=1]) Moves the turtle backwards or forward Blocks.</a><br>
+   <a href="#down">down([Blocks=1]) Moves the turtle down or up Blocks.</a><br>
+   <a href="#forward">forward([Blocks=1]) Moves the turtle forward or backwards Blocks.</a><br>
+   <a href="#up">up([Blocks=1]) Moves the turtle up or down Blocks.</a>
   
 ## Rotations and Moving
   
@@ -149,9 +157,9 @@
 
 ## Detect
 
-   <a href="#detectAbove">detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.</a><br>
-   <a href="#detectBelow">detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.</a><br>
-   <a href="#detectDir">detectDir(sDir) Detects if is a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.</a>
+   <a href="#detectAbove">detectAbove([Blocks=1]) Detects if exits 1 Block above the turtle in a strait line forward or backwards.</a><br>
+   <a href="#detectBelow">detectBelow([Blocks=1]) Detects if exits 1 Block below the turtle in a strait line forward or backwards.</a><br>
+   <a href="#detectDir">detectDir(sDir) Detects if is a block in sDir direction "forward"|"right"|"back"|"left"|"up"|"down".</a>
 
 ## Disk
 
@@ -159,28 +167,32 @@
 		
 ## Inspect
 
-   <a href="#inspectDir">inspectDir([sDir="forward]) Turtle inspect block in sDir direction {"forward", "right", "back", "left", "up", "down"}.</a>
+   <a href="#inspectDir">inspectDir([sDir="forward]) Turtle inspect block in sDir direction "forward"|"right"|"back"|"left"|"up"|"down".</a>
 
 ## Compare
 
-   <a href="#compareAbove">compareAbove([Blocks=1]) Compare blocks above the turtle in a strait line with selected slot.</a><br>
-   <a href="#compareBelow">compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.</a><br>
+   <a href="#compareAbove">compareAbove([Blocks=1]) Compare 1 block above the turtle in a strait line with selected slot.</a><br>
+   <a href="#compareBelow">compareBelow([Blocks=1]) Compare 1 block below the turtle in a strait line with selected slot.</a><br>
    <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
 
 ## Inventory
     
-   <a href="#clearSlot">clearSlot(nSlot) Clears content of slot, moving items to another slot.</a><br>
+   <a href="#calcAverage">calcAverage(tSlots, tIng) Builds a table with item and average between items and slots.</a><br>
+   <a href="#clearSlot">clearSlot([nSlot=selected slot][, bWrap=true]) Clears content of slot, moving items to another slot.</a><br>
    <a href="#decSlot">decSlot(nSlot) Decreases nSlot in range [1..16].</a><br>
    <a href="#freeCount">freeCount() Get number of free slots in turtle's inventory.</a><br>
    <a href="#getFreeSlot">getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.</a><br>
+   <a href="#geInvItems">getInvItems() Builds a table with the items and quantities in inventory.</a><br>
    <a href="#groupItems">groupItems() Groups the same type of items in one slot in inventory.</a><br>
    <a href="#incSlot">incSlot(nSlot) Increases nSlot in range [1..16].</a><br>
-   <a href="#invLowerStack">invLowerStack(sItem) gets lower stack in inventory, the slot and the name of item.</a><br>
+   <a href="#invLowerStack">invLowerStack(sItem) Gets lower stack in inventory, the slot and the name of item.</a><br>
    <a href="#itemCount">itemCount([selected slot/slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory.</a><br>
    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
    <a href="#itemSpace">itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.</a><br>
+   <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot, moving item from or to another slot.</a><br>
    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
+   <a href="#searchSpace">searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]) Search for space in a slot that has sItemName.</a><br>
    <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
 
 ## Suck
