@@ -454,14 +454,29 @@
   Returns: true - tSearch is in t.
            false - at the least one element of tSearch is not in table t.
   ex: tableInTable("forward", {"forward", "left", "right"}) - Returns true.</pre>
+
+
+## Stacks
+   
+   <p id="saveStacks"></p>
+   
+- saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
+    <pre>Param: Sintax: attackDir([sDir="forward"])
+  Returns: false - if it couldn't save file.
+           true - if it could save file.
+  ex: saveStacks()</pre>
   
+   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a><br>
+   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
+   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
 
 ## Attack
 
    <p id="attackDir"></p>
 
 - attackDir([sDir="forward"]) Turtle attack in sDir direction.
-    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"}
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
   Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
            false - if there is nothing to attack, or no weapon.
