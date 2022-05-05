@@ -77,10 +77,10 @@
   
 ## Stacks
    
-   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
-   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a>
-   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a>
-   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a>
+   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a><br>
+   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
+   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
   
 ## Attack
 
@@ -102,7 +102,7 @@
    <a href="#getRecipeIndex">getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.</a><br>
    <a href="#getRecipeItems">getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.</a><br>
    <a href="#haveItems">haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1]) Builds a table with the diference between the recipe and the inventory.</a><br>
-   <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>  
+   <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>
    <a href="#loadRecipes">loadRecipes() Loads tRecipes from file "tRecipes.txt".</a><br>
    <a href="#recipeSlots">recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.</a><br>
    <a href="#saveRecipes">saveRecipes() Saves tRecipes in a file as "tRecipes.txt".</a><br>
@@ -200,7 +200,7 @@
    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
    <a href="#itemSpace">itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.</a><br>
-   <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot, moving item from or to another slot.</a><br>
+   <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot.</a><br>
    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
    <a href="#searchSpace">searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]) Search for space in a slot that has sItemName.</a><br>
    <a href="#selectFreeSlot">selectFreeSlot([StartSlot=1][, Wrap=true]) Selects the first free slot starting at nStartSlot, and if the search wraps or not.</a>
