@@ -4,8 +4,34 @@ improving commands in lua for computer craft turtle.
 
 ## TODO TO VERSION 0.3.0
 
-- [ ] refuel(quantity of fuel/item Name)
-- [ ] checkfuel(nActions) check if the fuel is enough for that action.
+### DONE
+
+- [x] haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
+- [x] canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+- [x] addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
+- [x] getInvRecipe() Builds a table with items and their position from inventory (the recipe).
+- [x] getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.
+- [x] getRecipeItems(sRecipe, nIndex) Builds a table with items and quantities in a recipe.
+- [x] getInvItems() Builds a table with the items and quantities in inventory.
+- [x] getRecipeIndex(sRecipe, tRecipe) Returns a number (index) of the recipe in tRecipes.
+- [x] colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.
+- [x] getProdQuant() Returns the quantity of products made with the recipe in inventory.
+- [x] placeBack(nBlocks) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
+- [x] getItemName(nSlot) Gets the item name from Slot/selected slot.
+- [x] isNumber(...) Checks if all parameters are numbers.
+- [x] checkfuel(nActions) check if the fuel is enough for that action.
+
+### POSTPONED
+
+- [ ] detectUp([Blocks=1]) detects if upwards the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectDown([Blocks=1]) detects if downwards the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectRight([Blocks=1]) detects if on the right of the turtle are blocks in a strait line, stops when there isn't or blocked.
+- [ ] detectBack([Blocks=1]) detects if on the turtle backs are blocks in a strait line, stops when there isn't or blocked.
+- [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
+- [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
+- [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
+- [ ] compareRight([Blocks=1]) compare blocks Right of the turtle in a strait line with selected slot or inventory.
 
 ## TODO TO VERSION 0.2.0
 
@@ -48,8 +74,8 @@ improving commands in lua for computer craft turtle.
 - [x] setStack(sItemName, nStack) sets the item stack value in tStacks.
 - [x] getStack(nSlot/sItemName) returns how many items can stack.
 - [x] loadStacks() loads tStacks.txt to tStacks.
-- [x] saveStacks() saves tStacks to tStacks.txt
-- [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
+- [x] saveStacks() saves tStacks to tStacks.txt.
+- [x] setCoords(x,y,z) sets coords x, y, z for turtle
 - [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 - [x] getCoords() gets coords from turtle.
 - [x] craftRecipe(\[sRecipeName=lastRecipe\]\[, limit=64\]) craft a recipe limit number of times.
@@ -86,7 +112,7 @@ improving commands in lua for computer craft turtle.
 
 ### OPTIONAL
 
-- [x] isKey(Key, t) Checks if Key is in t table.
+- [x] isKey(Key, t) Checks if Key is in t table. [Eliminated]
 - [x] checkType(sType, ...) Checks if parameters are from sType.
 - [x] getParam(sParamOrder, tDefault, ...) Sorts parameters by type.
 - [x] tableInTable(tSearch, t) Verifies if tSearch is in table t.

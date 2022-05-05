@@ -1963,7 +1963,7 @@ function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strai
   27/08/2021  Param: nBlocks - number of blocks to place.
               Returns:  number of blocks placed.
                         nil - invalid parameter.
-              sintax: place([nBlocks=1])
+              sintax: placeBack([nBlocks=1])
               Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
               ex: place(1) or place() - Places 1 Block in front of turtle.]]
   nBlocks = nBlocks or 1
