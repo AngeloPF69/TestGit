@@ -28,7 +28,6 @@
     },
   },
   CSlot = 16,
-  lastRecipe = "minecraft:stick",
   [ "minecraft:oak_button" ] = {
     {
       recipe = {

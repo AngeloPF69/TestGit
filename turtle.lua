@@ -243,15 +243,16 @@ end
 
 ------ COMPARE FUNCTIONS ------
 
---not tested
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
   21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
                      nSlot - number 1..16
               Returns: true - if the item in slot and in the world is the same.
-                      false - if block in slot and in the world are not the same, or in the world is a empty space.
-                        nil - invalid direction,
-                            - if nSlot is not a number,
-                            - if empty slot.
+                       false, "empty" - if there is no block in sDir.
+                       false, "diferent" - if the block in the world is diferent.
+                       false, "empty slot" - if nSlot is empty.
+                       nil - invalid direction,
+                           - if nSlot is not a number,
+                           - if nSlot is not in [1..16].
               sintax: compareDir([sDir="forward"][, nSlot=selected slot])
               ex: compareDir() compares selected slot with block in front of turtle.
                   compareDir("left", 2) - compares item in slot 2 with block on the left.]]
@@ -259,10 +260,10 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	sDir  = string.lower(sDir)
 	if not dirType[sDir] then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
 	if type(nSlot) ~= "number" then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
-  nSlot = math.abs(nSlot)
-  nSlot = bit.band(nSlot-1, 15)+1
+  if (nSlot < 0) or (nSlot > 16) then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot must be between 1 and 16.' end
+  
 	local invData = turtle.getItemDetail(nSlot)
-	if not invData then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Empty slot.' end
+	if not invData then return nil, 'empty slot' end
 	
 	if (sDir == "left") or (sDir == "right") or (sDir == "back") then
 		turnDir(sDir)
@@ -272,30 +273,32 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	local success, worlData = insF[sDir]()
   if success then
 	  if worlData.name == invData.name then return true
-    else return false, "Selected slot and the world are diferent."
+    else return false, "diferent"
     end
   else
-	  return false, "Nothing to compare in the world."
+	  return false, "empty"
   end
 end
 
---not tested
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
   04/09/2021  Param: nBlocks - number of blocks to compare.
               Returns:  true - if all the blocks are the same.
                         false, "blocked" - if it can't advance.
                         false, "empty" - if it found a empty space.
                         false, "diferent" - if it found a diferent block.
-												nil if invalid parameter.
+                        false, "empty slot" - if selected slot is empty.
+												nil, string - if invalid parameter.
               sintax: compareAbove([nBlocks=1])
-              Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
+              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
               ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "compareAbove([Blocks=1]) - Blocks must be a number." end  --nBlocks must be a number.
   local dir = sign(nBlocks)
-  --if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
+
+  local invData = turtle.getItemDetail()
+	if not invData then return false, 'empty slot' end
 
   for i = 1, nBlocks do
     if not turtle.compareUp() then
@@ -310,29 +313,32 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
   return true
 end
 
---not tested
 function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
   04/09/2021  Param: nBlocks - number of blocks to compare.
               Returns:  true - if all the blocks are the same.
                         false, "blocked" - if blocked.
                         false, "empty" - if it found a empty space.
                         false, "diferent" - it found a diferent block.
-												nil - if invalid parameter.
+                        false, "empty slot" - if selected slot is empty.
+												nil, string - if invalid parameter.
               sintax: compareBelow([nBlocks=1])
-              Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
+              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
               ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "compareBelow([Blocks=1]) - Blocks must be a number." end
   local dir = sign(nBlocks)
-  --if nBlocks < 0 then turnBack() end
   nBlocks = math.abs(nBlocks)
+  
+  local invData = turtle.getItemDetail()
+	if not invData then return false, 'empty slot' end
 
   for i = 1, nBlocks do
     if not turtle.compareDown() then
       if not turtle.detectDown() then return false, "empty"
       else return false, "diferent"
       end
+    end
     if nBlocks ~= i then
 			if not forward(dir) then return false, "blocked" end
 		end
@@ -1204,6 +1210,7 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
     if tRecipe[iItems].col then nRSlot = tRecipe[iItems].lin * 4 + tRecipe[iItems].col + 1 end
     while nSlot < nRSlot do
       if not clearSlot(nSlot, false) then
+        print("slot:", nSlot)
         return false, "Couldn't clear slot, "..tostring(nSlot)
       end
       nSlot = incSlot(nSlot, false)
@@ -1461,34 +1468,41 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
 end
 
 --not tested
-function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
+function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
   26/01/2022  Param: sRecipe - string recipe name.
                      nLimit - number recipes to craft.
               Returns: Name of the item craft, and the quantity.
                        true - if nLimit == 0 and could craft a recipe.
-                       false - if the recipe name was not supplied, this is the first recipe craft, and items are not arranged to craft a recipe.
+                       false - .
+                             - if inventory is empty.
                              - if couln't find a empty slot where to craft recipe.
                              - if there are items that don't belong to the recipe.
-                              - if turtle couldn't craft.
+                            - if turtle couldn't craft.
               Sintax: craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible])
               ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
   sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
-	
-	if not turtle.craft(0) then
-    if not sRecipe then
-      local success, message = arrangeRecipe(sRecipe)
-      if not success then return success, message end
-    else return false, "Inventory doesn't have items to craft a recipe."
+  if isEmptyInventory() then return false, "Inventory is empty." end
+
+  local nIndex
+  local bCanCraft, tCanCraftRec = canCraft()
+
+  if not turtle.craft(0) then
+    if not bCanCraft then return false, "Can't craft anything with this items." end
+  end
+
+  if not sRecipe then
+    if bCanCraft then
+      sRecipe, nIndex = next(tCanCraftRec[1]) --get the first recipe name and index
     end
   end
-  
+
   local tRecipe = getInvRecipe()
   local nMaxCraft = getMaxCraft()
   if nLimit < 0 or nLimit > nMaxCraft then nLimit = nMaxCraft
   elseif nLimit == 0 then return true
   end
-  
+
   if invLowerStack() < nLimit then flattenInventory() end
 
   if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
@@ -1497,14 +1511,14 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
     if not nSlot then return false, "No empty slot." end
     tRecipes["CSlot"] = nSlot
   end
-  
+
   turtle.select(tRecipes["CSlot"])
   if not turtle.craft(nLimit) then
     local success, tItems = itemsBelong(sRecipe)
     if success then return false, "Remove items that do not belong to the recipe." end
   end
 	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
-	
+	--[[    
 	if not tData then return false end
 	local sName = tData.name
 	
@@ -1517,12 +1531,13 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe already stored or not.
     local nRecIndex = getRecipeIndex(sName, tRecipe)
     if not nRecIndex then
       tRecipes[sName][#tRecipes[sName]+1] = {}
-      tRecipes[sName][#tRecipes[sName]].recipe = tRecipe
-      tRecipes[sName][#tRecipes[sName]].count = tData.count / nLimit
+      tRecipes[sName][#tRecipes[sName] ].recipe = tRecipe
+      tRecipes[sName][#tRecipes[sName] ].count = tData.count / nLimit
     end
   end
   tRecipes.lastRecipe = sName
 	return sName, tData.count
+]]
 end
 
 ------ ROTATING FUNCTIONS ------  
@@ -2328,8 +2343,19 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
               ex: isEmpty() - Checks if selected slot is empty.
                   isEmpty(12) - checks if slot 12 is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
-  if type(nSlot) == "number" then return nil end
+  if type(nSlot) ~= "number" then return nil, "isEmptySlot(Slot) - Slot is not a number." end
   return turtle.getItemDetail(nSlot) == nil
+end
+
+function isEmptyInventory() --[[ Checks if nSlot is empty.
+  30/04/2022  Returns: true - if inventory is empty.
+                      false - if inventory is not empty.
+              sintax: isEmptyInventory()
+              ex: isEmptyInventory() - Checks if inventory is empty.]]
+  for nSlot = 1, 16 do
+    if turtle.getItemDetail(nSlot) then return false end
+  end
+  return true
 end
 
 function itemCount(nSlot) --[[ Counts items in inventory
@@ -2643,6 +2669,7 @@ end
 
 INIT()
 
+--print(textutils.serialize(canCraft("minecraft:stick", 1)))
 print(craftRecipe())
-print(textutils.serializeJSON(tRecipes))
+
 --TERMINATE()
