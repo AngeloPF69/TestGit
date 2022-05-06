@@ -203,7 +203,7 @@
    <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot.</a><br>
    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
    <a href="#searchSpace">searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]) Search for space in a slot that has sItemName.</a><br>
-   <a href="#selectFreeSlot">selectFreeSlot([StartSlot=1][, Wrap=true]) Selects the first free slot starting at nStartSlot, and if the search wraps or not.</a>
+   <a href="#selectFreeSlot">selectFreeSlot([StartSlot=1][, Wrap=true]) Selects the first free slot starting at nStartSlot, and if the search wraps or not.</a><br>
    <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
 
 ## Suck
