@@ -256,6 +256,7 @@
     <pre>Param: x, y, z - coords of point to calculate distance to turtle.
   Sintax: distTo(x, y, z)
   Returns: distX, distY, distZ From turtle to point x, y, z.
+  Note: returns a negative value if turtle is further away than the point x, y, z.
   ex: if turtle x=0, y=0, z=0
     distTo(10,10,10) Returns 10, 10, 10</pre>
 
@@ -382,7 +383,9 @@
   <p id="checkType"></p>
   
 - checkType(sType, ...) Checks if parameters are from sType.</a><br>
-    <pre>Sintax: checkType(sType, ...)
+    <pre>Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+             ... - the paremeters to check.
+  Sintax: checkType(sType, ...)
   Returns: true - if all parameters have the type of sType.
            false - if #sType ~= #... (number of parameters are diferent from length of sType).
   ex: checkType("snt", "hello", number1, tTable) - Outputs: true.</pre>
@@ -390,10 +393,13 @@
   <p id="getParam"></p>
   
 - getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
-    <pre>Sintax: getParam(sTypeParamOrder,{default parameter value,}, parameters ...}
+    <pre>Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+              tDefault - table with default values.
+                   ... - parameters to order.
+  Sintax: getParam(sTypeParamOrder,{default parameter value,}, parameters ...}
   Returns: Parameters ordered by type.
            nil - if no parameters.
-  Note: Only sorts three parameters type (string, number and boolean).
+  Note: Only sorts parameters type (string, table, number and boolean).
   ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.</pre>
    
    <p id="isValue"></p>
@@ -466,7 +472,14 @@
            true - if it could save file.
   ex: saveStacks()</pre>
   
-   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a><br>
+   <p id="saveStacks"></p>
+  
+- loadStacks() Loads tStacks from file "tStacks.txt".</a>
+    <pre>Param: Sintax: attackDir([sDir="forward"])
+  Sintax: loadStacks()
+  Returns: false - if it couldn't save file.
+           true - if it could save file.
+  ex: saveStacks()</pre>
    <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
    <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
    <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
