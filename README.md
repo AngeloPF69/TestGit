@@ -472,16 +472,29 @@
            true - if it could save file.
   ex: saveStacks()</pre>
   
-   <p id="saveStacks"></p>
+   <p id="loadStacks"></p>
   
-- loadStacks() Loads tStacks from file "tStacks.txt".</a>
-    <pre>Param: Sintax: attackDir([sDir="forward"])
-  Sintax: loadStacks()
-  Returns: false - if it couldn't save file.
-           true - if it could save file.
-  ex: saveStacks()</pre>
-   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
-   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+- loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
+    <pre>Sintax: loadStacks()
+  Returns false - if it couldn't load file.
+           true - if it could load file.
+  ex: loadStacks()</pre>
+  
+   <p id="getStack"></p>
+  
+ - getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+    <pre>Param: nSlot - slot number 1..16, or the item name.
+  Sintax: getStack([nSlot=selected slot])
+  Return: quantity a item can stack.
+          nil - if slot is out of range[1..16].
+          false - if slot is empty.
+                - if item was not found in inventory.
+  ex: getStack() - gets the stack of item in selected slot.</pre>
+  
+   <p id="setStack"></p>
+   
+ - setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
+ 
    <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
 
 ## Attack
