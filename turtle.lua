@@ -22,6 +22,10 @@ tStacks = {} --["itemName"] = nStack
 
 ------ FUEL ------
 
+--developing
+function checkFuel(nActions) --check if the fuel is enough for that action.
+end
+
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
   23/09/2021  Param: nCount - number of items to refuel.
               Returns:	number of items refueled.
