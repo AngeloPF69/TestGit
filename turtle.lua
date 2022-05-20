@@ -20,6 +20,8 @@ tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol 
                    ["CSlot"] = Crafting slot.]]
 tStacks = {} --["itemName"] = nStack
 
+local CSLOT = 13 --default crafting slot
+
 ------ FUEL ------
 
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
@@ -1413,7 +1415,7 @@ function getProdQuant() --[[Returns the quantity of products made with the recip
   nCount = getMaxCraft()
   if nCount > invLowerStack() then flattenInventory() end
 
-  if not tRecipes["CSlot"] then tRecipes["CSlot"] = 16 end
+  if not tRecipes["CSlot"] then tRecipes["CSlot"] = CSLOT end
   turtle.select(tRecipes["CSlot"])
 
   turtle.craft(nCount)
@@ -1435,7 +1437,7 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
 
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
 
-  if #tRecipe == 0 then
+  if next(tRecipe) == nil then
     tRecipe = getInvRecipe()
     if not tRecipe then return nil, "addRecipe(sRecipe, tRecipe, nCount) - Recipe table not supplied." end
   end
@@ -1467,7 +1469,7 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   return nIndex
 end
 
---not tested
+--implementing
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
   26/01/2022  Param: sRecipe - string recipe name.
                      nLimit - number recipes to craft.
@@ -1477,12 +1479,12 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
                              - if inventory is empty.
                              - if couln't find a empty slot where to craft recipe.
                              - if there are items that don't belong to the recipe.
-                            - if turtle couldn't craft.
+                             - if turtle couldn't craft.
               Sintax: craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible])
               ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
+  if isEmptyInventory() then return false, "Inventory is empty." end
   sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
-  if isEmptyInventory() then return false, "Inventory is empty." end
 
   local nIndex
   local bCanCraft, tCanCraftRec = canCraft()
@@ -1539,6 +1541,96 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
 	return sName, tData.count
 ]]
 end
+
+function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities have increased.]]
+	local bDif, tInvCmpRes = cmpInventory(tInv1, tInv2)
+	if bDif then return false end
+	
+	local tInc
+	for k, v in pairs(tInvCmpRes) do
+		for k1,v1 in pairs(v) do
+		  if tInvCmpRes[k][k1] > 0 then
+			  if not tInc then tInc = {} end
+			  tInc[k] = {}
+			  tInc[k][k1] = tInvCmpRes[k][k1]
+      end
+		end
+	end
+	if tInc then return true, tInc
+	else return false
+	end
+end
+
+function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
+  11/05/2022  Param: tInv1, tInv2 - snapshots from inventory (getInventory).
+              Returns: nil - if tInv1 or tInv2 not supplied.
+                       true - if snapshots are equals.
+                       table - if snapshots are diferent.
+              
+              Sintax: cmpInventory(tInv1, tInv2)
+              ex: craftRecipe(tInv1, tInv2) - compares tInv1 with tInv2.]]
+	if (not tInv1) or (not tInv2) then return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare" end
+	local tDif
+	for iSlot = 1, 16 do
+		if tInv1[iSlot] then
+			for k, v in pairs(tInv1[iSlot]) do
+				if tInv2[iSlot] and tInv2[iSlot][k] then
+					if tInv2[iSlot][k] ~= tInv1[iSlot][k] then
+						if not tDif then tDif = {} end	
+						tDif[iSlot]={}
+						tDif[iSlot][k] = tInv2[iSlot][k] - tInv1[iSlot][k]
+					end
+				else
+					if not tDif then tDif = {} end	
+					tDif[iSlot] = {}
+					tDif[iSlot][k] = -tInv1[iSlot][k]
+				end
+			end
+		else
+			if tInv2[iSlot] then
+				for k, v in pairs(tInv2[iSlot]) do
+					if not tDif then tDif = {} end	
+					tDif[iSlot] = {}
+					tDif[iSlot][k] = tInv2[iSlot][k]
+				end
+      end
+		end
+	end
+	if tDif then return false, tDif
+	else return true
+	end
+end
+
+function craftInv(nLimit) --[[ Crafts the recipe in inventory.
+  20/05/2022  Param: nLimit - number products to craft.
+              Returns: true, string product name, number index of recipe.
+                       nil - if nLimit is not a number.
+                           - if nLimit is out of range [1..64].
+                       false - if there is no recipe in inventory.
+                             - if the turtle cant craft.
+                             - if it craft something, but it didnt show up in inventory.
+              Sintax: craftInv([nLimit=64])
+              ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
+	nLimit = nLimit or 64
+	if type(nLimit) ~= "number" then return nil, "craft([Limit=64]) - Limit must be a number." end
+	if nLimit < 1 or nLimit > 64 then return nil, "craft([Limit=64]) - Limit must be between 1 and 64." end
+	if not turtle.craft(0) then return false, "There is no recipe in inventory." end
+  local nMaxCraft = getMaxCraft()
+	if not tRecipes["CSlot"] then tRecipes["CSlot"] = CSLOT end
+	turtle.select(tRecipes["CSlot"])
+	local tRecipe = getInvRecipe()
+	local tInv1 = getInventory()
+	if not turtle.craft(nLimit) then return false, "Could't craft "..nLimit.." products." end
+	local tInv2 = getInventory()
+	local bInc, tInc = cmpInvIncreased(tInv1, tInv2)
+	if not bInc then return false, "I don't know where the products went." end
+	local nSlot, _ = next(tInc, nil)
+  local sRecipe, nCount = next(tInc[nSlot])
+  nCount = nCount/nMaxCraft
+  local nIndex = addRecipe(sRecipe, tRecipe, nCount)
+  return true, sRecipe, nIndex
+end
+
 
 ------ ROTATING FUNCTIONS ------  
 
@@ -2668,8 +2760,9 @@ end
 
 
 INIT()
-
---print(textutils.serialize(canCraft("minecraft:stick", 1)))
 print(craftRecipe())
+saveTable(tRecipes, "teste.txt")
+--print(craft())
+
 
 --TERMINATE()

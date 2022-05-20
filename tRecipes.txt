@@ -27,7 +27,7 @@
       count = 4,
     },
   },
-  CSlot = 16,
+  CSlot = 13,
   [ "minecraft:oak_button" ] = {
     {
       recipe = {
