@@ -1627,25 +1627,27 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
                        false - if there is no recipe in inventory.
                              - if the turtle cant craft.
                              - if it craft something, but it didnt show up in inventory.
+                             - if it couldn't add the recipe.
               Sintax: craftInv([nLimit=64])
               ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
-	nLimit = nLimit or 64
+	nLimit = nLimit or 64 --default nLimit
 	if type(nLimit) ~= "number" then return nil, "craft([Limit=64]) - Limit must be a number." end
 	if nLimit < 1 or nLimit > 64 then return nil, "craft([Limit=64]) - Limit must be between 1 and 64." end
-	if not turtle.craft(0) then return false, "There is no recipe in inventory." end
-  local nMaxCraft = getMaxCraft()
-	if not tRecipes["CSlot"] then tRecipes["CSlot"] = CSLOT end
+	if not turtle.craft(0) then return false, "There is no recipe in inventory." end --check if there is a recipe in inventory
+  local nMaxCraft = getMaxCraft() --maximum number of recipes in inventory to craft.
+	if not tRecipes["CSlot"] then tRecipes["CSlot"] = CSLOT end --set the default crafting slot.
 	turtle.select(tRecipes["CSlot"])
-	local tRecipe = getInvRecipe()
-	local tInv1 = getInventory()
-	if not turtle.craft(nLimit) then return false, "Could't craft "..nLimit.." products." end
-	local tInv2 = getInventory()
-	local bInc, tInc = cmpInvIncreased(tInv1, tInv2)
-	if not bInc then return false, "I don't know where the products went." end
-	local nSlot, _ = next(tInc, nil)
-  local sRecipe, nCount = next(tInc[nSlot])
-  nCount = nCount/nMaxCraft
-  local nIndex = addRecipe(sRecipe, tRecipe, nCount)
+	local tRecipe = getInvRecipe() --get the recipe from inventory
+	local tInv1 = getInventory() --get snapshot of inventory to compare.
+	if not turtle.craft(nLimit) then return false, "Could't craft "..nLimit.." products." end --craft
+	local tInv2 = getInventory() --get second snapshot of inventory
+	local bInc, tInc = cmpInvIncreased(tInv1, tInv2) --compares the 2 snapshots if there was a increase of items.
+	if not bInc then return false, "I don't know where the products went." end --no
+	local nSlot, _ = next(tInc, nil) --get the slot where is the extra items.
+  local sRecipe, nCount = next(tInc[nSlot]) --get the product name, and count.
+  nCount = nCount/nMaxCraft --adjust count for 1 recipe
+  local nIndex = addRecipe(sRecipe, tRecipe, nCount) --add the recipe to tRecipes.
+  if not nIndex then false, "Couldn't add recipe." end
   return true, sRecipe, nIndex
 end
 
