@@ -77,10 +77,10 @@
   
 ## Stacks
    
-   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
-   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a>
-   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a>
-   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a>
+   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a><br>
+   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
+   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
   
 ## Attack
 
@@ -102,7 +102,7 @@
    <a href="#getRecipeIndex">getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.</a><br>
    <a href="#getRecipeItems">getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.</a><br>
    <a href="#haveItems">haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1]) Builds a table with the diference between the recipe and the inventory.</a><br>
-   <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>  
+   <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>
    <a href="#loadRecipes">loadRecipes() Loads tRecipes from file "tRecipes.txt".</a><br>
    <a href="#recipeSlots">recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.</a><br>
    <a href="#saveRecipes">saveRecipes() Saves tRecipes in a file as "tRecipes.txt".</a><br>
@@ -200,10 +200,10 @@
    <a href="#itemName">itemName([Slot=Selected slot]) Gets the item name from Slot.</a><br>
    <a href="#itemSelect">itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.</a><br>
    <a href="#itemSpace">itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.</a><br>
-   <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot, moving item from or to another slot.</a><br>
+   <a href="#leaveItems">leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true]) Leaves nQuant of item in Selected Slot.</a><br>
    <a href="#search">search(sItemName, nStartSlot) Search inventory for ItemName, starting at startSlot.</a><br>
    <a href="#searchSpace">searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]) Search for space in a slot that has sItemName.</a><br>
-   <a href="#selectFreeSlot">selectFreeSlot([StartSlot=1][, Wrap=true]) Selects the first free slot starting at nStartSlot, and if the search wraps or not.</a>
+   <a href="#selectFreeSlot">selectFreeSlot([StartSlot=1][, Wrap=true]) Selects the first free slot starting at nStartSlot, and if the search wraps or not.</a><br>
    <a href="#transferFrom">transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.</a>
 
 ## Suck
@@ -256,6 +256,7 @@
     <pre>Param: x, y, z - coords of point to calculate distance to turtle.
   Sintax: distTo(x, y, z)
   Returns: distX, distY, distZ From turtle to point x, y, z.
+  Note: returns a negative value if turtle is further away than the point x, y, z.
   ex: if turtle x=0, y=0, z=0
     distTo(10,10,10) Returns 10, 10, 10</pre>
 
@@ -382,7 +383,9 @@
   <p id="checkType"></p>
   
 - checkType(sType, ...) Checks if parameters are from sType.</a><br>
-    <pre>Sintax: checkType(sType, ...)
+    <pre>Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+             ... - the paremeters to check.
+  Sintax: checkType(sType, ...)
   Returns: true - if all parameters have the type of sType.
            false - if #sType ~= #... (number of parameters are diferent from length of sType).
   ex: checkType("snt", "hello", number1, tTable) - Outputs: true.</pre>
@@ -390,10 +393,13 @@
   <p id="getParam"></p>
   
 - getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
-    <pre>Sintax: getParam(sTypeParamOrder,{default parameter value,}, parameters ...}
+    <pre>Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+              tDefault - table with default values.
+                   ... - parameters to order.
+  Sintax: getParam(sTypeParamOrder,{default parameter value,}, parameters ...}
   Returns: Parameters ordered by type.
            nil - if no parameters.
-  Note: Only sorts three parameters type (string, number and boolean).
+  Note: Only sorts parameters type (string, table, number and boolean).
   ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.</pre>
    
    <p id="isValue"></p>
@@ -454,14 +460,49 @@
   Returns: true - tSearch is in t.
            false - at the least one element of tSearch is not in table t.
   ex: tableInTable("forward", {"forward", "left", "right"}) - Returns true.</pre>
+
+
+## Stacks
+   
+   <p id="saveStacks"></p>
+   
+- saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
+    <pre>Param: Sintax: attackDir([sDir="forward"])
+  Returns: false - if it couldn't save file.
+           true - if it could save file.
+  ex: saveStacks()</pre>
   
+   <p id="loadStacks"></p>
+  
+- loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
+    <pre>Sintax: loadStacks()
+  Returns false - if it couldn't load file.
+           true - if it could load file.
+  ex: loadStacks()</pre>
+  
+   <p id="getStack"></p>
+  
+ - getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+    <pre>Param: nSlot - slot number 1..16, or the item name.
+  Sintax: getStack([nSlot=selected slot])
+  Return: quantity a item can stack.
+          nil - if slot is out of range[1..16].
+          false - if slot is empty.
+                - if item was not found in inventory.
+  ex: getStack() - gets the stack of item in selected slot.</pre>
+  
+   <p id="setStack"></p>
+   
+ - setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
+ 
+   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
 
 ## Attack
 
    <p id="attackDir"></p>
 
 - attackDir([sDir="forward"]) Turtle attack in sDir direction.
-    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"}
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
   Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
            false - if there is nothing to attack, or no weapon.

@@ -24,6 +24,10 @@ local CSLOT = 13 --default crafting slot
 
 ------ FUEL ------
 
+--developing
+function checkFuel(nActions) --check if the fuel is enough for that action.
+end
+
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
   23/09/2021  Param: nCount - number of items to refuel.
               Returns:	number of items refueled.
@@ -66,6 +70,7 @@ end
 function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
   23/09/2021  Returns:	"left" or "right" the first free hand found.
 												false - if no free hand found.
+              Sintax: getFreeHand()
               ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
 	if tTurtle.leftHand == "empty" then return "left" end
 	if tTurtle.rightHand == "empty" then return "right" end
@@ -144,6 +149,7 @@ end
 
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021  Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
+              Sintax: setFacing(sFacing)
               Returns:  number - tTurtle.facing
                         false - if no parameter was supplied.
                               - if sFacing is not in facingType.
@@ -163,13 +169,15 @@ function setFacing(sFacing) --[[ Sets tTurtle.facing.
 end
 
 function getFacing() --[[ Returns tTurtle.facing.
-  02/10/2021  Returns:  tTurtle.facing.
+  02/10/2021  Sintax: getFacing()
+              Returns:  tTurtle.facing.
               ex: getFacing() - Outputs whatever is in tTurtle.facing [0..3].]]
   return tTurtle.facing
 end
 
 function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
   03/09/2021  Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
+              Sintax: setCoords(x, y, z)
               Returns:  true.
               ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
   if not isNumber(x,y,z) then return false, "setCoords(x, y, z) - Coords must be numbers." end
@@ -179,6 +187,7 @@ end
 
 function getCoords() --[[ Gets coords from turtle.
   03/09/2021  Returns: the turtle coords x, y, z.
+              Sintax: getCoords()
               ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
 	return tTurtle.x, tTurtle.y, tTurtle.z
 end
@@ -218,6 +227,7 @@ end
 
 function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
   24/09/2021  Param: nSteps - number of waking steps for turtle.
+              Sintax: addSteps([nSteps=1])
               Returns:  x,y,z adding nSteps in direction turtle is facing.
                         false - if nSteps is not a number.
               Note: accepts positive and negative numbers.
@@ -235,6 +245,7 @@ end
 
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
   03/09/2021  Param: x, y, z - coords of point to calculate distance to turtle.
+              Sintax: distTo(x, y, z)
               Returns:  the x,y,z distance from turtle to coords x, y, z.
               Note: returns a negative value if turtle is further away than the point x, y, z.
               ex: distTo(1, 10, 34) - Returns 3 values.]] 
@@ -532,6 +543,7 @@ end
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
   27/09/2021 - Param: t - table to save.
                       sFileName - string filename.
+               Sintax: saveTable(t, sFileName)
                Returns:  true - if saving file was a success.
                           false - if t or sFileName not supplied,
                                   if no disk space,
@@ -554,6 +566,7 @@ end
 
 function loadTable(sFileName) --[[ Loads a text file into a table.
   27/09/2021 -  Param: sFileName - string the file name.
+                Sintax: loadTable(sFileName)
                 Returns: table - if could read a text file into a table.
                          false - if sFileName is not supplied,
                                - if the file couldn't be opened for reading,
@@ -634,6 +647,7 @@ end
 function isValue(value, t) --[[ Checks if value is in t table.
   21/09/2021  Param:  value - any type of value.
                       t - table with values to compare.
+              Sintax: isValue(value, t)
               Returns:  true, key - if value is in t, key corresponding to value.
                         false - if value is not in t.
               ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".]]
@@ -647,6 +661,7 @@ function isNumber(...) --[[ Checks if all parameters are numbers.
   20/04/2022  Param:  ... - parameters to check
               Returns:  true - if all parameters are numbers.
                         false - if at least one parameter is not a number.
+              sintax: isNumber(...)
               ex: isNumber(2, "hello", 4}) - Outputs: false.]]
   Args = {...}
   if #Args == 0 then return false end
@@ -682,6 +697,7 @@ end
 
 function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
   28/08/2021  Param: value - number to evaluate.
+              Sintax: sign(value)
               Returns false if value is not a number, or not supplied.]]
   if type(value) ~= "number" then return false, "sign(value) - Is not a number or not supplied." end
   if value < 0 then return -1 end
@@ -693,7 +709,8 @@ end
 
 function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
   10/11/2021  Returns false - if it couldn't save file.
-                      true - if it could save file.]]
+                      true - if it could save file.
+              sintax: saveStacks()]]
   return saveTable(tStacks, "tStacks.txt")
 end
 
@@ -708,6 +725,7 @@ end
 
 function getStack(nSlot) --[[ Returns how many items can stack.
   10/11/2021  Param: nSlot - slot number 1..16, or the item name.
+              Sintax: loadStacks()
               Return: quantity a item can stack.
                       nil - if slot is out of range[1..16].
                       false - if slot is empty.
@@ -1637,6 +1655,8 @@ end
 function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
   02/10/2021  Param: nTurns - number of 90 degrees turns to the right.
               returns: true
+              ex: if turtle is facing "x+"=1
+              incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2
               sintax: incFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing + nTurns
