@@ -220,7 +220,7 @@
   <p id="INIT"></p>
   
 - INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.<br>
-    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tool name,
+    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
                    tRecipes - table of recipes,
                    tStacks - table of items stacks.
   Returns:  true
@@ -231,7 +231,7 @@
   <p id="TERMINATE"></p>
   
 - TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
-    <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tool name,
+    <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
                         tRecipes - table of recipes,
                         tStacks - table of items stacks.
   Returns:  true
@@ -246,7 +246,7 @@
   Sintax: addSteps([nSteps=1])
   Returns:  x, y, z adding nSteps in direction turtle is facing.
             false - if nSteps is not a number.
-  ex: if tTurtle x=0, y=0, z=0, facing="x+"
+  ex: if tTurtle x=0, y=0, z=0, facing=1 ("x+")
     addSteps() - Returns 1,0,0.
     addSteps(-1) - Returns -1,0,0.</pre>
   
