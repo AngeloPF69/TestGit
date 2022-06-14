@@ -287,6 +287,7 @@
     <pre>Param: nTurns - number of 90 degrees turns to the left.
   Sintax: decFacing([nTurns=1])
   Returns: true
+  Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
     decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
@@ -294,7 +295,7 @@
    
 - getFacing() Returns tTurtle.facing.<br>
     <pre>Sintax: getFacing()
-  Returns: tTurtle.facing [0..3]
+  Returns: tTurtle.facing [0..3] equivalent to "z+"|"x+"|"z-"|"x-"
   ex: getFacing()</pre>
     
    <p id="incFacing"></p>
@@ -303,6 +304,7 @@
     <pre>Param: nTurns - number of 90 degrees turns to the right.
   Sintax: incFacing([nTurns=1])
   Returns: true
+  Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
   incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
   if tTurtle.facing>3 then tTurtle.facing and= 3 end</pre>
@@ -359,6 +361,7 @@
     <pre>Sintax: getFreeHand()
   Returns: "left" or "right" the first free hand found.
            false - if no free hand found.
+  Note: you must use equip and not turtle.equip  for this function to work.
   ex: getFreeHand()</pre>
 
 
@@ -422,7 +425,7 @@
    <p id="loadTable"></p>
    
 - loadTable(sFileName) Loads a text file into a table.</a><br>
-    <pre>Param: sFileName - name of the file to serialize into a table.
+    <pre>Param: sFileName - name of the file to deserialize into a table.
   Sintax: loadTable(sFileName)
   Returns: table - if could read a text file into a table.
            false - if sFileName is not supplied,
@@ -433,7 +436,7 @@
    <p id="saveTable"></p>
    
 - saveTable(t, sFileName) Saves a table into a text file.</a><br>
-    <pre>Param: t - table to unserialize.
+    <pre>Param: t - table to serialize.
          sFileName - name of the file.
   Sintax: saveTable(t, sFileName)
   Returns: true - if saving file was a success.
@@ -467,7 +470,7 @@
    <p id="saveStacks"></p>
    
 - saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
-    <pre>Param: Sintax: attackDir([sDir="forward"])
+    <pre>Sintax: saveStacks()
   Returns: false - if it couldn't save file.
            true - if it could save file.
   ex: saveStacks()</pre>
@@ -477,14 +480,14 @@
 - loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
     <pre>Sintax: loadStacks()
   Returns false - if it couldn't load file.
-           true - if it could load file.
+          true - if it could load file.
   ex: loadStacks()</pre>
   
    <p id="getStack"></p>
   
- - getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+ - getStack(\[nSlot=selected slot\]) Returns how many items can stack.</a><br>
     <pre>Param: nSlot - slot number 1..16, or the item name.
-  Sintax: getStack([nSlot=selected slot])
+  Sintax: getStack(\[nSlot=selected slot\])
   Return: quantity a item can stack.
           nil - if slot is out of range[1..16].
           false - if slot is empty.
