@@ -490,18 +490,22 @@
   
  - getStack(\[nSlot=selected slot\]) Returns how many items can stack.</a><br>
     <pre>Param: nSlot - slot number 1..16, or the item name.
-  Sintax: getStack(\[nSlot=selected slot\])
-  Return: quantity a item can stack.
-          nil - if slot is out of range[1..16].
-          false - if slot is empty.
-                - if item was not found in inventory.
-  ex: getStack() - gets the stack of item in selected slot.</pre>
+   Sintax: getStack([nSlot=selected slot])
+   Return: quantity a item can stack.
+           nil - if slot is out of range[1..16].
+           false - if slot is empty.
+                 - if item was not found in inventory.
+   ex: getStack() - gets the stack of item in selected slot.</pre>
   
    <p id="setStack"></p>
    
- - setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
- 
-   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
+ - setStack(sItemName, nStack) Sets the item stack value in tStacks.</a><br>
+    <pre>Param: sItemName - string item name.
+             nStack - number how much item can stack.
+   Return: true - if it could set the stack for item.
+            nil - if no item name supplied.
+                - if no stack number is supplied.
+   sintax: setStack(sItemName = selected slot)</pre>
 
 ## Attack
 
@@ -517,7 +521,25 @@
 
   
 ## Recipes
-
+  
+  <p id="addRecipe"></p>
+- addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Returns index of recipe.</a><br>
+  
+  <p id="arrangeRecipe"></p>
+- arrangeRecipe(\[sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
+   
+   <p id="canCraft"></p>
+- canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
+   
+   <p id="colLinMatch"></p>
+- colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.</a><br>
+   
+   <p id="craftRecipe"></p>
+- craftRecipe(\[sRecipe=tRecipes.lastRecipe]\[nLimit=maximum craft possible]) Craft a recipe already stored or not.</a><br>
+   
+   <p id="flattenInventory"></p>
+- flattenInventory() Averages all the item stacks in inventory.</a><br>
+   
   <p id="getFirstItemCoords"></p>
   
 - getFirstItemCoords(sRecipe, nIndex) Returns the column and line=0 of the first item in the recipe.
@@ -546,6 +568,24 @@
            false - if it is not a recipe in the inventory.
   ex: getMaxCraft() - Returns the recipe from inventory.</pre>
   
+  <p id="getProdQuant"></p>
+  <a href="#getProdQuant">getProdQuant() Returns maximum limit to craft the recipe on inventory.</a><br>
+  
+  <p id="getRecipe"></p>
+  <a href="#getRecipe">getMaxCraft() Gets the recipe from tRecipes.</a><br>
+  
+  <p id="getRecipeIndex"></p>
+  <a href="#getRecipeIndex">getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.</a><br>
+  
+  <p id="getRecipeItems"></p>
+  <a href="#getRecipeItems">getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.</a><br>
+  
+  <p id="haveItems"></p>
+  <a href="#haveItems">haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1]) Builds a table with the diference between the recipe and the inventory.</a><br>
+  
+  <p id="itemsBelong"></p>
+  <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>
+   
   <p id="loadRecipes"></p>
   
 - loadRecipes() Loads tRecipes from file "tRecipes.txt"
@@ -553,6 +593,9 @@
   Returns: false - if it couldn't load file.
            true - if it could load file.
   ex: loadRecipes()</pre>
+  
+  <p id="recipeSlots"></p>
+  <a href="#recipeSlots">recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.</a><br>
   
   <p id="saveRecipes"></p>
   
@@ -869,7 +912,10 @@
                  - couldn't place block.
                  - invalid parameter.
   ex: placeAbove(1) or placeAbove() - Places one Block above turtle.</pre>
-            
+   
+  <p id="placeBack">
+  <a href="#placeBack">placeBack([Blocks=1]) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.</a><br>
+  
    <p id="placeBelow">
    
 - placeBelow([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.<br>
