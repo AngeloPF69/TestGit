@@ -236,7 +236,8 @@
                         tStacks - table of items stacks.
   Returns:  true
   ex: TERMINATE()</pre>
-  
+
+
 ## Measurements
 
    <p id="addSteps"></p>
