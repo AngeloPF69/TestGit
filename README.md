@@ -226,7 +226,8 @@
                    tStacks - table of items stacks.
   Returns:  true
   ex: INIT()</pre>
-  
+
+
 ## Terminate
 
   <p id="TERMINATE"></p>
