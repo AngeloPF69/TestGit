@@ -30,7 +30,7 @@
 
   <a href="#INIT">INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.</a>
 
-## Terminate
+## Finalize
 
   <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes, tStacks from tables to text files.</a>
   
@@ -56,7 +56,7 @@
    <a href="#getCoords">getCoords() Gets coords from tTurtle.</a><br>
    <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for tTurtle.</a>
 
-## Equip
+## Equipment
   
    <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
    <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.</a>
@@ -228,9 +228,9 @@
   ex: INIT()</pre>
 
 
-## Terminate
+## Finalize
 
-  <p id="TERMINATE"></p>
+  <p id="FINALIZE"></p>
   
 - TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
     <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
@@ -343,7 +343,7 @@
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
 
 
-## Equip
+## Equipment
   
    <p id="equip"></p>
      
