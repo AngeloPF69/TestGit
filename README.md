@@ -526,7 +526,18 @@
 - addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Returns index of recipe.</a><br>
   
   <p id="arrangeRecipe"></p>
-- arrangeRecipe(\[sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
+  
+- arrangeRecipe(\[sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.
+    <pre>Param: sRecipe - the recipe name.
+  Sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+  Returns: true - if items from the recipe was arranged.
+          false - if no recipe name was supplied and there isn't tRecipes.lastRecipe.
+                - if the recipe is not registered.
+                - if the recipe index doesn't exist.
+                - if some slot couldn't be cleared.
+                - if it couldn't leave the exact number of items in a slot.
+                - if it doesn't have enough items to craft recipe.
+  ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.</pre>
    
    <p id="canCraft"></p>
 - canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
