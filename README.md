@@ -996,7 +996,14 @@
   ex: placeAbove(1) or placeAbove() - Places one Block above turtle.</pre>
    
   <p id="placeBack">
-  <a href="#placeBack">placeBack([Blocks=1]) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.</a><br>
+  
+- placeBack([Blocks=1]) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
+    <pre>Param: nBlocks - number of blocks to place.
+    Returns:  number of blocks placed.
+              nil - invalid parameter.
+    sintax: placeBack([nBlocks=1])
+    Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
+    ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
   
    <p id="placeBelow">
    
