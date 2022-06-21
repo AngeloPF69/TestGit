@@ -527,7 +527,7 @@
   
   <p id="arrangeRecipe"></p>
   
-- arrangeRecipe(\[sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.
+- arrangeRecipe([sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.
     <pre>Param: sRecipe - the recipe name.
   Sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
   Returns: true - if items from the recipe was arranged.
@@ -540,17 +540,34 @@
   ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.</pre>
    
    <p id="canCraft"></p>
-- canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
    
+- canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+    <pre>Return: true, table - with recipe name and index.
+                  false - if no recipe can be crafted.
+         Sintax: canCraft()
+         ex: canCraft()</pre>
+         
    <p id="colLinMatch"></p>
-- colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.</a><br>
    
+- colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.
+    <pre>Param: tRecs - recipe from tRecipes.
+            tRec - recipe to compare.
+         Returns: true - if items in recipes have the same position.
+                 false - if items in recipes have the diferent position or diferent number of items.
+                   nil - if invalid parameter type.
+         Sintax: colLinMatch(tRecs, tRec)
+         Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
+         ex:getRecipeIndex()</pre>
+  
    <p id="craftRecipe"></p>
 - craftRecipe(\[sRecipe=tRecipes.lastRecipe]\[nLimit=maximum craft possible]) Craft a recipe already stored or not.</a><br>
    
    <p id="flattenInventory"></p>
-- flattenInventory() Averages all the item stacks in inventory.</a><br>
    
+- flattenInventory() Averages all the item stacks in inventory.</a><br>
+    <pre>Returns:  true
+    Sintax: flattenInventory()</pre>
+         
   <p id="getFirstItemCoords"></p>
   
 - getFirstItemCoords(sRecipe, nIndex) Returns the column and line=0 of the first item in the recipe.
@@ -580,23 +597,68 @@
   ex: getMaxCraft() - Returns the recipe from inventory.</pre>
   
   <p id="getProdQuant"></p>
-  <a href="#getProdQuant">getProdQuant() Returns maximum limit to craft the recipe on inventory.</a><br>
+  
+- getProdQuant() Returns maximum limit to craft the recipe on inventory.
+    <pre>Returns: number - quantity of products made with inventory recipe.
+    sintax: getProdQuant()
+    Note: this function crafts the recipe in inventory.
+    ex: getProdQuant()</pre>
   
   <p id="getRecipe"></p>
-  <a href="#getRecipe">getMaxCraft() Gets the recipe from tRecipes.</a><br>
-  
+- getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.
+    <pre>Param:  sRecipe - recipe name.
+             nIndex - recipe index.
+         Returns: table - the recipe.
+                  false - if recipe name is not supplied and doesn't exist last recipe.
+                        - if recipe name doesn't exist.
+                        - if recipe index doesn't existy.
+         Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1])</pre>
+    
   <p id="getRecipeIndex"></p>
-  <a href="#getRecipeIndex">getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.</a><br>
   
+- getRecipeIndex([sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.
+    <pre>Param: sRecipe - string recipe name.
+           tRecipe - table with a recipe from inventory.
+         Returns: number - index of the recipe in tRecipes.
+         Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
+         ex:getRecipeIndex()</pre>
+         
   <p id="getRecipeItems"></p>
-  <a href="#getRecipeItems">getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.</a><br>
   
+- getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.
+    <pre>Param: sRecipe - recipe name.
+            nIndex - recipe index
+         Return: table - with recipe ingredient name and quantity.
+                 false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
+                       - if tRecipes[sRecipe] dosn't exist, (never was made).
+                       - if the tRecipes[sRecipe[nIndex] doesn't exist.
+         Sintax: getRecipeItems([sRecipeName = tRecipes.lastRecipe][, nIndex=1])
+         ex: getRecipeItems("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2}</pre>
+         
   <p id="haveItems"></p>
-  <a href="#haveItems">haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1]) Builds a table with the diference between the recipe and the inventory.</a><br>
   
+- haveItems([sRecipeName = tRecipes.lastRecipe]\[, nIndex =1]) Builds a table with the diference between the recipe and the inventory.
+    <pre>Param: sRecipe - string recipe name.
+            nIndex - number index of the recipe
+         Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
+                 nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
+                     - if sRecipe dosn't exist, (never was made).
+         Note: on the table, negative values indicate missing items.
+               if not it returns true and the table.
+         Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])
+         ex: haveItems()</pre>
+         
   <p id="itemsBelong"></p>
-  <a href="#itemsBelong">itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.</a><br>
-   
+  
+- itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.
+    <pre>Param:  sRecipe - string recipe name.
+             nIndex - index of tReecipes[sRecipe][nIndex].
+         Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
+                   nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
+                 false - if sRecipe is not in tRecipes or recipe index not found.
+         Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
+         ex: itemsBelong("minecraft:wooden_shovel") - Returns true if all items belong to the recipe, otherwise returns false.</pre>
+         
   <p id="loadRecipes"></p>
   
 - loadRecipes() Loads tRecipes from file "tRecipes.txt"
@@ -606,8 +668,17 @@
   ex: loadRecipes()</pre>
   
   <p id="recipeSlots"></p>
-  <a href="#recipeSlots">recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.</a><br>
   
+- recipeSlots([sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.
+    <pre>Param: SRecipe - string recipe name.
+            nIndex - number recipe index.
+         Returns:  table with item name and quantity of slots ocupied by it.
+                   false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
+                         - if tRecipes[sRecipe] doesn't exist.
+                         - if tRecipes[sRecipe][nIndex] doesn't exist.
+					sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+					ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}</pre>
+              
   <p id="saveRecipes"></p>
   
 - saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
