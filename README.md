@@ -676,8 +676,8 @@
                    false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
                          - if tRecipes[sRecipe] doesn't exist.
                          - if tRecipes[sRecipe][nIndex] doesn't exist.
-					sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
-					ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}</pre>
+          sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+          ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}</pre>
               
   <p id="saveRecipes"></p>
   
