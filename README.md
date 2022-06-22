@@ -1081,7 +1081,7 @@
   Sintax: detectAbose([Blocks=1])
   Returns: true - if turtle detects a line of nBlocks above it.
            false - if blocked, empty space.
-					nil - if invalid parameter.
+           nil - if invalid parameter.
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectAbove() or detectAbove(1) - Detects 1 block up.</pre>
    
@@ -1092,7 +1092,7 @@
   Sintax: detectBelow([Blocks=1])
   Returns: true - if turtle detects a line of nBlocks below.
            false - if blocked, empty space.
-					 nil - if invalid parameter
+           nil - if invalid parameter
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
