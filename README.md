@@ -230,7 +230,7 @@
 
 ## Finalize
 
-  <p id="FINALIZE"></p>
+  <p id="TERMINATE"></p>
   
 - TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
     <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
