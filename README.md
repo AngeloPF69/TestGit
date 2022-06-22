@@ -150,7 +150,7 @@
    <a href="#dropRight">dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.</a><br>
    <a href="#dropUp">dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.</a>
 
-## Place
+## Placing
 
    <a href="#place">place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.</a><br>
    <a href="#placeAbove">placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.</a><br>
@@ -972,7 +972,7 @@
   ex: dropUp() - Drops 1 block upwards.</pre>
    
 
-## Place
+## Placing
 
    <p id="place"></p>
    
