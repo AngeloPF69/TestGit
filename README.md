@@ -273,7 +273,7 @@
            false - if it couldn't.
   ex: loadTurtle()</pre>
   
-   <p id="saveTurtle">
+   <p id="saveTurtle"></p>
      
 - saveTurtle() Saves tTurtle to file tTurtle.txt.<br>
    <pre>Sintax: saveTurtle()
@@ -974,7 +974,7 @@
 
 ## Place
 
-   <p id="place">
+   <p id="place"></p>
    
 - place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -984,7 +984,7 @@
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards
   ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
    
-   <p id="placeAbove">
+   <p id="placeAbove"></p>
    
 - placeAbove([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -995,7 +995,7 @@
                  - invalid parameter.
   ex: placeAbove(1) or placeAbove() - Places one Block above turtle.</pre>
    
-  <p id="placeBack">
+  <p id="placeBack"></p>
   
 - placeBack([Blocks=1]) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
     <pre>Param: nBlocks - number of blocks to place.
@@ -1005,7 +1005,7 @@
     Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
     ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
   
-   <p id="placeBelow">
+   <p id="placeBelow"></p>
    
 - placeBelow([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -1016,7 +1016,7 @@
                   - invalid parameter.
   ex: placeBelow(2) - Places two Blocks below turtle in a strait line forward.</pre>
    
-   <p id="placeDir">
+   <p id="placeDir"></p>
    
 - placeDir([sDir="forward"]) Places inventory selected Block in sDir.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
@@ -1025,7 +1025,7 @@
            false if turtle doesn't place the selected block, or invalid parameter.
   ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.</pre>
    
-   <p id="placeDown">
+   <p id="placeDown"></p>
    
 - placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -1036,7 +1036,7 @@
   Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
   ex: placeDown(1) or placeDown() - Places 1 Block Down.</pre>
    
-   <p id="placeLeft">
+   <p id="placeLeft"></p>
    
 - placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -1048,7 +1048,7 @@
   Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
   ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.</pre>
    
-   <p id="placeRight">
+   <p id="placeRight"></p>
    
 - placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -1060,7 +1060,7 @@
   Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
   ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.</pre>
    
-   <p id="placeUp">
+   <p id="placeUp"></p>
    
 - placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -1074,7 +1074,7 @@
    
 ## Detect
 
-   <p id="detectAbove">
+   <p id="detectAbove"></p>
    
 - detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.<br>
     <pre>Param: Blocks - number of blocks to detect.
@@ -1085,7 +1085,7 @@
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectAbove() or detectAbove(1) - Detects 1 block up.</pre>
    
-   <p id="detectBelow">
+   <p id="detectBelow"></p>
    
 - detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.<br>
     <pre>Param: Blocks - number of blocks to detect.
@@ -1096,7 +1096,7 @@
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
-   <p id="detectDir">
+   <p id="detectDir"></p>
    
 - detectDir(sDir) Detects if is a block in sDir direction.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down" 
@@ -1109,7 +1109,7 @@
 
 ## Disk
 
-   <p id="fsGetFreeSpace">
+   <p id="fsGetFreeSpace"></p>
    
 - fsGetFreeSpace() Gets the total free space on disk.<br>
 		<pre>Sintax: fsGetFreeSpace()
@@ -1119,7 +1119,7 @@
    
 ## Inspect
     
-   <p id="inspectDir">
+   <p id="inspectDir"></p>
 
 - inspectDir([sDir="forward"]) Turtle inspect block in sDir direction.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
@@ -1131,7 +1131,7 @@
 
 ## Compare
 
-   <p id="compareAbove">
+   <p id="compareAbove"></p>
    
 - compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
     <pre>Param: Blocks - the number of blocks to compare.
@@ -1142,7 +1142,7 @@
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
    
-   <p id="compareBelow">
+   <p id="compareBelow"></p>
    
 - compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.<br>
     <pre>Param: Blocks - number of blocks to compare.
@@ -1153,7 +1153,7 @@
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
    
-    <p id="compareDir">
+    <p id="compareDir"></p>
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
@@ -1171,7 +1171,7 @@
 
 ## Inventory
     
-   <p id="clearSlot">
+   <p id="clearSlot"></p>
     
 - clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
     <pre>Param: nSlot - slot number to clear.
@@ -1180,7 +1180,7 @@
            true - if the slot is empty.
   ex: clearSlot() - Clears the selected slot.</pre>
    
-   <p id="decSlot">
+   <p id="decSlot"></p>
    
 - decSlot(nSlot) Decreases nSlot in range [1..16].<br>
     <pre>Param: nSlot - number of slot to decrement.
@@ -1188,14 +1188,14 @@
   Returns: the number of slot increased by 1.
   ex: decSlot(1) - Returns 16.</pre>
    
-   <p id="freeCount">
+   <p id="freeCount"></p>
    
 - freeCount() Get number of free slots in turtle's inventory.<br>
     <pre>Sintax: freeCount()
   Returns: Number of free slots.
   ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
    
-   <p id="getFreeSlot">
+   <p id="getFreeSlot"></p>
    
 - getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
     <pre>Param: nStartSlot - start slot number.
@@ -1208,14 +1208,14 @@
       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
    
-   <p id="groupItems">
+   <p id="groupItems"></p>
    
 - groupItems() Groups the same type of items in one slot in inventoy.<br>
     <pre>Sintax: groupItems()
   Returns: true.
   ex: groupItems() - Stacks the same items.</pre>
    
-   <p id="incSlot">
+   <p id="incSlot"></p>
    
 - incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].<br>
     <pre>Param: nSlot - the slot number.
@@ -1224,7 +1224,7 @@
   Returns: The number of slot increased by 1.
   ex: incSlot(16) - Returns 1</pre>
    
-   <p id="itemCount">
+   <p id="itemCount"></p>
    
 - itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
     <pre>Param: slot|"inventory"|item name - the slot number or the inventory as a all or a item name.
@@ -1236,7 +1236,7 @@
       itemCount("inventory") - counts items in inventory.
       itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
    
-   <p id="itemName">
+   <p id="itemName"></p>
    
 - itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
     <pre>Param: Slot - the slot number.
@@ -1245,7 +1245,7 @@
            false - if selected slot/slot is empty.
   ex: itemName(1) - Returns the name of item in slot 1.</pre>
   
-   <p id="itemSelect">
+   <p id="itemSelect"></p>
    
 - itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
     <pre>Param: slot/itemName - the slot number or the item name.
@@ -1257,7 +1257,7 @@
   Note: if executed select() is the same as turtle.getSelectedSlot()
   ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
    
-   <p id="itemSpace">
+   <p id="itemSpace"></p>
    
 - itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
     <pre>Param: slot|item Name - the number of the slot or the item name.
@@ -1269,7 +1269,7 @@
       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
       itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
    
-   <p id="search">
+   <p id="search"></p>
    
 - search(sItemName, nStartSlot, bWrap) Search inventory for ItemName, starting at startSlot, and if search wrap.<br>
     <pre>Param: sItemName - name of item to search.
@@ -1282,6 +1282,8 @@
                  - if nStartSlot is not a number.
   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
+   
+   <p id="transferFrom"></p>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
     <pre>Param: nSlot - slot where to transfer items from.
@@ -1297,7 +1299,7 @@
    
 ## Suck
 
-   <p id="suckDir">
+   <p id="suckDir"></p>
    
 - suckDir(sDir, nItems) Sucks or drops nItems into sDir direction.<br>
     <pre>Param: sDir = "forward"|"right"|"back"|"left"|"up"|"down"
