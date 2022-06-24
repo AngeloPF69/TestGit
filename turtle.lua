@@ -17,7 +17,8 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
 tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
                    ["lastRecipe"] = sLastRecipe
-                   ["CSlot"] = Crafting slot.]]
+                   ["CSlot"] = Crafting slot.
+                   ["lastIndex"] = last recipe index]]
 tStacks = {} --["itemName"] = nStack
 
 local CSLOT = 13 --default crafting slot
@@ -854,8 +855,9 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
   20/11/2021  Return: true, table - with recipe name and index.
                       false - if no recipe can be crafted.
               Sintax: canCraft()
+              Note: table[index]={[name]=recipe index}
               ex: canCraft()]]
-	local tCRecipes = {} --recipes i can make with items in inventory
+	local tCRecipes = {} --recipes it can craft with items in inventory
 	local tInvItems = getInvItems() --items in inventory
 	for k, v in pairs(tRecipes) do
     if type(v)=="table" then
@@ -877,7 +879,9 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
       end  
     end
   end
-  return #tCRecipes~=0, tCRecipes
+  if #tCRecipes~=0 then return true, tCRecipes
+  else return false
+  end
 end
 
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
@@ -1318,24 +1322,36 @@ function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory 
                         nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
                         false - if sRecipe is not in tRecipes or recipe index not found.
               Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
-              ex: itemsBelong("minecraft:wooden_shovel") - Returns true if there is items that don't belong to the recipe, otherwise returns false.]]
-  sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)
+              ex: itemsBelong("minecraft:wooden_shovel") - Returns false if there is items that don't belong to the recipe, otherwise returns true.]]
+  sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, -1}, sRecipe, nIndex)
   if not sRecipe then return nil, "itemsBelong([sRecipe=tRecipes.lastRecipe]) - Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
-  if not tRecipes[sRecipe][nIndex] then return false, "Recipe index not found." end
+  if nIndex ~= -1 then
+    if not tRecipes[sRecipe][nIndex] then return false, "Recipe index not found." end
+  end
 
-  local tRecipe = tRecipes[sRecipe][nIndex].recipe
+  local bOnly1, tmpIndex, tRecipe = true, nIndex
   local tItems, bExcess = {}, true
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
       local bFound = false
-      for iRec = 1, #tRecipe do
-        if tRecipe[iRec][1] == tData.name then
-          bFound = true
-          break
-        end
+      if nIndex == -1 then
+        bOnly1 = false
+        tmpIndex = 1
       end
+
+      repeat
+        tRecipe = tRecipes[sRecipe][tmpIndex].recipe
+        for iRec = 1, #tRecipe do
+          if tRecipe[iRec][1] == tData.name then
+            bFound = true
+            break
+          end
+        end
+        tmpIndex = tmpIndex + 1
+      until bOnly1 or tmpIndex > #tRecipes[sRecipe] or bFound
+
       if not bFound then
         if tItems[tData.name] then tItems[tData.name] = tItems[tData.name]+ tData.count
         else
@@ -1475,6 +1491,7 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
     tRecipes[sRecipe][1].recipe = tRecipe
     tRecipes[sRecipe][1].count = nCount
     tRecipes.lastRecipe = sRecipe
+    tRecipes.lastIndex = 1
     return 1
   end
 
@@ -1484,6 +1501,7 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   tRecipes[sRecipe][nIndex].recipe = tRecipe
   tRecipes[sRecipe][nIndex].count = nCount
   tRecipes.lastRecipe = sRecipe
+  tRecipes.lastIndex = nIndex
   return nIndex
 end
 
@@ -1498,66 +1516,41 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
                              - if couln't find a empty slot where to craft recipe.
                              - if there are items that don't belong to the recipe.
                              - if turtle couldn't craft.
-              Sintax: craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible])
+              Sintax: craftRecipe(sRecipe=tRecipes.lastRecipe[, nLimit=64])
               ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
   if isEmptyInventory() then return false, "Inventory is empty." end
-  sRecipe, nLimit = getParam("sn", {"",-1}, sRecipe, nLimit)
-  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
-
-  local nIndex
-  local bCanCraft, tCanCraftRec = canCraft()
-
-  if not turtle.craft(0) then
-    if not bCanCraft then return false, "Can't craft anything with this items." end
-  end
-
-  if not sRecipe then
-    if bCanCraft then
-      sRecipe, nIndex = next(tCanCraftRec[1]) --get the first recipe name and index
+  sRecipe, nLimit = getParam("sn", {"",64}, sRecipe, nLimit)
+  local isRecipeInv = turtle.craft(0)
+  if nLimit == 0 then return turtle.craft(nLimit) end
+  if sRecipe == "" then
+    if isRecipeInv then return craftInv(nLimit)
+    else
+      sRecipe = tRecipes.lastRecipe
+      if not sRecipe then return nil, "craftRecipe(sRecipe, nLimit) - Must supply recipe name." end
+      if not tRecipes[sRecipe] then return false, "Recipe name not found" end
     end
   end
-
-  local tRecipe = getInvRecipe()
-  local nMaxCraft = getMaxCraft()
-  if nLimit < 0 or nLimit > nMaxCraft then nLimit = nMaxCraft
-  elseif nLimit == 0 then return true
-  end
+  
+  if type(nLimit) ~= "number" then return nil, "craftRecipe(sRecipe, nLimit) - nLimit must be a number[1..64]." end
+  if nLimit < 0 or nLimit > 64 then return nil, "craftRecipe(sRecipe, nLimit) - nLimit must be a number[1..64]." end
 
   if invLowerStack() < nLimit then flattenInventory() end
 
   if not tRecipes["CSlot"] then setCraftSlot(turtle.getSelectedSlot()) end
   if not isEmptySlot(tRecipes["CSlot"]) then
     local nSlot = getFreeSlot()
-    if not nSlot then return false, "No empty slot." end
+    if not nSlot then return false, "No empty slot to craft recipe to." end
     tRecipes["CSlot"] = nSlot
   end
-
   turtle.select(tRecipes["CSlot"])
+
+  local inv1 = getInventory()
   if not turtle.craft(nLimit) then
     local success, tItems = itemsBelong(sRecipe)
-    if success then return false, "Remove items that do not belong to the recipe." end
+    if not success then return false, "Remove items that do not belong to the recipe." end
   end
-	local tData = turtle.getItemDetail(turtle.getSelectedSlot())
-	--[[    
-	if not tData then return false end
-	local sName = tData.name
-	
-	if not tRecipes[sName] then
-		tRecipes[sName] = {}
-    tRecipes[sName][1] = {}
-    tRecipes[sName][1].recipe = tRecipe
-    tRecipes[sName][1].count = tData.count / nLimit
-  else
-    local nRecIndex = getRecipeIndex(sName, tRecipe)
-    if not nRecIndex then
-      tRecipes[sName][#tRecipes[sName]+1] = {}
-      tRecipes[sName][#tRecipes[sName] ].recipe = tRecipe
-      tRecipes[sName][#tRecipes[sName] ].count = tData.count / nLimit
-    end
-  end
-  tRecipes.lastRecipe = sName
-	return sName, tData.count
-]]
+	local inv2 = getInventory()
+  
 end
 
 function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities have increased.]]
@@ -1619,6 +1612,7 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
 	end
 end
 
+--not tested
 function craftInv(nLimit) --[[ Crafts the recipe in inventory.
   20/05/2022  Param: nLimit - number products to craft.
               Returns: true, string product name, number index of recipe.
@@ -1630,15 +1624,15 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
                              - if it couldn't add the recipe.
               Sintax: craftInv([nLimit=64])
               ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
-	nLimit = nLimit or 64 --default nLimit
+	nLimit = nLimit or 64
 	if type(nLimit) ~= "number" then return nil, "craft([Limit=64]) - Limit must be a number." end
 	if nLimit < 1 or nLimit > 64 then return nil, "craft([Limit=64]) - Limit must be between 1 and 64." end
-	if not turtle.craft(0) then return false, "There is no recipe in inventory." end --check if there is a recipe in inventory
-  local nMaxCraft = getMaxCraft() --maximum number of recipes in inventory to craft.
+	if not turtle.craft(0) then return false, "There is no recipe in inventory." end
+  local nMaxCraft = getMaxCraft() 
 	if not tRecipes["CSlot"] then tRecipes["CSlot"] = CSLOT end --set the default crafting slot.
 	turtle.select(tRecipes["CSlot"])
-	local tRecipe = getInvRecipe() --get the recipe from inventory
-	local tInv1 = getInventory() --get snapshot of inventory to compare.
+	local tRecipe = getInvRecipe()
+	local tInv1 = getInventory()
 	if not turtle.craft(nLimit) then return false, "Could't craft "..nLimit.." products." end --craft
 	local tInv2 = getInventory() --get second snapshot of inventory
 	local bInc, tInc = cmpInvIncreased(tInv1, tInv2) --compares the 2 snapshots if there was a increase of items.
@@ -1647,7 +1641,7 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
   local sRecipe, nCount = next(tInc[nSlot]) --get the product name, and count.
   nCount = nCount/nMaxCraft --adjust count for 1 recipe
   local nIndex = addRecipe(sRecipe, tRecipe, nCount) --add the recipe to tRecipes.
-  if not nIndex then false, "Couldn't add recipe." end
+  if not nIndex then return false, "Couldn't add recipe." end
   return true, sRecipe, nIndex
 end
 
@@ -2782,9 +2776,10 @@ end
 
 
 INIT()
-print(craftRecipe())
-saveTable(tRecipes, "teste.txt")
---print(craft())
+
+local success, tItems = itemsBelong("minecraft:stick")
+print("success:", success)
+print(textutils.serialize(tItems))
 
 
 --TERMINATE()
