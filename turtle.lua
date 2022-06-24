@@ -1456,6 +1456,7 @@ function getProdQuant() --[[Returns the quantity of products made with the recip
   return turtle.getItemCount()/nCount
 end
 
+-- not tested --
 function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   31/03/2022  Param:  sRecipe - name of recipe
                       tRecipe - recipe table, get if from getInvRecipe.
@@ -1463,13 +1464,11 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
               Returns:  number - index of recipe (tRecipes[sRecipe][index])
                         nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
                             - if tRecipe is not supplied and there is no recipe in inventory.
-              Syntax: addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount])
+              Syntax: addRecipe(sRecipe[, tRecipe=recipe in inventory][, nCount])
               Note: if no nCount is supplied this function crafts the recipe to obtain it.
               ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"] ]]
   
   sRecipe, tRecipe, nCount = getParam("stn",{"", {}, -1}, sRecipe, tRecipe, nCount )
-
-  if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
 
   if next(tRecipe) == nil then
     tRecipe = getInvRecipe()

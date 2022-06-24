@@ -29,7 +29,8 @@
 ## Initialize
 
   <a href="#INIT">INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.</a>
-## Terminate
+
+## Finalize
 
   <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes, tStacks from tables to text files.</a>
   
@@ -55,7 +56,7 @@
    <a href="#getCoords">getCoords() Gets coords from tTurtle.</a><br>
    <a href="#setCoords">setCoords(x, y, z) Set coords x, y, z for tTurtle.</a>
 
-## Equip
+## Equipment
   
    <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
    <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.</a>
@@ -149,7 +150,7 @@
    <a href="#dropRight">dropRight([nBlocks=stack]) Rotate right and drops or sucks nBlocks forward.</a><br>
    <a href="#dropUp">dropUp([Blocks=stack]) Drops Blocks from selected slot and inventory in the world upwards.</a>
 
-## Place
+## Placing
 
    <a href="#place">place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.</a><br>
    <a href="#placeAbove">placeAbove([Blocks=1]) places Blocks forwards or backwards, 1 block above the turtle, and returns to initial position.</a><br>
@@ -220,23 +221,25 @@
   <p id="INIT"></p>
   
 - INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.<br>
-    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tool name,
+    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
                    tRecipes - table of recipes,
                    tStacks - table of items stacks.
   Returns:  true
   ex: INIT()</pre>
-  
-## Terminate
+
+
+## Finalize
 
   <p id="TERMINATE"></p>
   
 - TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
-    <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tool name,
+    <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
                         tRecipes - table of recipes,
                         tStacks - table of items stacks.
   Returns:  true
   ex: TERMINATE()</pre>
-  
+
+
 ## Measurements
 
    <p id="addSteps"></p>
@@ -246,7 +249,7 @@
   Sintax: addSteps([nSteps=1])
   Returns:  x, y, z adding nSteps in direction turtle is facing.
             false - if nSteps is not a number.
-  ex: if tTurtle x=0, y=0, z=0, facing="x+"
+  ex: if tTurtle x=0, y=0, z=0, facing=1 ("x+")
     addSteps() - Returns 1,0,0.
     addSteps(-1) - Returns -1,0,0.</pre>
   
@@ -270,7 +273,7 @@
            false - if it couldn't.
   ex: loadTurtle()</pre>
   
-   <p id="saveTurtle">
+   <p id="saveTurtle"></p>
      
 - saveTurtle() Saves tTurtle to file tTurtle.txt.<br>
    <pre>Sintax: saveTurtle()
@@ -287,6 +290,7 @@
     <pre>Param: nTurns - number of 90 degrees turns to the left.
   Sintax: decFacing([nTurns=1])
   Returns: true
+  Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
     decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
@@ -294,7 +298,7 @@
    
 - getFacing() Returns tTurtle.facing.<br>
     <pre>Sintax: getFacing()
-  Returns: tTurtle.facing [0..3]
+  Returns: tTurtle.facing [0..3] equivalent to "z+"|"x+"|"z-"|"x-"
   ex: getFacing()</pre>
     
    <p id="incFacing"></p>
@@ -303,6 +307,7 @@
     <pre>Param: nTurns - number of 90 degrees turns to the right.
   Sintax: incFacing([nTurns=1])
   Returns: true
+  Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
   incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
   if tTurtle.facing>3 then tTurtle.facing and= 3 end</pre>
@@ -338,7 +343,7 @@
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
 
 
-## Equip
+## Equipment
   
    <p id="equip"></p>
      
@@ -359,6 +364,7 @@
     <pre>Sintax: getFreeHand()
   Returns: "left" or "right" the first free hand found.
            false - if no free hand found.
+  Note: you must use equip and not turtle.equip  for this function to work.
   ex: getFreeHand()</pre>
 
 
@@ -422,7 +428,7 @@
    <p id="loadTable"></p>
    
 - loadTable(sFileName) Loads a text file into a table.</a><br>
-    <pre>Param: sFileName - name of the file to serialize into a table.
+    <pre>Param: sFileName - name of the file to deserialize into a table.
   Sintax: loadTable(sFileName)
   Returns: table - if could read a text file into a table.
            false - if sFileName is not supplied,
@@ -433,7 +439,7 @@
    <p id="saveTable"></p>
    
 - saveTable(t, sFileName) Saves a table into a text file.</a><br>
-    <pre>Param: t - table to unserialize.
+    <pre>Param: t - table to serialize.
          sFileName - name of the file.
   Sintax: saveTable(t, sFileName)
   Returns: true - if saving file was a success.
@@ -467,7 +473,7 @@
    <p id="saveStacks"></p>
    
 - saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
-    <pre>Param: Sintax: attackDir([sDir="forward"])
+    <pre>Sintax: saveStacks()
   Returns: false - if it couldn't save file.
            true - if it could save file.
   ex: saveStacks()</pre>
@@ -477,25 +483,29 @@
 - loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
     <pre>Sintax: loadStacks()
   Returns false - if it couldn't load file.
-           true - if it could load file.
+          true - if it could load file.
   ex: loadStacks()</pre>
   
    <p id="getStack"></p>
   
- - getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
+ - getStack(\[nSlot=selected slot\]) Returns how many items can stack.</a><br>
     <pre>Param: nSlot - slot number 1..16, or the item name.
-  Sintax: getStack([nSlot=selected slot])
-  Return: quantity a item can stack.
-          nil - if slot is out of range[1..16].
-          false - if slot is empty.
-                - if item was not found in inventory.
-  ex: getStack() - gets the stack of item in selected slot.</pre>
+   Sintax: getStack([nSlot=selected slot])
+   Return: quantity a item can stack.
+           nil - if slot is out of range[1..16].
+           false - if slot is empty.
+                 - if item was not found in inventory.
+   ex: getStack() - gets the stack of item in selected slot.</pre>
   
    <p id="setStack"></p>
    
- - setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
- 
-   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
+ - setStack(sItemName, nStack) Sets the item stack value in tStacks.</a><br>
+    <pre>Param: sItemName - string item name.
+             nStack - number how much item can stack.
+   Return: true - if it could set the stack for item.
+            nil - if no item name supplied.
+                - if no stack number is supplied.
+   sintax: setStack(sItemName = selected slot)</pre>
 
 ## Attack
 
@@ -511,7 +521,53 @@
 
   
 ## Recipes
-
+  
+  <p id="addRecipe"></p>
+- addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Returns index of recipe.</a><br>
+  
+  <p id="arrangeRecipe"></p>
+  
+- arrangeRecipe([sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.
+    <pre>Param: sRecipe - the recipe name.
+  Sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+  Returns: true - if items from the recipe was arranged.
+          false - if no recipe name was supplied and there isn't tRecipes.lastRecipe.
+                - if the recipe is not registered.
+                - if the recipe index doesn't exist.
+                - if some slot couldn't be cleared.
+                - if it couldn't leave the exact number of items in a slot.
+                - if it doesn't have enough items to craft recipe.
+  ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.</pre>
+   
+   <p id="canCraft"></p>
+   
+- canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+    <pre>Return: true, table - with recipe name and index.
+                  false - if no recipe can be crafted.
+         Sintax: canCraft()
+         ex: canCraft()</pre>
+         
+   <p id="colLinMatch"></p>
+   
+- colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.
+    <pre>Param: tRecs - recipe from tRecipes.
+            tRec - recipe to compare.
+         Returns: true - if items in recipes have the same position.
+                 false - if items in recipes have the diferent position or diferent number of items.
+                   nil - if invalid parameter type.
+         Sintax: colLinMatch(tRecs, tRec)
+         Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
+         ex:getRecipeIndex()</pre>
+  
+   <p id="craftRecipe"></p>
+- craftRecipe(\[sRecipe=tRecipes.lastRecipe]\[nLimit=maximum craft possible]) Craft a recipe already stored or not.</a><br>
+   
+   <p id="flattenInventory"></p>
+   
+- flattenInventory() Averages all the item stacks in inventory.</a><br>
+    <pre>Returns:  true
+    Sintax: flattenInventory()</pre>
+         
   <p id="getFirstItemCoords"></p>
   
 - getFirstItemCoords(sRecipe, nIndex) Returns the column and line=0 of the first item in the recipe.
@@ -540,6 +596,69 @@
            false - if it is not a recipe in the inventory.
   ex: getMaxCraft() - Returns the recipe from inventory.</pre>
   
+  <p id="getProdQuant"></p>
+  
+- getProdQuant() Returns maximum limit to craft the recipe on inventory.
+    <pre>Returns: number - quantity of products made with inventory recipe.
+    sintax: getProdQuant()
+    Note: this function crafts the recipe in inventory.
+    ex: getProdQuant()</pre>
+  
+  <p id="getRecipe"></p>
+- getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.
+    <pre>Param:  sRecipe - recipe name.
+             nIndex - recipe index.
+         Returns: table - the recipe.
+                  false - if recipe name is not supplied and doesn't exist last recipe.
+                        - if recipe name doesn't exist.
+                        - if recipe index doesn't existy.
+         Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1])</pre>
+    
+  <p id="getRecipeIndex"></p>
+  
+- getRecipeIndex([sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]) Returns a number (index) of the recipe in tRecipes.
+    <pre>Param: sRecipe - string recipe name.
+           tRecipe - table with a recipe from inventory.
+         Returns: number - index of the recipe in tRecipes.
+         Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
+         ex:getRecipeIndex()</pre>
+         
+  <p id="getRecipeItems"></p>
+  
+- getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) Builds a table with items and quantities in a recipe.
+    <pre>Param: sRecipe - recipe name.
+            nIndex - recipe index
+         Return: table - with recipe ingredient name and quantity.
+                 false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
+                       - if tRecipes[sRecipe] dosn't exist, (never was made).
+                       - if the tRecipes[sRecipe[nIndex] doesn't exist.
+         Sintax: getRecipeItems([sRecipeName = tRecipes.lastRecipe][, nIndex=1])
+         ex: getRecipeItems("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2}</pre>
+         
+  <p id="haveItems"></p>
+  
+- haveItems([sRecipeName = tRecipes.lastRecipe]\[, nIndex =1]) Builds a table with the diference between the recipe and the inventory.
+    <pre>Param: sRecipe - string recipe name.
+            nIndex - number index of the recipe
+         Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
+                 nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
+                     - if sRecipe dosn't exist, (never was made).
+         Note: on the table, negative values indicate missing items.
+               if not it returns true and the table.
+         Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])
+         ex: haveItems()</pre>
+         
+  <p id="itemsBelong"></p>
+  
+- itemsBelong([sRecipe=tRecipes.lastRecipe]) Checks if all the items in inventory belong to a recipe.
+    <pre>Param:  sRecipe - string recipe name.
+             nIndex - index of tReecipes[sRecipe][nIndex].
+         Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
+                   nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
+                 false - if sRecipe is not in tRecipes or recipe index not found.
+         Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
+         ex: itemsBelong("minecraft:wooden_shovel") - Returns true if all items belong to the recipe, otherwise returns false.</pre>
+         
   <p id="loadRecipes"></p>
   
 - loadRecipes() Loads tRecipes from file "tRecipes.txt"
@@ -548,6 +667,18 @@
            true - if it could load file.
   ex: loadRecipes()</pre>
   
+  <p id="recipeSlots"></p>
+  
+- recipeSlots([sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Builds a table with item and quantity of slots ocupied by the item.
+    <pre>Param: SRecipe - string recipe name.
+            nIndex - number recipe index.
+         Returns:  table with item name and quantity of slots ocupied by it.
+                   false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
+                         - if tRecipes[sRecipe] doesn't exist.
+                         - if tRecipes[sRecipe][nIndex] doesn't exist.
+          sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+          ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}</pre>
+              
   <p id="saveRecipes"></p>
   
 - saveRecipes() Saves tRecipes in a file as "tRecipes.txt"
@@ -841,9 +972,9 @@
   ex: dropUp() - Drops 1 block upwards.</pre>
    
 
-## Place
+## Placing
 
-   <p id="place">
+   <p id="place"></p>
    
 - place([Blocks=1]) Places inventory selected Blocks in a strait line forward or backwards, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -853,7 +984,7 @@
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards
   ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
    
-   <p id="placeAbove">
+   <p id="placeAbove"></p>
    
 - placeAbove([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -863,8 +994,18 @@
                  - couldn't place block.
                  - invalid parameter.
   ex: placeAbove(1) or placeAbove() - Places one Block above turtle.</pre>
-            
-   <p id="placeBelow">
+   
+  <p id="placeBack"></p>
+  
+- placeBack([Blocks=1]) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
+    <pre>Param: nBlocks - number of blocks to place.
+    Returns:  number of blocks placed.
+              nil - invalid parameter.
+    sintax: placeBack([nBlocks=1])
+    Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
+    ex: place(1) or place() - Places 1 Block in front of turtle.</pre>
+  
+   <p id="placeBelow"></p>
    
 - placeBelow([Blocks=1]) Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -875,7 +1016,7 @@
                   - invalid parameter.
   ex: placeBelow(2) - Places two Blocks below turtle in a strait line forward.</pre>
    
-   <p id="placeDir">
+   <p id="placeDir"></p>
    
 - placeDir([sDir="forward"]) Places inventory selected Block in sDir.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
@@ -884,7 +1025,7 @@
            false if turtle doesn't place the selected block, or invalid parameter.
   ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.</pre>
    
-   <p id="placeDown">
+   <p id="placeDown"></p>
    
 - placeDown([Blocks=1]) Places inventory selected Blocks in a strait line downward or upwards, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -895,7 +1036,7 @@
   Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
   ex: placeDown(1) or placeDown() - Places 1 Block Down.</pre>
    
-   <p id="placeLeft">
+   <p id="placeLeft"></p>
    
 - placeLeft([Blocks=1]) Rotates turtle left or right, places inventory selected Blocks forward, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -907,7 +1048,7 @@
   Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
   ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.</pre>
    
-   <p id="placeRight">
+   <p id="placeRight"></p>
    
 - placeRight([Blocks=1]) Rotates turtle Right or left, places inventory selected Blocks forward, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -919,7 +1060,7 @@
   Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
   ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.</pre>
    
-   <p id="placeUp">
+   <p id="placeUp"></p>
    
 - placeUp([Blocks=1]) Places inventory selected Blocks in a strait line upward or downwards, and returns to initial position.<br>
     <pre>Param: Blocks - number of blocks to place.
@@ -933,29 +1074,29 @@
    
 ## Detect
 
-   <p id="detectAbove">
+   <p id="detectAbove"></p>
    
 - detectAbove([Blocks=1]) Detects if exits Blocks above the turtle in a strait line forward or backwards.<br>
     <pre>Param: Blocks - number of blocks to detect.
   Sintax: detectAbose([Blocks=1])
   Returns: true - if turtle detects a line of nBlocks above it.
            false - if blocked, empty space.
-					nil - if invalid parameter.
+           nil - if invalid parameter.
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectAbove() or detectAbove(1) - Detects 1 block up.</pre>
    
-   <p id="detectBelow">
+   <p id="detectBelow"></p>
    
 - detectBelow([Blocks=1]) Detects if exits Blocks below the turtle in a strait line forward or backwards.<br>
     <pre>Param: Blocks - number of blocks to detect.
   Sintax: detectBelow([Blocks=1])
   Returns: true - if turtle detects a line of nBlocks below.
            false - if blocked, empty space.
-					 nil - if invalid parameter
+           nil - if invalid parameter
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
   ex: detectBelow() or detectBelow(1) - Detect 1 block down.</pre>
    
-   <p id="detectDir">
+   <p id="detectDir"></p>
    
 - detectDir(sDir) Detects if is a block in sDir direction.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down" 
@@ -968,7 +1109,7 @@
 
 ## Disk
 
-   <p id="fsGetFreeSpace">
+   <p id="fsGetFreeSpace"></p>
    
 - fsGetFreeSpace() Gets the total free space on disk.<br>
 		<pre>Sintax: fsGetFreeSpace()
@@ -978,7 +1119,7 @@
    
 ## Inspect
     
-   <p id="inspectDir">
+   <p id="inspectDir"></p>
 
 - inspectDir([sDir="forward"]) Turtle inspect block in sDir direction.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
@@ -990,7 +1131,7 @@
 
 ## Compare
 
-   <p id="compareAbove">
+   <p id="compareAbove"></p>
    
 - compareAbove([Blocks=1]) Compares nBlocks above the turtle in a strait line with selected slot block.<br>
     <pre>Param: Blocks - the number of blocks to compare.
@@ -1001,7 +1142,7 @@
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareAbove() or compareAbove(1) - Compares 1 block up.</pre>
    
-   <p id="compareBelow">
+   <p id="compareBelow"></p>
    
 - compareBelow([Blocks=1]) Compare blocks below the turtle in a strait line with selected slot.<br>
     <pre>Param: Blocks - number of blocks to compare.
@@ -1012,7 +1153,7 @@
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
    
-    <p id="compareDir">
+    <p id="compareDir"></p>
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
@@ -1030,7 +1171,7 @@
 
 ## Inventory
     
-   <p id="clearSlot">
+   <p id="clearSlot"></p>
     
 - clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
     <pre>Param: nSlot - slot number to clear.
@@ -1039,7 +1180,7 @@
            true - if the slot is empty.
   ex: clearSlot() - Clears the selected slot.</pre>
    
-   <p id="decSlot">
+   <p id="decSlot"></p>
    
 - decSlot(nSlot) Decreases nSlot in range [1..16].<br>
     <pre>Param: nSlot - number of slot to decrement.
@@ -1047,14 +1188,14 @@
   Returns: the number of slot increased by 1.
   ex: decSlot(1) - Returns 16.</pre>
    
-   <p id="freeCount">
+   <p id="freeCount"></p>
    
 - freeCount() Get number of free slots in turtle's inventory.<br>
     <pre>Sintax: freeCount()
   Returns: Number of free slots.
   ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
    
-   <p id="getFreeSlot">
+   <p id="getFreeSlot"></p>
    
 - getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
     <pre>Param: nStartSlot - start slot number.
@@ -1067,14 +1208,14 @@
       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
    
-   <p id="groupItems">
+   <p id="groupItems"></p>
    
 - groupItems() Groups the same type of items in one slot in inventoy.<br>
     <pre>Sintax: groupItems()
   Returns: true.
   ex: groupItems() - Stacks the same items.</pre>
    
-   <p id="incSlot">
+   <p id="incSlot"></p>
    
 - incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].<br>
     <pre>Param: nSlot - the slot number.
@@ -1083,7 +1224,7 @@
   Returns: The number of slot increased by 1.
   ex: incSlot(16) - Returns 1</pre>
    
-   <p id="itemCount">
+   <p id="itemCount"></p>
    
 - itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
     <pre>Param: slot|"inventory"|item name - the slot number or the inventory as a all or a item name.
@@ -1095,7 +1236,7 @@
       itemCount("inventory") - counts items in inventory.
       itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
    
-   <p id="itemName">
+   <p id="itemName"></p>
    
 - itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
     <pre>Param: Slot - the slot number.
@@ -1104,7 +1245,7 @@
            false - if selected slot/slot is empty.
   ex: itemName(1) - Returns the name of item in slot 1.</pre>
   
-   <p id="itemSelect">
+   <p id="itemSelect"></p>
    
 - itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
     <pre>Param: slot/itemName - the slot number or the item name.
@@ -1116,7 +1257,7 @@
   Note: if executed select() is the same as turtle.getSelectedSlot()
   ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
    
-   <p id="itemSpace">
+   <p id="itemSpace"></p>
    
 - itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
     <pre>Param: slot|item Name - the number of the slot or the item name.
@@ -1128,7 +1269,7 @@
       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
       itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
    
-   <p id="search">
+   <p id="search"></p>
    
 - search(sItemName, nStartSlot, bWrap) Search inventory for ItemName, starting at startSlot, and if search wrap.<br>
     <pre>Param: sItemName - name of item to search.
@@ -1141,6 +1282,8 @@
                  - if nStartSlot is not a number.
   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
+   
+   <p id="transferFrom"></p>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
     <pre>Param: nSlot - slot where to transfer items from.
@@ -1156,7 +1299,7 @@
    
 ## Suck
 
-   <p id="suckDir">
+   <p id="suckDir"></p>
    
 - suckDir(sDir, nItems) Sucks or drops nItems into sDir direction.<br>
     <pre>Param: sDir = "forward"|"right"|"back"|"left"|"up"|"down"
