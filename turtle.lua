@@ -1438,8 +1438,26 @@ function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns 
   return bFound
 end
 
-function getProdQuant() --[[Returns the quantity of products made with the recipe in inventory.
-  31/03/2022  Returns: number - quantity of products made with inventory recipe.
+function getSecSumItems(nSlot) --[[ Gets the sum of items in sequencial not empty slots.
+  25/06/2022  Returns: number the sum of items in sequencial slots.
+              Sintax: getSecSumItems([nSlot=selected slot])
+              Note: it stops if empty slot or end of inventory.
+              ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.) ]]
+  nSlot = nSlot or turtle.getSelectedSlot()
+  if type(nSlot) ~= "number" then return nil, "getSecSumItems(Slot) - Slot must be a number." end
+  if nSlot < 1 or nSlot > 16 then return nil, "getSecSumItems(Slot) - Slot must be between 1 and 16." end
+  local nSum = 0
+  repeat
+    local nCount = turtle.getItemCount(nSlot)
+    if nCount == 0 then return nSum end
+    nSum = nSum + nCount
+    nSlot = nSlot + 1
+  until nSlot > 16
+  return nSum
+end
+
+function getProdQuant() --[[Gets quantity of products made with 1 recipe in inventory.
+  31/03/2022  Returns: number - quantity of products made with 1 inventory recipe.
               sintax: getProdQuant()
               Note: this function crafts the recipe in inventory.
               ex: getProdQuant()]]
@@ -1453,10 +1471,9 @@ function getProdQuant() --[[Returns the quantity of products made with the recip
   turtle.select(tRecipes["CSlot"])
 
   turtle.craft(nCount)
-  return turtle.getItemCount()/nCount
+  return getSecSumItems(tRecipes["CSlot"])/nCount
 end
 
--- not tested --
 function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   31/03/2022  Param:  sRecipe - name of recipe
                       tRecipe - recipe table, get if from getInvRecipe.
@@ -2776,9 +2793,8 @@ end
 
 INIT()
 
-local success, tItems = itemsBelong("minecraft:stick")
-print("success:", success)
-print(textutils.serialize(tItems))
-
+local tRecipe = getInvRecipe()
+print(addRecipe("minecraft:stick"))
+saveTable(tRecipes, "test.txt")
 
 --TERMINATE()
