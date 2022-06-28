@@ -92,7 +92,7 @@ improving commands in lua for computer craft turtle.
 - [x] decSlot(nSlot, bWrap) decreases nSlot in range [1..16].
 - [x] getInventory() builds a table with the slot, the name and quantity of items in inventory.
 - [x] countItemSlots() counts how many slots is ocupied with each item.
-- [x] ingDontBelong(sRecipe) checks if all the items in inventory belong to a recipe.
+- [x] itemsBelong(\[sRecipe=tRecipes.lastRecipe]) checks if all the items in inventory belong to a recipe.
 - [x] setCraftSlot(nSlot) sets the craft resulting slot, in tRecipes CSlot
 - [x] arrangeRecipe(sRecipe) arranges items in inventory to craft a recipe.
 - [x] transferFrom(nSlot, nItems) transfer nItems from nSlot to selected slot.
