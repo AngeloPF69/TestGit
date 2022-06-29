@@ -1,3 +1,7 @@
+--
+---- Version 0.3.0
+--
+
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
 insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
@@ -26,19 +30,30 @@ local CSLOT = 13 --default crafting slot
 ------ FUEL ------
 
 --developing
-function checkFuel(nActions) --check if the fuel is enough for that action.
+function checkFuel(nActions) --[[ Checks if the fuel is enough for nActions.
+  29/06/2022 v0.3.0 Param: nActions - number of turtle moves.
+  Returns:	true - if the fuel is enough.
+					 false - if the fuel is not enough.
+	sintax: checkFuel(nActions)
+  ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.]]
+  
+  if type(turtle.getFuelLimit()) == "string" then return true end
+  nActions = math.abs(nActions)
+  if turtle.getFuelLevel() - nActions > 0 then return true end
+  return false
 end
 
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
-  23/09/2021  Param: nCount - number of items to refuel.
-              Returns:	number of items refueled.
-												false - "Empty selected slot."
-															-	"Item is not fuel."
-															- "Turtle doesn't need fuel."
-															- "Turtle is at maximum fuel."
-                              - "refuel(nItems) - nItems must be a number."
-							sintax: refuel([nCount=stack of items])
-              ex: refuel(123) - Fuels the turtle with 123 items.]] 
+  23/09/2021 v0.1.0 Param: nCount - number of items to refuel.
+  Returns:	number of items refueled.
+						false - "Empty selected slot."
+                  -	"Item is not fuel."
+									- "Turtle doesn't need fuel."
+									- "Turtle is at maximum fuel."
+                  - "refuel(nItems) - nItems must be a number."
+	sintax: refuel([nCount=stack of items])
+  ex: refuel(123) - Fuels the turtle with 123 items.]] 
+  
 	local fuelLimit = turtle.getFuelLimit()
 	if type(fuelLimit) == "string" then return false, "Turtle doesn't need fuel." end
 	
@@ -69,23 +84,25 @@ end
 ------ EQUIP ------
 
 function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
-  23/09/2021  Returns:	"left" or "right" the first free hand found.
-												false - if no free hand found.
-              Sintax: getFreeHand()
-              ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
+  23/09/2021 v0.1.0 Returns:	"left" or "right" the first free hand found.
+										          false - if no free hand found.
+  Sintax: getFreeHand()
+  ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
+  
 	if tTurtle.leftHand == "empty" then return "left" end
 	if tTurtle.rightHand == "empty" then return "right" end
 	return false
 end
 
 function equip(sSide) --[[ Equip tool from the selected slot.
-  23/09/2021  Param: sSide - String: "left"|"right"
-              Returns:	true - if it was equiped.
-												false - "Invalid side."
-															- "Empty selected slot."
-															- if it can't equip tool.
-							sintax: equip([Side=first free hand(left|right)])
-              ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
+  23/09/2021 v0.1.0 Param: sSide - String: "left"|"right"
+  Returns:	true - if it was equiped.
+	  				false - "Invalid side."
+									- "Empty selected slot."
+									- if it can't equip tool.
+	sintax: equip([Side=first free hand(left|right)])
+  ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
+  
 	sSide = sSide or getFreeHand()
 	if not sSide then sSide = "right" end
   sSide = string.lower(sSide)
@@ -105,18 +122,20 @@ end
 ------ TURTLE ------
 
 function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
-  23/09/2021  Returns:	true - if it could save the file.
-												false - if it couldn't save file.
-              ex: turtleSave() ]] 
+  23/09/2021 v0.2.0 Returns:	true - if it could save the file.
+											        false - if it couldn't save file.
+  ex: saveTurtle() ]] 
+  
   local success, reason = saveTable(tTurtle, "tTurtle.txt")
   if success then return success end
   return false, reason
 end
 
 function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
-  23/09/2021  Returns:	true - if it could load the file to tTurtle.
-												false - if it couldn't load file.
-              ex: turtleLoad() ]] 
+  23/09/2021 v0.2.0 Returns:	true - if it could load the file to tTurtle.
+										      		false - if it couldn't load file.
+  ex: turtleLoad() ]] 
+  
   local t = loadTable("tTurtle.txt")
 	if not t then return false,"Can't load tTurtle.txt" end
 	tTurtle = t
@@ -127,7 +146,7 @@ end
 ------ INIT ------
 
 function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
-  02/11/2021  Returns:	true]] 
+  02/11/2021 v0.2.0 Returns:	true]] 
 	loadTurtle()
 	loadRecipes()
   loadStacks()
@@ -138,7 +157,7 @@ end
 ------ TERMINATE ------
 
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
-  02/11/2021  Returns:	true]] 
+  02/11/2021 v0.2.0 Returns:	true]] 
 	saveTurtle()
 	saveRecipes()
   saveStacks()
@@ -149,13 +168,14 @@ end
 ------ TURTLE STATUS FUNCTIONS ----
 
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
-  02/10/2021  Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
-              Sintax: setFacing(sFacing)
-              Returns:  number - tTurtle.facing
-                        false - if no parameter was supplied.
-                              - if sFacing is not in facingType.
-                              - if sFacing is not a string.
-              ex: setFacing("z+") - Sets the tTurtle.facing to "z+"=2]]
+  02/10/2021 v0.2.0 Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
+  Sintax: setFacing(sFacing)
+  Returns:  number - tTurtle.facing
+             false - if no parameter was supplied.
+                   - if sFacing is not in facingType.
+                   - if sFacing is not a string.
+  ex: setFacing("z+") - Sets the tTurtle.facing to "z+"=2]]
+  
   if not sFacing then return false, 'setFacing(Facing) - Must supply facing ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).' end
   if type(sFacing) == "number" then
     sFacing = bit32.band(sFacing, 3)
@@ -170,26 +190,29 @@ function setFacing(sFacing) --[[ Sets tTurtle.facing.
 end
 
 function getFacing() --[[ Returns tTurtle.facing.
-  02/10/2021  Sintax: getFacing()
-              Returns:  tTurtle.facing.
-              ex: getFacing() - Outputs whatever is in tTurtle.facing [0..3].]]
+  02/10/2021 v0.2.0 Sintax: getFacing()
+  Returns:  tTurtle.facing.
+  ex: getFacing() - Outputs whatever is in tTurtle.facing [0..3].]]
+  
   return tTurtle.facing
 end
 
 function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
-  03/09/2021  Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
-              Sintax: setCoords(x, y, z)
-              Returns:  true.
-              ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
+  03/09/2021 v0.2.0 Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
+  Sintax: setCoords(x, y, z)
+  Returns:  true.
+  ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
+  
   if not isNumber(x,y,z) then return false, "setCoords(x, y, z) - Coords must be numbers." end
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
   return true
 end
 
 function getCoords() --[[ Gets coords from turtle.
-  03/09/2021  Returns: the turtle coords x, y, z.
-              Sintax: getCoords()
-              ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
+  03/09/2021 v0.2.0 Returns: the turtle coords x, y, z.
+  Sintax: getCoords()
+  ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
+  
 	return tTurtle.x, tTurtle.y, tTurtle.z
 end
 
@@ -197,12 +220,13 @@ end
 ------ ATTACK FUCTIONS ------
 
 function attackDir(sDir) --[[ Turtle attack in sDir direction.
-  05/09/2021  Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down".
-              Returns:  true if turtle attack something.
-                        false - if there is nothing to attack, or no weapon.
-                              - if invalid parameter.
-              sintax: attackDir([sDir="forward"])
-              ex: attackDir("left") - Rotates left and attacks. ]]
+  05/09/2021 v0.1.0 Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down".
+  Returns:  true if turtle attack something.
+            false - if there is nothing to attack, or no weapon.
+                  - if invalid parameter.
+  sintax: attackDir([sDir="forward"])
+  ex: attackDir("left") - Rotates left and attacks. ]]
+  
   sDir = sDir or "forward"
   if not (type(sDir) == "string") then return nil,'attackDir([Direction="forward"]) - Diretion must be a string: "forward"|"right"|"back"|"left"|"up"|"down"' end
   sDir = string.lower(sDir)
@@ -227,12 +251,13 @@ end
 ------ MEASUREMENTS FUNCTIONS ------
 
 function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
-  24/09/2021  Param: nSteps - number of waking steps for turtle.
-              Sintax: addSteps([nSteps=1])
-              Returns:  x,y,z adding nSteps in direction turtle is facing.
-                        false - if nSteps is not a number.
-              Note: accepts positive and negative numbers.
-              ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
+  24/09/2021 v0.2.0 Param: nSteps - number of waking steps for turtle.
+  Sintax: addSteps([nSteps=1])
+  Returns:  x,y,z adding nSteps in direction turtle is facing.
+            false - if nSteps is not a number.
+  Note: accepts positive and negative numbers.
+  ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
+  
   nSteps = nSteps or 1
 
   if type(nSteps) ~= "number" then return false, "addSteps([Steps=1]) - Steps must be a number." end
@@ -245,11 +270,12 @@ function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
 end
 
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
-  03/09/2021  Param: x, y, z - coords of point to calculate distance to turtle.
-              Sintax: distTo(x, y, z)
-              Returns:  the x,y,z distance from turtle to coords x, y, z.
-              Note: returns a negative value if turtle is further away than the point x, y, z.
-              ex: distTo(1, 10, 34) - Returns 3 values.]] 
+  03/09/2021 v0.2.0 Param: x, y, z - coords of point to calculate distance to turtle.
+  Sintax: distTo(x, y, z)
+  Returns:  the x,y,z distance from turtle to coords x, y, z.
+  Note: returns a negative value if turtle is further away than the point x, y, z.
+  ex: distTo(1, 10, 34) - Returns 3 values.]] 
+  
   if not isNumber(x,y,z) then return false, "distTo(x, y, z) - Coords must be numbers." end
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
@@ -258,18 +284,19 @@ end
 ------ COMPARE FUNCTIONS ------
 
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
-  21/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
-                     nSlot - number 1..16
-              Returns: true - if the item in slot and in the world is the same.
-                       false, "empty" - if there is no block in sDir.
-                       false, "diferent" - if the block in the world is diferent.
-                       false, "empty slot" - if nSlot is empty.
-                       nil - invalid direction,
-                           - if nSlot is not a number,
-                           - if nSlot is not in [1..16].
-              sintax: compareDir([sDir="forward"][, nSlot=selected slot])
-              ex: compareDir() compares selected slot with block in front of turtle.
-                  compareDir("left", 2) - compares item in slot 2 with block on the left.]]
+  21/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+                           nSlot - number 1..16
+  Returns: true - if the item in slot and in the world is the same.
+           false, "empty" - if there is no block in sDir.
+           false, "diferent" - if the block in the world is diferent.
+           false, "empty slot" - if nSlot is empty.
+           nil - invalid direction,
+               - if nSlot is not a number,
+               - if nSlot is not in [1..16].
+  sintax: compareDir([sDir="forward"][, nSlot=selected slot])
+  ex: compareDir() compares selected slot with block in front of turtle.
+  compareDir("left", 2) - compares item in slot 2 with block on the left.]]
+  
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	sDir  = string.lower(sDir)
 	if not dirType[sDir] then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Invalid direction "forward"|"right"|"back"|"left"|"up"|"down".' end
@@ -295,16 +322,17 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 end
 
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
-  04/09/2021  Param: nBlocks - number of blocks to compare.
-              Returns:  true - if all the blocks are the same.
-                        false, "blocked" - if it can't advance.
-                        false, "empty" - if it found a empty space.
-                        false, "diferent" - if it found a diferent block.
-                        false, "empty slot" - if selected slot is empty.
-												nil, string - if invalid parameter.
-              sintax: compareAbove([nBlocks=1])
-              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
-              ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
+  04/09/2021 v0.1.0 Param: nBlocks - number of blocks to compare.
+  Returns:  true - if all the blocks are the same.
+            false, "blocked" - if it can't advance.
+            false, "empty" - if it found a empty space.
+            false, "diferent" - if it found a diferent block.
+            false, "empty slot" - if selected slot is empty.
+						nil, string - if invalid parameter.
+  sintax: compareAbove([nBlocks=1])
+  Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+  ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "compareAbove([Blocks=1]) - Blocks must be a number." end  --nBlocks must be a number.
@@ -328,16 +356,17 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
 end
 
 function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
-  04/09/2021  Param: nBlocks - number of blocks to compare.
-              Returns:  true - if all the blocks are the same.
-                        false, "blocked" - if blocked.
-                        false, "empty" - if it found a empty space.
-                        false, "diferent" - it found a diferent block.
-                        false, "empty slot" - if selected slot is empty.
-												nil, string - if invalid parameter.
-              sintax: compareBelow([nBlocks=1])
-              Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
-              ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
+  04/09/2021 v0.1.0 Param: nBlocks - number of blocks to compare.
+  Returns:  true - if all the blocks are the same.
+            false, "blocked" - if blocked.
+            false, "empty" - if it found a empty space.
+            false, "diferent" - it found a diferent block.
+            false, "empty slot" - if selected slot is empty.
+						nil, string - if invalid parameter.
+  sintax: compareBelow([nBlocks=1])
+  Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
+  ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "compareBelow([Blocks=1]) - Blocks must be a number." end
@@ -364,11 +393,12 @@ end
 ------ DETECT FUNCTIONS ------
 
 function detectDir(sDir) --[[ Detects if is a block in sDir direction.
-  03/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
-              Returns:  true - If turtle detects a block.
-                        false - if turtle didn't detect a block.
-                        nil - invalid parameter.
-              ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
+  03/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+  Returns:  true - If turtle detects a block.
+           false - if turtle didn't detect a block.
+             nil - invalid parameter.
+  ex: detectDir([sDir="forward"]) - Detect blocks forward.]]
+  
 	sDir = sDir or "forward"
   sDir = string.lower(sDir)
 
@@ -389,13 +419,14 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction.
 end
 
 function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block above the turtle.
-  03/09/2021  Param: nBlocks - number of blocks to detect.
-              Returns:  true - if turtle detects a line of nBlocks above it.
-                        false - if blocked, empty space.
-												nil - if invalid parameter.
-              sintax: detectAbove([nBlocks=1])
-              Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-              ex: detectAbove() or detectAbove(1) - Detects 1 block up.]]
+  03/09/2021 v0.1.0 Param: nBlocks - number of blocks to detect.
+  Returns:  true - if turtle detects a line of nBlocks above it.
+           false - if blocked, empty space.
+	  				nil - if invalid parameter.
+  sintax: detectAbove([nBlocks=1])
+  Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+  ex: detectAbove() or detectAbove(1) - Detects 1 block up.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "detectAbove([Blocks=1]) - Blocks must be a number." end
@@ -411,13 +442,14 @@ function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
 end
 
 function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block below the turtle.
-  03/09/2021  Param: nBlocks - number of blocks to detect.
-              Returns:  true - if turtle detects a line of nBlocks below.
-                        false - if blocked, empty space.
-												nil - if invalid parameter
-              sintax: detectBelow([nBlocks=1])
-              Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-              ex: detectBelow() or detectBelow(1) - Detect 1 block down.]]
+  03/09/2021 v0.1.0 Param: nBlocks - number of blocks to detect.
+  Returns:  true - if turtle detects a line of nBlocks below.
+           false - if blocked, empty space.
+             nil - if invalid parameter
+  sintax: detectBelow([nBlocks=1])
+  Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
+  ex: detectBelow() or detectBelow(1) - Detect 1 block down.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "detectBelow([Blocks=1]) - Blocks must be a number." end
@@ -436,11 +468,12 @@ end
 ------ INSPECT FUNCTIONS ------
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
-  05/09/2021  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
-              Returns:  true, table with data - If turtle detects a block.
-                        false, message - if turtle didn't detect a block.
-                        nil - 
-              ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
+  05/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+  Returns:  true, table with data - If turtle detects a block.
+            false, message - if turtle didn't detect a block.
+            nil - if invalid parameter sDir.
+  ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
+  
 	sDir = sDir or "forward"
   sDir = string.lower(sDir)
 
@@ -462,13 +495,14 @@ end
 ------ MOVING FUNCTIONS ------
 
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
-  27/08/2021  Param: nBlocks - number of blocks to walk.
-              Returns:  true - if turtle goes all way.
-                        false - "Can't advance forward."
-                        nil - invalid nBlocks type.
-              Sintax: forward([nBlocks=1])
-              Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
-              ex: forward(3) - Moves 3 blocks forward.]] 
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk.
+  Returns:  true - if turtle goes all way.
+           false - "Can't advance forward."
+             nil - invalid nBlocks type.
+  Sintax: forward([nBlocks=1])
+  Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
+  ex: forward(3) - Moves 3 blocks forward.]] 
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "forward([Blocks=1]) - Blocks must be a number." end
@@ -482,12 +516,13 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
 end
 
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
-  27/08/2021  Param: nBlocks - number of blocks to walk backwards. 
-              Returns:  true - if turtle goes all way.
-                        false - if turtle was blocked.
-                        nil - if nBlocks is not a number.
-              Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
-              ex: back(-3) - Moves 3 blocks forward.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk backwards. 
+  Returns:  true - if turtle goes all way.
+           false - if turtle was blocked.
+             nil - if nBlocks is not a number.
+  Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
+  ex: back(-3) - Moves 3 blocks forward.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "back([Blocks=1]) - Blocks must be a number." end
@@ -501,12 +536,13 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
 end
 
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
-  27/08/2021 Param: nBlocks - number of blocks to walk up.
-             Returns:  true - if turtle goes all way.
-                       false - if turtle was blocked.
-                       nil - if nBlocks is not a number.
-             Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
-             ex: up(3) - Moves 3 blocks up.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk up.
+  Returns:  true - if turtle goes all way.
+           false - if turtle was blocked.
+             nil - if nBlocks is not a number.
+  Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
+  ex: up(3) - Moves 3 blocks up.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "up([Blocks=1]) - Blocks must be a number." end
@@ -520,12 +556,13 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
 end
 
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
-  27/08/2021 -  Param: nBlocks - number of blocks to walk down.
-                Returns:  true - if turtle goes all way.
-                          false - if turtle was blocked.
-                          nil - if nBlocks is not a number.
-                Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
-                ex: down(3) - Moves 3 blocks down.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk down.
+  Returns:  true - if turtle goes all way.
+           false - if turtle was blocked.
+             nil - if nBlocks is not a number.
+  Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
+  ex: down(3) - Moves 3 blocks down.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "down([Blocks=1]) - Blocks must be a number." end
@@ -542,15 +579,16 @@ end
 ------ GENERAL FUNCTIONS ------
 
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
-  27/09/2021 - Param: t - table to save.
-                      sFileName - string filename.
-               Sintax: saveTable(t, sFileName)
-               Returns:  true - if saving file was a success.
-                          false - if t or sFileName not supplied,
-                                  if no disk space,
-                                  if it couldn't create file.
-               Note: if not supplied extension it adds ".txt" to the file name.
-               ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.]]
+  27/09/2021 v0.2.0 Param: t - table to save.
+                   sFileName - string filename.
+  Sintax: saveTable(t, sFileName)
+  Returns:  true - if saving file was a success.
+           false - if t or sFileName not supplied,
+                 - if no disk space,
+                 - if it couldn't create file.
+  Note: if not supplied extension it adds ".txt" to the file name.
+  ex: saveTable(oneTable, "oneFile") - Saves table oneTable into "oneFile.txt" file.]]
+  
 	if not t or not sFileName then return false, "Table or filename not supplied." end --no arguments
 	
   if not string.find(sFileName, "[.]") then sFileName=sFileName..".txt" end --if no extension add 1
@@ -566,13 +604,14 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
 end
 
 function loadTable(sFileName) --[[ Loads a text file into a table.
-  27/09/2021 -  Param: sFileName - string the file name.
-                Sintax: loadTable(sFileName)
-                Returns: table - if could read a text file into a table.
-                         false - if sFileName is not supplied,
-                               - if the file couldn't be opened for reading,
-                               - if the file is empty.
-                ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.]]
+  27/09/2021 v0.2.0 Param: sFileName - string the file name.
+  Sintax: loadTable(sFileName)
+  Returns: table - if could read a text file into a table.
+           false - if sFileName is not supplied,
+                 - if the file couldn't be opened for reading,
+                 - if the file is empty.
+  ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.]]
+  
 	if not sFileName then return false, "loadTable(FileName) - Must supply file name." end
 	
   local fh,t
@@ -586,10 +625,11 @@ function loadTable(sFileName) --[[ Loads a text file into a table.
 end
 
 function checkType(sType, ...) --[[ Checks if parameters are from sType.
-  03/09/2021  Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
-                     ... - the paremeters to check.
-              Returns: true - if all parameters match the sType.
-              ex: checkType("snt", "hello", number1, tTable) - Outputs: true.]]
+  03/09/2021 v0.1.0 Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+                           ... - the paremeters to check.
+  Returns: true - if all parameters match the sType.
+  ex: checkType("snt", "hello", number1, tTable) - Outputs: true.]]
+  
 	Args = { ... }
   
   if #Args ~= #sType then return false end
@@ -600,14 +640,15 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
-  27/08/2021  Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
-                     tDefault - table with default values.
-                     ... - parameters to order.
-              Returns:  Parameters sorted by type, nil if no parameters.
-                        nil - if no parameters.
-              sintax: getParam(sParamOrder, tDefault[, ...])
-              ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
-              Note: Only sorts parameters type (string, table, number and boolean).]]
+  27/08/2021 v0.1.0 Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+                           tDefault - table with default values.
+                           ... - parameters to order.
+  Returns:  Parameters sorted by type,
+            nil - if no parameters.
+  sintax: getParam(sParamOrder, tDefault[, ...])
+  ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
+  Note: Only sorts parameters type (string, table, number and boolean).]]
+  
   if not sParamOrder then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply string with parameters order." end
   if not tDefault then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply table with default values." end
   local Args={...}
@@ -646,12 +687,13 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
 end
 
 function isValue(value, t) --[[ Checks if value is in t table.
-  21/09/2021  Param:  value - any type of value.
-                      t - table with values to compare.
-              Sintax: isValue(value, t)
-              Returns:  true, key - if value is in t, key corresponding to value.
-                        false - if value is not in t.
-              ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".]]
+  21/09/2021 v0.2.0 Param:  value - any type of value.
+                            t - table with values to compare.
+  Sintax: isValue(value, t)
+  Returns:  true, key - if value is in t, key corresponding to value.
+            false - if value is not in t.
+  ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".]]
+  
   for k,v in pairs(t) do
     if v == value then return true, k end
   end
@@ -659,11 +701,12 @@ function isValue(value, t) --[[ Checks if value is in t table.
 end
 
 function isNumber(...) --[[ Checks if all parameters are numbers.
-  20/04/2022  Param:  ... - parameters to check
-              Returns:  true - if all parameters are numbers.
-                        false - if at least one parameter is not a number.
-              sintax: isNumber(...)
-              ex: isNumber(2, "hello", 4}) - Outputs: false.]]
+  20/04/2022 v0.3.0 Param:  ... - parameters to check
+  Returns:  true - if all parameters are numbers.
+           false - if at least one parameter is not a number.
+  sintax: isNumber(...)
+  ex: isNumber(2, "hello", 4}) - Outputs: false.]]
+  
   Args = {...}
   if #Args == 0 then return false end
   for i = 1, #Args do
@@ -673,12 +716,13 @@ function isNumber(...) --[[ Checks if all parameters are numbers.
 end
 
 function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in table t.
-  27/08/2021  Param: tSearch - table contains values to search in table t.
-                     t - table to search.
-              Returns:  true - tSearch is in t.
-                        false - at the least one element of tSearch is not in table t.
-              Sintax: tableInTable(tSearch, t)
-              ex: tableInTable("forward", lookingType) - outputs true.]]
+  27/08/2021 v0.1.0 Param: tSearch - table contains values to search in table t.
+                           t - table to search.
+  Returns:  true - tSearch is in t.
+           false - at the least one element of tSearch is not in table t.
+  Sintax: tableInTable(tSearch, t)
+  ex: tableInTable("forward", lookingType) - outputs true.]]
+  
   if type(tSearch) ~= "table" then return nil, "tableInTable(tSearch, t) - tSearch (items to search in t) must be a table." end
 
   totMatch = 0
@@ -697,9 +741,10 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
 end
 
 function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-  28/08/2021  Param: value - number to evaluate.
-              Sintax: sign(value)
-              Returns false if value is not a number, or not supplied.]]
+  28/08/2021 v0.1.0 Param: value - number to evaluate.
+  Sintax: sign(value)
+  Returns false if value is not a number, or not supplied.]]
+  
   if type(value) ~= "number" then return false, "sign(value) - Is not a number or not supplied." end
   if value < 0 then return -1 end
   if value == 0  then return 0 end
@@ -709,15 +754,18 @@ end
 ------ STACK FUNCTIONS ------
 
 function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
-  10/11/2021  Returns false - if it couldn't save file.
-                      true - if it could save file.
-              sintax: saveStacks()]]
+  10/11/2021 v0.2.0 Returns false - if it couldn't save file.
+                            true - if it could save file.
+  sintax: saveStacks()]]
+  
   return saveTable(tStacks, "tStacks.txt")
 end
 
 function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
-  10/11/2021  Returns false - if it couldn't load file.
-                      true - if it could load file.]]
+  10/11/2021 v0.2.0 Returns false - if it couldn't load file.
+                            true - if it could load file.
+  sintax: loadStacks()]]
+  
   local t = loadTable("tStacks.txt")
 	if not t then return false, "loadStacks() - Couldn't load tStacks.txt" end
 	tStacks = t
@@ -725,15 +773,16 @@ function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
 end
 
 function getStack(nSlot) --[[ Returns how many items can stack.
-  10/11/2021  Param: nSlot - slot number 1..16, or the item name.
-              Sintax: loadStacks()
-              Return: quantity a item can stack.
-                      nil - if slot is out of range[1..16].
-                      false - if slot is empty.
-                            - if item was not found in inventory.
-              sintax: getStack([nSlot/sItemName = selected slot]).
-              ex: getStack() - gets the stack of item in selected slot.
-                  getStack("minecraft:oak_planks") - gets the stack for oak_planks, in inventory or in tStacks.]]
+  10/11/2021 v0.2.0 Param: nSlot - slot number 1..16, or the item name.
+  Sintax: loadStacks()
+  Return: number - quantity a item can stack.
+             nil - if slot is out of range[1..16].
+           false - if slot is empty.
+                 - if item was not found in inventory.
+  sintax: getStack([nSlot/sItemName = selected slot]).
+  ex: getStack() - gets the stack of item in selected slot.
+      getStack("minecraft:oak_planks") - gets the stack for oak_planks, in inventory or in tStacks.]]
+  
   nSlot = nSlot or turtle.getSelectedSlot()
 
   local tData, nStack
@@ -760,12 +809,13 @@ function getStack(nSlot) --[[ Returns how many items can stack.
 end
 
 function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory, the slot and the name of item.
-  17/12/2021  Param: sItem - string - item name.
-              Return: number, number, string - the lowerstack of items in inventory, the Slot, the name of item.
-                      false - if item not found.
-              sintax: invLowerStack([sItem]).
-              ex: invLowerStack() - gets the lowest stack of items in inventory, the slot, and the item name.
-                  invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks in inventory, the slot and the item name.]]
+  17/12/2021 v0.2.0 Param: sItem - string - item name.
+  Return: number, number, string - the lowerstack of items in inventory, the Slot, the name of item.
+          false - if item not found.
+  sintax: invLowerStack([sItem]).
+  ex: invLowerStack() - gets the lowest stack of items in inventory, the slot, and the item name.
+  invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks in inventory, the slot and the item name.]]
+  
   local nLower, nRSlot = false
   local sName = ""
   for nSlot = 1, 16 do
@@ -795,12 +845,13 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
-  10/11/2021  Param: sItemName - string item name.
-                     nStack - number how much item can stack.
-              Return: true - if it could set the stack for item.
-                      nil - if no item name supplied.
-                          - if no stack number is supplied.
-              sintax: setStack(sItemName = selected slot) ]]
+  10/11/2021 v0.2.0 Param: sItemName - string item name.
+                           nStack - number how much item can stack.
+  Return: true - if it could set the stack for item.
+           nil - if no item name supplied.
+               - if no stack number is supplied.
+  sintax: setStack(sItemName = selected slot) ]]
+  
   sItemName, nStacks = getParam("sn", {"", -1}, sItemName, nStack)
   if sItemName == "" then return nil, "Must supply item name." end
   if nStack == -1 then return nil, "Must supply stack." end
@@ -812,7 +863,8 @@ end
 ------ RECIPES FUNCTIONS ------
 
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
-  20/11/2021  Return: table - with ingredient name and quantity.]]
+  20/11/2021 v0.3.0 Return: table - with ingredient name and quantity.]]
+  
   local tQuant = {}
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
@@ -826,14 +878,15 @@ function getInvItems() --[[ Builds a table with the items and quantities in inve
 end
 
 function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.
-  20/11/2021  Param:  sRecipe - recipe name.
-                      nIndex - recipe index
-              Return: table - with recipe ingredient name and quantity.
-                      false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
-                            - if tRecipes[sRecipe] dosn't exist, (never was made).
-                            - if the tRecipes[sRecipe[nIndex] doesn't exist.
-              Sintax: getRecipeItems([sRecipeName = tRecipes.lastRecipe][, nIndex=1])
-              ex: getRecipeItems("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2} ]]
+  20/11/2021 v0.3.0 Param:  sRecipe - recipe name.
+                            nIndex - recipe index
+  Return: table - with recipe ingredient name and quantity.
+          false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
+                - if tRecipes[sRecipe] dosn't exist, (never was made).
+                - if the tRecipes[sRecipe[nIndex] doesn't exist.
+  Sintax: getRecipeItems([sRecipeName = tRecipes.lastRecipe][, nIndex=1])
+  ex: getRecipeItems("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2} ]]
+  
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
 
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
@@ -852,11 +905,12 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
 end
 
 function canCraft() --[[ Retuns a table with recipe name and index that you can craft from inventory.
-  20/11/2021  Return: true, table - with recipe name and index.
-                      false - if no recipe can be crafted.
-              Sintax: canCraft()
-              Note: table[index]={[name]=recipe index}
-              ex: canCraft()]]
+  20/11/2021 v0.3.0 Return: true, table - with recipe name and index.
+                            false - if no recipe can be crafted.
+  Sintax: canCraft()
+  Note: table[index]={[name]=recipe index}
+  ex: canCraft()]]
+  
 	local tCRecipes = {} --recipes it can craft with items in inventory
 	local tInvItems = getInvItems() --items in inventory
 	for k, v in pairs(tRecipes) do
@@ -885,15 +939,16 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
 end
 
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
-  23/11/2021  Param: sRecipe - string recipe name.
-                     nIndex - number index of the recipe
-              Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
-                      nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
-                          - if sRecipe dosn't exist, (never was made).
-              Note: on the table, negative values indicate missing items.
-                    if not it returns true and the table.
-              Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])
-              ex: haveItems() - ]]
+  23/11/2021 v0.2.0 Param: sRecipe - string recipe name.
+                           nIndex - number index of the recipe
+  Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
+          nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
+              - if sRecipe dosn't exist, (never was made).
+  Note: on the table, negative values indicate missing items.
+        if not it returns true and the table.
+  Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])
+  ex: haveItems() = haveItems(tRecipes.lastRecipe, 1) - Retuens the table with the diference between the inventory and the recipe.]]
+  
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
   if not sRecipe then return false, "haveItems(RecipeName, Index) - Recipe name not supplied." end
@@ -919,14 +974,18 @@ function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference betwe
 end
 
 function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
-  19/10/2021  Returns false - if it couldn't save file.
-                      true - if it could save file.]]
+  19/10/2021 v0.2.0 Returns false - if it couldn't save file.
+                            true - if it could save file.
+  sintax: saveRecipes()]]
+  
 	return saveTable(tRecipes, "tRecipes.txt")
 end
 
 function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
-  19/10/2021  Returns false - if it couldn't load file.
-                      true - if it could load file.]]
+  19/10/2021 v0.2.0 Returns false - if it couldn't load file.
+                            true - if it could load file.
+  sintax: loadRecipes()]]
+  
 	local t = loadTable("tRecipes.txt")
 	if not t then return false,"loadRecipes() - Couldn't load tRecipes.txt" end
 	tRecipes = t
@@ -934,13 +993,14 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
 end
 
 function getRecipe(sRecipe, nIndex) --[[ Gets the recipe from tRecipes.
-  14/4/2022 Param:  sRecipe - recipe name.
-                    nIndex - recipe index.
-            Returns: table - the recipe.
-                     false - if recipe name is not supplied and doesn't exist last recipe.
-                           - if recipe name doesn't exist.
-                           - if recipe index doesn't existy.
-            Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) ]]
+  14/4/2022 v0.3.0 Param:  sRecipe - recipe name.
+                           nIndex - recipe index.
+  Returns: table - the recipe.
+           false - if recipe name is not supplied and doesn't exist last recipe.
+                 - if recipe name doesn't exist.
+                 - if recipe index doesn't existy.
+  Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) ]]
+  
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
   if not sRecipe then return false, "Must supply recipe name." end
@@ -950,15 +1010,16 @@ function getRecipe(sRecipe, nIndex) --[[ Gets the recipe from tRecipes.
 end
 
 function getInvRecipe() --[[ Builds a table with items and their position from inventory (the recipe).
-  19/10/2021  Returns false - if it is not a recipe in the inventory.
-                      tRecipe - the recipe with items and positions.
-              Sintax: getInvRecipe()
-              Note: Trecipe[item number].name = item name
-                    (the first item in table only have the item name)
-                    Trecipe[item number > 1].name = item name
-                    Trecipe[item number > 1].col = distance to first item col
-                    Trecipe[item number > 1].lin = distance to first item lin
-                    (the 2nd and posterior items have name, col and lin indexes in table)]]
+  19/10/2021 v0.3.0 Returns false - if it is not a recipe in the inventory.
+                            tRecipe - the recipe with items and positions.
+  Sintax: getInvRecipe()
+  Note: Trecipe[item number].name = item name
+        (the first item in table only have the item name)
+        Trecipe[item number > 1].name = item name
+        Trecipe[item number > 1].col = distance to first item col
+        Trecipe[item number > 1].lin = distance to first item lin
+        (the 2nd and posterior items have name, col and lin indexes in table)]]
+  
   if not turtle.craft(0) then return false, "This is not a recipe." end
   
 	local index, tFirstItem, tData, tRecipe = 1
