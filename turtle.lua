@@ -1051,8 +1051,10 @@ function getInvRecipe() --[[ Builds a table with items and their position from i
 end
 
 function getMaxCraft() --[[ Returns maximum limit to craft the recipe on inventory.
-  19/10/2021  Returns false - if it is not a recipe in the inventory.
-                      tRecipe - the recipe with items and positions.]]
+  19/10/2021 v0.2.0 Returns false - if it is not a recipe in the inventory.
+                            tRecipe - the recipe with items and positions.
+  sintax: getMaxCraft()]]
+  
   --if not turtle.craft(0) then return false, "This is not a recipe." end
   local tIng = getInvItems() --[ingredient name] = quantity
   local tIngSlots = countItemSlots() --[ingredient name] = quantity of slots ocupied
@@ -1072,11 +1074,13 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
 end
 
 function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 of the first item in the recipe.
-  19/10/2021  Param: sRecipe - stringh recipe name.
-                     nIndex - number index of the recipe tRecipes[sRecipe][nIndex].
-              Returns:  col, lin - the column and line of first item.
-                        false - if the recipe name was not supplied and doesn't exist an last recipe.
-                              - if this recipe does not exist.]]
+  19/10/2021 v0.2.0 Param: sRecipe - stringh recipe name.
+                           nIndex - number index of the recipe tRecipes[sRecipe][nIndex].
+  Returns:  col, lin - the column and line of first item.
+               false - if the recipe name was not supplied and doesn't exist in tRecipes.lastRecipe.
+                     - if this recipe does not exist.
+  sintax: getFirstItemCoords([sRecipe=tRecipes.lastRecipe][, nIndex=1]) ]]
+  
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
   if type(sRecipe) == "number" then return false, "Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
@@ -1093,15 +1097,16 @@ function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 
 end
 
 function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a slot that has sItemName.
-  19/10/2021  Param: sItemName - string item name.
-                     nStartSlot - number starting slot.
-                     bWrap - boolean if search wraps around the inventory.
-              Returns:  nSlot, nSpace - Slot where is this item, and number of space.
-                        false - if it didn't find a slot with sItemName and some space.
-              sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
-              ex: searchSpace("minecraft:oak_planks") - Search for a not complete stack of oak boards.
-                  searchSpace("minecraft:cobblestone", 16, false) - Checks if slot 16 has cobblestone and space for more.
-                  searchSpace("minecraft:cobblestone", 5) - Searchs for cobblestone a incomplete stack, starting at slot 5 in all inventory.]]
+  19/10/2021 v0.2.0 Param: sItemName - string item name.
+                           nStartSlot - number starting slot.
+                           bWrap - boolean if search wraps around the inventory.
+  Returns:  nSlot, nSpace - Slot where is this item, and number of space.
+                    false - if it didn't find a slot with sItemName and some space.
+  sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
+  ex: searchSpace("minecraft:oak_planks") - Search for a not complete stack of oak boards.
+      searchSpace("minecraft:cobblestone", 16, false) - Checks if slot 16 has cobblestone and space for more.
+      searchSpace("minecraft:cobblestone", 5) - Searchs for cobblestone a incomplete stack, starting at slot 5 in all inventory.]]
+  
   local nSlot, nSpace = nStartSlot
   repeat
     nSlot = search(sItemName, nSlot, bWrap)
@@ -1115,16 +1120,17 @@ function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a sl
 end
 
 function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
-  19/10/2021  Param: sItemName - string name of the item.
-                     nQuant - number quantity of items to leave in selected slot.
-                     bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
-              Returns:  true - if there is nQuant of items in selected slot.
-                        false - if sItemName not supplied.
-                        false - if there is no items to tranfer to selected slot or no space to tranfer items to.
-              Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
-              ex: leaveItems() - Removes items from selected slot.
-                  leaveItems("minecraft:cobblestone") - Removes items from selected slot.
-                  leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot]]
+  19/10/2021 v0.2.0 Param: sItemName - string name of the item.
+                              nQuant - number quantity of items to leave in selected slot.
+                               bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
+  Returns:  true - if there is nQuant of items in selected slot.
+           false - if sItemName not supplied.
+           false - if there is no items to tranfer to selected slot or no space to tranfer items to.
+  Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
+  ex: leaveItems() - Removes items from selected slot.
+      leaveItems("minecraft:cobblestone") - Removes items from selected slot.
+      leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot]]
+  
   sItemName, nQuant, bWrap = getParam("snb", {"", 0, true}, sItemName, nQuant, bWrap)
   local tData = turtle.getItemDetail()
 
@@ -1182,12 +1188,13 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
 end
 
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
-  19/10/2021  Param: nSlot - number slot to clear.
-                     bWrap - slot where to put excess items can be lower than nSlot(wrap around inventory).
-              Returns:  false - if there is no space to tranfer items.
-                        true - if the slot is empty.
-                        nil - if nSlot is out of range [1..16].
-              Sintax: clearSlot([nSlot=selected slot][], bWrap)]]
+  19/10/2021 v0.2.0 Param: nSlot - number slot to clear.
+                           bWrap - slot where to put excess items can be lower than nSlot(wrap around inventory).
+  Returns:  false - if there is no space to tranfer items.
+             true - if the slot is empty.
+              nil - if nSlot is out of range [1..16].
+  Sintax: clearSlot([nSlot=selected slot][], bWrap)]]
+  
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if nSlot > 16 or nSlot < 1 then return nil, "clearSlot(Slot, Wrap) - Slot out of range." end
   if isEmptySlot(nSlot) then return true end
@@ -1196,14 +1203,20 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
 end  
     
 function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
-  02/11/2021  Param: nSlot - number slot where to transfer from.
-                     nItems - number items to transfer from.
-              Returns:  number of items in selected slot.
-                        nil - if nSlot is not supplied.
-                        false - if nSlot is empty.
-                              - if nSlot is out of range [1..16].
-                              - if selected slot is full.]]
+  02/11/2021 v0.2.0 Param: nSlot - number slot where to transfer from.
+                          nItems - number items to transfer from.
+  Returns:  number of items in selected slot.
+            nil - if nSlot not supplied.
+                - if nItems not supplied.
+                - if nItems is not a number
+          false - if nSlot is empty.
+                - if nSlot is out of range [1..16].
+                - if selected slot is full.
+  sintax: transferFrom(nSlot, nItems]]
+  
   if not nSlot then return nil, "transferFrom(nSlot, nItems) - Must supply origin slot." end
+  if not nItems then return nil, "transferFrom(nSlot, nItems) - Must supply number of items." end
+  
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return false, "Empty origin slot." end
   local destSlot = turtle.getSelectedSlot()
@@ -1211,6 +1224,8 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
   if nSlot < 1 or nSlot > 16 then return false, "transferFrom(nSlot, nItems) - Slot out of range [1..16]." end
   turtle.select(nSlot)
 
+  if type(nItems) ~= "number" then return nil, "transferFrom(nSlot, nItems) - nItems must be a number." end
+  if nItems < 0 then return nil, "transferFrom(nSlot, nItems) - nItems must be positive." end
   if not turtle.transferTo(destSlot, nItems) then
     turtle.select(destSlot)
      return false, "Couldn't tranfer items."
