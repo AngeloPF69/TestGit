@@ -1,3 +1,19 @@
+# Version 0.3.0
+  - haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
+  - canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+  - addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
+  - getInvRecipe() Builds a table with items and their position from inventory (the recipe).
+  - getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.
+  - getRecipeItems(sRecipe, nIndex) Builds a table with items and quantities in a recipe.
+  - getInvItems() Builds a table with the items and quantities in inventory.
+  - getRecipeIndex(sRecipe, tRecipe) Returns a number (index) of the recipe in tRecipes.
+  - colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.
+  - getProdQuant() Returns the quantity of products made with the recipe in inventory.
+  - placeBack(nBlocks) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
+  - getItemName(nSlot) Gets the item name from Slot/selected slot.
+  - isNumber(...) Checks if all parameters are numbers.
+  - checkfuel(nActions) check if the fuel is enough for that action.
+
 # Version 0.2.0
   - getFreeHand() - Gets turtle free hand: "left"|"right"|false.
   - getCoords() gets coords from turtle.
