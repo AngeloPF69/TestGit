@@ -1237,14 +1237,15 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
 end
 
 function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
-  21/01/2022  Param:  SRecipe - string recipe name.
-                      nIndex - number recipe index.
-              Returns:  table with item name and quantity of slots ocupied by it.
-                        false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
-                              - if tRecipes[sRecipe] doesn't exist.
-                              - if tRecipes[sRecipe][nIndex] doesn't exist.
-							sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
-							ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
+  21/01/2022 v0.2.0 Param:  SRecipe - string recipe name.
+                            nIndex - number recipe index.
+  Returns:  table with item name and quantity of slots ocupied by it.
+            false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
+                  - if tRecipes[sRecipe] doesn't exist.
+                  - if tRecipes[sRecipe][nIndex] doesn't exist.
+	sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+	ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
+
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
   if type(sRecipe) == "number" then return false, "recipeSlots(sRecipe, nIndex) - Must supply recipe name." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
@@ -1261,11 +1262,12 @@ function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity
 end
 
 function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
-  21/01/2022  Param:  tSlots - table with item name and quantity of slots ocupied in the recipe.
-                      tIng - table with item name and quantity in the inventory.
-              Returns:  table with item and average between items and slots.
-							sintax: calcAverage(tSlots, tIng)
-							ex: calcAverage(tSlots, tIng)]]
+  21/01/2022 v0.2.0 Param:  tSlots - table with item name and quantity of slots ocupied in the recipe.
+                            tIng - table with item name and quantity in the inventory.
+  Returns:  table with item and average between items and slots.
+	sintax: calcAverage(tSlots, tIng)
+	ex: calcAverage(tSlots, tIng)]]
+
   if not tSlots then return false, "calcAverage(tSlots, tIng) - Table of quantity of slots ocupied by recipe not supplied." end
   if not tIng then return false, "calcAverage(tSlots, tIng) - Table of items in the inventory not supplied." end
 
@@ -1281,17 +1283,18 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
 end
 
 function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
-  21/01/2022 Param: sRecipe - recipe name.
-                    nIndex - recipe index (tRecipes[recipeName][index])
-             Returns:  true - if items from the recipe was arranged.
-                      false - if no recipe name was supplied and there isn't tRecipes.lastRecipe.
-                            - if the recipe is not registered.
-                            - if the recipe index doesn't exist.
-                            - if some slot couldn't be cleared.
-                            - if it couldn't leave the exact number of items in a slot.
-                            - if it doesn't have enough items to craft recipe.
-             sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
-						 ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
+  21/01/2022 v0.2.0 Param: sRecipe - recipe name.
+                           nIndex - recipe index (tRecipes[recipeName][index])
+  Returns:  true - if items from the recipe was arranged.
+            false - if no recipe name was supplied and there isn't tRecipes.lastRecipe.
+                  - if the recipe is not registered.
+                  - if the recipe index doesn't exist.
+                  - if some slot couldn't be cleared.
+                  - if it couldn't leave the exact number of items in a slot.
+                  - if it doesn't have enough items to craft recipe.
+  sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+	ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
+
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)              
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
   if not sRecipe then return false, "arrangeRecipe(sRecipe, nIndex) - Must supply recipe name." end
@@ -1330,9 +1333,10 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
 end
 
 function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
-  03/11/2021  Param: nSlot - number slot where the product of the recipe is put.
-              Returns:  nil - if nSlot is not in range[1..16].
-                        true - if was set tRecipes["CSlot"].]]
+  03/11/2021 v0.2.0 Param: nSlot - number slot where the product of the recipe is put.
+  Returns:  nil - if nSlot is not in range[1..16].
+           true - if was set tRecipes["CSlot"].]]
+
   nSlot = nSlot or turtle.selectedSlot()
   if nSlot < 0 or nSlot > 16 then return nil, "setCraftSlot(nSlot) - nSlot out of range." end
   tRecipes["CSlot"] = nSlot
@@ -1340,8 +1344,9 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSl
 end
 
 function flattenInventory() --[[ Averages all the item stacks in inventory.
-  26/01/2022  Returns:  true
-              Sintax: flattenInventory()]]
+  26/01/2022 v0.2.0 Returns:  true
+  Sintax: flattenInventory()]]
+
   local tTotIng = getInvItems()
   local tTotSlots = countItemSlots()
   local tInv = getInventory() --get [slot][itemName]=Quantity
@@ -1392,13 +1397,14 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
 end
 
 function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory belong to a recipe.
-  26/01/2022  Param:  sRecipe - string recipe name.
-                      nIndex - index of tReecipes[sRecipe][nIndex].
-              Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
-                        nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
-                        false - if sRecipe is not in tRecipes or recipe index not found.
-              Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
-              ex: itemsBelong("minecraft:wooden_shovel") - Returns false if there is items that don't belong to the recipe, otherwise returns true.]]
+  26/01/2022 v0.2.0 Param:  sRecipe - string recipe name.
+                            nIndex - index of tReecipes[sRecipe][nIndex].
+  Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
+            nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
+          false - if sRecipe is not in tRecipes or recipe index not found.
+  Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
+  ex: itemsBelong("minecraft:wooden_shovel") - Returns false if there is items that don't belong to the recipe, otherwise returns true.]]
+
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, -1}, sRecipe, nIndex)
   if not sRecipe then return nil, "itemsBelong([sRecipe=tRecipes.lastRecipe]) - Recipe name not supplied." end
   if not tRecipes[sRecipe] then return false, "Recipe not found." end
@@ -1441,11 +1447,12 @@ function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory 
 end
 
 function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
-  01/02/2022  Param: sRecipe - string recipe name.
-                     tRecipe - table with a recipe from inventory.
-              Returns: number - index of the recipe in tRecipes.
-              Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
-              ex:getRecipeIndex()]]
+  01/02/2022 v0.3.0 Param: sRecipe - string recipe name.
+                           tRecipe - table with a recipe from inventory.
+  Returns: number - index of the recipe in tRecipes.
+  Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
+  ex:getRecipeIndex()]]
+
   sRecipe, tRecipe = getParam("st", {tRecipes.lastRecipe,{}}, sRecipe, tRecipe)
   if not sRecipe then return false, "getRecipeIndex(sRecipe, tRecipe) - Recipe name not supplied."
   else
@@ -1490,14 +1497,15 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
 end
 
 function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns true if is the same.
-  21/04/2022  Param: tRecs - recipe from tRecipes.
-                     tRec - recipe to compare.
-              Returns: true - if items in recipes have the same position.
-                       false - if items in recipes have the diferent position or diferent number of items.
-                       nil - if invalid parameter type.
-              Sintax: colLinMatch(tRecs, tRec)
-              Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
-              ex:getRecipeIndex()]]
+  21/04/2022 v0.3.0 Param: tRecs - recipe from tRecipes.
+                            tRec - recipe to compare.
+  Returns: true - if items in recipes have the same position.
+          false - if items in recipes have the diferent position or diferent number of items.
+            nil - if invalid parameter type.
+  Sintax: colLinMatch(tRecs, tRec)
+  Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
+  ex:getRecipeIndex()]]
+
   if (type(tRecs) ~= "table") or (type(tRec) ~= "table") then
     return nil, "colLinMatch(tRecs, tRec) - tRecs and tRec must be tables."
   end
@@ -1514,21 +1522,23 @@ function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns 
   return bFound
 end
 
-function getSecSumItems(nSlot) --[[ Gets the sum of items in sequencial not empty slots.
+--not tested
+function getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.
   25/06/2022  Returns: number the sum of items in sequencial slots.
               Sintax: getSecSumItems([nSlot=selected slot])
               Note: it stops if empty slot or end of inventory.
               ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.) ]]
-  nSlot = nSlot or turtle.getSelectedSlot()
+  nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "getSecSumItems(Slot) - Slot must be a number." end
   if nSlot < 1 or nSlot > 16 then return nil, "getSecSumItems(Slot) - Slot must be between 1 and 16." end
-  local nSum = 0
+
+  local nSum, nStartSlot = 0, nSlot
   repeat
     local nCount = turtle.getItemCount(nSlot)
     if nCount == 0 then return nSum end
     nSum = nSum + nCount
-    nSlot = nSlot + 1
-  until nSlot > 16
+    nSlot = incSlot(nSlot, bWrap)
+  until (not nSlot) or (nSlot == nStartSlot)
   return nSum
 end
 
@@ -2547,7 +2557,7 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
   return turtle.getItemDetail(nSlot) == nil
 end
 
-function isEmptyInventory() --[[ Checks if nSlot is empty.
+function isEmptyInventory() --[[ Checks if inventory is empty.
   30/04/2022  Returns: true - if inventory is empty.
                       false - if inventory is not empty.
               sintax: isEmptyInventory()
