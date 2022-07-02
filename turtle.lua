@@ -2879,6 +2879,6 @@ end
 
 INIT()
 
-print(craftInv(1))
+print(getSecSumItems(13))
 
 --TERMINATE()
