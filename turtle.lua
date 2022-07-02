@@ -2793,8 +2793,6 @@ end
 
 INIT()
 
-local tRecipe = getInvRecipe()
-print(addRecipe("minecraft:stick"))
-saveTable(tRecipes, "test.txt")
+print(craftInv(1))
 
 --TERMINATE()
