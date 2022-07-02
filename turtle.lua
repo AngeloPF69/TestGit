@@ -495,7 +495,7 @@ end
 ------ MOVING FUNCTIONS ------
 
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk.
+  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk.
   Returns:  true - if turtle goes all way.
            false - "Can't advance forward."
              nil - invalid nBlocks type.
@@ -516,7 +516,7 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
 end
 
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk backwards. 
+  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk backwards. 
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -536,7 +536,7 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
 end
 
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk up.
+  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk up.
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -556,7 +556,7 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
 end
 
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk down.
+  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk down.
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
