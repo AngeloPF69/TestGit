@@ -1729,7 +1729,16 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
 	end
 end
 
---not tested
+function getLowerIndex(t)
+  local Lower
+  for k, v in pairs(t) do
+    if not Lower then Lower = k
+    else if k < Lower then Lower = k end
+    end
+  end
+  return Lower
+end
+
 function craftInv(nLimit) --[[ Crafts the recipe in inventory.
   20/05/2022  Param: nLimit - number products to craft.
               Returns: true, string product name, number index of recipe.
@@ -1759,14 +1768,13 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
 	local bInc, tInc = cmpInvIncreased(tInv1, tInv2) --compares the 2 snapshots if there was a increase of items.
 	if not bInc then return false, "I don't know where the products went." end --no
 
-	local nSlot, _ = next(tInc, nil) --get the slot where is the first product item.
-  local sRecipe = next(tInc[nSlot]) --get the product name.
-  nCount = getSecSumItems(nSlot, false)/nMaxCraft --adjust count for 1 recipe
+	local nFirstSlot = getLowerIndex(tInc) --get the slot where is the first product item.
+  local sRecipe = next(tInc[nFirstSlot]) --get the product name.
+  nCount = getSecSumItems(nFirstSlot, false)/nMaxCraft --adjust count for 1 recipe
   local nIndex = addRecipe(sRecipe, tRecipe, nCount) --add the recipe to tRecipes.
   if not nIndex then return false, "Couldn't add recipe." end
   return true, sRecipe, nIndex
 end
-
 
 ------ ROTATING FUNCTIONS ------  
 

@@ -3,10 +3,10 @@
     {
       recipe = {
         {
-          "minecraft:jungle_planks",
+          "minecraft:spruce_planks",
         },
         {
-          "minecraft:jungle_planks",
+          "minecraft:oak_planks",
           lin = 1,
           col = 0,
         },
