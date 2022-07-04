@@ -1,50 +1,12 @@
 {
-  [ "minecraft:oak_button" ] = {
-    {
-      recipe = {
-        {
-          "minecraft:oak_planks",
-        },
-      },
-      count = 1,
-    },
-  },
-  lastRecipe = "minecraft:stick",
-  lastIndex = 3,
   [ "minecraft:stick" ] = {
     {
       recipe = {
         {
-          "minecraft:oak_planks",
-        },
-        {
-          "minecraft:oak_planks",
-          col = 0,
-          lin = 1,
-        },
-      },
-      count = 4,
-    },
-    {
-      recipe = {
-        {
           "minecraft:jungle_planks",
         },
         {
           "minecraft:jungle_planks",
-          lin = 1,
-          col = 0,
-        },
-      },
-      count = 4,
-    },
-    {
-      recipe = {
-        {
-          "minecraft:spruce_planks",
-        },
-        {
-          "minecraft:spruce_planks",
           lin = 1,
           col = 0,
         },
@@ -53,4 +15,6 @@
     },
   },
   CSlot = 13,
+  lastIndex = 1,
+  lastRecipe = "minecraft:stick",
 }
