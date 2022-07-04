@@ -1729,7 +1729,12 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
 	end
 end
 
-function getLowerIndex(t)
+function getLowestKey(t) --[[ Gets the lowest key of the table t.
+  04/07/2022 Param: t - table to look for the lowest key.
+  Return: number - the lowest key.
+  Sintax: getLowestKey(t)
+  Note: All the keys must have the same type.
+  ex: getLowestKey({[1]="minecraft:cobblestone", [-1]="minecraft:stick"}) - returns -1.]]
   local Lower
   for k, v in pairs(t) do
     if not Lower then Lower = k
@@ -1768,7 +1773,7 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
 	local bInc, tInc = cmpInvIncreased(tInv1, tInv2) --compares the 2 snapshots if there was a increase of items.
 	if not bInc then return false, "I don't know where the products went." end --no
 
-	local nFirstSlot = getLowerIndex(tInc) --get the slot where is the first product item.
+	local nFirstSlot = getLowestKey(tInc) --get the slot where is the first product item.
   local sRecipe = next(tInc[nFirstSlot]) --get the product name.
   nCount = getSecSumItems(nFirstSlot, false)/nMaxCraft --adjust count for 1 recipe
   local nIndex = addRecipe(sRecipe, tRecipe, nCount) --add the recipe to tRecipes.
