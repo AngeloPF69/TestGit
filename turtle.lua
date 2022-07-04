@@ -939,7 +939,7 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
 end
 
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
-  23/11/2021 v0.2.0 Param: sRecipe - string recipe name.
+  23/11/2021 v0.3.0 Param: sRecipe - string recipe name.
                            nIndex - number index of the recipe
   Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
           nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
@@ -1543,7 +1543,7 @@ function getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial n
 end
 
 function getProdQuant() --[[Gets quantity of products made with 1 recipe in inventory.
-  31/03/2022  Returns: number - quantity of products made with 1 inventory recipe.
+  31/03/2022 v0.3.0 Returns: number - quantity of products made with 1 inventory recipe.
               sintax: getProdQuant()
               Note: this function crafts the recipe in inventory.
               ex: getProdQuant()]]
@@ -2170,7 +2170,7 @@ function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or b
 end
 
 function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.3.0 Param: nBlocks - number of blocks to place.
               Returns:  number of blocks placed.
                         nil - invalid parameter.
               sintax: placeBack([nBlocks=1])
@@ -2599,7 +2599,7 @@ function itemCount(nSlot) --[[ Counts items in inventory
 end
 
 function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
-  05/09/2021  Param: nSlot - number slot where to get the item name.
+  05/09/2021 v0.3.0 Param: nSlot - number slot where to get the item name.
               Returns: item name - if slot is not empty.
                         false - if slot is empty.
               Sintax: getItemName([nSlot=selected slot])
