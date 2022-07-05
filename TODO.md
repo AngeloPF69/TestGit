@@ -33,6 +33,7 @@ improving commands in lua for computer craft turtle.
 
 ### DONE
 
+- [x] getLowestKey(t) Gets the lowest key of the table t.
 - [x] haveIngredients(sRecipe, nLimit) Renamed to haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
 - [x] canCraft() Retuns a table with recipe name and index that you can craft from inventory.
 - [x] addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
