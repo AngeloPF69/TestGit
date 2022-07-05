@@ -401,7 +401,7 @@
   
 - getLowestKey(t) Gets the lowest key of the table t.</a><br>
     <pre>Param: t - table to look for the lowest key.
-  Return: number - the lowest key.
+  Return: key type - the lowest key.
   Sintax: getLowestKey(t)
   Note: All the keys must have the same type.
   ex: getLowestKey({[1]="minecraft:cobblestone", [-1]="minecraft:stick"}) - returns -1.</pre>
