@@ -29,15 +29,19 @@ local CSLOT = 13 --default crafting slot
 
 ------ FUEL ------
 
---developing
 function checkFuel(nActions) --[[ Checks if the fuel is enough for nActions.
   29/06/2022 v0.3.0 Param: nActions - number of turtle moves.
   Returns:	true - if the fuel is enough.
 					 false - if the fuel is not enough.
-	sintax: checkFuel(nActions)
-  ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.]]
+           nil - if nActions is not a number.
+           turtle.getFuelLevel() - if nActions is not present.
+	sintax: checkFuel([nActions])
+  ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
+      checkFuel() - returns turtle.getFuelLevel()]]
   
   if type(turtle.getFuelLimit()) == "string" then return true end
+  if not nActions then return turtle.getFuelLevel() end
+  if type(nActions) ~= "number" then return nil, "checkFuel([Actions]) - Actions must be a number." end
   nActions = math.abs(nActions)
   if turtle.getFuelLevel() - nActions > 0 then return true end
   return false
@@ -2921,6 +2925,6 @@ INIT()
 --print(craftRecipe("aa"))
 
 
-print(craftInv())
-saveTable(tRecipes, "test.txt")
+print(checkFuel("hi"))
+
 --TERMINATE()

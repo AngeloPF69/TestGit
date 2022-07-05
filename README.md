@@ -64,6 +64,7 @@
 ## Fuel
 
    <a href="#refuel">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a>
+   <a href="#checkFuel">checkFuel([nActions]) Checks if the fuel is enough for nActions.</a>
 
 ## General
 
@@ -383,6 +384,17 @@
                  - "refuel(nItems) - nItems must be a number."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
+  <p id="checkFuel"></p>
+
+- checkFuel(nActions) Checks if the fuel is enough for nActions.
+    <pre>Param: nActions - number of turtle moves.
+  Returns:	true - if the fuel is enough.
+					 false - if the fuel is not enough.
+             nil - if nActions is not a number.
+           turtle.getFuelLevel() - if nActions is not present.
+	sintax: checkFuel([nActions])
+  ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
+      checkFuel() - returns turtle.getFuelLevel()</pre>
   
 ## General
 
