@@ -1730,7 +1730,7 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
 end
 
 function getLowestKey(t) --[[ Gets the lowest key of the table t.
-  04/07/2022 Param: t - table to look for the lowest key.
+  04/07/2022 v0.3.0 Param: t - table to look for the lowest key.
   Return: key type - the lowest key.
   Sintax: getLowestKey(t)
   Note: All the keys must have the same type.
