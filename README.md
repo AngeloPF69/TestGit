@@ -68,7 +68,7 @@
 ## General
 
    <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
-   <a href="getLowestKey">getLowestKey(t) Gets the lowest key of the table t.</a><br>
+   <a href="#getLowestKey">getLowestKey(t) Gets the lowest key of the table t.</a><br>
    <a href="#getParam">getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
    <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
    <a href="#isNumber">isNumber(...) Checks if all parameters are numbers.</a><br>
