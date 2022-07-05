@@ -33,6 +33,8 @@ improving commands in lua for computer craft turtle.
 
 ### DONE
 
+- [x] craftInv(nLimit) Crafts the recipe in inventory.
+- [x] getLowestKey(t) Gets the lowest key of the table t.
 - [x] haveIngredients(sRecipe, nLimit) Renamed to haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
 - [x] canCraft() Retuns a table with recipe name and index that you can craft from inventory.
 - [x] addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
@@ -128,7 +130,6 @@ improving commands in lua for computer craft turtle.
   - [x] up([Blocks=1]) moves the turtle up blocks, until it hits something.
   - [x] back([Blocks=1]) Moves the turtle backwards or forward blocks, until blocked.
   - [x] forward([Blocks=1]) Moves nBlocks forward or backwards, until blocked.
-  
 - [x] All base rotation functions (turn left and right) must update tTurtle.facing.
   - [x] turnDir([Direction="back"]) rotates turtle back, left or right.
 - [x] setCoords(x,y,z) sets coords x, y, z for turtle. x
@@ -152,7 +153,6 @@ improving commands in lua for computer craft turtle.
 - [ ] detectLeft([Blocks=1]) detects if on the left of the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectRight([Blocks=1]) detects if on the right of the turtle are blocks in a strait line, stops when there isn't or blocked.
 - [ ] detectBack([Blocks=1]) detects if on the turtle backs are blocks in a strait line, stops when there isn't or blocked.
-
 - [ ] compareUp([Blocks=1]) compare blocks upwards in a strait line with selected slot or inventory.
 - [ ] compareDown([Blocks=1]) compare blocks downwards in a strsit line with selected slot or inventory.
 - [ ] compareLeft([Blocks=1]) compare blocks left of the turtle in a strait line with selected slot or inventory.
