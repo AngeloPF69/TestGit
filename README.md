@@ -68,6 +68,7 @@
 ## General
 
    <a href="#checkType">checkType(sType, ...) Checks if parameters are from sType.</a><br>
+   <a href="getLowestKey">getLowestKey(t) Gets the lowest key of the table t.</a><br>
    <a href="#getParam">getParam(sParamOrder, tDefault, ...) Sorts parameters by type.</a><br>
    <a href="#isValue">isValue(value, t) Checks if value is in t table.</a><br>
    <a href="#isNumber">isNumber(...) Checks if all parameters are numbers.</a><br>
@@ -395,6 +396,15 @@
   Returns: true - if all parameters have the type of sType.
            false - if #sType ~= #... (number of parameters are diferent from length of sType).
   ex: checkType("snt", "hello", number1, tTable) - Outputs: true.</pre>
+  
+  <p id="getLowestKey"></p>
+  
+- getLowestKey(t) Gets the lowest key of the table t.</a><br>
+    <pre>Param: t - table to look for the lowest key.
+  Return: number - the lowest key.
+  Sintax: getLowestKey(t)
+  Note: All the keys must have the same type.
+  ex: getLowestKey({[1]="minecraft:cobblestone", [-1]="minecraft:stick"}) - returns -1.</pre>
   
   <p id="getParam"></p>
   
