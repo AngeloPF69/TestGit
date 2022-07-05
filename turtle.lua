@@ -1527,10 +1527,13 @@ function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns 
 end
 
 function getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.
-  25/06/2022  Returns: number the sum of items in sequencial slots.
-              Sintax: getSecSumItems([nSlot=selected slot])
-              Note: it stops if empty slot or end of inventory.
-              ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.) ]]
+  25/06/2022 v0.3.0 Param: nSlot - number first slot to sum.
+                           bWrap - boolean if the sum wraps around the inventory.
+  Returns: number the sum of items in sequencial slots.
+  Sintax: getSecSumItems([nSlot=selected slot])
+  Note: it stops if empty slot or end of inventory.
+  ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.) ]]
+  
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "getSecSumItems(Slot) - Slot must be a number." end
   if nSlot < 1 or nSlot > 16 then return nil, "getSecSumItems(Slot) - Slot must be between 1 and 16." end

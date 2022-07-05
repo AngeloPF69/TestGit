@@ -185,7 +185,7 @@
    <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
 
 ## Inventory
-    
+   <a href="#getSecSumItems">getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.</a><br>
    <a href="#calcAverage">calcAverage(tSlots, tIng) Builds a table with item and average between items and slots.</a><br>
    <a href="#clearSlot">clearSlot([nSlot=selected slot][, bWrap=true]) Clears content of slot, moving items to another slot.</a><br>
    <a href="#countItemSlots">countItemSlots() Counts how many slots is ocupied with each item.</a><br>
@@ -1193,6 +1193,16 @@
 
 ## Inventory
     
+   <p id="getSecSumItems"></p>
+
+- getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.<br>
+    <pre>Param: nSlot - number first slot to sum.
+           bWrap - boolean if the sum wraps around the inventory.
+  Returns: number the sum of items in sequencial slots.
+  Sintax: getSecSumItems([nSlot=selected slot])
+  Note: it stops if empty slot or end of inventory.
+  ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.)</pre>
+
    <p id="clearSlot"></p>
     
 - clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
