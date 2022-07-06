@@ -20,6 +20,7 @@
     tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, }
                        ["Name"][index]["count"] = resulting number of items}
                        ["lastRecipe"] = sLastRecipe
+                       ["lastIndex"]= nLastIndex
                        ["CSlot"] = Crafting slot.]]
 
     -------------------------------------------------
