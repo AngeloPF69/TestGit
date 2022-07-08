@@ -96,7 +96,7 @@
    <a href="#arrangeRecipe">arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
    <a href="#canCraft">canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
    <a href="#colLinMatch">colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.</a><br>
-   <a href="#craftRecipe">craftRecipe([sRecipe=tRecipes.lastRecipe][, [nLimit=maximum craft possible]) Craft a recipe already stored or not.</a><br>
+   <a href="#craftRecipe">craftRecipe([sRecipe=recipe in inventory|tRecipes.lastRecipe][, [nLimit=64]) Craft a recipe.</a><br>
    <a href="#flattenInventory">flattenInventory() Averages all the item stacks in inventory.</a><br>
    <a href="#getFirstItemCoords">getFirstItemCoords(sRecipe) Returns the column and line=0 of the first item in the recipe.</a><br>
    <a href="#getInvRecipe">getInvRecipe() Builds a table with items and their position (the recipe).</a><br>
@@ -583,7 +583,8 @@
          ex:getRecipeIndex()</pre>
   
    <p id="craftRecipe"></p>
-- craftRecipe(\[sRecipe=tRecipes.lastRecipe]\[nLimit=maximum craft possible]) Craft a recipe already stored or not.</a><br>
+   
+- craftRecipe([sRecipe=recipe in inventory|tRecipes.lastRecipe]\[, [nLimit=64]) Craft a recipe.</a><br>
    
    <p id="flattenInventory"></p>
    
