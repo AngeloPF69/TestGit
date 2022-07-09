@@ -1626,7 +1626,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
                              - if turtle couldn't craft.
               Sintax: craftRecipe(sRecipe=tRecipes.lastRecipe[, nLimit=64])
               ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
-  if isEmptyInventory() then return false, "Inventory is empty." end
+  if isInventoryEmpty() then return false, "Inventory is empty." end
   sRecipe, nLimit = getParam("sn", {"",64}, sRecipe, nLimit)
   local nIndex
   local isRecipeInv = turtle.craft(0)
@@ -2597,11 +2597,11 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
   return turtle.getItemDetail(nSlot) == nil
 end
 
-function isEmptyInventory() --[[ Checks if inventory is empty.
+function isInventoryEmpty() --[[ Checks if inventory is empty.
   30/04/2022  Returns: true - if inventory is empty.
                       false - if inventory is not empty.
-              sintax: isEmptyInventory()
-              ex: isEmptyInventory() - Checks if inventory is empty.]]
+              sintax: isInventoryEmpty()
+              ex: isInventoryEmpty() - Checks if inventory is empty.]]
   for nSlot = 1, 16 do
     if turtle.getItemDetail(nSlot) then return false end
   end

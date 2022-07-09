@@ -33,6 +33,7 @@ improving commands in lua for computer craft turtle.
 
 ### DONE
 
+- [x] isInventoryEmpty() Checks if inventory is empty.
 - [x] getSecSumItems(nSlot, bWrap) Gets the sum of items in sequencial not empty slots.
 - [x] craftInv(nLimit) Crafts the recipe in inventory.
 - [x] getLowestKey(t) Gets the lowest key of the table t.

@@ -185,6 +185,8 @@
    <a href="#compareDir">compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.</a>
 
 ## Inventory
+
+   <a href="#isInventoryEmpty">isInventoryEmpty() Checks if inventory is empty.</a><br>
    <a href="#getSecSumItems">getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.</a><br>
    <a href="#calcAverage">calcAverage(tSlots, tIng) Builds a table with item and average between items and slots.</a><br>
    <a href="#clearSlot">clearSlot([nSlot=selected slot][, bWrap=true]) Clears content of slot, moving items to another slot.</a><br>
@@ -1192,7 +1194,11 @@
 
 
 ## Inventory
-    
+
+   <p id="isInventoryEmpty"></p>
+
+ - isInventoryEmpty() Checks if inventory is empty.
+
    <p id="getSecSumItems"></p>
 
 - getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.<br>
