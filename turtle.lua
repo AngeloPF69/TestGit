@@ -909,8 +909,14 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
 end
 
 --tested
-function canCraftRecipe(sRecipe) --checks if you can craft sRecipe with inventory items.
-  --09/07/2022  returns: true, number index of recipe.
+function canCraftRecipe(sRecipe) --[[ Checks if you can craft sRecipe with inventory items.
+  09/07/2022 v0.3.0 Param: sRecipe - string the recipe name.
+  returns: true, number index of recipe.
+           false
+  sintax: canCraftRecipe(sRecipe)
+  Note: if you didn't craft this recipe earlier this functions returns true, even with all items in inventory.
+  ex: canCraft("minecraft:stick") - if you have created this recipe and all items are in inventory it returns true.]]
+
   local bSuccess, tRecs = canCraft()
   if not bSuccess then return false end
   for iRec = 1, #tRecs do
@@ -1634,15 +1640,20 @@ end
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
   26/01/2022  Param: sRecipe - string recipe name.
                      nLimit - number recipes to craft.
-              Returns: true, string product name, number index of recipe, number quantity crafted.
-                       true - if nLimit == 0 and could craft a recipe.
-                       false - .
-                             - if inventory is empty.
-                             - if couln't find a empty slot where to craft recipe.
-                             - if there are items that don't belong to the recipe.
-                             - if turtle couldn't craft.
-              Sintax: craftRecipe(sRecipe=tRecipes.lastRecipe[, nLimit=64])
-              ex: craftRecipe("minecraft:wooden_shovel, 1) - Craft one wooden shovel.]]
+  Returns: true, string product name, number index of recipe, number quantity crafted.
+           true - if nLimit == 0 and could craft a recipe.
+           nil - if nLimit out of range [0..64]
+               - if no recipe name was supplied in the first recipe to craft.
+           false - if inventory is empty.
+                 - if there is no recipe in inventory and the rcipe name wasn't found
+                 - if there are missing items or this recipe was never craft.
+                 - if it couldn't arrange items as a recipe in inventory.
+                 - if there isn't a empty slot to craft the recipe to.
+                 - if inventory has items that don't belong to the recipe.
+                 - if when crafting the recipe the resulting items vanishes
+  Sintax: craftRecipe(sRecipe=inventory recipe/tRecipes.lastRecipe[, nLimit=64])
+  ex: craftRecipe() - craft the recipe in invenrtory.
+      craftRecipe("minecraft:wooden_shovel", 1) - Craft one wooden shovel.]]
               
   if isInventoryEmpty() then return false, "Inventory is empty." end
   sRecipe, nLimit = getParam("sn", {"",64}, sRecipe, nLimit)
@@ -1674,7 +1685,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
   if not nIndex then
     local bSuccess
     bSuccess, nIndex = canCraftRecipe(sRecipe)
-    if not bSuccess then return false, "There are missing items." end
+    if not bSuccess then return false, "There are missing items or this recipe was never crafted" end
     if not arrangeRecipe(sRecipe, nIndex) then return false, "Can't arrange items in inventory." end
     tRecipe = getInvRecipe()
   end
