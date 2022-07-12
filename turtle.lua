@@ -908,7 +908,6 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
   return tRecipe
 end
 
---tested
 function canCraftRecipe(sRecipe) --[[ Checks if you can craft sRecipe with inventory items.
   09/07/2022 v0.3.0 Param: sRecipe - string the recipe name.
   returns: true, number index of recipe.
@@ -1639,7 +1638,6 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   return nIndex
 end
 
---implementing
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
   26/01/2022  Param: sRecipe - string recipe name.
                      nLimit - number recipes to craft.
@@ -1801,7 +1799,6 @@ function getLowestKey(t) --[[ Gets the lowest key of the table t.
   return Lower
 end
 
---tested
 function craftInv(nLimit) --[[ Crafts the recipe in inventory.
   20/05/2022  Param: nLimit - number products to craft.
               Returns: true, string product name, number index of recipe, number quantity crafted.
