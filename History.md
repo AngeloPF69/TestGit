@@ -6,6 +6,9 @@
   - getLowestKey(t) Gets the lowest key of the table t.
   - haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
   - canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+  - canCraftRecipe(sRecipe) Checks if you can craft sRecipe with inventory items.
+  - craftInv(nLimit) Crafts the recipe in inventory.
+  - craftRecipe(sRecipe, nLimit) Craft a recipe.
   - addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
   - getInvRecipe() Builds a table with items and their position from inventory (the recipe).
   - getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.

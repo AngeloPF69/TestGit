@@ -577,17 +577,33 @@
 - colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.
     <pre>Param: tRecs - recipe from tRecipes.
             tRec - recipe to compare.
-         Returns: true - if items in recipes have the same position.
-                 false - if items in recipes have the diferent position or diferent number of items.
-                   nil - if invalid parameter type.
-         Sintax: colLinMatch(tRecs, tRec)
-         Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
-         ex:getRecipeIndex()</pre>
+  Returns: true - if items in recipes have the same position.
+          false - if items in recipes have the diferent position or diferent number of items.
+            nil - if invalid parameter type.
+  Sintax: colLinMatch(tRecs, tRec)
+  Note: get tRecs from getRecipe(), and tRec from getInvRecipe().
+  ex:getRecipeIndex()</pre>
   
    <p id="craftRecipe"></p>
    
-- craftRecipe([sRecipe=recipe in inventory|tRecipes.lastRecipe]\[, [nLimit=64]) Craft a recipe.</a><br>
-   
+- craftRecipe(\[sRecipe=recipe in inventory|tRecipes.lastRecipe]\[, \[nLimit=64]) Craft a recipe.</a><br>
+     <pre>Param: sRecipe - string recipe name.
+                     nLimit - number recipes to craft.
+  Returns: true, string product name, number index of recipe, number quantity crafted.
+           true - if nLimit == 0 and could craft a recipe.
+           nil - if nLimit out of range [0..64]
+               - if no recipe name was supplied in the first recipe to craft.
+           false - if inventory is empty.
+                 - if there is no recipe in inventory and the rcipe name wasn't found
+                 - if there are missing items or this recipe was never craft.
+                 - if it couldn't arrange items as a recipe in inventory.
+                 - if there isn't a empty slot to craft the recipe to.
+                 - if inventory has items that don't belong to the recipe.
+                 - if when crafting the recipe the resulting items vanishes
+  Sintax: craftRecipe(sRecipe=inventory recipe/tRecipes.lastRecipe[, nLimit=64])
+  ex: craftRecipe() - craft the recipe in invenrtory.
+      craftRecipe("minecraft:wooden_shovel", 1) - Craft one wooden shovel.</pre>
+	 
    <p id="flattenInventory"></p>
    
 - flattenInventory() Averages all the item stacks in inventory.</a><br>
