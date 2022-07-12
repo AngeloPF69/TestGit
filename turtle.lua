@@ -1299,6 +1299,10 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
   return tMean
 end
 
+function arrangeGenRecipe(sRecipe)
+  
+end
+
 function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
   21/01/2022 v0.2.0 Param: sRecipe - recipe name.
                            nIndex - recipe index (tRecipes[recipeName][index])
@@ -1330,7 +1334,6 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
     if tRecipe[iItems].col then nRSlot = tRecipe[iItems].lin * 4 + tRecipe[iItems].col + 1 end
     while nSlot < nRSlot do
       if not clearSlot(nSlot, false) then
-        print("slot:", nSlot)
         return false, "Couldn't clear slot, "..tostring(nSlot)
       end
       nSlot = incSlot(nSlot, false)
