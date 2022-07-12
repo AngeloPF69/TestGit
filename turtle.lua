@@ -1304,10 +1304,6 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
   return tMean
 end
 
-function arrangeGenRecipe(sRecipe)
-  
-end
-
 function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
   21/01/2022 v0.2.0 Param: sRecipe - recipe name.
                            nIndex - recipe index (tRecipes[recipeName][index])
@@ -1588,7 +1584,7 @@ function getProdQuant() --[[Gets quantity of products made with 1 recipe in inve
 end
 
 function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
-  31/03/2022  Param:  sRecipe - name of recipe
+  31/03/2022 v0.3.0 Param:  sRecipe - name of recipe
                       tRecipe - recipe table, get if from getInvRecipe.
                       nCount - quantity of products made with this recipe.
               Returns:  number - index of recipe (tRecipes[sRecipe][index])
@@ -1639,7 +1635,7 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
 end
 
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
-  26/01/2022  Param: sRecipe - string recipe name.
+  26/01/2022 v0.3.0 Param: sRecipe - string recipe name.
                      nLimit - number recipes to craft.
   Returns: true, string product name, number index of recipe, number quantity crafted.
            true - if nLimit == 0 and could craft a recipe.
@@ -1721,11 +1717,11 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
 end
 
 function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities have increased.
-  03/07/2022 Param: tInv1, tInv2 - snapshot of inventory from getInventory()
-             Returns: true, t - if items have increased, table with slot, name, quantity.
-                      false - if items haven't increased.
-             Sintax: cmpInvIncreased(tInv1, tInv2)
-             ex: cmpInvIncreased(inv1, inv2) - verifies if inventory snapshot inv2 has more items than inv1.]]
+  03/07/2022 v0.3.0 Param: tInv1, tInv2 - snapshot of inventory from getInventory()
+  Returns: true, t - if items have increased, table with slot, name, quantity.
+           false - if items haven't increased.
+  Sintax: cmpInvIncreased(tInv1, tInv2)
+  ex: cmpInvIncreased(inv1, inv2) - verifies if inventory snapshot inv2 has more items than inv1.]]
 	local bDif, tInvCmpRes = cmpInventory(tInv1, tInv2)
 	if bDif then return false end
 	
@@ -1745,13 +1741,12 @@ function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities hav
 end
 
 function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
-  11/05/2022  Param: tInv1, tInv2 - snapshots from inventory (getInventory).
-              Returns: nil - if tInv1 or tInv2 not supplied.
-                       true - if snapshots are equals.
-                       table - if snapshots are diferent.
-              
-              Sintax: cmpInventory(tInv1, tInv2)
-              ex: craftRecipe(tInv1, tInv2) - compares tInv1 with tInv2.]]
+  11/05/2022 v0.3.0 Param: tInv1, tInv2 - snapshots from inventory (getInventory).
+  Returns: nil - if tInv1 or tInv2 not supplied.
+           true - if snapshots are equals.
+           table - if snapshots are diferent.
+  Sintax: cmpInventory(tInv1, tInv2)
+  ex: craftRecipe(tInv1, tInv2) - compares tInv1 with tInv2.]]
 	if (not tInv1) or (not tInv2) then return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare" end
 	local tDif
 	for iSlot = 1, 16 do
@@ -1800,16 +1795,16 @@ function getLowestKey(t) --[[ Gets the lowest key of the table t.
 end
 
 function craftInv(nLimit) --[[ Crafts the recipe in inventory.
-  20/05/2022  Param: nLimit - number products to craft.
-              Returns: true, string product name, number index of recipe, number quantity crafted.
-                       nil - if nLimit is not a number.
-                           - if nLimit is out of range [1..64].
-                       false - if there is no recipe in inventory.
-                             - if the turtle cant craft.
-                             - if it craft something, but it didnt show up in inventory.
-                             - if it couldn't add the recipe.
-              Sintax: craftInv([nLimit=64])
-              ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
+  20/05/2022 v0.3.0 Param: nLimit - number products to craft.
+  Returns: true, string product name, number index of recipe, number quantity crafted.
+           nil - if nLimit is not a number.
+               - if nLimit is out of range [1..64].
+           false - if there is no recipe in inventory.
+                 - if the turtle cant craft.
+                 - if it craft something, but it didnt show up in inventory.
+                 - if it couldn't add the recipe.
+  Sintax: craftInv([nLimit=64])
+  ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
 	nLimit = nLimit or 64
 	if type(nLimit) ~= "number" then return nil, "craft([Limit=64]) - Limit must be a number." end
 	if nLimit < 1 or nLimit > 64 then return nil, "craft([Limit=64]) - Limit must be between 1 and 64." end
@@ -1839,11 +1834,11 @@ end
 ------ ROTATING FUNCTIONS ------  
 
 function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
-  02/10/2021  Param: nTurns - number of 90 degrees turns to the right.
-              returns: true
-              ex: if turtle is facing "x+"=1
-              incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2
-              sintax: incFacing([nTurns=1])]]
+  02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the right.
+  Returns: true
+  ex: if turtle is facing "x+"=1
+      incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2
+  Sintax: incFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing + nTurns
   tTurtle.facing = bit32.band(tTurtle.facing, 3)
@@ -1851,9 +1846,9 @@ function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
 end
 
 function decFacing(nTurns) --[[ Decrements tTurtle.facing by nTurns
-  02/10/2021  Param: nTurns - number of 90 degrees turns to the left.
-              returns: true
-              sintax: decFacing([nTurns=1])]]
+  02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the left.
+  Returns: true
+  Sintax: decFacing([nTurns=1])]]
   nTurns = nTurns or 1
   tTurtle.facing = tTurtle.facing - nTurns
   tTurtle.facing = bit32.band(tTurtle.facing, 3)
@@ -1861,9 +1856,9 @@ function decFacing(nTurns) --[[ Decrements tTurtle.facing by nTurns
 end
 
 function turnBack() --[[ Turtle turns back.
-  11/09/2021  Returns:  true.
-              sintax: turnBack()
-              ex: turnBack() - Turns the turtle back.]]
+  11/09/2021 v0.1.0 Returns:  true.
+  Sintax: turnBack()
+  ex: turnBack() - Turns the turtle back.]]
   turtle.turnRight()
   turtle.turnRight()
   incFacing(2)
@@ -1871,11 +1866,11 @@ function turnBack() --[[ Turtle turns back.
 end
 
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
-  27/08/2021  Param: sDir - string diretion "back"|"right"|"left".
-              Returns:  true - if sDir is a valid direction.
-                        false - if sDir is not a valid direction.
-              sintax: turn([sDir="back"])
-              ex: turnDir("back") or turnDir() - Turns the turtle back.]]
+  27/08/2021 v0.2.0 Param: sDir - string diretion "back"|"right"|"left".
+  Returns:  true - if sDir is a valid direction.
+            false - if sDir is not a valid direction.
+  Sintax: turn([sDir="back"])
+  ex: turnDir("back") or turnDir() - Turns the turtle back.]]
   sDir = sDir or "back"
   sDir = string.lower(sDir)
   
@@ -1895,14 +1890,14 @@ end
 ------ MOVING AND ROTATING FUNCTIONS ------
 
 function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
-  27/08/2021  Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"
-                     nBlocks - number of blocks to walk.
-              Returns:  true if turtle goes all way.
-                        false if blocked.
-              sintax: go([sDir="forward"], [nBlocks=1])
-              ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
-              ex: go() - Moves 1 block forward.
-              ex: go(-3, "up") - moves 3 blocks down.]]
+  27/08/2021 v01.0 Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"
+                       nBlocks - number of blocks to walk.
+  Returns:  true if turtle goes all way.
+            false if blocked.
+  Sintax: go([sDir="forward"], [nBlocks=1])
+  ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
+      go() - Moves 1 block forward.
+      go(-3, "up") - moves 3 blocks down.]]
   sDir, nBlocks = getParam("sn", {"forward", 1}, sDir, nBlocks)
   sDir = string.lower(sDir)
   
@@ -1917,12 +1912,12 @@ function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
 end
 
 function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until blocked.
-  27/08/2021  Param: nBlocks - number of blocks to walk left.
-              Returns:  true if turtle goes all way.
-                        false if bllocked, or invalid parameter.
-                        nil - if nBlocks is not a number.
-              Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
-              ex: goLeft(3) - Moves 3 Blocks to the left.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk left.
+  Returns:  true if turtle goes all way.
+            false if bllocked, or invalid parameter.
+            nil - if nBlocks is not a number.
+  Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
+  ex: goLeft(3) - Moves 3 Blocks to the left.]]
   nBlocks = nBlocks or 1
 
   if type(nBlocks) ~= "number" then return nil, "goLeft(Blocks) - Blocks must be a number." end
@@ -1941,12 +1936,12 @@ end
 
 
 function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until blocked.
-  27/08/2021  Param: nBlocks - number of blocks to walk right.
-              Returns:  true if turtle goes all way.
-                        false if bllocked, or invalid parameter.
-                        nil - if nBlocks is not a number.
-              Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
-              ex: goRight(3) - Moves 3 Blocks to the right.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk right.
+  Returns:  true if turtle goes all way.
+            false if bllocked, or invalid parameter.
+            nil - if nBlocks is not a number.
+  Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
+  ex: goRight(3) - Moves 3 Blocks to the right.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "goRight(Blocks) - Blocks must be a number." end
@@ -1964,12 +1959,12 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
 end
 
 function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
-  27/08/2021  Param: nBlocks - number of blocks to walk back.
-              Returns:  true if turtle goes all way.
-                        false if blocked, or invalid parameter.
-                        nil - if nBlocks type is not a number.
-              Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
-              ex: goBack(3) - Turns back and moves 3 blocks forward.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
+  Returns:  true if turtle goes all way.
+            false if blocked, or invalid parameter.
+            nil - if nBlocks type is not a number.
+  Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
+  ex: goBack(3) - Turns back and moves 3 blocks forward.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
@@ -1986,14 +1981,14 @@ end
 ------ DIG FUNCTIONS ------  
 
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
-  08/09/2021  Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"
-                     nBlocks - number of blocks to walk in sDir direction. 
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, can't turn that way.
-                        nil if invalid parameter
-              sintax: digDir([sDir="forward"], [nBlocks=1])              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
-              ex: digDir() - Digs 1 block forward.
-              ex: digDir(-3, "up") - Digs 3 blocks down.]]
+  08/09/2021 v0.1.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"
+                        nBlocks - number of blocks to walk in sDir direction. 
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, can't turn that way.
+            nil if invalid parameter
+  Sintax: digDir([sDir="forward"], [nBlocks=1])              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
+  ex: digDir() - Digs 1 block forward.
+      digDir(-3, "up") - Digs 3 blocks down.]]
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
   negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
   sDir = string.lower(sDir)
@@ -2028,12 +2023,12 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
 end
 
 function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig.
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, or invalid parameter.
-              sintax: dig([nBlocks=1])
-              Note: nBlocks < 0 turns back and digs forward, nBlocks > 0 digs forward.
-              ex: dig() or dig(1) - Dig 1 block forward.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig.
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, or invalid parameter.
+  Sintax: dig([nBlocks=1])
+  Note: nBlocks < 0 turns back and digs forward, nBlocks > 0 digs forward.
+  ex: dig() or dig(1) - Dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "dig(Blocks) - Blocks must be a number." end
@@ -2052,12 +2047,12 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
 end
 
 function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig left.
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, or invalid parameter.
-              sintax: digLeft([nBlocks=1])
-              Note: nBlocks < 0 digs to the right, nBlocks > 0 digs to the left
-              ex: digLeft() or digLeft(1) - Dig 1 block left.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig left.
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, or invalid parameter.
+  Sintax: digLeft([nBlocks=1])
+  Note: nBlocks < 0 digs to the right, nBlocks > 0 digs to the left
+  ex: digLeft() or digLeft(1) - Dig 1 block left.]]
   nBlocks = nBlocks or 1
   
 	if type(nBlocks) ~= "number" then return false, "digLeft(Blocks) - Blocks must be a number." end
@@ -2068,12 +2063,12 @@ function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must ha
 end
 
 function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig right.
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, or invalid parameter.
-              sintax: digRight([nBlocks=1])
-              Note: nBlocks < 0 digs to the left, nBlocks > 0 digs to the Right.
-              ex: digRight() or digRight(1) - Dig 1 block right.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig right.
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, or invalid parameter.
+  Sintax: digRight([nBlocks=1])
+  Note: nBlocks < 0 digs to the left, nBlocks > 0 digs to the Right.
+  ex: digRight() or digRight(1) - Dig 1 block right.]]
   nBlocks = nBlocks or 1
   
 	if type(nBlocks) ~= "number" then return false, "digRight(Blocks) - Blocks must be a number." end
@@ -2084,12 +2079,12 @@ function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must h
 end
 
 function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig up.
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, or invalid parameter.
-              sintax: digUp([nBlocks=1])
-              Note: nBlocks < 0 digs downwards, nBlocks > 0 digs upwards.
-              ex: digUp() or digUp(1) - Dig 1 block up.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig up.
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, or invalid parameter.
+  Sintax: digUp([nBlocks=1])
+  Note: nBlocks < 0 digs downwards, nBlocks > 0 digs upwards.
+  ex: digUp() or digUp(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digUp(Blocks) - Blocks must be anumber." end
@@ -2107,12 +2102,12 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
 end
 
 function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig down.
-              Returns:  true if turtle digs all way.
-                        false if bllocked, empty space, or invalid parameter.
-              sintax: digDown([nBlocks=1])
-              Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
-              ex: digDown() or digDown(1) - Dig 1 block down.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig down.
+  Returns:  true if turtle digs all way.
+            false if bllocked, empty space, or invalid parameter.
+  Sintax: digDown([nBlocks=1])
+  Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
+  ex: digDown() or digDown(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digDown(Blocks) - Blocks must be a number." end
@@ -2130,12 +2125,12 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
 end
 
 function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig forward 1 block above turtle.
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, or invalid parameter.
-              sintax: digAbove([nBlocks=1])
-              Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-              ex: digAbove() or digAbove(1) - Dig 1 block up.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig forward 1 block above turtle.
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, or invalid parameter.
+  Sintax: digAbove([nBlocks=1])
+  Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
+  ex: digAbove() or digAbove(1) - Dig 1 block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digAbove(Blocks) - Blocks must be a number." end
@@ -2151,12 +2146,12 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
 end
 
 function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig forward and below turtle.
-              Returns:  true if turtle digs all way.
-                        false if blocked, empty space, or invalid parameter.
-              sintax: digBelow([nBlocks=1])
-              Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-              ex: digBelow() or digBelow(1) - Dig 1 block down.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig forward and below turtle.
+  Returns:  true if turtle digs all way.
+            false if blocked, empty space, or invalid parameter.
+  Sintax: digBelow([nBlocks=1])
+  Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
+  ex: digBelow() or digBelow(1) - Dig 1 block down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digBelow(Blocks) - Blocks must be a number." end
@@ -2172,12 +2167,12 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
 end
 
 function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must have a tool equiped.
-  27/08/2021  Param: nBlocks - number of blocks to dig.
-              Returns:  true if turtle digs all way.
-                        false if bllocked, empty space, or invalid parameter.
-              sintax: digBack([nBlocks=1])
-              Note: nBlocks < 0 digs forward, nBlocks > 0 digs backwards.
-              ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig.
+  Returns:  true if turtle digs all way.
+            false if bllocked, empty space, or invalid parameter.
+  Sintax: digBack([nBlocks=1])
+  Note: nBlocks < 0 digs forward, nBlocks > 0 digs backwards.
+  ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digBack(Blocks) - Blocks must be a number." end
@@ -2196,11 +2191,11 @@ end
 
 
 function placeDir(sDir) --[[ Places one selected block in sDir direction.
-  27/08/2021  Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"
-              Returns:  true if turtle places the selected block.
-                        false if turtle doesn't place the selected block, or invalid parameter.
-              sintax: placeDir([sDir="forward"])
-              ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
+  27/08/2021 v0.1.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"
+  Returns:  true if turtle places the selected block.
+            false if turtle doesn't place the selected block, or invalid parameter.
+  Sintax: placeDir([sDir="forward"])
+  ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
   sDir = sDir or "forward"
   if type(sDir) ~= "string" then return false end
   sDir = string.lower(sDir)
@@ -2225,12 +2220,12 @@ function placeDir(sDir) --[[ Places one selected block in sDir direction.
 end
 
 function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  number of blocks placed.
-                        false - invalid parameter.
-              sintax: place([nBlocks=1])
-              Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
-              ex: place(1) or place() - Places 1 Block in front of turtle.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of blocks placed.
+            false - invalid parameter.
+  Sintax: place([nBlocks=1])
+  Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
+  ex: place(1) or place() - Places 1 Block in front of turtle.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "place(Blocks) - Blocks must be a number." end
@@ -2259,11 +2254,11 @@ end
 
 function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.3.0 Param: nBlocks - number of blocks to place.
-              Returns:  number of blocks placed.
-                        nil - invalid parameter.
-              sintax: placeBack([nBlocks=1])
-              Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
-              ex: place(1) or place() - Places 1 Block in front of turtle.]]
+  Returns:  number of blocks placed.
+            nil - invalid parameter.
+  Sintax: placeBack([nBlocks=1])
+  Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
+  ex: place(1) or place() - Places 1 Block in front of turtle.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "placeBack(Blocks) - Blocks must be a number." end
@@ -2291,13 +2286,13 @@ function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strai
 end
 
 function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  number os blocks placed.
-                        false - if turtle was blocked on the way back.
-                              - invalid parameter.
-              sintax: placeUp([nBlocks=1])
-              Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
-              ex: placeUp(1) or placeUp() - Places 1 Block up.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number os blocks placed.
+            false - if turtle was blocked on the way back.
+                  - invalid parameter.
+  Sintax: placeUp([nBlocks=1])
+  Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
+  ex: placeUp(1) or placeUp() - Places 1 Block up.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeUp(Blocks) - Blocks must be a number." end
@@ -2321,13 +2316,13 @@ function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns 
 end
 
 function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  number of blocks placed.
-                        false - if turtle was blocked on the way back.
-                              - invalid parameter.
-              sintax: placeDown([nBlocks=1])
-              Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
-              ex: placeDown(1) or placeDown() - Places 1 Block Down.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of blocks placed.
+            false - if turtle was blocked on the way back.
+                  - invalid parameter.
+  Sintax: placeDown([nBlocks=1])
+  Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
+  ex: placeDown(1) or placeDown() - Places 1 Block Down.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeDown(Blocks) - Blocks must be a number." end
@@ -2351,14 +2346,14 @@ function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and return
 end
   
 function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  number of placed blocks.
-                        false - if turtle was blocked on the way back.
-                              - invalid parameter.
-                              - couldn't place block.
-              sintax: placeLeft([nBlocks=1])
-              Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
-              ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of placed blocks.
+            false - if turtle was blocked on the way back.
+                  - invalid parameter.
+                  - couldn't place block.
+  Sintax: placeLeft([nBlocks=1])
+  Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
+  ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
   nBlocks = nBlocks or 1
 
   if type(nBlocks) ~= "number" then return false, "placeLeft(Blocks) - Blocks must be a number." end
@@ -2369,14 +2364,14 @@ function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns
 end
   
 function placeRight(nBlocks) --[[ Places Blocks to the right or left, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  true if turtle places all blocks all the way.
-                        false - if turtle was blocked on the way back.
-                              - invalid parameter.
-                              - couldn't place block
-              sintax: placeRight([nBlocks=1])
-              Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
-              ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  true if turtle places all blocks all the way.
+            false - if turtle was blocked on the way back.
+                  - invalid parameter.
+                  - couldn't place block
+  Sintax: placeRight([nBlocks=1])
+  Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
+  ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
   nBlocks = nBlocks or 1
 
   if type(nBlocks) ~= "number" then return false, "placeRight(Blocks) - Blocks must be a number." end
@@ -2387,13 +2382,13 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
 end
   
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  number of blocks placed
-                        false - if turtle was blocked on the way back.
-                              - couldn't place block.
-                              - invalid parameter.
-              sintax: placeAbove([nBlocks=1])
-              ex: placeAbove(1) or placeAbove() - Places one Block above turtle.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of blocks placed
+            false - if turtle was blocked on the way back.
+                  - couldn't place block.
+                  - invalid parameter.
+  Sintax: placeAbove([nBlocks=1])
+  ex: placeAbove(1) or placeAbove() - Places one Block above turtle.]]
     nBlocks = nBlocks or 1
     
     if type(nBlocks) ~= "number" then return false, "placeAbove(Blocks) - Blocks must be a number." end
@@ -2431,13 +2426,13 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
 end
 
 function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
-  27/08/2021  Param: nBlocks - number of blocks to place.
-              Returns:  number of placed blocks.
-                      false - if turtle was blocked on the way back.
-                            - couldn't place block.
-                            - invalid parameter.
-              sintax: placeBelow([Blocks=1])
-              ex: placeBelow(1) or placeBelow() - Places one Block below turtle.]]
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of placed blocks.
+            false - if turtle was blocked on the way back.
+                  - couldn't place block.
+                  - invalid parameter.
+  Sintax: placeBelow([Blocks=1])
+  ex: placeBelow(1) or placeBelow() - Places one Block below turtle.]]
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeBelow(Blocks) - Blocks must be a number." end
