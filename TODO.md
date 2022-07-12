@@ -36,9 +36,11 @@ improving commands in lua for computer craft turtle.
 - [x] isInventoryEmpty() Checks if inventory is empty.
 - [x] getSecSumItems(nSlot, bWrap) Gets the sum of items in sequencial not empty slots.
 - [x] craftInv(nLimit) Crafts the recipe in inventory.
+- [x] craftRecipe(sRecipe, nLimit) Craft a recipe.
 - [x] getLowestKey(t) Gets the lowest key of the table t.
 - [x] haveIngredients(sRecipe, nLimit) Renamed to haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
 - [x] canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+- [x] canCraftRecipe(sRecipe) Checks if you can craft sRecipe with inventory items.
 - [x] addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
 - [x] getInvRecipe() Builds a table with items and their position from inventory (the recipe).
 - [x] getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.
