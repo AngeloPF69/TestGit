@@ -2769,13 +2769,13 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
 end
 
 function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
-  07/10/2021  Param: nStartSlot - number slot where to start search for free slot.
-                     bWrap - boolean true if the search wraps around inventory.
-              Returns:  free slot number.
-                        false - if no free slot.
-              sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
-              ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
-              ex: selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
+  07/10/2021 v0.2.0 Param: nStartSlot - number slot where to start search for free slot.
+                           bWrap - boolean true if the search wraps around inventory.
+  Returns:  free slot number.
+            false - if no free slot.
+  Sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
+  ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
+      selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
   local nSlot
 
   nSlot=getFreeSlot(nStartSlot, bWrap) --get a free slot
@@ -2787,13 +2787,13 @@ end
 ------ SUCK FUNCTIONS ------
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
-  05/09/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
-                      nItems - number of items to suck.
-              Returns:  true - if turtle collects some items.
-                        false - if there are no items to take.
-              sintax: suckDir([sDir="forward][,nItems=all the items])
-              Note: if nItems < 0 it drops nItems from selected slot.
-              ex: suckDir() - Turtle sucks all the items forward.]]
+  05/09/2021 v0.1.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+                            nItems - number of items to suck.
+  Returns:  true - if turtle collects some items.
+            false - if there are no items to take.
+  Sintax: suckDir([sDir="forward][,nItems=all the items])
+  Note: if nItems < 0 it drops nItems from selected slot.
+  ex: suckDir() - Turtle sucks all the items forward.]]
   sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
   sDir = string.lower(sDir)
 
@@ -2819,8 +2819,8 @@ end
 ------ FILE SYSTEM FUNCTIONS ------
 
 function fsGetFreeSpace() --[[ Gets the total free space on disk.
-  02/10/2021  Returns:  Free space on disk.
-              ex: fsGetFreeSpace() - Outputs free space on disk.]]
+  02/10/2021 v0.2.0 Returns:  Free space on disk.
+  ex: fsGetFreeSpace() - Outputs free space on disk.]]
 	return fs.getFreeSpace("/")
 end
 
@@ -2828,18 +2828,18 @@ end
 ------ DROP FUNCTIONS ------  
 
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
-  29/08/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
-                      nBlocks - number of blocks to drop/suck
-              Returns:  number of dropped items.
-                        true - if suck some items.
-                        false - empty selected slot.
-                        nil - if invalid direction.
-              Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
-              Note: if nBlocks not supplied, drops all items in selected slot.
-                    if nBlocks < 0 sucks nBlocks.
-              ex: dropDir() - Drops all blocks from selected slot, forward.
-                  dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
-                  drop(-5, "down") - Suck 5 items from down.]]
+  29/08/2021 v0.1.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+                            nBlocks - number of blocks to drop/suck
+  Returns:  number of dropped items.
+            true - if suck some items.
+            false - empty selected slot.
+            nil - if invalid direction.
+  Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
+  Note: if nBlocks not supplied, drops all items in selected slot.
+        if nBlocks < 0 sucks nBlocks.
+  ex: dropDir() - Drops all blocks from selected slot, forward.
+      dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
+      dropDir(-5, "down") - Suck 5 items from down.]]
 
   sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
   sDir = string.lower(sDir)
@@ -2885,74 +2885,74 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
 end
 
 function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
-  29/08/2021  Param: nBlocks - number of blocks to drop forward.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: drop([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: drop() - Drops all blocks from selected slot, in front of the turtle.
-                  drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop forward.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: drop([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: drop() - Drops all blocks from selected slot, in front of the turtle.
+      drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("forward", nBlocks)
 end
 
 function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
-  29/08/2021  Param: nBlocks - number of blocks to drop up.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropUp([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropUp() - Drops all blocks from selected slot, upwards.
-                  dropUp(205) - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop up.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropUp([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropUp() - Drops all blocks from selected slot, upwards.
+      dropUp(205) - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
   return dropDir("up", nBlocks)
 end
 
 function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
-  29/08/2021  Param: nBlocks - number of blocks to drop down.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.          
-              Sintax: dropDown([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropDown() - Drops all blocks from selected slot, downwards.
-                  dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop down.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.          
+  Sintax: dropDown([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropDown() - Drops all blocks from selected slot, downwards.
+  dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
   return dropDir("down", nBlocks)
 end
 
 function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
-  11/09/2021  Param: nBlocks - number of blocks to drop left.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropLeft([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
-                  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  11/09/2021 v0.1.0 Param: nBlocks - number of blocks to drop left.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropLeft([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
+  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("left", nBlocks)
 end
 
 function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward.
-  11/09/2021  Param: nBlocks - number of blocks to drop right.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropRight([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
-                  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  11/09/2021 v0.1.0 Param: nBlocks - number of blocks to drop right.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropRight([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
+  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("right", nBlocks)
 end
 
 function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
-  29/08/2021  Param: nBlocks - number of blocks to drop back.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropBack([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
-                  dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop back.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropBack([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
+      dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("back", nBlocks)
 end
 
