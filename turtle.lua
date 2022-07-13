@@ -2473,8 +2473,8 @@ end
 ------ INVENTORY FUNCTIONS ------
 
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
-  04/12/2021  Returns: table[itemName]=Slots ocupied by item.
-              sintax: countItemSlots()]]
+  04/12/2021 v0.2.0 Returns: table[itemName]=Slots ocupied by item.
+  Sintax: countItemSlots()]]
   local tItemSlots = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -2488,15 +2488,15 @@ function countItemSlots() --[[ Counts how many slots is ocupied with each item.
 end
 
 function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
-  02/11/2021  Param: nSlot - number slot to decrease.
-                     bWrap - boolean if slot wraps around inventory.
-              Returns:  the number of slot decreased by 1.
-                        nil - if nSlot if not a number.
-                        false - if bWrap and nSlot = 1.
-              Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
-              ex: decSlot() - Decrements the selected slot.
-                  decSlot(1, false) - Returns false.
-                  decSlot(16, false) - Returns 15]]
+  02/11/2021 v0.2.0 Param: nSlot - number slot to decrease.
+                           bWrap - boolean if slot wraps around inventory.
+  Returns:  the number of slot decreased by 1.
+            nil - if nSlot if not a number.
+            false - if bWrap and nSlot = 1.
+  Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
+  ex: decSlot() - Decrements the selected slot.
+      decSlot(1, false) - Returns false.
+      decSlot(16, false) - Returns 15]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "decSlot([Slot=selected slot][, Wrap=true]) - Slot must be a number." end
 	nSlot = nSlot - 1
@@ -2505,8 +2505,8 @@ function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
 end
 
 function freeCount() --[[ Get number of free slots in turtle's inventory.
-  07/10/2021  Returns:  number of free slots.
-              sintax: freeCount()]]
+  07/10/2021 v0.2.0 Returns:  number of free slots.
+  Sintax: freeCount()]]
   local nFree,i=0
   for i=1,16 do
     if turtle.getItemCount(i)==0 then nFree=nFree+1 end
@@ -2515,12 +2515,12 @@ function freeCount() --[[ Get number of free slots in turtle's inventory.
 end
 
 function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the search or not.
-  07/10/2021  Param:  nStartSlot - number slot where to start the search.
-                      bWrap - boolean if the search wraps around the inventory.
-              Returns:  number - first free slot number.
-                        false - if no free slot.
-              sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
-              Note: if nStartSlot<0 search backwards--]]
+  07/10/2021 v0.2.0 Param:  nStartSlot - number slot where to start the search.
+                            bWrap - boolean if the search wraps around the inventory.
+  Returns:  number - first free slot number.
+            false - if no free slot.
+  Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
+  Note: if nStartSlot<0 search backwards--]]
 	nStartSlot, bWrap = getParam("nb",{1, true}, nStartSlot, bWrap)
 
   if not type(nStartSlot) == "number" then return false, "getFreeSlot([StartSlot=1][, Wrap=true]) - Slot must be a number." end
@@ -2545,8 +2545,8 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
 end
 
 function getInventory() --[[ Builds a table with the slot, the name and quantity of items in inventory.
-  04/12/2021  Returns:  table[slot][itemName]=Quantity.
-              sintax: getInventory()]]
+  04/12/2021 v0.2.0 Returns:  table[slot][itemName]=Quantity.
+  Sintax: getInventory()]]
   local tInv = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -2559,8 +2559,8 @@ function getInventory() --[[ Builds a table with the slot, the name and quantity
 end
 
 function groupItems() --[[ Groups the same type of items in one slot in inventory.
-  07/10/2021  Returns:  true.
-              sintax: groupItems()]]
+  07/10/2021 v0.2.0 Returns:  true.
+  Sintax: groupItems()]]
   local destSlot,orgSlot,tmpSlot
  
   for destSlot=1,15 do --destination slot
@@ -2579,12 +2579,12 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 end
 
 function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Param:  nSlot - number slot to be increased.
-                      bWrap - boolean true if the slot number wraps around inventory.
-              Returns:  the number of slot increased by 1.
-                        false - if it couldn't increase slot.
-              sintax: incSlot([Slot.selecetd slot][, Wrap=true])
-              ex: incSlot(16) - returns false.]]
+  02/11/2021 v0.2.0 Param: nSlot - number slot to be increased.
+                           bWrap - boolean true if the slot number wraps around inventory.
+  Returns:  the number of slot increased by 1.
+            false - if it couldn't increase slot.
+  Sintax: incSlot([Slot.selecetd slot][, Wrap=true])
+  ex: incSlot(16) - returns 1.]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "incSlot([Slot.selecetd slot][, Wrap=true]) - Slot must be a number." end
   nSlot = nSlot + 1
@@ -2593,14 +2593,14 @@ function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
 end
 
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
-  23/09/2021  Param: nSlot/sItemName - number of slot/string item name.
-              Returns: number of items you can store more in inventory/slot.
-                      false - if item is not in inventory.
-                         -1 - if slot is empty.
-              sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
-              ex: itemSpace() gets how many items you can store, like the item in selected slot.
-                  itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
-                  itemSpace(12) - gets how more items, like item in slot 12, you can store.]]
+  23/09/2021 v0.1.0 Param: nSlot/sItemName - number of slot/string item name.
+  Returns: number of items you can store more in inventory/slot.
+           false - if item is not in inventory.
+                 - 1 - if slot is empty.
+  Sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
+  ex: itemSpace() gets how many items you can store, like the item in selected slot.
+      itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
+      itemSpace(12) - gets how more items, like item in slot 12, you can store.]]
 	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
 	local stack = 0
 	
@@ -2629,22 +2629,22 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 end
 
 function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
-  23/09/2021  Param: nSlot - number slot to check.
-              Returns: true - if nSlot is empty.
-                      false - if nSlot is not empty.
-              sintax: isEmpty([nSlot=selected slot])
-              ex: isEmpty() - Checks if selected slot is empty.
-                  isEmpty(12) - checks if slot 12 is empty.]]
+  23/09/2021 v0.2.0 Param: nSlot - number slot to check.
+  Returns: true - if nSlot is empty.
+           false - if nSlot is not empty.
+  Sintax: isEmpty([nSlot=selected slot])
+  ex: isEmpty() - Checks if selected slot is empty.
+      isEmpty(12) - checks if slot 12 is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "isEmptySlot(Slot) - Slot is not a number." end
   return turtle.getItemDetail(nSlot) == nil
 end
 
 function isInventoryEmpty() --[[ Checks if inventory is empty.
-  30/04/2022  Returns: true - if inventory is empty.
-                      false - if inventory is not empty.
-              sintax: isInventoryEmpty()
-              ex: isInventoryEmpty() - Checks if inventory is empty.]]
+  30/04/2022 v0.1.0 Returns: true - if inventory is empty.
+                             false - if inventory is not empty.
+  Sintax: isInventoryEmpty()
+  ex: isInventoryEmpty() - Checks if inventory is empty.]]
   for nSlot = 1, 16 do
     if turtle.getItemDetail(nSlot) then return false end
   end
@@ -2698,14 +2698,14 @@ function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
 end
 
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-  29/08/2021  Param: slot/itemName - number slot/string name of the item to select.
-              Returns:  number, number - The selected slot, and number of items in that slot.
-                        False - if it didn't find the item name.
-                          nil - if type of itemName/Slot is not a number or string.
-                              - if itemName/Slot is a number out of range [1..16].
-              Note: if executed select() is the same as turtle.getSelectedSlot()
-              sintax: select([Slot/Item Name])
-              ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  29/08/2021 v0.1.0 Param: slot/itemName - number slot/string name of the item to select.
+  Returns:  number, number - The selected slot, and number of items in that slot.
+            False - if it didn't find the item name.
+            nil - if type of itemName/Slot is not a number or string.
+                - if itemName/Slot is a number out of range [1..16].
+  Note: if executed select() is the same as turtle.getSelectedSlot()
+  Sintax: select([Slot/Item Name])
+  ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
   local nSlot
   local tData
 
@@ -2728,17 +2728,17 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
 end
 
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
-  28/08/2021  Param: sItemName - string the item name.
-                     nStartSlot - number slot where to start the search.
-                     bWrap - boolean true if the search wraps around inventory.
-              Returns:  number, number - first slot where the item was found, and the quantity.
-                        nil - if sItemName not supplied.
-                            - if nStartSlot is not a number.
-                        False - if the item was not found
-              Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
-                    if not supplied nStartSlot, default is the selected slot.
-                    if not supplied bWrap, it defaults to true.
-              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
+  28/08/2021 v0.1.0 Param: sItemName - string the item name.
+                           nStartSlot - number slot where to start the search.
+                           bWrap - boolean true if the search wraps around inventory.
+  Returns:  number, number - first slot where the item was found, and the quantity.
+            nil - if sItemName not supplied.
+                - if nStartSlot is not a number.
+            False - if the item was not found
+  Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
+        if not supplied nStartSlot, default is the selected slot.
+        if not supplied bWrap, it defaults to true.
+  Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
 	sItemName, nStartSlot , bWrap= getParam("snb", {"", turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
   if sItemName == "" then return nil, "search(sItemName, nStartSlot, bWrap) - Item name must be supplied." end
   if type(nStartSlot) ~= "number" then return nil, "search(sItemName, nStartSlot, bWrap) - Start slot must be a number." end
