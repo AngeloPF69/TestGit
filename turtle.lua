@@ -2473,8 +2473,8 @@ end
 ------ INVENTORY FUNCTIONS ------
 
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
-  04/12/2021  Returns: table[itemName]=Slots ocupied by item.
-              sintax: countItemSlots()]]
+  04/12/2021 v0.2.0 Returns: table[itemName]=Slots ocupied by item.
+  Sintax: countItemSlots()]]
   local tItemSlots = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -2488,15 +2488,15 @@ function countItemSlots() --[[ Counts how many slots is ocupied with each item.
 end
 
 function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
-  02/11/2021  Param: nSlot - number slot to decrease.
-                     bWrap - boolean if slot wraps around inventory.
-              Returns:  the number of slot decreased by 1.
-                        nil - if nSlot if not a number.
-                        false - if bWrap and nSlot = 1.
-              Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
-              ex: decSlot() - Decrements the selected slot.
-                  decSlot(1, false) - Returns false.
-                  decSlot(16, false) - Returns 15]]
+  02/11/2021 v0.2.0 Param: nSlot - number slot to decrease.
+                           bWrap - boolean if slot wraps around inventory.
+  Returns:  the number of slot decreased by 1.
+            nil - if nSlot if not a number.
+            false - if bWrap and nSlot = 1.
+  Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
+  ex: decSlot() - Decrements the selected slot.
+      decSlot(1, false) - Returns false.
+      decSlot(16, false) - Returns 15]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "decSlot([Slot=selected slot][, Wrap=true]) - Slot must be a number." end
 	nSlot = nSlot - 1
@@ -2505,8 +2505,8 @@ function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
 end
 
 function freeCount() --[[ Get number of free slots in turtle's inventory.
-  07/10/2021  Returns:  number of free slots.
-              sintax: freeCount()]]
+  07/10/2021 v0.2.0 Returns:  number of free slots.
+  Sintax: freeCount()]]
   local nFree,i=0
   for i=1,16 do
     if turtle.getItemCount(i)==0 then nFree=nFree+1 end
@@ -2515,12 +2515,12 @@ function freeCount() --[[ Get number of free slots in turtle's inventory.
 end
 
 function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the search or not.
-  07/10/2021  Param:  nStartSlot - number slot where to start the search.
-                      bWrap - boolean if the search wraps around the inventory.
-              Returns:  number - first free slot number.
-                        false - if no free slot.
-              sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
-              Note: if nStartSlot<0 search backwards--]]
+  07/10/2021 v0.2.0 Param:  nStartSlot - number slot where to start the search.
+                            bWrap - boolean if the search wraps around the inventory.
+  Returns:  number - first free slot number.
+            false - if no free slot.
+  Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
+  Note: if nStartSlot<0 search backwards--]]
 	nStartSlot, bWrap = getParam("nb",{1, true}, nStartSlot, bWrap)
 
   if not type(nStartSlot) == "number" then return false, "getFreeSlot([StartSlot=1][, Wrap=true]) - Slot must be a number." end
@@ -2545,8 +2545,8 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
 end
 
 function getInventory() --[[ Builds a table with the slot, the name and quantity of items in inventory.
-  04/12/2021  Returns:  table[slot][itemName]=Quantity.
-              sintax: getInventory()]]
+  04/12/2021 v0.2.0 Returns:  table[slot][itemName]=Quantity.
+  Sintax: getInventory()]]
   local tInv = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -2559,8 +2559,8 @@ function getInventory() --[[ Builds a table with the slot, the name and quantity
 end
 
 function groupItems() --[[ Groups the same type of items in one slot in inventory.
-  07/10/2021  Returns:  true.
-              sintax: groupItems()]]
+  07/10/2021 v0.2.0 Returns:  true.
+  Sintax: groupItems()]]
   local destSlot,orgSlot,tmpSlot
  
   for destSlot=1,15 do --destination slot
@@ -2579,12 +2579,12 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 end
 
 function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
-  02/11/2021  Param:  nSlot - number slot to be increased.
-                      bWrap - boolean true if the slot number wraps around inventory.
-              Returns:  the number of slot increased by 1.
-                        false - if it couldn't increase slot.
-              sintax: incSlot([Slot.selecetd slot][, Wrap=true])
-              ex: incSlot(16) - returns false.]]
+  02/11/2021 v0.2.0 Param: nSlot - number slot to be increased.
+                           bWrap - boolean true if the slot number wraps around inventory.
+  Returns:  the number of slot increased by 1.
+            false - if it couldn't increase slot.
+  Sintax: incSlot([Slot.selecetd slot][, Wrap=true])
+  ex: incSlot(16) - returns 1.]]
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "incSlot([Slot.selecetd slot][, Wrap=true]) - Slot must be a number." end
   nSlot = nSlot + 1
@@ -2593,14 +2593,14 @@ function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
 end
 
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
-  23/09/2021  Param: nSlot/sItemName - number of slot/string item name.
-              Returns: number of items you can store more in inventory/slot.
-                      false - if item is not in inventory.
-                         -1 - if slot is empty.
-              sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
-              ex: itemSpace() gets how many items you can store, like the item in selected slot.
-                  itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
-                  itemSpace(12) - gets how more items, like item in slot 12, you can store.]]
+  23/09/2021 v0.1.0 Param: nSlot/sItemName - number of slot/string item name.
+  Returns: number of items you can store more in inventory/slot.
+           false - if item is not in inventory.
+                 - 1 - if slot is empty.
+  Sintax: itemSpace([nSlot/item name=turtle.getSelectedSlot()])
+  ex: itemSpace() gets how many items you can store, like the item in selected slot.
+      itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
+      itemSpace(12) - gets how more items, like item in slot 12, you can store.]]
 	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
 	local stack = 0
 	
@@ -2629,22 +2629,22 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 end
 
 function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
-  23/09/2021  Param: nSlot - number slot to check.
-              Returns: true - if nSlot is empty.
-                      false - if nSlot is not empty.
-              sintax: isEmpty([nSlot=selected slot])
-              ex: isEmpty() - Checks if selected slot is empty.
-                  isEmpty(12) - checks if slot 12 is empty.]]
+  23/09/2021 v0.2.0 Param: nSlot - number slot to check.
+  Returns: true - if nSlot is empty.
+           false - if nSlot is not empty.
+  Sintax: isEmpty([nSlot=selected slot])
+  ex: isEmpty() - Checks if selected slot is empty.
+      isEmpty(12) - checks if slot 12 is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "isEmptySlot(Slot) - Slot is not a number." end
   return turtle.getItemDetail(nSlot) == nil
 end
 
 function isInventoryEmpty() --[[ Checks if inventory is empty.
-  30/04/2022  Returns: true - if inventory is empty.
-                      false - if inventory is not empty.
-              sintax: isInventoryEmpty()
-              ex: isInventoryEmpty() - Checks if inventory is empty.]]
+  30/04/2022 v0.1.0 Returns: true - if inventory is empty.
+                             false - if inventory is not empty.
+  Sintax: isInventoryEmpty()
+  ex: isInventoryEmpty() - Checks if inventory is empty.]]
   for nSlot = 1, 16 do
     if turtle.getItemDetail(nSlot) then return false end
   end
@@ -2698,14 +2698,14 @@ function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
 end
 
 function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-  29/08/2021  Param: slot/itemName - number slot/string name of the item to select.
-              Returns:  number, number - The selected slot, and number of items in that slot.
-                        False - if it didn't find the item name.
-                          nil - if type of itemName/Slot is not a number or string.
-                              - if itemName/Slot is a number out of range [1..16].
-              Note: if executed select() is the same as turtle.getSelectedSlot()
-              sintax: select([Slot/Item Name])
-              ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  29/08/2021 v0.1.0 Param: slot/itemName - number slot/string name of the item to select.
+  Returns:  number, number - The selected slot, and number of items in that slot.
+            False - if it didn't find the item name.
+            nil - if type of itemName/Slot is not a number or string.
+                - if itemName/Slot is a number out of range [1..16].
+  Note: if executed select() is the same as turtle.getSelectedSlot()
+  Sintax: select([Slot/Item Name])
+  ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
   local nSlot
   local tData
 
@@ -2728,17 +2728,17 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
 end
 
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
-  28/08/2021  Param: sItemName - string the item name.
-                     nStartSlot - number slot where to start the search.
-                     bWrap - boolean true if the search wraps around inventory.
-              Returns:  number, number - first slot where the item was found, and the quantity.
-                        nil - if sItemName not supplied.
-                            - if nStartSlot is not a number.
-                        False - if the item was not found
-              Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
-                    if not supplied nStartSlot, default is the selected slot.
-                    if not supplied bWrap, it defaults to true.
-              sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
+  28/08/2021 v0.1.0 Param: sItemName - string the item name.
+                           nStartSlot - number slot where to start the search.
+                           bWrap - boolean true if the search wraps around inventory.
+  Returns:  number, number - first slot where the item was found, and the quantity.
+            nil - if sItemName not supplied.
+                - if nStartSlot is not a number.
+            False - if the item was not found
+  Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
+        if not supplied nStartSlot, default is the selected slot.
+        if not supplied bWrap, it defaults to true.
+  Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
 	sItemName, nStartSlot , bWrap= getParam("snb", {"", turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
   if sItemName == "" then return nil, "search(sItemName, nStartSlot, bWrap) - Item name must be supplied." end
   if type(nStartSlot) ~= "number" then return nil, "search(sItemName, nStartSlot, bWrap) - Start slot must be a number." end
@@ -2769,13 +2769,13 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
 end
 
 function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
-  07/10/2021  Param: nStartSlot - number slot where to start search for free slot.
-                     bWrap - boolean true if the search wraps around inventory.
-              Returns:  free slot number.
-                        false - if no free slot.
-              sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
-              ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
-              ex: selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
+  07/10/2021 v0.2.0 Param: nStartSlot - number slot where to start search for free slot.
+                           bWrap - boolean true if the search wraps around inventory.
+  Returns:  free slot number.
+            false - if no free slot.
+  Sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
+  ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
+      selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
   local nSlot
 
   nSlot=getFreeSlot(nStartSlot, bWrap) --get a free slot
@@ -2787,13 +2787,13 @@ end
 ------ SUCK FUNCTIONS ------
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
-  05/09/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
-                      nItems - number of items to suck.
-              Returns:  true - if turtle collects some items.
-                        false - if there are no items to take.
-              sintax: suckDir([sDir="forward][,nItems=all the items])
-              Note: if nItems < 0 it drops nItems from selected slot.
-              ex: suckDir() - Turtle sucks all the items forward.]]
+  05/09/2021 v0.1.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+                            nItems - number of items to suck.
+  Returns:  true - if turtle collects some items.
+            false - if there are no items to take.
+  Sintax: suckDir([sDir="forward][,nItems=all the items])
+  Note: if nItems < 0 it drops nItems from selected slot.
+  ex: suckDir() - Turtle sucks all the items forward.]]
   sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
   sDir = string.lower(sDir)
 
@@ -2819,8 +2819,8 @@ end
 ------ FILE SYSTEM FUNCTIONS ------
 
 function fsGetFreeSpace() --[[ Gets the total free space on disk.
-  02/10/2021  Returns:  Free space on disk.
-              ex: fsGetFreeSpace() - Outputs free space on disk.]]
+  02/10/2021 v0.2.0 Returns:  Free space on disk.
+  ex: fsGetFreeSpace() - Outputs free space on disk.]]
 	return fs.getFreeSpace("/")
 end
 
@@ -2828,18 +2828,18 @@ end
 ------ DROP FUNCTIONS ------  
 
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
-  29/08/2021  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
-                      nBlocks - number of blocks to drop/suck
-              Returns:  number of dropped items.
-                        true - if suck some items.
-                        false - empty selected slot.
-                        nil - if invalid direction.
-              Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
-              Note: if nBlocks not supplied, drops all items in selected slot.
-                    if nBlocks < 0 sucks nBlocks.
-              ex: dropDir() - Drops all blocks from selected slot, forward.
-                  dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
-                  drop(-5, "down") - Suck 5 items from down.]]
+  29/08/2021 v0.1.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+                            nBlocks - number of blocks to drop/suck
+  Returns:  number of dropped items.
+            true - if suck some items.
+            false - empty selected slot.
+            nil - if invalid direction.
+  Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
+  Note: if nBlocks not supplied, drops all items in selected slot.
+        if nBlocks < 0 sucks nBlocks.
+  ex: dropDir() - Drops all blocks from selected slot, forward.
+      dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
+      dropDir(-5, "down") - Suck 5 items from down.]]
 
   sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
   sDir = string.lower(sDir)
@@ -2885,74 +2885,74 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
 end
 
 function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
-  29/08/2021  Param: nBlocks - number of blocks to drop forward.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: drop([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: drop() - Drops all blocks from selected slot, in front of the turtle.
-                  drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop forward.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: drop([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: drop() - Drops all blocks from selected slot, in front of the turtle.
+      drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("forward", nBlocks)
 end
 
 function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
-  29/08/2021  Param: nBlocks - number of blocks to drop up.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropUp([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropUp() - Drops all blocks from selected slot, upwards.
-                  dropUp(205) - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop up.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropUp([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropUp() - Drops all blocks from selected slot, upwards.
+      dropUp(205) - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
   return dropDir("up", nBlocks)
 end
 
 function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
-  29/08/2021  Param: nBlocks - number of blocks to drop down.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.          
-              Sintax: dropDown([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropDown() - Drops all blocks from selected slot, downwards.
-                  dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop down.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.          
+  Sintax: dropDown([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropDown() - Drops all blocks from selected slot, downwards.
+  dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
   return dropDir("down", nBlocks)
 end
 
 function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
-  11/09/2021  Param: nBlocks - number of blocks to drop left.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropLeft([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
-                  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  11/09/2021 v0.1.0 Param: nBlocks - number of blocks to drop left.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropLeft([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
+  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("left", nBlocks)
 end
 
 function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward.
-  11/09/2021  Param: nBlocks - number of blocks to drop right.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropRight([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
-                  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  11/09/2021 v0.1.0 Param: nBlocks - number of blocks to drop right.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropRight([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
+  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("right", nBlocks)
 end
 
 function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
-  29/08/2021  Param: nBlocks - number of blocks to drop back.
-              Returns:  number of dropped items.
-                        false - empty selected slot.
-                        true - if suck some items.
-              Sintax: dropBack([nBlocks])
-              Note: if nBlocks not supplied, drops all items from selected slot.
-              ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
-                  dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop back.
+  Returns:  number of dropped items.
+            false - empty selected slot.
+            true - if suck some items.
+  Sintax: dropBack([nBlocks])
+  Note: if nBlocks not supplied, drops all items from selected slot.
+  ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
+      dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
   return dropDir("back", nBlocks)
 end
 
