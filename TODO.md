@@ -36,6 +36,8 @@ improving commands in lua for computer craft turtle.
 - [x] isInventoryEmpty() Checks if inventory is empty.
 - [x] getSecSumItems(nSlot, bWrap) Gets the sum of items in sequencial not empty slots.
 - [x] craftInv(nLimit) Crafts the recipe in inventory.
+- [x] cmpInventory(tInv1, tInv2) Compares 2 snapshots of inventory.
+- [x] cmpInvIncreased(tInv1, tInv2) Verifies if inventory quantities have increased.
 - [x] craftRecipe(sRecipe, nLimit) Craft a recipe.
 - [x] getLowestKey(t) Gets the lowest key of the table t.
 - [x] haveIngredients(sRecipe, nLimit) Renamed to haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
@@ -111,7 +113,6 @@ improving commands in lua for computer craft turtle.
 - [x] setCoords(x,y,z) sets coords x, y, z for turtle
 - [x] distTo(x, y, z) gets the three components of the distance from the turtle to point.
 - [x] getCoords() gets coords from turtle.
-- [x] craftRecipe(\[sRecipeName=lastRecipe\]\[, limit=64\]) craft a recipe limit number of times.
 - [x] addSteps(\[nSteps=1\]) adds nSteps to coords of turtle.
 - [x] freeCount() get free slots in turtle's inventory.
 - [x] getFreeSlot(nStartSlot) get the first free slot.
