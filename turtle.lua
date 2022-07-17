@@ -18,7 +18,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           rightHand = "empty",
 } 
 
-tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
+tRecipes = {} -- ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
                    ["lastRecipe"] = sLastRecipe
                    ["CSlot"] = Crafting slot.
@@ -30,9 +30,9 @@ local CSLOT = 13 --default crafting slot
 ------ FUEL ------
 
 function checkFuel(nActions) --[[ Checks if the fuel is enough for nActions.
-  29/06/2022 v0.3.0 Param: nActions - number of turtle moves.
-  Returns:	true - if the fuel is enough.
-					 false - if the fuel is not enough.
+  29/06/2022 v0.3.1 Param: nActions - number of turtle moves.
+  Returns:	true, number remaining fuel - if the fuel is enough.
+					 false, negative number missing fuel- if the fuel is not enough.
            nil - if nActions is not a number.
            turtle.getFuelLevel() - if nActions is not present.
 	sintax: checkFuel([nActions])
@@ -43,8 +43,10 @@ function checkFuel(nActions) --[[ Checks if the fuel is enough for nActions.
   if not nActions then return turtle.getFuelLevel() end
   if type(nActions) ~= "number" then return nil, "checkFuel([Actions]) - Actions must be a number." end
   nActions = math.abs(nActions)
-  if turtle.getFuelLevel() - nActions > 0 then return true end
-  return false
+  local nDif = turtle.getFuelLevel() - nActions
+  if nDif > 0 then return true, nDif
+  else return false, nDif
+  end
 end
 
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
@@ -2961,18 +2963,20 @@ end
 
 
 INIT()
---print(craftRecipe())
---print(craftRecipe(0))
---print(craftRecipe(1))
---print(craftRecipe(64))
---print(craftRecipe(164))
---print(craftRecipe(-15))
---print(craftRecipe("aa"))
---print(craftRecipe("minecraft:oak_button"))
-print(craftRecipe("minecraft:stick"))
+--test all functions
+--function checkFuel(nActions) -- Checks if the fuel is enough for nActions.
+--function refuel(nCount) -- Refuels the turtle with nCount items in the selected slot.
+--function getFreeHand() -- Gets turtle free hand: "left"|"right"|false.
+--function equip(sSide) -- Equip tool from the selected slot.
+--function saveTurtle() -- Saves tTurtle to file tTurtle.txt.
+--function loadTurtle() -- Loads tTurtle from file tTurtle.txt.
+--function INIT() -- Loads tTurtle.txt, tRecipes.txt from files to tables.
+--function TERMINATE() -- Saves tTurtle, tRecipes to text files.
+--function setFacing(sFacing) -- Sets tTurtle.facing.
 
 
 
---print(craftInv())
+print(equip())
+
 
 TERMINATE()

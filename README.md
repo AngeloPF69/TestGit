@@ -392,10 +392,10 @@
 
 - checkFuel(nActions) Checks if the fuel is enough for nActions.
     <pre>Param: nActions - number of turtle moves.
-  Returns:	true - if the fuel is enough.
-					 false - if the fuel is not enough.
-             nil - if nActions is not a number.
-           turtle.getFuelLevel() - if nActions is not present.
+  Returns:	true, number remaining fuel - if the fuel is enough.
+					  false, negative number missing fuel- if the fuel is not enough.
+            nil - if nActions is not a number.
+            turtle.getFuelLevel() - if nActions is not present.
 	sintax: checkFuel([nActions])
   ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
       checkFuel() - returns turtle.getFuelLevel()</pre>

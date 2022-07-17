@@ -23,6 +23,7 @@ improving commands in lua for computer craft turtle.
 - [ ] create tSpot[sSpotName] = {x, y, z, facing}
 - [ ] upgrade getFreeHand(prefered hand="right")
 - [ ] upgrade tEnt[sEntityName] = { equipable (if item is equipable), nId = number} 
+- [ ] create table for equipable tools
 
 ## DONE
 
