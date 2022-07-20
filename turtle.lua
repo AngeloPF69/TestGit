@@ -2963,20 +2963,7 @@ end
 
 
 INIT()
---test all functions
---function checkFuel(nActions) -- Checks if the fuel is enough for nActions.
---function refuel(nCount) -- Refuels the turtle with nCount items in the selected slot.
---function getFreeHand() -- Gets turtle free hand: "left"|"right"|false.
---function equip(sSide) -- Equip tool from the selected slot.
---function saveTurtle() -- Saves tTurtle to file tTurtle.txt.
---function loadTurtle() -- Loads tTurtle from file tTurtle.txt.
---function INIT() -- Loads tTurtle.txt, tRecipes.txt from files to tables.
---function TERMINATE() -- Saves tTurtle, tRecipes to text files.
---function setFacing(sFacing) -- Sets tTurtle.facing.
 
-
-
-print(equip())
-
+-- your code goes here
 
 TERMINATE()
