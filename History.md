@@ -1,6 +1,6 @@
 # Version 0.3.0
 
-  - isInventoryEmpty() isInventoryEmpty() Checks if inventory is empty.
+  - isInventoryEmpty() Checks if inventory is empty.
   - getSecSumItems(nSlot, bWrap) Gets the sum of items in sequencial not empty slots.
   - checkFuel(nActions) Checks if the fuel is enough for nActions.
   - getLowestKey(t) Gets the lowest key of the table t.
