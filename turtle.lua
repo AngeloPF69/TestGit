@@ -2,6 +2,8 @@
 ---- Version 0.3.0
 --
 
+local CSLOT = 13 --default crafting slot
+
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
 insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions
@@ -24,8 +26,6 @@ tRecipes = {} -- ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = 
                    ["CSlot"] = Crafting slot.
                    ["lastIndex"] = last recipe index]]
 tStacks = {} --["itemName"] = nStack
-
-local CSLOT = 13 --default crafting slot
 
 ------ FUEL ------
 
