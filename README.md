@@ -1,7 +1,7 @@
 # computercraft turtle lua improved commands.
 <p id="top"></p>
 
-## Settings
+## Used tables
 
     Type of values:
     dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down"]=8 } --moving direction options
