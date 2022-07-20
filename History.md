@@ -1,0 +1,123 @@
+# Version 0.3.0
+
+  - isInventoryEmpty() Checks if inventory is empty.
+  - getSecSumItems(nSlot, bWrap) Gets the sum of items in sequencial not empty slots.
+  - checkFuel(nActions) Checks if the fuel is enough for nActions.
+  - getLowestKey(t) Gets the lowest key of the table t.
+  - haveItems(sRecipe, nIndex) Builds a table with the diference between the recipe and the inventory.
+  - canCraft() Retuns a table with recipe name and index that you can craft from inventory.
+  - canCraftRecipe(sRecipe) Checks if you can craft sRecipe with inventory items.
+  - craftInv(nLimit) Crafts the recipe in inventory.
+  - craftRecipe(sRecipe, nLimit) Craft a recipe.
+  - addRecipe(sRecipe, tRecipe, nCount) Returns index of recipe.
+  - getInvRecipe() Builds a table with items and their position from inventory (the recipe).
+  - getRecipe(sRecipe, nIndex) Gets the recipe from tRecipes.
+  - getRecipeItems(sRecipe, nIndex) Builds a table with items and quantities in a recipe.
+  - getInvItems() Builds a table with the items and quantities in inventory.
+  - getRecipeIndex(sRecipe, tRecipe) Returns a number (index) of the recipe in tRecipes.
+  - colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.
+  - getProdQuant() Returns the quantity of products made with the recipe in inventory.
+  - placeBack(nBlocks) Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
+  - getItemName(nSlot) Gets the item name from Slot/selected slot.
+  - isNumber(...) Checks if all parameters are numbers.
+  - checkfuel(nActions) check if the fuel is enough for that action.
+
+# Version 0.2.0
+  - getFreeHand() - Gets turtle free hand: "left"|"right"|false.
+  - getCoords() gets coords from turtle.
+  - distTo(x, y, z) gets the three components of the distance from the turtle to point.
+  - setCoords(x,y,z) sets coords x, y, z for turtle. x
+  - getCoords() gets coords from turtle.
+  - All base rotation functions (turn left and right) must update tTurtle.facing.
+  - all base movement functions (forward, up, down, back) must change the coords in tTurtle.
+  - loadTurtle() loads tTurtle from file tTurtle.txt.
+  - saveTurtle() saves tTurtle to file tTurtle.txt.
+  - getFacing() returns tTurtle.facing.
+  - setFacing(sFacing) sets tTurtle.facing.
+  - getInvRecipe() builds a table with items and their position (the recipe).
+  - getMaxCraft() returns maximum limit to craft the recipe on inventory.
+  - getFirstItemCoords(sRecipe) returns the column and line=0 of the first item in the recipe.
+  - clearSlot(nSlot) clears content of slot, moving items to another slot.
+  - loadRecipes() loads tRecipes from file "tRecipes.txt".
+  - saveRecipes() saves tRecipes in a file as "tRecipes.txt".
+  - decFacing(nTurns) decrements tTurtle.facing by nTurns.
+  - incFacing(nTurns) increments tTurtle.facing by nTurns.
+  - groupItems() groups the same type of items in one slot in inventory.
+  - getFreeSlot(nStartSlot) get the first free slot.
+  - freeCount() get free slots in turtle's inventory.
+  - addSteps(\[nSteps=1]) adds nSteps to coords of turtle.
+  - craftRecipe(\[sRecipeName=lastRecipe]\[, limit=64]) craft a recipe limit number of times.
+  - saveStacks() saves tStacks to tStacks.txt.
+  - loadStacks() loads tStacks.txt to tStacks.
+  - setStack(sItemName, nStack) sets the item stack value in tStacks.
+  - getStack(nSlot/sItemName) returns how many items can stack.
+  - INIT() loads tables from text files.
+  - TERMINATE() saves tables to text files.
+  - transferFrom(nSlot, nItems) transfer nItems from nSlot to selected slot.
+  - arrangeRecipe(sRecipe) arranges items in inventory to craft a recipe.
+  - setCraftSlot(nSlot) sets the craft resulting slot, in tRecipes CSlot
+  - itemsBelong(\[sRecipe=tRecipes.lastRecipe]) checks if all the items in inventory belong to a recipe.
+  - countItemSlots() counts how many slots is ocupied with each item.
+  - getInventory() builds a table with the slot, the name and quantity of items in inventory.
+  - decSlot(nSlot, bWrap) decreases nSlot in range \[1..16].
+  - incSlot(nSlot, bWrap) increases nSlot in range \[1..16].
+  - isEmptySlot(nSlot) checks if nSlot is empty.
+  - itemCount(nSlot) - Counts items in inventory.
+  - selectFreeSlot(nStartSlot, bWrap) selects the first free slot starting at nStartSlot, and if the search wraps or not.
+  - fsGetFreeSpace() gets the total free space on disk.
+  
+# Version 0.1.0
+  - itemSpace(nSlot/sItemName) - Get how many items more you can store in inventory.
+  - compareDir(sDir, nSlot) - Compares item in slot with block in sDir direction.
+  - equip(sSide) - Equip tool in the selected slot.
+  - refuel(nCount) - Refuels the turtle with nCount items.
+  - forward(nBlocks) - Moves nBlocks forward or backwards, if nBlocks < 0, until blocked.
+  - back(nBlocks) - Moves nBlocks back or forward, if nBlocks < 0, until blocked.
+  - up(nBlocks) - Moves nBlocks up or down, if nBlocks < 0, until blocked.
+  - down(nBlocks) - Moves nBlocks down or up, if nBlocks < 0, until blocked.
+  - turnDir(sDir) - Turtle turns to sDir direction {"back", "right", "left"}.
+  - turnBack() - Turtle turns back.
+  - sDir {"forward", "right", "back", "left", "up", "down"}
+  - goDir(sDir, nBlocks) - Turtle goes in sDir direction, or the other way if nBlocks < 0, until blocked.
+  - goLeft(nBlocks) - Turns left or  right if nBlocks <0, and advances nBlocks until blocked.
+  - goRight(nBlocks) - Turns right or left if nBlocks < 0, and advances nBlocks until blocked.
+  - goBack(nBlocks) - Turns back or not if nBlocks < 0, and advances nBlocks until blocked.
+  - digDir(sDir, nBlocks) - Turtle digs in sDir direction or the other way if nBlocks < 0, must have a tool equiped.
+  - dig(nBlocks) - Turtle digs nBlocks forward or turns back if nBlocks < 0, and digs nBlocks, must have a tool equiped.
+  - digLeft(nBlocks) - Turtle digs nBlocks to the left or right if nBlocks < 0, must have a tool equiped.
+  - digRight(nBlocks) - Turtle digs nBlocks to the right or left if nBlocks <0, must have a tool equiped.
+  - digUp(nBlocks) - Turtle digs nBlocks upwards or downwards if nBlocks < 0, must have a tool equiped.
+  - digDown(nBlocks) - Turtle digs nBlocks downwards or upwards if nBlocks < 0, must have a tool equiped.
+  - digAbove(nBlocks) - Digs nBlocks forwards or backwards if nBlocks < 0, 1 block above the turtle, must have a tool equiped.
+  - digBelow(nBlocks) - Digs nBlocks forwards or backwards if nBlocks < 0, 1 block below the turtle, must have a tool equiped.
+  - digBack(nBlocks) - Turns back or not if nBlocks < 0, and digs Blocks forward, must have a tool equiped.
+  - detectDir(sDir) - Detects if is a block in sDir.
+  - detectAbove(nBlocks) - Detects nBlocks forwards or backwards if nBlocks < 0, 1 block above the turtle.
+  - detectBelow(nBlocks) - Detects nBlocks forwards or backwards if nBlocks < 0, 1 block below the turtle.
+  - inspectDir(sDir) - Inspect a block in sDir direction.
+  - placeDir(sDir) - Places one selected block in sDir.
+  - place(nBlocks) - Turtle places nBlocks in a strait line forward or backwards if nBlocks < 0, and returns to starting point.
+  - placeUp(nBlocks) - Places nBlocks upwards or downwards if nBlocks < 0, and returns to starting point.
+  - placeDown(nBlocks) - Places nBlocks downwards or upwards if nBlocks < 0, and returns to starting point.
+  - placeLeft(nBlocks) - Places Blocks to the left or right if nBlocks < 0, and returns to starting point.
+  - placeRight(nBlocks) - Places Blocks to the right or left if nBlocks < 0, and returns to starting point.
+  - placeAbove(nBlocks) - Places nBlocks forwards or backwards if nBlocks < 0, in a strait line, 1 block above the turtle, and returns to starting point.
+  - placeBelow(nBlocks) - Places nBlocks forwards or backwards if nBlocks < 0, in a strait line, 1 block below the turtle, and returns to starting point.
+  - suckDir(sDir, nItems) - Sucks nItems from sDir direction.
+  - dropDir(sDir, nBlocks) - Drops or sucks if nBlocks <0, between selected slot to inventory or the world in front.
+  - drop(nBlocks) - Drops or sucks if nBlocks < 0, in front of the turtle.
+  - dropUp(nBlocks) - Drops or sucks if nBlocks < 0, upwards.
+  - dropDown(nBlocks) - Drops or sucks if nBlocks <0, downwards.
+  - dropLeft(nBlocks) - Rotate left and drops or sucks if nBlocks < 0, forward.
+  - dropRight(nBlocks) - Rotate right and drops or sucks if nBlocks < 0, forward.
+  - dropBack(nBlocks) - Rotate back and drops or sucks if nBlocks < 0, forward.
+  - itemName(nSlot) - Gets the item name from Slot/selected slot.
+  - search(sItemName, nStartSlot) - Search inventory for ItemName, starting at startSlot. 
+  - itemSelect(itemName) - Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
+  - compareAbove(nBlocks) - Compares nBlocks above the turtle in a strait line with selected slot block.
+  - compareBelow(nBlocks) - Compares nBlocks below the turtle in a strait line with selected slot block.
+  - attackDir(sDir) - Turtle attack in sDir direction.
+  - checkType(sType, ...) - Checks if parameters are from sType.
+  - getParam(sParamOrder, tDefault, ...) - Sorts parameters by type.
+  - tableInTable(tSearch, t) - Verifies if tSearch is in table t.
+  - sign(value) - Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0

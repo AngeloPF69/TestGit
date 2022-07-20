@@ -1,0 +1,8 @@
+{
+  y = 0,
+  x = 1,
+  leftHand = "minecraft:crafting_table",
+  z = -3,
+  rightHand = "minecraft:diamond_pickaxe",
+  facing = 2,
+}
