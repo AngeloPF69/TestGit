@@ -26,9 +26,62 @@ tRecipes = {} -- ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = 
                    ["CSlot"] = Crafting slot.
                    ["lastIndex"] = last recipe index]]
 tStacks = {} --["itemName"] = nStack
+tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity 20-07-2022
+tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity 20-07-2022
+
+
+------ Entity ------
+--not tested
+function addEntId(sEntName)
+	if type(sEntName) ~= "string" then return nil end
+	if tEnts[sEntName] then return tEnts[sEntName] end
+	tEnts[sEntName] = tEnts.next
+	tRevEnts[tEnts.next] = sEntName
+	tEnts.next = tEnts.next + 1
+	return tEnts.next-1
+end
+
+--not tested
+function getEntId(sEntName)
+	if type(sEntName) ~= "string" then return nil end
+	if tEnts[sEntName] then return tEnts[sEntName] end
+	return false
+end
+
+--not tested
+function getEntName(nId)
+	if type(nId) ~= "number" then return nil end
+	if tRevEnts[nId] then return tRevEnts[nId] end
+	return false
+end
+
+--not tested
+function saveEnt()
+  return saveTable(tEnts, "tEnts.txt")
+end
+
+--not tested
+function loadEnt()
+  local t = loadTable("tEnts.txt")
+	if not t then return false,"Can't load tEnts.txt" end
+	tEnts = t
+  return true
+end
+
+--not tested
+function saveRevEnt()
+  return saveTable(tRevEnts, "tRevEnts.txt")
+end
+
+--not tested
+function loadRevEnt()
+  local t = loadTable("tRevEnts.txt")
+	if not t then return false,"Can't load tRevEnts.txt" end
+	tEnts = t
+  return true
+end
 
 ------ FUEL ------
-
 function checkFuel(nActions) --[[ Checks if the fuel is enough for nActions.
   29/06/2022 v0.3.1 Param: nActions - number of turtle moves.
   Returns:	true, number remaining fuel - if the fuel is enough.
@@ -88,7 +141,6 @@ end
 
 
 ------ EQUIP ------
-
 function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
   23/09/2021 v0.1.0 Returns:	"left" or "right" the first free hand found.
 										          false - if no free hand found.
@@ -126,7 +178,6 @@ end
 
 
 ------ TURTLE ------
-
 function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
   23/09/2021 v0.2.0 Returns:	true - if it could save the file.
 											        false - if it couldn't save file.
@@ -150,9 +201,11 @@ end
 
 
 ------ INIT ------
-
+--not tested
 function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
-  02/11/2021 v0.2.0 Returns:	true]] 
+  02/11/2021 v0.4.0 Returns:	true]] 
+  loadEnt()
+  loadRevEnt()
 	loadTurtle()
 	loadRecipes()
   loadStacks()
@@ -161,9 +214,11 @@ end
 
 
 ------ TERMINATE ------
-
+--not tested
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
-  02/11/2021 v0.2.0 Returns:	true]] 
+  02/11/2021 v0.4.0 Returns:	true]] 
+  saveEnt()
+  saveRevEnt()
 	saveTurtle()
 	saveRecipes()
   saveStacks()
@@ -172,7 +227,6 @@ end
 
 
 ------ TURTLE STATUS FUNCTIONS ----
-
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021 v0.2.0 Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
@@ -224,7 +278,6 @@ end
 
 
 ------ ATTACK FUCTIONS ------
-
 function attackDir(sDir) --[[ Turtle attack in sDir direction.
   05/09/2021 v0.1.0 Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down".
   Returns:  true if turtle attack something.
@@ -255,7 +308,6 @@ end
 
 
 ------ MEASUREMENTS FUNCTIONS ------
-
 function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
   24/09/2021 v0.2.0 Param: nSteps - number of waking steps for turtle.
   Sintax: addSteps([nSteps=1])
@@ -288,7 +340,6 @@ end
 
 
 ------ COMPARE FUNCTIONS ------
-
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
   21/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
                            nSlot - number 1..16
@@ -397,7 +448,6 @@ end
 
 
 ------ DETECT FUNCTIONS ------
-
 function detectDir(sDir) --[[ Detects if is a block in sDir direction.
   03/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
   Returns:  true - If turtle detects a block.
@@ -472,7 +522,6 @@ end
 
 
 ------ INSPECT FUNCTIONS ------
-
 function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
   05/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
   Returns:  true, table with data - If turtle detects a block.
@@ -499,7 +548,6 @@ end
 
 
 ------ MOVING FUNCTIONS ------
-
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
   27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk.
   Returns:  true - if turtle goes all way.
@@ -583,7 +631,6 @@ end
 
 
 ------ GENERAL FUNCTIONS ------
-
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
   27/09/2021 v0.2.0 Param: t - table to save.
                    sFileName - string filename.
@@ -758,7 +805,6 @@ function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value 
 end
 
 ------ STACK FUNCTIONS ------
-
 function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
   10/11/2021 v0.2.0 Returns false - if it couldn't save file.
                             true - if it could save file.
@@ -867,7 +913,6 @@ function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
 end
 
 ------ RECIPES FUNCTIONS ------
-
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021 v0.3.0 Return: table - with ingredient name and quantity.]]
   
@@ -1834,7 +1879,6 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
 end
 
 ------ ROTATING FUNCTIONS ------  
-
 function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
   02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the right.
   Returns: true
@@ -1890,7 +1934,6 @@ end
 
 
 ------ MOVING AND ROTATING FUNCTIONS ------
-
 function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
   27/08/2021 v01.0 Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"
                        nBlocks - number of blocks to walk.
@@ -1981,7 +2024,6 @@ end
 
 
 ------ DIG FUNCTIONS ------  
-
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   08/09/2021 v0.1.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"
                         nBlocks - number of blocks to walk in sDir direction. 
@@ -2190,8 +2232,6 @@ end
 
 
 ------ PLACE FUNCTIONS ------  
-
-
 function placeDir(sDir) --[[ Places one selected block in sDir direction.
   27/08/2021 v0.1.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"
   Returns:  true if turtle places the selected block.
@@ -2473,7 +2513,6 @@ end
 
 
 ------ INVENTORY FUNCTIONS ------
-
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
   04/12/2021 v0.2.0 Returns: table[itemName]=Slots ocupied by item.
   Sintax: countItemSlots()]]
@@ -2787,7 +2826,6 @@ function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot star
 end
 
 ------ SUCK FUNCTIONS ------
-
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   05/09/2021 v0.1.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
                             nItems - number of items to suck.
@@ -2819,7 +2857,6 @@ end
 
 
 ------ FILE SYSTEM FUNCTIONS ------
-
 function fsGetFreeSpace() --[[ Gets the total free space on disk.
   02/10/2021 v0.2.0 Returns:  Free space on disk.
   ex: fsGetFreeSpace() - Outputs free space on disk.]]
@@ -2828,7 +2865,6 @@ end
 
 
 ------ DROP FUNCTIONS ------  
-
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
   29/08/2021 v0.1.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"
                             nBlocks - number of blocks to drop/suck
