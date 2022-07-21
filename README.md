@@ -64,7 +64,7 @@
     
 ## Fuel
 
-   <a href="#refuel">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a>
+   <a href="#refuel">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
    <a href="#checkFuel">checkFuel([nActions]) Checks if the fuel is enough for nActions.</a>
 
 ## General
