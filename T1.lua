@@ -13,14 +13,15 @@ equipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original
 
 dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down"]=8 } --moving direction options
 lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
-facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8}
+facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8} --axis type values
+carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           facing = facingType["z-"], --the axis where the turtle is facing at
           leftHand = "empty",
           rightHand = "empty",
 } 
 
-tRecipes = {} -- ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
+tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
                    ["Name"][index]["count"] = resulting number of items}
                    ["lastRecipe"] = sLastRecipe
                    ["CSlot"] = Crafting slot.
@@ -31,9 +32,17 @@ tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table enti
 
 
 ------ Entity ------
---not tested
-function addEntId(sEntName)
-	if type(sEntName) ~= "string" then return nil end
+function addEnt(sEntName) --[[ Adds a entity name to table ent.
+  21-07-2022 v0.4.0 Param: sEntName - string name of entity.
+  Returns: number - entity id
+           nil - if not sEntName not supplied.
+               - if sEntName is not a number.
+  Sintax: addEnt(sEntName)
+  Note: if entity already exists, it returns the existing one.
+  ex: addEnt("minecraft:cobblestone") - it returns tEnts.next]]
+
+  if not sEntName then return nil, "addEnt(EntName) - Must supply entity name." end
+	if type(sEntName) ~= "string" then return nil, "addEnt(EntName) - Entity name must be a string." end
 	if tEnts[sEntName] then return tEnts[sEntName] end
 	tEnts[sEntName] = tEnts.next
 	tRevEnts[tEnts.next] = sEntName
@@ -41,65 +50,124 @@ function addEntId(sEntName)
 	return tEnts.next-1
 end
 
---not tested
-function getEntId(sEntName)
-	if type(sEntName) ~= "string" then return nil end
+function getEntId(sEntName) --[[ Gets the entity id.
+  21-07-2022 v0.4.0 Param: sEntName - string the entity name.
+  Returns: number - the entity id.
+           false - the entity name was not found.
+           nil - the entity name was not supplied.
+               - the entity name was not a string.
+  Sintax: getEntId(sEntName)
+  ex: getEntId("minecraft:stick") - it returns a number the id.]]
+
+  if not sEntName then return nil, "getEntId(EntName) - Entity name must be supplied." end
+	if type(sEntName) ~= "string" then return nil, "getEntId(EntName) - Ent name must be a string." end
 	if tEnts[sEntName] then return tEnts[sEntName] end
 	return false
 end
 
---not tested
-function getEntName(nId)
-	if type(nId) ~= "number" then return nil end
+function getEntName(nId) --[[ Gets the entity name.
+  21-07-2022 v0.4.0 Param: nId - number the id of the entity to get the name.
+  Returns: string - the name of the entity.
+           false - if nId was not found.
+           nil - if nId was not supplied.
+               - if nId is not a number
+  Sintax: getEntName(nId)
+  ex: getEntName(1) - gets the intity name witch has 1 for id.]]
+
+  if not nId then return nil, "getEntName(Id) - The id of the entity must be supplied." end
+	if type(nId) ~= "number" then return nil, "getEntName(Id) - The id of the entity must be a number." end
 	if tRevEnts[nId] then return tRevEnts[nId] end
 	return false
 end
 
---not tested
-function saveEnt()
+function saveEnt() --[[ Saves table tEnts into tEnts.txt file.
+  21-07-2022 v0.4.0 Returns: the same as saveTable
+  Sintax: saveEnt()
+  ex: saveEnt()]]
+
   return saveTable(tEnts, "tEnts.txt")
 end
 
---not tested
-function loadEnt()
+function loadEnt() --[[ Loads tEnts.txt into table tEnts.
+  21-07-2022 v0.4.0 Returns: true - if it loaded the table.
+                             false - if it couldn't load the table.
+  Sintax: loadEnt()
+  ex: loadEnt()]]
+
   local t = loadTable("tEnts.txt")
 	if not t then return false,"Can't load tEnts.txt" end
 	tEnts = t
   return true
 end
 
---not tested
-function saveRevEnt()
+function saveRevEnt() --[[ Saves tRevEnts into tRevEnts.txt file.
+  21-07-2022 v0.3.0 Returns: same as saveTable
+  Sintax: saveRevEnt()
+  ex: saveRevEnt()]]
+
   return saveTable(tRevEnts, "tRevEnts.txt")
 end
 
---not tested
-function loadRevEnt()
+function loadRevEnt() --[[ Loads tRevEnts.txt into tRevEnts table.
+  21-07-2022 v0.4.0 Returns: true - if could load tRevEnts.txt
+                             false - if couldn't load file tRevEnts.txt
+  Sintax: loadRevEnt()
+  ex: loadRevEnt()]]
+
   local t = loadTable("tRevEnts.txt")
 	if not t then return false,"Can't load tRevEnts.txt" end
-	tEnts = t
+	tRevEnts = t
   return true
 end
 
 ------ FUEL ------
-function checkFuel(nActions) --[[ Checks if the fuel is enough for nActions.
-  29/06/2022 v0.3.1 Param: nActions - number of turtle moves.
+function checkFuel(...) --[[ Checks if the fuel is enough.
+  29/06/2022 v0.4.1 Param: ... - number of turtle moves.
+                               - coords where to go (x, y, z).
   Returns:	true, number remaining fuel - if the fuel is enough.
-					 false, negative number missing fuel- if the fuel is not enough.
-           nil - if nActions is not a number.
-           turtle.getFuelLevel() - if nActions is not present.
-	sintax: checkFuel([nActions])
+					 false, negative number missing fuel - if the fuel is not enough.
+           nil - if parameters are not numbers.
+               - if quantity of parameters are not 1 or 3.
+  Note: returns turtle.getFuelLevel() - if no parameters.
+	sintax: checkFuel([nActions/x,y,z])
   ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
-      checkFuel() - returns turtle.getFuelLevel()]]
+      checkFuel() - returns turtle.getFuelLevel()
+      checkFuel(10, 20, 45) - checks if fuel is enough to go to coords (10, 20, 45).]]
   
   if type(turtle.getFuelLimit()) == "string" then return true end
-  if not nActions then return turtle.getFuelLevel() end
-  if type(nActions) ~= "number" then return nil, "checkFuel([Actions]) - Actions must be a number." end
-  nActions = math.abs(nActions)
+  if #arg == 0 then return turtle.getFuelLevel() end
+
+  local nActions = 0
+  local tIndex = {"x", "y", "z"}
+  if #arg == 1 then 
+    if type(arg[1]) ~= "number" then
+      return nil, "checkFuel([Actions|x, y, z]) - Actions or coords must be numbers."
+    else
+      nActions = nActions + arg[1]
+    end
+  elseif #arg == 3 then
+    for iArg = 1, 3 do
+      if type(arg[iArg]) ~= "number" then
+        return nil, "checkFuel([Actions|x, y, z]) - Actions or coords must be numbers."
+      else
+        nActions = nActions + math.abs(tTurtle[tIndex[iArg]] - arg[iArg])
+      end
+    end
+  else return nil, "checkFuel([Actions|x, y, z]) - Invalid number of parameters."
+  end
   local nDif = turtle.getFuelLevel() - nActions
   if nDif > 0 then return true, nDif
   else return false, nDif
   end
+end
+
+function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,z
+  21-07-2022 v0.4.0 Param: x, y, z (numbers) - coords of the point where to go.
+  Returns: checkFuel(...)
+  Sintax: isFuelEnoughTo(x, y, z)
+  ex: isFuelEnoughTo(10, 20, 50) - checks if there is enough fuel to go to (10, 20, 50)]]
+
+  return checkFuel(x, y, z)
 end
 
 function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
@@ -201,7 +269,6 @@ end
 
 
 ------ INIT ------
---not tested
 function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
   02/11/2021 v0.4.0 Returns:	true]] 
   loadEnt()
@@ -214,7 +281,6 @@ end
 
 
 ------ TERMINATE ------
---not tested
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
   02/11/2021 v0.4.0 Returns:	true]] 
   saveEnt()
@@ -631,6 +697,46 @@ end
 
 
 ------ GENERAL FUNCTIONS ------
+function checkNil(nArg, ...) --[[ Checks for nil parameters.
+	21-07-2022 v0.4.0 Param: nArg - number of parameters
+                           ... - parameters to test
+  Returns: true, number of parameters that are nil.
+           false - there is no nil parameters
+           nil - if nArg not supplied.
+               - if nArg not a number.
+  sintax:checkNil(nArg, ...)
+	ex: checkNil(2, 2) - returns true, 1]]
+
+  if not nArg then return nil, "checkNil(nArg, ...) - Must supply nArg as the number of arguments." end
+  if type(nArg) ~= "number" then return nil, "checkNil(nArg, ...) - narg must be a number." end
+
+  local dif = #arg - nArg
+	if dif < 0 then return true, math.abs(dif)
+  else return false
+  end
+end
+
+function loadTable(sFileName) --[[ Loads a text file into a table.
+  27/09/2021 v0.2.0 Param: sFileName - string the file name.
+  Sintax: loadTable(sFileName)
+  Returns: table - if could read a text file into a table.
+           false - if sFileName is not supplied,
+                 - if the file couldn't be opened for reading,
+                 - if the file is empty.
+  ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.]]
+  
+	if not sFileName then return false, "loadTable(FileName) - Must supply file name." end
+	
+  local fh,t
+  if not fs.exists(sFileName) then return false, "loadTable - file not found" end
+  fh=fs.open(sFileName, "r")
+	if not fh then return false, "loadTable - can't open file "..sFileName end
+  t=textutils.unserialize(fh.readAll())
+	if not t then return false, "loadTable - empty file "..sFileName end
+  fh.close()
+  return t
+end
+
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
   27/09/2021 v0.2.0 Param: t - table to save.
                    sFileName - string filename.
@@ -654,27 +760,6 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
 	fh.write(str2Save) --transform table values and keys in strings
 	fh.close() --close file handle(file)
 	return true --return success
-end
-
-function loadTable(sFileName) --[[ Loads a text file into a table.
-  27/09/2021 v0.2.0 Param: sFileName - string the file name.
-  Sintax: loadTable(sFileName)
-  Returns: table - if could read a text file into a table.
-           false - if sFileName is not supplied,
-                 - if the file couldn't be opened for reading,
-                 - if the file is empty.
-  ex: loadTable("oneFile.txt") - Loads file "oneFile.txt" returns it as a table.]]
-  
-	if not sFileName then return false, "loadTable(FileName) - Must supply file name." end
-	
-  local fh,t
-  if not fs.exists(sFileName) then return false, "loadTable - file not found" end
-  fh=fs.open(sFileName, "r")
-	if not fh then return false, "loadTable - can't open file "..sFileName end
-  t=textutils.unserialize(fh.readAll())
-	if not t then return false, "loadTable - empty file "..sFileName end
-  fh.close()
-  return t
 end
 
 function checkType(sType, ...) --[[ Checks if parameters are from sType.
@@ -1932,10 +2017,102 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
   return true
 end
 
+function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
+  22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the left.
+  Returns: true
+           nil - if nTurns is not a number.
+  Note: if nTurns < 0 it turns to the right.
+  Sintax: turnLeft([nTurns=1])
+  ex: turnLeft() - turns once to the left.
+      turnLeft(-1) - turns once to the right.]]
+  
+  local i
+  nTurns = nTurns or 1 --default 1 turn
+  if type(nTurns) ~= "number" then return nil, "turnLeft(Turns) - Turns must be a number." end
+  if nTurns < 0 then return turnRight(math.abs(nTurns)) end
+  nTurns=bit32.band(nTurns, 3) --nTurns muest be 0..3 (4=0...)
+  for i=1,nTurns do
+    turtle.turnLeft()
+    decFacing()
+  end
+  return true
+end
+
+function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
+  22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the right.
+  Returns: true
+           nil - if nTurns is not a number.
+  Note: if nTurns < 0 it turns to the left.
+  Sintax: turnRight([nTurns=1])
+  ex: turnRight() - turns once to the right.
+      turnRight(-1) - turns once to the left.]]
+  
+  local i
+  nTurns = nTurns or 1
+  if type(nTurns) ~= "number" then return nil, "turnRight(Turns) - Turns must be a number." end
+  if nTurns < 0 then return turnLeft(math.abs(nTurns)) end
+  nTurns=bit32.band(nTurns, 3)
+  for i=1,nTurns do
+    turtle.turnRight()
+    incFacing()
+  end
+  return true
+end
+
+function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
+  21-07-2022 v0.4.0 Param: nsFacing - "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"
+  Returns: true - if it turn to specified direction
+           nil - if nsFacing is not a string.
+  sintax: turnTo(nsFacing)]]
+
+  local nDir, nRotate;
+	if not nsFacing then return true end --no parameters
+  if type(nsFacing) ~= "string" then
+    return nil, 'turnTo(Facing) - Facing must be a string ("z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east")'
+  end
+	
+  nsFacing = string.lower(nsFacing)
+  if carDirType[nsFacing] then --is "north", "south", "west", "east"
+    nRotate = carDirType[nsFacing] - tTurtle.facing
+  elseif facingType[nsFacing] then --is "z+","z-","x+","x-"
+    nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
+  else return nil, 'turnTo(Facing) - Invalid Facing direction "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"';
+  end
+
+	if nRotate == 0 then return true end; --no need to rotate
+	
+  if nRotate < -2 then nRotate = 1 --3 lefts = 1 right
+  else if nRotate > 2 then nRotate = -1 end --3 rights = 1 left
+	end
+
+	if nRotate < 0 then turnLeft(math.abs(nRotate))
+	else turnRight(nRotate)
+	end
+	return true
+end
 
 ------ MOVING AND ROTATING FUNCTIONS ------
+function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
+  Returns:  true if turtle goes all way.
+            false if blocked, or invalid parameter.
+            nil - if nBlocks type is not a number.
+  Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
+  ex: goBack(3) - Turns back and moves 3 blocks forward.]]
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
+  if nBlocks >= 0  then turnBack() end
+  for i = 1, math.abs(nBlocks) do
+    if not turtle.forward() then return false, "I can't go back."
+    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
+    end
+  end
+  return true
+end
+
 function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
-  27/08/2021 v01.0 Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"
+  27/08/2021 v04.0 Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"|"z+"|"x+"|"z-"|"x-"|"y+"|"y-"|"north"|"south"|"west"|"east"
                        nBlocks - number of blocks to walk.
   Returns:  true if turtle goes all way.
             false if blocked.
@@ -1946,6 +2123,7 @@ function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
   sDir, nBlocks = getParam("sn", {"forward", 1}, sDir, nBlocks)
   sDir = string.lower(sDir)
   
+  if turnTo(sDir) then sDir = "forward" end
   if sDir == "forward" then return forward(nBlocks)
   elseif sDir == "right" then return goRight(nBlocks)
   elseif sDir == "back" then return goBack(nBlocks)
@@ -2003,25 +2181,47 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
   return true
 end
 
-function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
-  Returns:  true if turtle goes all way.
-            false if blocked, or invalid parameter.
-            nil - if nBlocks type is not a number.
-  Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
-  ex: goBack(3) - Turns back and moves 3 blocks forward.]]
-  nBlocks = nBlocks or 1
-  
-  if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
-  if nBlocks >= 0  then turnBack() end
-  for i = 1, math.abs(nBlocks) do
-    if not turtle.forward() then return false, "I can't go back."
-    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
-    end
-  end
-  return true
-end
+function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
+  21-07-2022 v0.4.0 Param: x, y, z - numbers coords to go to.
+  Returns: true - if it goes all the way.
+           false - if it didn't go all the way.
+  ex: goTo(10, 4, 5) - goes to coords 10, 4, 5.]]
 
+  if checkNil(3, x, y, z) then return false, "goTo(x, y, z) - Must supply x, y, z" end
+  if not isFuelEnoughTo(z,x,y) then return false,"goTo(x, y, z) - Not enough fuel." end --have fuel
+  local dX, dY, dZ = distTo(x, y, z)
+  if dX == 0 and dY == 0 and dZ == 0 then return true end
+  
+  repeat
+    ---------------------- TO IMPLEMENT if facing then move on that direction ----------------------------
+    
+    local bHasMoved=false
+    if dZ>0 then
+      if goDir("z+",dZ) then bHasMoved=true end
+    end
+    if dZ<0 then
+      if goDir("z-",math.abs(dZ)) then bHasMoved=true end
+    end
+
+    if dX>0 then
+      if goDir("x+",dX) then bHasMoved=true end
+    end
+    if dX<0 then
+      if goDir("x-",math.abs(dX)) then  bHasMoved=true end
+    end
+
+    if dY>0 then
+      if goDir("up", dY) then bHasMoved=true end
+    end
+    if dY<0 then
+      if goDir("down", math.abs(dY)) then bHasMoved=true end
+    end
+
+    dX, dY, DZ = distTo(x,y, z)
+  until (bHasMoved == false) or (dZ == 0 and dX == 0 and dY == 0)
+  if (dZ == 0) and (dX == 0) and (dY == 0) then return true end
+  return false
+end
 
 ------ DIG FUNCTIONS ------  
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
@@ -3000,6 +3200,7 @@ end
 
 INIT()
 
--- your code goes here
+sleep(2)
+print(goTo(0, 0, 0))
 
 TERMINATE()

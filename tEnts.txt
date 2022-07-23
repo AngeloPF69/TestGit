@@ -1,0 +1,6 @@
+{
+  next = 2,
+  empty = 0,
+  unreachable = -1,
+  [ "minecraft:cobblestone" ] = 1,
+}

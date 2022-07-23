@@ -1,0 +1,5 @@
+{
+  "minecraft:cobblestone",
+  [ 0 ] = "empty",
+  [ -1 ] = "unreachable",
+}
