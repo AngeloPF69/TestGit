@@ -1,7 +1,7 @@
 --
----- Version 0.3.0
+---- Version 0.4.0
 --
-
+local DEFSTACK = 64
 local CSLOT = 13 --default crafting slot
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
@@ -74,7 +74,7 @@ function addEnt(sEntName) --[[ Adds a entity name to table ent.
                - if sEntName is not a number.
   Sintax: addEnt(sEntName)
   Note: if entity already exists, it returns the existing one.
-  ex: addEnt("minecraft:cobblestone") - it returns tEnts.next]]
+  ex: addEnt("minecraft:cobblestone") - it returns tEnts.next or the existing tEnt["minecraft:cobblestone"] ]]
 
   if not sEntName then return nil, "addEnt(EntName) - Must supply entity name." end
 	if type(sEntName) ~= "string" then return nil, "addEnt(EntName) - Entity name must be a string." end
@@ -139,8 +139,8 @@ function saveEnt() --[[ Saves table tEnts into tEnts.txt file.
 end
 
 function loadEnt() --[[ Loads tEnts.txt into table tEnts.
-  21-07-2022 v0.4.0 Returns: true - if it loaded the table.
-                             false - if it couldn't load the table.
+  21-07-2022 v0.4.0 Returns: true - if it loaded the file.
+                             false - if it couldn't load the file.
   Sintax: loadEnt()
   ex: loadEnt()]]
 
@@ -1422,19 +1422,18 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
 end  
     
 function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
-  02/11/2021 v0.2.0 Param: nSlot - number slot where to transfer from.
+  02/11/2021 v0.2.1 Param: nSlot - number slot where to transfer from.
                           nItems - number items to transfer from.
   Returns:  number of items in selected slot.
             nil - if nSlot not supplied.
-                - if nItems not supplied.
                 - if nItems is not a number
           false - if nSlot is empty.
                 - if nSlot is out of range [1..16].
                 - if selected slot is full.
-  sintax: transferFrom(nSlot, nItems]]
+  sintax: transferFrom(nSlot [, nItems=64]) ]]
   
   if not nSlot then return nil, "transferFrom(nSlot, nItems) - Must supply origin slot." end
-  if not nItems then return nil, "transferFrom(nSlot, nItems) - Must supply number of items." end
+  nItems = nItems or DEFSTACK --default stack
   
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return false, "Empty origin slot." end
@@ -1839,7 +1838,7 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
            nil - if nLimit out of range [0..64]
                - if no recipe name was supplied in the first recipe to craft.
            false - if inventory is empty.
-                 - if there is no recipe in inventory and the rcipe name wasn't found
+                 - if there is no recipe in inventory and the recipe name wasn't found
                  - if there are missing items or this recipe was never craft.
                  - if it couldn't arrange items as a recipe in inventory.
                  - if there isn't a empty slot to craft the recipe to.
@@ -1850,9 +1849,9 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
       craftRecipe("minecraft:wooden_shovel", 1) - Craft one wooden shovel.]]
               
   if isInventoryEmpty() then return false, "Inventory is empty." end
-  sRecipe, nLimit = getParam("sn", {"",64}, sRecipe, nLimit)
+  sRecipe, nLimit = getParam("sn", {"", DEFSTACK}, sRecipe, nLimit)
   if nLimit == 0 then return turtle.craft(nLimit) end
-  if nLimit < 0 or nLimit > 64 then return nil, "craftRecipe(sRecipe, nLimit) - nLimit must be a number[1..64]." end
+  if nLimit < 0 or nLimit > DEFSTACK then return nil, "craftRecipe(sRecipe, nLimit) - nLimit must be a number[1.."..tostring(DEFSTACK).."]." end
 
   local nIndex
   local isRecipeInv = turtle.craft(0)
@@ -2002,9 +2001,9 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
                  - if it couldn't add the recipe.
   Sintax: craftInv([nLimit=64])
   ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
-	nLimit = nLimit or 64
-	if type(nLimit) ~= "number" then return nil, "craft([Limit=64]) - Limit must be a number." end
-	if nLimit < 1 or nLimit > 64 then return nil, "craft([Limit=64]) - Limit must be between 1 and 64." end
+	nLimit = nLimit or DEFSTACK
+	if type(nLimit) ~= "number" then return nil, "craft([Limit="..tostring(DEFSTACK).."]) - Limit must be a number." end
+	if nLimit < 1 or nLimit > DEFSTACK then return nil, "craft([Limit="..tostring(DEFSTACK).."]) - Limit must be between 1 and "..tostring(DEFSTACK).."." end
 
 	if not turtle.craft(0) then return false, "There is no recipe in inventory." end
   local nMaxCraft = getMaxCraft() 
@@ -2814,7 +2813,7 @@ function freeCount() --[[ Get number of free slots in turtle's inventory.
   07/10/2021 v0.2.0 Returns:  number of free slots.
   Sintax: freeCount()]]
   local nFree,i=0
-  for i=1,16 do
+  for i = 1, 16 do
     if turtle.getItemCount(i)==0 then nFree=nFree+1 end
   end	
   return nFree
@@ -3049,16 +3048,16 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
   if sItemName == "" then return nil, "search(sItemName, nStartSlot, bWrap) - Item name must be supplied." end
   if type(nStartSlot) ~= "number" then return nil, "search(sItemName, nStartSlot, bWrap) - Start slot must be a number." end
   dir = sign(nStartSlot)
-  nStartSlot = math.abs(nStartSlot)-1
+  nStartSlot = math.abs(nStartSlot) - 1
   nStartSlot = bit32.band(nStartSlot, 15)
 	slot = nStartSlot
 	
 	repeat
-    tData = turtle.getItemDetail(slot+1)
+    tData = turtle.getItemDetail(slot + 1)
 
     if tData then
       if tData.name == sItemName then
-        return slot+1, tData.count
+        return slot + 1, tData.count
       end
     end
     slot = slot + dir
