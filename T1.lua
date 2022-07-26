@@ -29,7 +29,42 @@ tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol 
 tStacks = {} --["itemName"] = nStack
 tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity 20-07-2022
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity 20-07-2022
+tWorld = {} --[x][y][z] = nEnt
 
+------ World ------
+--not tested
+function setWorld(x, y, z, nEnt) --[[ Set world coords containing nEnt.
+  24-07-2022 v0.4.0]]
+  if not tWorld[x] then tWorld[x]={} end
+  if not tWorld[x][y] then tWorld[x][y]={} end
+  tWorld[x][y][z]=nEnt
+  return true
+end
+
+--not tested
+function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
+  24-07-2022 v0.4.0]]
+  if not tWorld[z] then return nil end
+  if not tWorld[z][x] then return nil end
+  return tWorld[z][x][y]
+end
+
+--not tested
+function worldSave() --[[ Saves tWorldinto tWorld.txt
+  24-07-2022 v0.4.0]]
+  return saveTable(tWorld,"tworld.txt")
+end
+
+--not tested
+function worldLoad() --[[ Loads tWorld.txt into tWorld table.
+  24-07-2022 v0.4.0]]
+  tWorld = loadTable("tworld.txt")
+	if not tWorld then
+		tWorld={}
+		return false,"can't load tworld.txt"
+	end
+  return true
+end
 
 ------ Entity ------
 function addEnt(sEntName) --[[ Adds a entity name to table ent.
@@ -48,6 +83,21 @@ function addEnt(sEntName) --[[ Adds a entity name to table ent.
 	tRevEnts[tEnts.next] = sEntName
 	tEnts.next = tEnts.next + 1
 	return tEnts.next-1
+end
+
+--implementing
+function addInvNewEnt() --[[ Adds all the inventory items to tEnts.
+  24-07-2022 v0.4.0]]
+end
+
+--imlementing
+function addSlotEnt(nSlot) --[[ Adds item in nSlot to tEnts.
+  24-07-2022 v0.4.0]]
+end
+
+--implementing
+function getSlotEnt(nSlot) --[[ Gets or adds the nSlot item tEnts.
+  24-07-2022 v0.4.0]]
 end
 
 function getEntId(sEntName) --[[ Gets the entity id.
@@ -101,7 +151,7 @@ function loadEnt() --[[ Loads tEnts.txt into table tEnts.
 end
 
 function saveRevEnt() --[[ Saves tRevEnts into tRevEnts.txt file.
-  21-07-2022 v0.3.0 Returns: same as saveTable
+  21-07-2022 v0.4.0 Returns: same as saveTable
   Sintax: saveRevEnt()
   ex: saveRevEnt()]]
 
@@ -979,6 +1029,21 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
   if nLower == 9999 then return false, "Item not found."
   else return nLower, nRSlot, sName
   end
+end
+
+--not tested
+function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
+  24-07-2022 v0.4.0]]
+
+  if not nSlot then nSlot=turtle.getSelectedSlot() end --nSlot not supplied
+	
+	local tData, nStack
+	if type(nSlot) ~= "number" then return nil, "setSlotStack(Slot) - Must be a number [1..16]." end --nSlot is not a number
+	if nSlot < 1 or nSlot > 16 then return nil, "setSlotStack(Slot) - Must be between 1 and 16."end --is valid
+  tData = turtle.getItemDetail(nSlot)
+	if not tData then return false, "Slot is empty." end --is empty nSlot
+	nStack = turtle.getItemSpace(nSlot) + tData.count --calculate stack for this item
+	return setStack(tData.name, nStack) --store nStack in tStacks[id]=nStack
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
@@ -2000,7 +2065,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
   27/08/2021 v0.2.0 Param: sDir - string diretion "back"|"right"|"left".
   Returns:  true - if sDir is a valid direction.
             false - if sDir is not a valid direction.
-  Sintax: turn([sDir="back"])
+  Sintax: turnDir([sDir="back"])
   ex: turnDir("back") or turnDir() - Turns the turtle back.]]
   sDir = sDir or "back"
   sDir = string.lower(sDir)
