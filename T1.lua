@@ -1,7 +1,8 @@
 --
 ---- Version 0.4.0
 --
-local DEFSTACK = 64
+
+local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
@@ -85,14 +86,36 @@ function addEnt(sEntName) --[[ Adds a entity name to table ent.
 	return tEnts.next-1
 end
 
---implementing
-function addInvNewEnt() --[[ Adds all the inventory items to tEnts.
-  24-07-2022 v0.4.0]]
+--not tested
+function addInvEnts() --[[ Adds all the inventory items to tEnts.
+  24-07-2022 v0.4.0 Returns: true, number quantity of entities added.
+                             false, if no entities added.]]
+
+  local nAdded = 0
+  for nSlot = 1, 16 do
+    local tData = turtle.getItemDetail(nSlot)
+    if tData then
+      if not getEntId(tData.name) then
+        addEnt(tData.name)
+        nAdded = nAdded + 1
+      end
+    end
+  end
+  if nAdded == 0 then  return false
+  else return true, nAdded
+  end
 end
 
---imlementing
+--not tested
 function addSlotEnt(nSlot) --[[ Adds item in nSlot to tEnts.
   24-07-2022 v0.4.0]]
+
+  nSlot = nSlot or turtle.selectedSlot()
+  if type(nSlot) ~= "number" then return nil, "addSlotEnt(Slot) - Slot must be a number." end
+  if nSlot < 1 or nSlot > 16 then return nil, "addSlotEnt(Slot) - Slot must be between 1 and 16" end
+  local tData = turtlke.getItemDetail(nSlot)
+  if not tData then return false, "Empty Slot." end
+  return addEnt(tData.name)
 end
 
 --implementing
