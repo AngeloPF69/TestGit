@@ -2,7 +2,7 @@
 
 improving commands in lua for computer craft turtle.
 
-## ## TODO TO VERSION 0.4.0
+## TODO TO VERSION 0.4.0
 
 - [x] cataloging each block in a table ex: tEnt[sEntityName] = nId.
 - [x] create set/get functions for tEnt.
