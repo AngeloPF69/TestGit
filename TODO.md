@@ -4,23 +4,23 @@ improving commands in lua for computer craft turtle.
 
 ## ## TODO TO VERSION 0.4.0
 
-- [ ] cataloging each block in a table ex: tEnt[sEntityName] = nId.
-- [ ] create set/get functions for tEnt.
+- [x] cataloging each block in a table ex: tEnt[sEntityName] = nId.
+- [x] create set/get functions for tEnt.
 - [ ] set/getInvEntId(nSlot)
-- [ ] create tRevEnt[nID] = sEntityName
-- [ ] create set/get functions for tRevEnt.
+- [x] create tRevEnt[nID] = sEntityName
+- [x] create set/get functions for tRevEnt.
 - [ ] all the inspect functions must update tEnt, tRevEnt on positive inspect.
 - [ ] create tFuel[sItemName] = fuel.
 - [ ] create set/getfunctions for tFuel.
 - [ ] isFuel(nSlot)
 - [ ] getInvFuel(sItemName)
-- [ ] haveFuelTo(x, y, z)
+- [x] haveFuelTo(x, y, z)
 - [ ] upgrade refuel(sItemName, nCount)
-- [ ] create tWorld[x][y][z]=nEntId
-- [ ] create set/get for tWorld
+- [x] create tWorld[x][y][z]=nEntId
+- [x] create set/get for tWorld
 - [ ] and finally create getPath(P1, P2)
 - [ ] goto(x,y,z) using pathfinding.
-- [ ] create tSpot[sSpotName] = {x, y, z, facing}
+- [x] create tSpot[sSpotName] = {x, y, z, facing}
 - [ ] upgrade getFreeHand(prefered hand="right")
 - [ ] upgrade tEnt[sEntityName] = { equipable (if item is equipable), nId = number} 
 - [ ] create table for equipable tools
