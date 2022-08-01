@@ -33,7 +33,6 @@ tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table enti
 tWorld = {} --[x][y][z] = nEnt
 
 ------ World ------
---not tested
 function setWorld(x, y, z, nEnt) --[[ Set world coords containing nEnt.
   24-07-2022 v0.4.0]]
   if not tWorld[x] then tWorld[x]={} end
@@ -51,13 +50,13 @@ function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
 end
 
 --not tested
-function worldSave() --[[ Saves tWorldinto tWorld.txt
+function saveWorld() --[[ Saves tWorldinto tWorld.txt
   24-07-2022 v0.4.0]]
   return saveTable(tWorld,"tworld.txt")
 end
 
 --not tested
-function worldLoad() --[[ Loads tWorld.txt into tWorld table.
+function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   24-07-2022 v0.4.0]]
   tWorld = loadTable("tworld.txt")
 	if not tWorld then
@@ -121,6 +120,7 @@ end
 --implementing
 function getSlotEnt(nSlot) --[[ Gets or adds the nSlot item tEnts.
   24-07-2022 v0.4.0]]
+  
 end
 
 function getEntId(sEntName) --[[ Gets the entity id.
@@ -346,6 +346,7 @@ function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
   02/11/2021 v0.4.0 Returns:	true]] 
   loadEnt()
   loadRevEnt()
+  loadWorld()
 	loadTurtle()
 	loadRecipes()
   loadStacks()
@@ -358,6 +359,7 @@ function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
   02/11/2021 v0.4.0 Returns:	true]] 
   saveEnt()
   saveRevEnt()
+  saveWorld()
 	saveTurtle()
 	saveRecipes()
   saveStacks()
@@ -3288,6 +3290,6 @@ end
 INIT()
 
 sleep(2)
-print(goTo(0, 0, 0))
-
+print(setWorld(0, 2, 0, 1))
+print(textutils.serialize(tWorld))
 TERMINATE()
