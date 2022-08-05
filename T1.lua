@@ -31,19 +31,74 @@ tStacks = {} --["itemName"] = nStack
 tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity 20-07-2022
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity 20-07-2022
 tWorld = {} --[x][y][z] = nEnt
+tSpots = {} --[sSpotName]={x, y, z, nFacing}
+
+
+------ Spots ------
+--not tested
+function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
+  05-08-2022 v0.4.0]]
+  return saveTable(tSpots,"tSpots.txt")
+end
+
+--not tested
+function loadSpots() --[[ Loads from file tSpots.txt to table tSpots
+  05-08-2022 v0.4.0]]
+  tSpots = loadTable("tSpots.txt")
+	if not tSpots then
+		tSpots = {}
+		return false,"can't load tworld.txt"
+	end
+  return true
+end
+
+--not tested
+function setSpot(sSpotName, x, y, z, nFacing) --[[ Sets a spot in tSpots table.
+  05-08-2022 v0.4.0 Param: sSpotName - string the name of the spot.
+                           x, y, z - coords of spot.
+                           nFacing - the direction in that spot.
+  Returns: true - if spot was set with success.
+  Sintax: setSpot(sSpotName[, x, y, z, nFacing]=tTurtle)
+  ex: setSpot("minecraft:cobblestone", 10,3,5, 0) - cobblestone at coords (10,3,5) facing z- ]]
+  if not x then
+    x = tTurtle.x
+    y = tTurtle.y
+    z = tTurtle.z
+    nFacing = tTurtle.facing
+  end
+  tSpots[sSpotName] = {["x"] = x, ["y"] = y, ["z"] = z, ["facing"] = nFacing}
+  return true
+end
+
+--not tested
+function getSpot(sSpotName)
+  return tSpots[sSpotName]
+end
+
+--not tested
+function goToSpot(sSpotName)
+  local tSpot = getSpot(sSpotName)
+  if not goTo(tSpot.x, tSpot.y, tSpot.z) then return false, "Couldn't get there." end
+  turnTo(tSpot.facing)
+  return true
+end
 
 ------ World ------
-function setWorld(x, y, z, nEnt) --[[ Set world coords containing nEnt.
-  24-07-2022 v0.4.0]]
-  if not tWorld[x] then tWorld[x]={} end
-  if not tWorld[x][y] then tWorld[x][y]={} end
-  tWorld[x][y][z]=nEnt
+function setWorldEnt(x, y, z, nEnt) --[[ Set world coords containing nEnt.
+  24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
+                           nEnt - id of the entity from getEntId(sBlockName).
+  Returns: true
+  Sintax: setWorldEnt(x, y, z, nEnt)]]
+  if not tWorld[x] then tWorld[x] = {} end
+  if not tWorld[x][y] then tWorld[x][y] = {} end
+  tWorld[x][y][z] = nEnt
   return true
 end
 
 --not tested
 function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
-  24-07-2022 v0.4.0]]
+  24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
+  Returns: number the id of the block in that coords.]]
   if not tWorld[z] then return nil end
   if not tWorld[z][x] then return nil end
   return tWorld[z][x][y]
@@ -51,13 +106,14 @@ end
 
 --not tested
 function saveWorld() --[[ Saves tWorldinto tWorld.txt
-  24-07-2022 v0.4.0]]
+  24-07-2022 v0.4.0 Returns: the same as the saveTable function.]]
   return saveTable(tWorld,"tworld.txt")
 end
 
 --not tested
 function loadWorld() --[[ Loads tWorld.txt into tWorld table.
-  24-07-2022 v0.4.0]]
+  24-07-2022 v0.4.0 Returns: true - if success.
+                             false - if it couldn't load file "tworld.txt".]]
   tWorld = loadTable("tworld.txt")
 	if not tWorld then
 		tWorld={}
@@ -119,8 +175,8 @@ end
 
 --implementing
 function getSlotEnt(nSlot) --[[ Gets or adds the nSlot item tEnts.
-  24-07-2022 v0.4.0]]
-  
+  24-07-2022 v0.4.0 Alias for function addSlotEnt()]]
+  return addSlotEnt(nSlot)
 end
 
 function getEntId(sEntName) --[[ Gets the entity id.
@@ -368,8 +424,9 @@ end
 
 
 ------ TURTLE STATUS FUNCTIONS ----
+--not tested
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
-  02/10/2021 v0.2.0 Param: sFacing - "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
+  02/10/2021 v0.2.0 Param: sFacing - "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
   Returns:  number - tTurtle.facing
              false - if no parameter was supplied.
@@ -377,11 +434,13 @@ function setFacing(sFacing) --[[ Sets tTurtle.facing.
                    - if sFacing is not a string.
   ex: setFacing("z+") - Sets the tTurtle.facing to "z+"=2]]
   
-  if not sFacing then return false, 'setFacing(Facing) - Must supply facing ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).' end
+  if not sFacing then return false, 'setFacing(Facing) - Must supply facing ("north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).' end
   if type(sFacing) == "number" then
     sFacing = bit32.band(sFacing, 3)
   elseif type(sFacing) == "string" then
+    sFacing = string.lower(sFacing)
     if facingType[sFacing] then sFacing = facingType[sFacing]
+    elseif carDirType[sFacing] then sFacing = carDirType[sFacing]
     else return false, 'setFacing(Facing) - Invalid facing ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).'
     end
   else return false, 'setFacing(Facing) - Invalid facing type, must be a string ("z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3).'
