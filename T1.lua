@@ -35,13 +35,11 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing}
 
 
 ------ Spots ------
---not tested
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
   05-08-2022 v0.4.0]]
   return saveTable(tSpots,"tSpots.txt")
 end
 
---not tested
 function loadSpots() --[[ Loads from file tSpots.txt to table tSpots
   05-08-2022 v0.4.0]]
   tSpots = loadTable("tSpots.txt")
@@ -52,7 +50,6 @@ function loadSpots() --[[ Loads from file tSpots.txt to table tSpots
   return true
 end
 
---not tested
 function setSpot(sSpotName, x, y, z, nFacing) --[[ Sets a spot in tSpots table.
   05-08-2022 v0.4.0 Param: sSpotName - string the name of the spot.
                            x, y, z - coords of spot.
@@ -70,14 +67,16 @@ function setSpot(sSpotName, x, y, z, nFacing) --[[ Sets a spot in tSpots table.
   return true
 end
 
---not tested
-function getSpot(sSpotName)
+function getSpot(sSpotName) --[[ Gets the spot.
+  06-082022 v0.4.0 Param: sSpotName - string the name of the spot to get the data from.
+  Returns: table with spot - {x,y,z,facing}
+  Sintax: getSpot(sSpotName)]]
   return tSpots[sSpotName]
 end
 
---not tested
 function goToSpot(sSpotName)
   local tSpot = getSpot(sSpotName)
+  if not tSpot then return false, "Spot name not found." end
   if not goTo(tSpot.x, tSpot.y, tSpot.z) then return false, "Couldn't get there." end
   turnTo(tSpot.facing)
   return true
@@ -95,22 +94,19 @@ function setWorldEnt(x, y, z, nEnt) --[[ Set world coords containing nEnt.
   return true
 end
 
---not tested
 function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
   24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
   Returns: number the id of the block in that coords.]]
-  if not tWorld[z] then return nil end
-  if not tWorld[z][x] then return nil end
-  return tWorld[z][x][y]
+  if not tWorld[x] then return nil end
+  if not tWorld[x][y] then return nil end
+  return tWorld[x][y][z]
 end
 
---not tested
 function saveWorld() --[[ Saves tWorldinto tWorld.txt
   24-07-2022 v0.4.0 Returns: the same as the saveTable function.]]
   return saveTable(tWorld,"tworld.txt")
 end
 
---not tested
 function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   24-07-2022 v0.4.0 Returns: true - if success.
                              false - if it couldn't load file "tworld.txt".]]
@@ -141,7 +137,6 @@ function addEnt(sEntName) --[[ Adds a entity name to table ent.
 	return tEnts.next-1
 end
 
---not tested
 function addInvEnts() --[[ Adds all the inventory items to tEnts.
   24-07-2022 v0.4.0 Returns: true, number quantity of entities added.
                              false, if no entities added.]]
@@ -161,21 +156,19 @@ function addInvEnts() --[[ Adds all the inventory items to tEnts.
   end
 end
 
---not tested
 function addSlotEnt(nSlot) --[[ Adds item in nSlot to tEnts.
   24-07-2022 v0.4.0]]
 
   nSlot = nSlot or turtle.selectedSlot()
   if type(nSlot) ~= "number" then return nil, "addSlotEnt(Slot) - Slot must be a number." end
   if nSlot < 1 or nSlot > 16 then return nil, "addSlotEnt(Slot) - Slot must be between 1 and 16" end
-  local tData = turtlke.getItemDetail(nSlot)
+  local tData = turtle.getItemDetail(nSlot)
   if not tData then return false, "Empty Slot." end
   return addEnt(tData.name)
 end
 
---implementing
 function getSlotEnt(nSlot) --[[ Gets or adds the nSlot item tEnts.
-  24-07-2022 v0.4.0 Alias for function addSlotEnt()]]
+  24-07-2022 v0.4.0 Alias for addSlotEnt()]]
   return addSlotEnt(nSlot)
 end
 
@@ -406,6 +399,7 @@ function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
 	loadTurtle()
 	loadRecipes()
   loadStacks()
+  loadSpots()
 	return true
 end
 
@@ -419,6 +413,7 @@ function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
 	saveTurtle()
 	saveRecipes()
   saveStacks()
+  saveSpots()
 	return true
 end
 
@@ -1115,11 +1110,15 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
   end
 end
 
---not tested
 function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
-  24-07-2022 v0.4.0]]
+  24-07-2022 v0.4.0 Param: nSlot - number 1..16, where to get how many the item can stack.
+  Returns: number - how many the item can stack.
+           false - if slot is empty
+           nil - if nSlot is not a number.
+               - if nSlot is out of bounds 1..16
+  Sintax: setStackSlot([nSlot=selected slot])]]
 
-  if not nSlot then nSlot=turtle.getSelectedSlot() end --nSlot not supplied
+  nSlot = nSlot or turtle.getSelectedSlot()
 	
 	local tData, nStack
 	if type(nSlot) ~= "number" then return nil, "setSlotStack(Slot) - Must be a number [1..16]." end --nSlot is not a number
@@ -1127,7 +1126,8 @@ function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
   tData = turtle.getItemDetail(nSlot)
 	if not tData then return false, "Slot is empty." end --is empty nSlot
 	nStack = turtle.getItemSpace(nSlot) + tData.count --calculate stack for this item
-	return setStack(tData.name, nStack) --store nStack in tStacks[id]=nStack
+	setStack(tData.name, nStack) --store nStack in tStacks[id]=nStack
+  return nStack
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
@@ -2208,23 +2208,25 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
 end
 
 function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
-  21-07-2022 v0.4.0 Param: nsFacing - "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"
+  21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3
   Returns: true - if it turn to specified direction
-           nil - if nsFacing is not a string.
+           nil - if nsFacing is not a string or number or invalid direction.
   sintax: turnTo(nsFacing)]]
 
   local nDir, nRotate;
 	if not nsFacing then return true end --no parameters
-  if type(nsFacing) ~= "string" then
-    return nil, 'turnTo(Facing) - Facing must be a string ("z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east")'
-  end
-	
-  nsFacing = string.lower(nsFacing)
-  if carDirType[nsFacing] then --is "north", "south", "west", "east"
-    nRotate = carDirType[nsFacing] - tTurtle.facing
-  elseif facingType[nsFacing] then --is "z+","z-","x+","x-"
-    nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
-  else return nil, 'turnTo(Facing) - Invalid Facing direction "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"';
+  if type(nsFacing) == "number" then
+    nsFacing = bit32.band(nsFacing, 3)
+    nRotate = nsFacing - tTurtle.facing
+  elseif type(nsFacing) == "string" then
+    nsFacing = string.lower(nsFacing)
+    if carDirType[nsFacing] then --is "north", "south", "west", "east"
+      nRotate = carDirType[nsFacing] - tTurtle.facing
+    elseif facingType[nsFacing] then --is "z+","z-","x+","x-"
+      nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
+    else return nil, 'turnTo(Facing) - Invalid direction "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
+    end
+  else return nil, 'turnTo(Facing) - Invalid Facing type "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
   end
 
 	if nRotate == 0 then return true end; --no need to rotate
@@ -2341,8 +2343,6 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
   if dX == 0 and dY == 0 and dZ == 0 then return true end
   
   repeat
-    ---------------------- TO IMPLEMENT if facing then move on that direction ----------------------------
-    
     local bHasMoved=false
     if dZ>0 then
       if goDir("z+",dZ) then bHasMoved=true end
@@ -2365,9 +2365,9 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
       if goDir("down", math.abs(dY)) then bHasMoved=true end
     end
 
-    dX, dY, DZ = distTo(x,y, z)
-  until (bHasMoved == false) or (dZ == 0 and dX == 0 and dY == 0)
-  if (dZ == 0) and (dX == 0) and (dY == 0) then return true end
+    dX, dY, dZ = distTo(x,y, z)
+  until (bHasMoved == false) or (dX == 0 and dY == 0 and dZ == 0)
+  if (dX == 0) and (dY == 0) and (dZ == 0) then return true end
   return false
 end
 
@@ -3347,8 +3347,7 @@ end
 
 
 INIT()
+print(setStackSlot(1))
 
-sleep(2)
-print(setWorld(0, 2, 0, 1))
-print(textutils.serialize(tWorld))
+
 TERMINATE()

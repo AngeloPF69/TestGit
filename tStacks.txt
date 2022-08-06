@@ -1,3 +1,4 @@
 {
   [ "minecraft:oak_planks" ] = 64,
+  [ "minecraft:spruce_planks" ] = 64,
 }

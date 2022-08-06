@@ -1,5 +1,17 @@
 {
   "minecraft:cobblestone",
+  "minecraft:oak_planks",
+  "minecraft:spruce_planks",
+  "minecraft:oak_log",
+  "minecraft:warped_planks",
+  "minecraft:birch_planks",
+  "minecraft:dark_oak_planks",
+  "minecraft:jungle_planks",
+  "abundance:jacaranda_planks",
+  "abundance:redbud_planks",
+  "minecraft:dirt",
+  "minecraft:acacia_planks",
+  "minecraft:crimson_planks",
   [ 0 ] = "empty",
   [ -1 ] = "unreachable",
 }

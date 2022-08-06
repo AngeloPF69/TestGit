@@ -4,5 +4,5 @@
   leftHand = "minecraft:crafting_table",
   z = 0,
   rightHand = "minecraft:diamond_pickaxe",
-  facing = 1,
+  facing = 0,
 }
