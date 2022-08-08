@@ -533,6 +533,10 @@ function distTo(x, y, z) --[[ Gets the three components of the distance from the
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
+--not tested
+function ABSDistTo(x, y, z)
+  return math.abs(tTurtle.x-x)+math.abs(tTurtle.y-y)+math.abs(tTurtle.z-z)
+end
 
 ------ COMPARE FUNCTIONS ------
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
