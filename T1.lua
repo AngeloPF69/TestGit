@@ -2149,7 +2149,7 @@ function turnBack() --[[ Turtle turns back.
 end
 
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
-  27/08/2021 v0.2.0 Param: sDir - string diretion "back"|"right"|"left".
+  27/08/2021 v0.2.1 Param: sDir - string diretion "back"|"right"|"left".
   Returns:  true - if sDir is a valid direction.
             false - if sDir is not a valid direction.
   Sintax: turnDir([sDir="back"])
