@@ -2166,7 +2166,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
     incFacing()
     return turtle.turnRight()
   end
-  return true
+  return false
 end
 
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
