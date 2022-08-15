@@ -1,20 +1,13 @@
 {
-  [ "minecraft:stick" ] = {
-    {
-      recipe = {
-        {
-          "minecraft:spruce_planks",
-        },
-        {
-          "minecraft:oak_planks",
-          lin = 1,
-          col = 0,
-        },
-      },
-      count = 4,
-    },
+  state = {
+    axis = "y",
   },
-  CSlot = 13,
-  lastIndex = 1,
-  lastRecipe = "minecraft:stick",
+  ent = 4,
+  name = "minecraft:oak_log",
+  tags = {
+    [ "minecraft:oak_logs" ] = true,
+    [ "minecraft:logs_that_burn" ] = true,
+    [ "minecraft:logs" ] = true,
+    [ "neapolitan:vanilla_plantable_on" ] = true,
+  },
 }

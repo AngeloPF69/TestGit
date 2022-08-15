@@ -12,6 +12,7 @@
   "minecraft:dirt",
   "minecraft:acacia_planks",
   "minecraft:crimson_planks",
-  [ 0 ] = "empty",
+  "minecraft:grass_block",
   [ -1 ] = "unreachable",
+  [ 0 ] = "empty",
 }

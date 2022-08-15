@@ -419,7 +419,6 @@ end
 
 
 ------ TURTLE STATUS FUNCTIONS ----
---not tested
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021 v0.2.0 Param: sFacing - "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
@@ -533,8 +532,11 @@ function distTo(x, y, z) --[[ Gets the three components of the distance from the
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
---not tested
-function ABSDistTo(x, y, z)
+function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
+  15-08-2022 v0.4.0 Param: x, y, z - numbers the destination coords.
+  Sintax: ABSDistTo(x, y, z)
+  Returns: number - the distance from turtle to point x, y, z.]]
+
   return math.abs(tTurtle.x-x)+math.abs(tTurtle.y-y)+math.abs(tTurtle.z-z)
 end
 
@@ -721,30 +723,35 @@ end
 
 
 ------ INSPECT FUNCTIONS ------
-function inspectDir(sDir) --[[ Inspect a block in sDir direction {"forward", "right", "back", "left", "up", "down" }.
-  05/09/2021 v0.1.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down".
+function inspectDir(sDir) --[[ Inspect a block in sDir "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west".
+  05/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west".
   Returns:  true, table with data - If turtle detects a block.
             false, message - if turtle didn't detect a block.
             nil - if invalid parameter sDir.
-  ex: detectDir([sDir="forward"]) - Inspects a block forward.]]
+	Note: tData = { name = "minecraft:oak_log",
+									state = { axis = "x" },
+									tags = { ["minecraft:logs"] = true, ... },
+									ent = number id in the table tEnt
+  ex: inspectDir([sDir="forward"]) - Inspects a block forward.]]
   
 	sDir = sDir or "forward"
   sDir = string.lower(sDir)
 
-	if sDir == "right" then
-      turnDir("right")
-      sDir = "forward"
-	elseif sDir == "back" then
-    turnBack()
-    sDir = "forward"
-	elseif sDir == "left" then
-    turnDir("left")
-    sDir = "forward"
+	if carDirType[sDir] then
+		turnTo(sDir)
+		sDir = "forward"
+	elseif dirType[sDir] then
+		turnDir(sDir)
+		if (sDir ~= "up") and (sDir ~= "down") then sDir = "forward" end
+	else return nil, 'inspectDir(Dir) - Dir must be "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"'
 	end
-	if insF[sDir] then return insF[sDir]() end
-  return nil, 'detectDir([Dir="forward"]) - Invalid parameter: Dir - "forward"|"right"|"back"|"left"|"up"|"down".'
+	
+  print(sDir)
+	local success, tData = insF[sDir]()
+	if not success then return false, tData end
+  tData.ent = addEnt(tData.name)
+	return tData
 end
-
 
 ------ MOVING FUNCTIONS ------
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
@@ -908,6 +915,21 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 		if sType:sub(i,i) ~= type(Args[i]):sub(1,1) then return false end
 	end
 	return true
+end
+
+function getKey(value, t) --[[ Gets the first key from table t where the key is the index of value.
+  09-08-2022 v0.4.0 Param: value - the value in table t.
+                           t - the table that has the value.
+  Sintax: getKey(value, t)
+  Return: the key corresponding to value in table t.
+          false - if value is not found
+  ex: getKey(2, {"first"=1, "second"=2}) - returns second]]
+
+  if checkNil(2, value, t) then return nil, "getKey(value, t) - you must supply value and t table." end
+	for k, v in pairs(t) do
+		if v == value then return k end
+	end
+	return false
 end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
@@ -2011,13 +2033,10 @@ function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities hav
 	
 	local tInc
 	for kSlot, v in pairs(tInvCmpRes) do
-		for kName,v1 in pairs(v) do
-		  if tInvCmpRes[kSlot][kName] > 0 then
-			  if not tInc then tInc = {} end
-			  tInc[kSlot] = {}
-			  tInc[kSlot][kName] = tInvCmpRes[kSlot][kName]
-      end
-		end
+    if tInvCmpRes[kSlot].count > 0 then
+      if not tInc then tInc = {} end
+      tInc[kSlot] = {["name"] = tInvCmpRes[kSlot].name, ["count"] = tInvCmpRes[kSlot].count}
+    end
 	end
 	if tInc then return true, tInc
 	else return false
@@ -2030,7 +2049,7 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
            true - if snapshots are equals.
            table - if snapshots are diferent.
   Sintax: cmpInventory(tInv1, tInv2)
-  ex: craftRecipe(tInv1, tInv2) - compares tInv1 with tInv2.]]
+  ex: cmpInventory(tInv1, tInv2) - compares tInv1 with tInv2.]]
 	if (not tInv1) or (not tInv2) then return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare" end
 	local tDif
 	for iSlot = 1, 16 do
@@ -2039,21 +2058,18 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
 				if tInv2[iSlot] and tInv2[iSlot][k] then
 					if tInv2[iSlot][k] ~= tInv1[iSlot][k] then
 						if not tDif then tDif = {} end	
-						tDif[iSlot]={}
-						tDif[iSlot][k] = tInv2[iSlot][k] - tInv1[iSlot][k]
+						tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k] - tInv1[iSlot][k]}
 					end
 				else
 					if not tDif then tDif = {} end	
-					tDif[iSlot] = {}
-					tDif[iSlot][k] = -tInv1[iSlot][k]
+					tDif[iSlot] = {["name"] = k, ["count"] = -tInv1[iSlot][k]}
 				end
 			end
 		else
 			if tInv2[iSlot] then
 				for k, v in pairs(tInv2[iSlot]) do
 					if not tDif then tDif = {} end	
-					tDif[iSlot] = {}
-					tDif[iSlot][k] = tInv2[iSlot][k]
+					tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k]}
 				end
       end
 		end
@@ -2107,9 +2123,15 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
 	local bInc, tInc = cmpInvIncreased(tInv1, tInv2) --compares the 2 snapshots if there was a increase of items.
 	if not bInc then return false, "I don't know where the products went." end --no
 
-	local nFirstSlot = getLowestKey(tInc) --get the slot where is the first product item.
-  local sRecipe = next(tInc[nFirstSlot]) --get the product name.
-  nCount = getSecSumItems(nFirstSlot, false)/nMaxCraft --adjust count for 1 recipe
+	local sRecipe = tInc[next(tInc)].name --get the product name.
+  print(sRecipe)
+
+  local nSumCount = 0
+  for k, v in pairs(tInc) do
+    nSumCount = nSumCount + tInc[k].count
+  end
+  local nCount = nSumCount/nMaxCraft --adjust count for 1 recipe
+
   local nIndex = addRecipe(sRecipe, tRecipe, nCount) --add the recipe to tRecipes.
   if not nIndex then return false, "Couldn't add recipe." end
   return true, sRecipe, nIndex, nCount
@@ -2149,7 +2171,7 @@ function turnBack() --[[ Turtle turns back.
 end
 
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
-  27/08/2021 v0.2.1 Param: sDir - string diretion "back"|"right"|"left".
+  27/08/2021 v0.2.0 Param: sDir - string diretion "back"|"right"|"left".
   Returns:  true - if sDir is a valid direction.
             false - if sDir is not a valid direction.
   Sintax: turnDir([sDir="back"])
@@ -2166,7 +2188,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
     incFacing()
     return turtle.turnRight()
   end
-  return false
+  return true
 end
 
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
@@ -3351,7 +3373,7 @@ end
 
 
 INIT()
-print(setStackSlot(1))
 
+print(setFacing("north"))
 
 TERMINATE()
