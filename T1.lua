@@ -331,14 +331,20 @@ end
 
 
 ------ EQUIP ------
-function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
-  23/09/2021 v0.1.0 Returns:	"left" or "right" the first free hand found.
+--not tested
+function getFreeHand(sPreferedHand) --[[ Gets turtle free hand.
+  23/09/2021 v0.4.0 Returns:	"right" or "left" the first free hand found.
 										          false - if no free hand found.
   Sintax: getFreeHand()
   ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
-  
-	if tTurtle.leftHand == "empty" then return "left" end
-	if tTurtle.rightHand == "empty" then return "right" end
+  sPreferedHand = sPreferedHand or "right"
+  sPreferedHand = string.lower(sPreferedHand)
+  local tHands = {["right"] = 0, ["left"] = 1}
+  if tHands[sPreferedHand] then
+    if tTurtle.[sPreferedHand.."Hand"] == "empty" then return sPreferedHand end
+    sPreferedHand = getKey(bit32.bxor(tHands[sPreferedHand],1), tHands)
+    if tTurtle.[sPreferedHand.."Hand"] == "empty" then return sPreferedHand end
+  else
 	return false
 end
 
