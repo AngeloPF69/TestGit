@@ -334,7 +334,7 @@ end
 ------ EQUIP ------
 --not tested
 function getFreeHand(sHand) --[[ Gets turtle free hand: "left"|"right"|false.
-  23/09/2021 v0.1.0 Returns:	"left" or "right" the first free hand found.
+  23/09/2021 v0.4.0 Returns:	"left" or "right" the first free hand found.
 										          false - if no free hand found.
   Sintax: getFreeHand()
   ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
