@@ -2,6 +2,7 @@
 ---- Version 0.4.0
 --
 
+local PREFEREDHAND = "right" --default equip hand
 local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
 
@@ -331,14 +332,23 @@ end
 
 
 ------ EQUIP ------
-function getFreeHand() --[[ Gets turtle free hand: "left"|"right"|false.
+--not tested
+function getFreeHand(sHand) --[[ Gets turtle free hand: "left"|"right"|false.
   23/09/2021 v0.1.0 Returns:	"left" or "right" the first free hand found.
 										          false - if no free hand found.
   Sintax: getFreeHand()
   ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
-  
-	if tTurtle.leftHand == "empty" then return "left" end
-	if tTurtle.rightHand == "empty" then return "right" end
+
+  sHand = sHand or PREFEREDHAND
+  sHand = string.lower(sHand)
+
+  local tHands = {["right"] = 0, ["left"] = 1}
+  if tHands[sHand] then
+    if tTurtle[sHand.."Hand"] == "empty" then return sHand end
+    sHand = getKey(bit32.bxor(tHands[sHand], 1), tHands)
+    if tTurtle[sHand.."Hand"] == "empty" then return sHand end
+  else return nil, "getFreeHand(Hand) - Hand must be left or right" end
+  end
 	return false
 end
 
@@ -746,7 +756,6 @@ function inspectDir(sDir) --[[ Inspect a block in sDir "forward"|"right"|"back"|
 	else return nil, 'inspectDir(Dir) - Dir must be "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"'
 	end
 	
-  print(sDir)
 	local success, tData = insF[sDir]()
 	if not success then return false, tData end
   tData.ent = addEnt(tData.name)
@@ -3374,6 +3383,5 @@ end
 
 INIT()
 
-print(setFacing("north"))
 
 TERMINATE()
