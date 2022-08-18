@@ -336,9 +336,9 @@ end
 function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
   23/09/2021 v0.4.0 Returns:	"right" or "left" the first free hand found.
 										          false - if no free hand found.
-  Sintax: getFreeHand()
-  Note: the first hand to check, if no sHand is supplied, is the PREFEREDHAND.
-  ex: getFreeHand() - Return the first free hand "right" or "left" or false if none is empty.]] 
+                              nil - if invalid hand.
+  Sintax: getFreeHand([sHand]=PREFEREDHAND)
+  ex: getFreeHand() - Return the first free hand referenced from PREFEREDHAND and then the other hand, or false.]] 
 
   sHand = sHand or PREFEREDHAND
   sHand = string.lower(sHand)
@@ -2408,21 +2408,23 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
 end
 
 ------ DIG FUNCTIONS ------  
+--not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
-  08/09/2021 v0.1.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"
+  08/09/2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west".
                         nBlocks - number of blocks to walk in sDir direction. 
-  Returns:  true if turtle digs all way.
+  Returns:  true if turtle digs all the way.
             false if blocked, empty space, can't turn that way.
             nil if invalid parameter
-  Sintax: digDir([sDir="forward"], [nBlocks=1])              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
-  ex: digDir() - Digs 1 block forward.
+  Sintax: digDir([sDir="forward"][, nBlocks=1])
+  ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
+      digDir() - Digs 1 block forward.
       digDir(-3, "up") - Digs 3 blocks down.]]
 
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
   negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
   sDir = string.lower(sDir)
   
-  if type(nBlocks) ~= "number" then return nil, 'digDir([Dir="foreward"][, Blocks=1]) - Blocks must be a number.' end
+  --if type(nBlocks) ~= "number" then return nil, 'digDir([Dir="foreward"][, Blocks=1]) - Blocks must be a number.' end
   if nBlocks < 0 then
     nBlocks = math.abs(nBlocks)
     sDir = negOrient[sDir]
