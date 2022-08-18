@@ -333,11 +333,12 @@ end
 
 ------ EQUIP ------
 --not tested
-function getFreeHand(sHand) --[[ Gets turtle free hand: "left"|"right"|false.
-  23/09/2021 v0.4.0 Returns:	"left" or "right" the first free hand found.
+function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
+  23/09/2021 v0.4.0 Returns:	"right" or "left" the first free hand found.
 										          false - if no free hand found.
   Sintax: getFreeHand()
-  ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
+  Note: the first hand to check, if no sHand is supplied, is the PREFEREDHAND.
+  ex: getFreeHand() - Return the first free hand "right" or "left" or false if none is empty.]] 
 
   sHand = sHand or PREFEREDHAND
   sHand = string.lower(sHand)
@@ -2416,6 +2417,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   Sintax: digDir([sDir="forward"], [nBlocks=1])              ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
   ex: digDir() - Digs 1 block forward.
       digDir(-3, "up") - Digs 3 blocks down.]]
+
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
   negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
   sDir = string.lower(sDir)
