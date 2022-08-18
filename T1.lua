@@ -336,8 +336,9 @@ end
 function getFreeHand(sHand) --[[ Gets turtle free hand: "left"|"right"|false.
   23/09/2021 v0.4.0 Returns:	"left" or "right" the first free hand found.
 										          false - if no free hand found.
-  Sintax: getFreeHand()
-  ex: getFreeHand() - Return the first free hand "left" or "right" or false.]] 
+                              nil - if invalid hand.
+  Sintax: getFreeHand([sHand]=PREFEREDHAND)
+  ex: getFreeHand() - Return the first free hand referenced from PREFEREDHAND and then the other hand, or false.]] 
 
   sHand = sHand or PREFEREDHAND
   sHand = string.lower(sHand)
