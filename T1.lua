@@ -2180,6 +2180,7 @@ function turnBack() --[[ Turtle turns back.
   return true
 end
 
+--not tested
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
   27/08/2021 v0.2.0 Param: sDir - string diretion "back"|"right"|"left".
   Returns:  true - if sDir is a valid direction.
@@ -2198,7 +2199,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
     incFacing()
     return turtle.turnRight()
   end
-  return true
+  return false
 end
 
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
