@@ -2,7 +2,28 @@ local tInv = {
 	bChanged = false, --if a inventory slot has changed
 	tSlots, --wich slot has changed tSlots[nSlot] = {name, count}
 	tLastInv, --snapshot of last inventory (before it changed)
+  bTerminate, --if the handling is to be terminated
+  bActive, --if the handling is not active, but it is not terminated
 	}
+
+function tInv.terminate()
+  if tInv.bTerminate then return true
+  else tInv.bTerminate = true
+  end
+end
+
+function tInv.deactivate()
+  if not tInv.bActive then return true
+  else tInv.bActive = false
+  end
+end
+
+function tInv.activate()
+  if tInv.bTerminate == false then return false, "Inventory event is not running." end
+  if tInv.bActive then return true
+  else tInv.bActive = true
+  end
+end
 
 function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
     11/05/2022 v0.3.0 Param: tInv1, tInv2 - snapshots from inventory (getInventory).
