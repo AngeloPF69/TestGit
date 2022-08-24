@@ -348,13 +348,14 @@ function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
     if tTurtle[sHand.."Hand"] == "empty" then return sHand end
     sHand = getKey(bit32.bxor(tHands[sHand], 1), tHands)
     if tTurtle[sHand.."Hand"] == "empty" then return sHand end
-  else return nil, "getFreeHand(Hand) - Hand must be left or right" end
+  else return nil, "getFreeHand(Hand) - Hand must be left or right"
   end
 	return false
 end
 
+--not tested
 function equip(sSide) --[[ Equip tool from the selected slot.
-  23/09/2021 v0.1.0 Param: sSide - String: "left"|"right"
+  23/09/2021 v0.4.0 Param: sSide - String: "left"|"right"
   Returns:	true - if it was equiped.
 	  				false - "Invalid side."
 									- "Empty selected slot."
@@ -363,7 +364,7 @@ function equip(sSide) --[[ Equip tool from the selected slot.
   ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
   
 	sSide = sSide or getFreeHand()
-	if not sSide then sSide = "right" end
+	sSide = sSide or PREFEREDHAND
   sSide = string.lower(sSide)
   if not isValue(sSide, {"left", "right"}) then return false, 'equip([Side=free hand]) - Invalid side("left"|"right").' end
 	local tData
@@ -377,6 +378,26 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 	return true
 end
 
+--not tested
+function unequip(sHand)
+  sHand = sHand or PREFEREDHAND
+  sHand = string.lower(sHand)
+  
+  if not equipF[sHand] then return nil, 'unequip(Hand) - Invalid hand "left"|"right".' end
+
+  if not isEmptySlot() then
+    local nSlot = getFreeSlot()
+    if not nSlot then return false, "No empty slot to unequip." end
+    turtle.select(nSlot)
+  end
+
+  if equipF[sHand]() then
+    tTurtle[sHand.."Hand"] = "empty"
+    return true
+  end
+
+  return false
+end
 
 ------ TURTLE ------
 function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
@@ -3060,9 +3081,9 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
   23/09/2021 v0.2.0 Param: nSlot - number slot to check.
   Returns: true - if nSlot is empty.
            false - if nSlot is not empty.
-  Sintax: isEmpty([nSlot=selected slot])
-  ex: isEmpty() - Checks if selected slot is empty.
-      isEmpty(12) - checks if slot 12 is empty.]]
+  Sintax: isEmptySlot([nSlot=selected slot])
+  ex: isEmptySlot() - Checks if selected slot is empty.
+      isEmptySlot(12) - checks if slot 12 is empty.]]
   nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "isEmptySlot(Slot) - Slot is not a number." end
   return turtle.getItemDetail(nSlot) == nil
@@ -3387,5 +3408,7 @@ end
 
 INIT()
 
+turtle.select(false)
+--print(equip("left"))
 
 TERMINATE()
