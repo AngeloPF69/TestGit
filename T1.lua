@@ -2384,6 +2384,31 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
   return true
 end
 
+--not tested
+function getNeighbors(x,y,z)
+	return {{x+1, y, z}, {x-1, y, z}, {x, y+1, z}, {x, y-1, z}, {x, y, z+1}, {x, y, z-1}}
+end
+
+--not tested
+function orderByDistance(tP1, tPoints)
+	local tOrder = {}
+	for i = 1, #tPoints do
+		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), index = i}
+	end
+	table.sort(tOrder, function(a, b) return a[1] < b[1] end)
+	return tOrder
+end
+
+--not tested
+function goToNeighbor(x, y, z)
+	local tNeighbors = getNeighbors(x, y, z)
+	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
+	for i = 1, #tDist do
+		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then return true end
+	end
+	return false
+end
+
 function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
   21-07-2022 v0.4.0 Param: x, y, z - numbers coords to go to.
   Returns: true - if it goes all the way.
