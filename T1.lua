@@ -2294,6 +2294,22 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
 	return true
 end
 
+--not tested
+function turnToCoord(x, y, z)
+	if not checkType("nnn", x, y, z) then return nil, "turnToCoord(x, y, z) - x,y,z must be numbers" end
+	local tLongerDist = {0, index = 0}
+	local tDist = {distTo(x, y, z)}
+	for i = 1, #tDist do
+		if math.abs(tLongerDist[1]) < math.abs(tDist[i]) then tLongerDist = {tDist[i], index = i} end
+	end
+	local tDir = {["x"] = 1, ["y"] = 2, ["z"] = 3}
+	local sDir = getKey(tLongerDist[index], tDir)
+	if tLongerDist[1]<0 then sDir = sDir.."-"
+	else sDir = sDir .. "+"
+	end
+	return turnTo(sDir)
+end
+
 ------ MOVING AND ROTATING FUNCTIONS ------
 function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
