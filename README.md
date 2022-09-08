@@ -29,7 +29,7 @@
             
 ## Initialize
 
-  <a href="#INIT">INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.</a>
+  <a href="#INIT">INIT() Loads files to tables, so that the turtle won't forget what it has learned.</a>
 
 ## Finalize
 
