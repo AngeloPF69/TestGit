@@ -426,7 +426,7 @@ end
 
 
 ------ INIT ------
-function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
+function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
   02/11/2021 v0.4.0 Returns:	true]] 
   loadEnt()
   loadRevEnt()
