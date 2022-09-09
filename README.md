@@ -225,7 +225,7 @@
 
   <p id="INIT"></p>
   
-- INIT() Loads tTurtle.txt, tRecipes.txt, tStacks.txt from files to tables.<br>
+- INIT() Loads files to tables, so that the turtle won't forget what it has learned.<br>
     <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
                    tRecipes - table of recipes,
                    tStacks - table of items stacks.
