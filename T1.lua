@@ -426,7 +426,7 @@ end
 
 
 ------ INIT ------
-function INIT() --[[ Loads tTurtle.txt, tRecipes.txt from files to tables.
+function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
   02/11/2021 v0.4.0 Returns:	true]] 
   loadEnt()
   loadRevEnt()
@@ -2294,6 +2294,22 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
 	return true
 end
 
+--not tested
+function turnToCoord(x, y, z)
+	if not checkType("nnn", x, y, z) then return nil, "turnToCoord(x, y, z) - x,y,z must be numbers" end
+	local tLongerDist = {0, index = 0}
+	local tDist = {distTo(x, y, z)}
+	for i = 1, #tDist do
+		if math.abs(tLongerDist[1]) < math.abs(tDist[i]) then tLongerDist = {tDist[i], index = i} end
+	end
+	local tDir = {["x"] = 1, ["y"] = 2, ["z"] = 3}
+	local sDir = getKey(tLongerDist[index], tDir)
+	if tLongerDist[1]<0 then sDir = sDir.."-"
+	else sDir = sDir .. "+"
+	end
+	return turnTo(sDir)
+end
+
 ------ MOVING AND ROTATING FUNCTIONS ------
 function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
@@ -2382,6 +2398,31 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
     end
   end
   return true
+end
+
+--not tested
+function getNeighbors(x,y,z)
+	return {{x+1, y, z}, {x-1, y, z}, {x, y+1, z}, {x, y-1, z}, {x, y, z+1}, {x, y, z-1}}
+end
+
+--not tested
+function orderByDistance(tP1, tPoints)
+	local tOrder = {}
+	for i = 1, #tPoints do
+		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), index = i}
+	end
+	table.sort(tOrder, function(a, b) return a[1] < b[1] end)
+	return tOrder
+end
+
+--not tested
+function goToNeighbor(x, y, z)
+	local tNeighbors = getNeighbors(x, y, z)
+	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
+	for i = 1, #tDist do
+		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then return true end
+	end
+	return false
 end
 
 function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
