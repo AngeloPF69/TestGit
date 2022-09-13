@@ -122,6 +122,28 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   return true
 end
 
+--implementing
+function getNearest(sBlock)
+	local x, y, z = T.getCoords()
+	for i = 1, 5 do
+		for ix = -i, i do
+			for iy = -i, i do
+				for iz = -i, i do
+					local nQuadIndex = 1
+					local nQuadFactor = { 1, 1, 1 }
+					while nQuadIndex < 4 do
+						local nEntId = getWorldEnt( x+ix*nQuadFactor[1], y+iy*nQuadFactor[2], z+iz*nQuadFactor[3] )
+						if tRevEnts[nEntId] == sBlock then
+						end
+					end
+					if nQuadFactor[nQuadIndex] > 0 then
+						nQuadFactor[nQuadIndex] = -1
+					else
+						nQuadFactor[nQuadIndex] = 1
+						nQuadIndex = nQuadIndex + 1
+					end
+end
+        
 ------ Entity ------
 function addEnt(sEntName) --[[ Adds a entity name to table ent.
   21-07-2022 v0.4.0 Param: sEntName - string name of entity.
@@ -2294,6 +2316,12 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
 	return true
 end
 
+--not tested
+function turnToBlock(sBlock)
+	local x, y, z = getNearest(sBlock)
+	return turnToCoords(x, y, z)
+end
+        
 --not tested
 function turnToCoord(x, y, z)
 	if not checkType("nnn", x, y, z) then return nil, "turnToCoord(x, y, z) - x,y,z must be numbers" end
