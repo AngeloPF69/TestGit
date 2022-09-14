@@ -2440,7 +2440,12 @@ function orderByDistance(tP1, tPoints)
 		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), index = i}
 	end
 	table.sort(tOrder, function(a, b) return a[1] < b[1] end)
-	return tOrder
+	local tRetPoints = {}
+	for i = 1, #tOrder do
+		tRetPoints[i] = {}
+		tRetPoints[i] = tPoints[tOrder[i].index]
+	end
+	return tRetPoints
 end
 
 --not tested
