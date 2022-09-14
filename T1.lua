@@ -389,7 +389,6 @@ function equip(sSide) --[[ Equip tool from the selected slot.
   ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
   
 	sSide = sSide or getFreeHand()
-	sSide = sSide or PREFEREDHAND
   sSide = string.lower(sSide)
   if not isValue(sSide, {"left", "right"}) then return false, 'equip([Side=free hand]) - Invalid side("left"|"right").' end
 	local tData
