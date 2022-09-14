@@ -123,7 +123,7 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
 end
 
 --implementing
-function getNearest(sBlock)
+function getNearestBlock(sBlock)
 	local x, y, z = T.getCoords()
 	for i = 1, 5 do
 		for ix = -i, i do
@@ -142,6 +142,21 @@ function getNearest(sBlock)
 						nQuadFactor[nQuadIndex] = 1
 						nQuadIndex = nQuadIndex + 1
 					end
+end
+        
+--not tested
+function WorldFindBlock(sBlock)
+	local tRetBlocks = {}
+	for kx, vx in pairs(tWorld) do
+		for ky, vy in pairs(tWorld[kx]) do
+			for kz, vz in pairs(tWorld[kx][ky]) do
+				if tRevEnts[ tWorld[kx][ky][kz] ] == sBlock then
+					tRetBlocks[#tRetBlocks+1] = {kx, ky, kz}
+				end
+			end
+		end
+	end
+	return tRetBlocks
 end
         
 ------ Entity ------
