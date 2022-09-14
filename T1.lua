@@ -2332,7 +2332,7 @@ end
 
 --not tested
 function turnToBlock(sBlock)
-	local x, y, z = getNearest(sBlock)
+	local x, y, z = getNearestBlock(sBlock)
 	return turnToCoords(x, y, z)
 end
         
