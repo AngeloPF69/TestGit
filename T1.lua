@@ -2453,7 +2453,10 @@ function goToNeighbor(x, y, z)
 	local tNeighbors = getNeighbors(x, y, z)
 	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
 	for i = 1, #tDist do
-		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then return true end
+		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then
+			turnTo(x, y, z)
+			return true
+		end
 	end
 	return false
 end
