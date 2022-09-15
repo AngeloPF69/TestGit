@@ -2400,16 +2400,33 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
   return true
 end
 
---not tested
-function getNeighbors(x,y,z)
+function getNeighbors(x,y,z) --[[ Gets the neighbor's coords of x, y, z.
+  12/09/2022 v0.4.0 Param: x, y, z - numbers coords of block.
+  Returns:  table with coords of 6 neighbors.
+  Sintax: getNeighbors([x,y,z] = turtle coords)
+  ex: getNeighbors() - gets the neighbor's coords, of turtle.]]
+
+  x = x or tTurtle.x
+  y = y or tTurtle.y
+  z = z or tTurtle.z
 	return {{x+1, y, z}, {x-1, y, z}, {x, y+1, z}, {x, y-1, z}, {x, y, z+1}, {x, y, z-1}}
 end
 
 --not tested
-function orderByDistance(tP1, tPoints)
+function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances from a point to a table of points.
+  12/09/2022 v0.4.0 Param: tP1 - a point in space.
+                           tPoints - several points in space {x, y, z}.
+  Returns:  ordered table with pairs {distance from tP1 to tPoints[n], n index of tPoints}
+            nil - if tP1 and or tPoints not supplied.
+                - if tP1 or tPoints are not tables.
+  Sintax: orderByDistance(tP1, tPoints)
+  ex: orderByDistance({0,0,0}, getNeighbors(1,0,10)) - returns the ordered table of distance from point tP1 to neighbors of 1,0,10.]]
+
+  if (not tPoints) or (not tP1) then return nil, "orderByDistance(tP1, tPoints) - point Tp1 and/or table of points tPoints, not supplied." end"
+  if not checkType("tt", tP1, tPoints) then return nil, "orderByDistance(tP1, tPoints) - tP1 and tPoints are tables of coords {x, y, z}." end
 	local tOrder = {}
 	for i = 1, #tPoints do
-		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), index = i}
+		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), i}
 	end
 	table.sort(tOrder, function(a, b) return a[1] < b[1] end)
 	return tOrder
@@ -3436,7 +3453,9 @@ end
 
 INIT()
 
-turtle.select(false)
---print(equip("left"))
+local tP1 = {0, 0, 0}
+local tNeighbors = getNeighbors(1, 0, 10)
+print(textutils.serializeJSON(tNeighbors))
+print(textutils.serializeJSON(orderByDistance(tP1, tNeighbors)))
 
 TERMINATE()
