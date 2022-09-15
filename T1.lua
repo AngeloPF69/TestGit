@@ -122,6 +122,43 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   return true
 end
 
+--implementing
+function getNearestBlock(sBlock)
+	local x, y, z = T.getCoords()
+	for i = 1, 5 do
+		for ix = -i, i do
+			for iy = -i, i do
+				for iz = -i, i do
+					local nQuadIndex = 1
+					local nQuadFactor = { 1, 1, 1 }
+					while nQuadIndex < 4 do
+						local nEntId = getWorldEnt( x+ix*nQuadFactor[1], y+iy*nQuadFactor[2], z+iz*nQuadFactor[3] )
+						if tRevEnts[nEntId] == sBlock then
+						end
+					end
+					if nQuadFactor[nQuadIndex] > 0 then
+						nQuadFactor[nQuadIndex] = -1
+					else
+						nQuadFactor[nQuadIndex] = 1
+						nQuadIndex = nQuadIndex + 1
+					end
+end
+        
+--not tested
+function WorldFindBlock(sBlock)
+	local tRetBlocks = {}
+	for kx, vx in pairs(tWorld) do
+		for ky, vy in pairs(tWorld[kx]) do
+			for kz, vz in pairs(tWorld[kx][ky]) do
+				if tRevEnts[ tWorld[kx][ky][kz] ] == sBlock then
+					tRetBlocks[#tRetBlocks+1] = {kx, ky, kz}
+				end
+			end
+		end
+	end
+	return tRetBlocks
+end
+        
 ------ Entity ------
 function addEnt(sEntName) --[[ Adds a entity name to table ent.
   21-07-2022 v0.4.0 Param: sEntName - string name of entity.
@@ -367,7 +404,6 @@ function equip(sSide) --[[ Equip tool from the selected slot.
   ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
   
 	sSide = sSide or getFreeHand()
-	sSide = sSide or PREFEREDHAND
   sSide = string.lower(sSide)
   if not isValue(sSide, {"left", "right"}) then return false, 'equip([Side=free hand]) - Invalid side("left"|"right").' end
 	local tData
@@ -2295,6 +2331,12 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
 end
 
 --not tested
+function turnToBlock(sBlock)
+	local x, y, z = getNearestBlock(sBlock)
+	return turnToCoords(x, y, z)
+end
+        
+--not tested
 function turnToCoord(x, y, z)
 	if not checkType("nnn", x, y, z) then return nil, "turnToCoord(x, y, z) - x,y,z must be numbers" end
 	local tLongerDist = {0, index = 0}
@@ -2429,7 +2471,12 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
 		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), i}
 	end
 	table.sort(tOrder, function(a, b) return a[1] < b[1] end)
-	return tOrder
+	local tRetPoints = {}
+	for i = 1, #tOrder do
+		tRetPoints[i] = {}
+		tRetPoints[i] = tPoints[tOrder[i].index]
+	end
+	return tRetPoints
 end
 
 --not tested
@@ -2437,7 +2484,10 @@ function goToNeighbor(x, y, z)
 	local tNeighbors = getNeighbors(x, y, z)
 	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
 	for i = 1, #tDist do
-		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then return true end
+		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then
+			turnTo(x, y, z)
+			return true
+		end
 	end
 	return false
 end
