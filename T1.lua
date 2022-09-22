@@ -78,9 +78,15 @@ function getSpot(sSpotName) --[[ Gets the spot.
   return tSpots[sSpotName]
 end
 
-function goToSpot(sSpotName)
+function goToSpot(sSpotName) --[[ Turtle walks to the spot coords, and turns to spot facing.
+  22-09-2022 v04.0 Param: sSpotName - string the name of the spot.
+  Returns: true - if it goes all the way to the spot.
+           false - if it couldn't get there.
+           nil - if the spotname was not found.
+  Sintax: goToSpot(sPotName)]]
+  
   local tSpot = getSpot(sSpotName)
-  if not tSpot then return false, "Spot name not found." end
+  if not tSpot then return nil, "Spot name not found." end
   if not goTo(tSpot.x, tSpot.y, tSpot.z) then return false, "Couldn't get there." end
   turnTo(tSpot.facing)
   return true
