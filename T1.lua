@@ -123,26 +123,60 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
 end
 
 --implementing
-function getNearestBlock(sBlock)
-	local x, y, z = T.getCoords()
-	for i = 1, 5 do
-		for ix = -i, i do
-			for iy = -i, i do
-				for iz = -i, i do
-					local nQuadIndex = 1
-					local nQuadFactor = { 1, 1, 1 }
-					while nQuadIndex < 4 do
-						local nEntId = getWorldEnt( x+ix*nQuadFactor[1], y+iy*nQuadFactor[2], z+iz*nQuadFactor[3] )
-						if tRevEnts[nEntId] == sBlock then
-						end
-					end
-					if nQuadFactor[nQuadIndex] > 0 then
-						nQuadFactor[nQuadIndex] = -1
-					else
-						nQuadFactor[nQuadIndex] = 1
-						nQuadIndex = nQuadIndex + 1
-					end
-end
+function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
+  15-09-2022 Param: sBlock - string name of block.
+  Sintax: getNearestBlock([sBlock="any"])
+  Return: x,y,z, distance - coords of nearest block and the distance to it.
+          false - If then block name is not in tWorld.
+          nil - If parameter is not string or number.
+  Note: if sBlock = "any" it returns the nearest block.
+        if sBlock = "empty" or 0 it returns the nearest empty space.
+        if sBlock = "unreachable" or -1 it returns the nearest block space marked as unreachable.
+        if sBlock = "unknown" or nil it returns the first unscanned block space.
+  ex: getNearestBlock("any") or getNearestBlock() - returns coords of the nearest block.]]
+
+  sBlock = sBlock or "any"
+  if type(sBlock) == "number" then
+
+  end
+  
+    local nID;
+    --no param, search for any block
+    if not sBlock then sBlock="any"
+    else	if type(sBlock)=="number" then nID=sBlock
+          --else is a string get the id of sFamName
+          else	if type(sBlock)=="string" then
+                  nID=entGetFamID(sBlock);
+                  if not nID then return false, "wGetNearestEnt(sBlock) - sFamNameORID not registed." end;
+                else	return nil, "wGetNearestEnt(sBlock) - sFamNameORID invalid type parameter.";
+                end
+          end
+    end
+    
+    local nTZ, nTX, nTY=tGetPos();
+    local nRDist,nDist, nRZ, nRX, nRY=9999 --distance and coords
+    --search world for entity
+    local k,v
+    for k,v in pairs(tWorld) do --loop for z indez
+      local k1,v1
+      for k1,v1 in pairs(tWorld[k]) do --loop for x index
+        local k2,v2
+        for k2,v2 in pairs(tWorld[k][k1]) do --loop for y index
+          if (v2==nID or sBlock=="any") and v2~=0 then --check entity
+            nDist=getSumDist(nTZ, nTX, nTY, k, k1, k2) --distance from world center to entity
+            if nDist<nRDist then --is lower
+              nRDist=nDist
+              nRZ=k
+              nRX=k1
+              nRY=k2
+            end
+          end
+        end
+      end
+    end
+    --return shortest distance to entity
+    return nRZ, nRX, nRY, nDist
+  end
         
 --not tested
 function WorldFindBlock(sBlock)
@@ -2336,8 +2370,14 @@ function turnToBlock(sBlock)
 	return turnToCoords(x, y, z)
 end
         
---not tested
-function turnToCoord(x, y, z)
+function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
+  15-09-2022 v0.4.0 Param: x, y, z - numbers coords of point.
+  Returns: true - if it turn to specified direction
+           nil - if x or y or z aren't numbers.
+					 false - if it couldn't turn to that directions ex: up|down.
+  sintax: turnToCoord(x, y, z)
+	ex: turnToCoord(1, 0, 0) - turns to block at 1,0,0.]]
+
 	if not checkType("nnn", x, y, z) then return nil, "turnToCoord(x, y, z) - x,y,z must be numbers" end
 	local tLongerDist = {0, index = 0}
 	local tDist = {distTo(x, y, z)}
@@ -2345,7 +2385,7 @@ function turnToCoord(x, y, z)
 		if math.abs(tLongerDist[1]) < math.abs(tDist[i]) then tLongerDist = {tDist[i], index = i} end
 	end
 	local tDir = {["x"] = 1, ["y"] = 2, ["z"] = 3}
-	local sDir = getKey(tLongerDist[index], tDir)
+	local sDir = getKey(tLongerDist.index, tDir)
 	if tLongerDist[1]<0 then sDir = sDir.."-"
 	else sDir = sDir .. "+"
 	end
@@ -2464,7 +2504,7 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
   Sintax: orderByDistance(tP1, tPoints)
   ex: orderByDistance({0,0,0}, getNeighbors(1,0,10)) - returns the ordered table of distance from point tP1 to neighbors of 1,0,10.]]
 
-  if (not tPoints) or (not tP1) then return nil, "orderByDistance(tP1, tPoints) - point Tp1 and/or table of points tPoints, not supplied." end"
+  if (not tPoints) or (not tP1) then return nil, "orderByDistance(tP1, tPoints) - point Tp1 and/or table of points tPoints, not supplied." end
   if not checkType("tt", tP1, tPoints) then return nil, "orderByDistance(tP1, tPoints) - tP1 and tPoints are tables of coords {x, y, z}." end
 	local tOrder = {}
 	for i = 1, #tPoints do
@@ -3503,9 +3543,6 @@ end
 
 INIT()
 
-local tP1 = {0, 0, 0}
-local tNeighbors = getNeighbors(1, 0, 10)
-print(textutils.serializeJSON(tNeighbors))
-print(textutils.serializeJSON(orderByDistance(tP1, tNeighbors)))
+print(turnToCoord(1, 2, -3))
 
 TERMINATE()
