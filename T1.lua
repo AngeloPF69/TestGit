@@ -5,6 +5,7 @@
 local PREFEREDHAND = "right" --default equip hand
 local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
+local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
@@ -159,7 +160,7 @@ function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
           end
     end
     
-    local nTZ, nTX, nTY=tGetPos();
+    local nTZ, nTX, nTY=getCoords();
     local nRDist,nDist, nRZ, nRX, nRY=9999 --distance and coords
     --search world for entity
     local k,v
@@ -412,7 +413,7 @@ end
 
 
 ------ EQUIP ------
---not tested
+
 function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
   23/09/2021 v0.4.0 Returns:	"right" or "left" the first free hand found.
 										          false - if no free hand found.
@@ -433,7 +434,6 @@ function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
 	return false
 end
 
---not tested
 function equip(sSide) --[[ Equip tool from the selected slot.
   23/09/2021 v0.4.0 Param: sSide - String: "left"|"right"
   Returns:	true - if it was equiped.
@@ -457,7 +457,6 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 	return true
 end
 
---not tested
 function unequip(sHand)
   sHand = sHand or PREFEREDHAND
   sHand = string.lower(sHand)
@@ -495,7 +494,7 @@ function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
   ex: turtleLoad() ]] 
   
   local t = loadTable("tTurtle.txt")
-	if not t then return false,"Can't load tTurtle.txt" end
+  if not t then return false,"Can't load tTurtle.txt" end
 	tTurtle = t
   return true
 end
@@ -577,13 +576,13 @@ function getCoords() --[[ Gets coords from turtle.
   03/09/2021 v0.2.0 Returns: the turtle coords x, y, z.
   Sintax: getCoords()
   ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
-  
-	return tTurtle.x, tTurtle.y, tTurtle.z
+
+  return tTurtle.x, tTurtle.y, tTurtle.z
 end
 
 
 ------ ATTACK FUCTIONS ------
---not tested
+
 function attackDir(sDir) --[[ Turtle attack in sDir direction.
   05/09/2021 v0.4.0 Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle attack something.
@@ -605,22 +604,43 @@ end
 
 
 ------ MEASUREMENTS FUNCTIONS ------
-function addSteps(nSteps) --[[ Returns nSteps added to turtle coords.
+
+function dirType2Facing(sDir, nFacing) --[[ Converts values of dirType to facingType.]]
+  sDir = sDir or "forward"
+  nFacing = nFacing or tTurtle.facing
+
+  if not dirType[sDir] then return false end
+
+  local facing
+  facing = (sDir == "forward" and nFacing or 0) + (sDir == "back" and incFacing(2, nFacing) or 0)
+  facing = facing + (sDir == "left" and decFacing(1, nFacing) or 0) + (sDir == "right" and incFacing(1, nFacing) or 0)
+  facing = facing + (sDir == "up" and dirType[sDir] or 0) + (sDir == "down" and dirType[sDir] or 0)
+  return facing
+end
+
+function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
   24/09/2021 v0.2.0 Param: nSteps - number of waking steps for turtle.
-  Sintax: addSteps([nSteps=1])
+                           nFacing - number or string "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3 direction of turtle.
+  Sintax: addSteps([nSteps=1][, facing = tTurtle.facing])
   Returns:  x,y,z adding nSteps in direction turtle is facing.
             false - if nSteps is not a number.
   Note: accepts positive and negative numbers.
   ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
   
+  facing = facing or tTurtle.facing
   nSteps = nSteps or 1
 
-  if type(nSteps) ~= "number" then return false, "addSteps([Steps=1]) - Steps must be a number." end
+  if type(facing) ~= "number" then
+    if facingType[facing] then facing = facingType[facing]
+    elseif dirType[facing] then facing = dirType2Facing(facing)
+    else return false, 'addSteps([Steps=1][, facing = turtle facing]) - facing must be "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3.'
+    end
+  end
 
-	local x, y, z, facing = tTurtle.x, tTurtle.y, tTurtle.z, tTurtle.facing
-		x = x+(facing == 1 and nSteps or 0)+(facing == 3 and -nSteps or 0)
-		y = y+(facing == 4 and nSteps or 0)+(facing == 8 and -nSteps or 0)
-		z = z+(facing == 2 and nSteps or 0)+(facing == 0 and -nSteps or 0)
+	local x, y, z = getCoords()
+  x = x+(facing == 1 and nSteps or 0)+(facing == 3 and -nSteps or 0)
+  y = y+(facing == 4 and nSteps or 0)+(facing == 8 and -nSteps or 0)
+  z = z+(facing == 2 and nSteps or 0)+(facing == 0 and -nSteps or 0)
   return x, y, z
 end
 
@@ -847,9 +867,40 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction.
 	end
 end
 
+------ SCANNING ------
+
+function scan(sDir)
+  sDir = sDir or "forward"
+  if type(sDir) ~= "string" then
+    return nil, 'scan(sDir) - Invalid sDir type, must be a string ""forward"|"up"|"down"'
+  end
+  if not insF[sDir] then
+    return nil, 'scan(sDir) - Invalid sDir must be "forward"|"up"|"down"'
+  end
+  local success, tData = insF[sDir]()
+  local x, y, z = addSteps(1, sDir)
+  local nID
+  if not success then nID = 0
+  else nID = addEnt(tData.name)
+  end
+
+  setWorldEnt(x, y, z, nID)
+  return true
+end
+
+function scanAll()
+  local tDir = {"up", "forward", "down"}
+  for i = 1, #tDir do
+    scan(tDir[i])
+  end
+  return true
+end
+
+
 ------ MOVING FUNCTIONS ------
+
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
-  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk.
+  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk.
   Returns:  true - if turtle goes all way.
            false - "Can't advance forward."
              nil - invalid nBlocks type.
@@ -863,14 +914,16 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.forward() then return false, "Can't advance forward."
-    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
+    else
+      tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
+      if SCAN then scanAll() end
     end
   end
   return true
 end
 
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
-  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk backwards. 
+  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk backwards. 
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -883,14 +936,16 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.back() then return false, "Can't go backward."
-    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps(-1)
+    else
+      tTurtle.x, tTurtle.y, tTurtle.z = addSteps(-1)
+      if SCAN then scanAll() end
     end
   end
   return true
 end
 
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
-  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk up.
+  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk up.
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -903,14 +958,17 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.up() then return false, "Can't move up."
-    else  tTurtle.y = tTurtle.y + 1
+    else
+      tTurtle.y = tTurtle.y + 1
+      if SCAN then scanAll() end
     end
   end
   return true
 end
 
+
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
-  27/08/2021 v0.2.0 Param: nBlocks - number of blocks to walk down.
+  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk down.
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -923,7 +981,9 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
       if not turtle.down() then return false, "I can't go down anymore."
-      else  tTurtle.y = tTurtle.y -1
+      else
+        tTurtle.y = tTurtle.y -1
+        if SCAN then scanAll() end
       end
   end
   return true
@@ -2231,27 +2291,35 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
   return true, sRecipe, nIndex, nCount
 end
 
+
 ------ ROTATING FUNCTIONS ------  
-function incFacing(nTurns) --[[ Increments tTurtle.facing by nTurns
+
+function incFacing(nTurns, nFacing) --[[ Increments nFacing by nTurns
   02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the right.
-  Returns: true
+                           nFacing - where is the turtle facing 0..3
+  Returns: the new direction 0..3
   ex: if turtle is facing "x+"=1
-      incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2
-  Sintax: incFacing([nTurns=1])]]
+      incFacing(1) - Increments nFacing, nFacing turns to "z+"=2
+  Sintax: incFacing([nTurns=1][, nFacing = tTurtle.facing])]]
+
+  nFacing = nFacing or tTurtle.facing
   nTurns = nTurns or 1
-  tTurtle.facing = tTurtle.facing + nTurns
-  tTurtle.facing = bit32.band(tTurtle.facing, 3)
-  return true
+  nFacing = nFacing + nTurns
+  nFacing = bit32.band(nFacing, 3)
+  return nFacing
 end
 
-function decFacing(nTurns) --[[ Decrements tTurtle.facing by nTurns
+function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
   02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the left.
-  Returns: true
-  Sintax: decFacing([nTurns=1])]]
+                           nFacing - where is the turtle facing 0..3
+  Returns: the new direction 0..3
+  Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])]]
+
+  nFacing = nFacing or tTurtle.facing
   nTurns = nTurns or 1
-  tTurtle.facing = tTurtle.facing - nTurns
-  tTurtle.facing = bit32.band(tTurtle.facing, 3)
-  return true
+  nFacing = nFacing - nTurns
+  nFacing = bit32.band(nFacing, 3)
+  return nFacing
 end
 
 function turnBack() --[[ Turtle turns back.
@@ -2260,11 +2328,10 @@ function turnBack() --[[ Turtle turns back.
   ex: turnBack() - Turns the turtle back.]]
   turtle.turnRight()
   turtle.turnRight()
-  incFacing(2)
+  tTurtle.facing = incFacing(2)
   return true
 end
 
---not tested
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
   27/08/2021 v0.4.0 Param: sDir - string diretion "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if sDir is a valid direction.
@@ -2277,9 +2344,9 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
   sDir = string.lower(sDir)
   
 	if turnTo(sDir) then return true
-	elseif turnDir(sDir) then return true
 	else
-		if sDir == "back" then return turnBack()
+    if sDir == "forward" then return true
+		elseif sDir == "back" then return turnBack()
 		elseif sDir == "left" then return turnLeft()
 		elseif sDir == "right" then return turnRight()
 		end
@@ -2303,7 +2370,7 @@ function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   nTurns=bit32.band(nTurns, 3) --nTurns muest be 0..3 (4=0...)
   for i=1,nTurns do
     turtle.turnLeft()
-    decFacing()
+    tTurtle.facing = decFacing()
   end
   return true
 end
@@ -2324,12 +2391,13 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   nTurns=bit32.band(nTurns, 3)
   for i=1,nTurns do
     turtle.turnRight()
-    incFacing()
+    tTurtle.facing = incFacing()
   end
   return true
 end
 
---not tested
+-- implementing
+-- update to turTo(x,y,z)
 function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
   21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3
   Returns: true - if it turn to specified direction
@@ -2343,16 +2411,19 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
 
   local nDir, nRotate;
 	if not nsFacing then return true end --no parameters
+
   if type(nsFacing) == "number" then
     nsFacing = bit32.band(nsFacing, 3)
     nRotate = nsFacing - tTurtle.facing
+
   elseif type(nsFacing) == "string" then
     nsFacing = string.lower(nsFacing)
     if carDirType[nsFacing] then --is "north", "south", "west", "east"
       nRotate = carDirType[nsFacing] - tTurtle.facing
+
     elseif facingType[nsFacing] then --is "z+","z-","x+","x-", "y+", "y-"
-			if bit32.band(facingType[nsFacing]) == 0 then return false end
       nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
+
     else return nil, 'turnTo(Facing) - Invalid direction "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
     end
   else return nil, 'turnTo(Facing) - Invalid Facing type "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
@@ -2373,7 +2444,7 @@ end
 --not tested
 function turnToBlock(sBlock)
 	local x, y, z = getNearestBlock(sBlock)
-	return turnToCoords(x, y, z)
+	return turnToCoord(x, y, z)
 end
         
 function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
@@ -2398,7 +2469,9 @@ function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
 	return turnTo(sDir)
 end
 
+
 ------ MOVING AND ROTATING FUNCTIONS ------
+
 function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
   Returns:  true if turtle goes all way.
@@ -2410,12 +2483,7 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
   
   if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
   if nBlocks >= 0  then turnBack() end
-  for i = 1, math.abs(nBlocks) do
-    if not turtle.forward() then return false, "I can't go back."
-    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
-    end
-  end
-  return true
+  return forward(nBlocks)
 end
 
 function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
@@ -2448,22 +2516,16 @@ function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until bl
             nil - if nBlocks is not a number.
   Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
   ex: goLeft(3) - Moves 3 Blocks to the left.]]
+
   nBlocks = nBlocks or 1
-
   if type(nBlocks) ~= "number" then return nil, "goLeft(Blocks) - Blocks must be a number." end
-  if nBlocks < 0 then turtle.turnRight()
-  else  turtle.turnLeft()
+  local dir = sign(nBlocks)
+  if dir >= 0 then turnDir("left")
+  else turnDir("right")
   end
-  decFacing(sign(nBlocks))
 
-  for i = 1, math.abs(nBlocks) do
-    if not turtle.forward() then return false, "Can't go any further."
-    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
-    end
-  end
-  return true
+  return forward(math.abs(nBlocks))
 end
-
 
 function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until blocked.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk right.
@@ -2472,23 +2534,18 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
             nil - if nBlocks is not a number.
   Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
   ex: goRight(3) - Moves 3 Blocks to the right.]]
-  nBlocks = nBlocks or 1
-  
-  if type(nBlocks) ~= "number" then return nil, "goRight(Blocks) - Blocks must be a number." end
-  if nBlocks < 0 then turtle.turnLeft()
-  else  turtle.turnRight()
-  end
-  incFacing(sign(nBlocks))
 
-  for i= 1, math.abs(nBlocks) do
-    if not turtle.forward() then return false, "There is a obstacle in my way."
-    else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
-    end
+  nBlocks = nBlocks or 1
+  if type(nBlocks) ~= "number" then return nil, "goRight(Blocks) - Blocks must be a number." end
+  local dir = sign(nBlocks)
+  if dir >= 0 then turnDir("right")
+  else turnDir("left")
   end
-  return true
+
+  return forward(math.abs(nBlocks))
 end
 
-function getNeighbors(x,y,z) --[[ Gets the neighbor's coords of x, y, z.
+function getNeighbors(x,y,z) --[[ Gets the neighbor's coords of x, y, z, or of the turtle.
   12/09/2022 v0.4.0 Param: x, y, z - numbers coords of block.
   Returns:  table with coords of 6 neighbors.
   Sintax: getNeighbors([x,y,z] = turtle coords)
@@ -2500,7 +2557,6 @@ function getNeighbors(x,y,z) --[[ Gets the neighbor's coords of x, y, z.
 	return {{x+1, y, z}, {x-1, y, z}, {x, y+1, z}, {x, y-1, z}, {x, y, z+1}, {x, y, z-1}}
 end
 
---not tested
 function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances from a point to a table of points.
   12/09/2022 v0.4.0 Param: tP1 - a point in space.
                            tPoints - several points in space {x, y, z}.
@@ -2512,26 +2568,29 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
 
   if (not tPoints) or (not tP1) then return nil, "orderByDistance(tP1, tPoints) - point Tp1 and/or table of points tPoints, not supplied." end
   if not checkType("tt", tP1, tPoints) then return nil, "orderByDistance(tP1, tPoints) - tP1 and tPoints are tables of coords {x, y, z}." end
+
 	local tOrder = {}
 	for i = 1, #tPoints do
 		tOrder[i] = {math.abs(tP1[1]-tPoints[i][1])+math.abs(tP1[2]-tPoints[i][2])+math.abs(tP1[3]-tPoints[i][3]), i}
 	end
+
 	table.sort(tOrder, function(a, b) return a[1] < b[1] end)
 	local tRetPoints = {}
 	for i = 1, #tOrder do
 		tRetPoints[i] = {}
-		tRetPoints[i] = tPoints[tOrder[i].index]
+		tRetPoints[i] = tPoints[tOrder[i][2]]
 	end
 	return tRetPoints
 end
 
---not tested
 function goToNeighbor(x, y, z)
 	local tNeighbors = getNeighbors(x, y, z)
 	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
 	for i = 1, #tDist do
-		if goTo(tNeighbors[tDist[i].index][1], tNeighbors[tDist[i].index][2], tNeighbors[tDist[i].index][3]) then
-			turnTo(x, y, z)
+    -- print(tDist[i][1], tDist[i][2], tDist[i][3])
+		if goTo(tDist[i][1], tDist[i][2], tDist[i][3]) then
+      print(x,y,z)
+			turnToCoord(x, y, z)
 			return true
 		end
 	end
@@ -2578,7 +2637,9 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
   return false
 end
 
+
 ------ DIG FUNCTIONS ------  
+
 --not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   08/09/2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west".
@@ -2603,12 +2664,14 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
 
   local success, message = turnDir(sDir)
 
+  print(success, message)
   if not success  then return false, message end
   if (sDir == "left") or (sDir == "right") or (sDir == "back") then sDir = "forward" end
   
   local facing = tTurtle.facing
   if (sDir == "up") or (sDir == "down") then tTurtle.facing = dirType[sDir] end
 
+  
   for i = 1, nBlocks do
     if not digF[sDir]() then return false, "No block to dig." end
     if i ~= nBlocks then
@@ -2624,6 +2687,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   return true
 end
 
+--not tested
 function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig.
   Returns:  true if turtle digs all way.
@@ -3546,9 +3610,8 @@ end
 
 ---- TEST AREA ------
 
-
 INIT()
 
-print(turnToCoord(1, 2, -3))
+print(digDir("z-"))
 
 TERMINATE()
