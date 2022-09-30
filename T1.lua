@@ -129,6 +129,10 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   return true
 end
 
+function getDist3D(p1, p2)
+	return math.sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z))
+end
+
 --implementing
 function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
   15-09-2022 Param: sBlock - string name of block.
@@ -160,8 +164,8 @@ function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
           end
     end
     
-    local nTZ, nTX, nTY=getCoords();
-    local nRDist,nDist, nRZ, nRX, nRY=9999 --distance and coords
+    local nTX, nTY, nTZ = getCoords();
+    local nRDist,nDist, nRZ, nRX, nRY --distance and coords
     --search world for entity
     local k,v
     for k,v in pairs(tWorld) do --loop for z indez
@@ -170,8 +174,13 @@ function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
         local k2,v2
         for k2,v2 in pairs(tWorld[k][k1]) do --loop for y index
           if (v2==nID or sBlock=="any") and v2~=0 then --check entity
-            nDist=getSumDist(nTZ, nTX, nTY, k, k1, k2) --distance from world center to entity
-            if nDist<nRDist then --is lower
+            nDist=getDist3D(nTX, nTY, nTz, k, k1, k2) --distance from world center to entity
+						if not nRDist then
+							nRDist=nDist
+              nRZ=k
+              nRX=k1
+              nRY=k2
+						elseif nDist<nRDist then --is lower
               nRDist=nDist
               nRZ=k
               nRX=k1
@@ -182,7 +191,7 @@ function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
       end
     end
     --return shortest distance to entity
-    return nRZ, nRX, nRY, nDist
+    return nRZ, nRX, nRY, nRDist
   end
         
 --not tested
