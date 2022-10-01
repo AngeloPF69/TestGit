@@ -23,6 +23,7 @@ facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8} --axis
 carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           facing = facingType["z-"], --the axis where the turtle is facing at
+          looking = lookingType["forward"],
           leftHand = "empty",
           rightHand = "empty",
 } 
@@ -1198,6 +1199,7 @@ function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value 
   return 1
 end
 
+
 ------ STACK FUNCTIONS ------
 function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
   10/11/2021 v0.2.0 Returns false - if it couldn't save file.
@@ -1325,6 +1327,7 @@ function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
   tStacks[sItemName] = nStack
   return true
 end
+
 
 ------ RECIPES FUNCTIONS ------
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
@@ -2396,8 +2399,6 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   return true
 end
 
--- implementing
--- update to turTo(x,y,z)
 function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
   21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3
   Returns: true - if it turn to specified direction
@@ -2421,7 +2422,8 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
     if carDirType[nsFacing] then --is "north", "south", "west", "east"
       nRotate = carDirType[nsFacing] - tTurtle.facing
 
-    elseif facingType[nsFacing] then --is "z+","z-","x+","x-", "y+", "y-"
+    elseif facingType[nsFacing] then --is "z+", "z-", "x+", "x-", "y+", "y-"
+      if facingType[nsFacing] > 3 then return false, 'turnTo(Facing) - Facing must be "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3' end 
       nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
 
     else return nil, 'turnTo(Facing) - Invalid direction "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
@@ -2642,7 +2644,7 @@ end
 
 --not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
-  08/09/2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west".
+  08/09/2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
                         nBlocks - number of blocks to walk in sDir direction. 
   Returns:  true if turtle digs all the way.
             false if blocked, empty space, can't turn that way.
@@ -2653,7 +2655,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
       digDir(-3, "up") - Digs 3 blocks down.]]
 
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
-  negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up"}
+  negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1}
   sDir = string.lower(sDir)
   
   --if type(nBlocks) ~= "number" then return nil, 'digDir([Dir="foreward"][, Blocks=1]) - Blocks must be a number.' end
@@ -2664,13 +2666,11 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
 
   local success, message = turnDir(sDir)
 
-  print(success, message)
-  if not success  then return false, message end
-  if (sDir == "left") or (sDir == "right") or (sDir == "back") then sDir = "forward" end
-  
   local facing = tTurtle.facing
-  if (sDir == "up") or (sDir == "down") then tTurtle.facing = dirType[sDir] end
-
+  if not success then
+    if (sDir == "up") or (sDir == "down") then tTurtle.looking = lookingType[sDir] end
+  else sDir = "forward"
+  end
   
   for i = 1, nBlocks do
     if not digF[sDir]() then return false, "No block to dig." end
@@ -3612,6 +3612,6 @@ end
 
 INIT()
 
-print(digDir("z-"))
+print(digDir("up"))
 
 TERMINATE()
