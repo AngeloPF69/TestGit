@@ -21,6 +21,8 @@ dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down
 lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
 facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8} --axis type values
 carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions
+negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}
+
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           facing = facingType["z-"], --the axis where the turtle is facing at
           looking = lookingType["forward"],
@@ -100,6 +102,7 @@ function setWorldEnt(x, y, z, nEnt) --[[ Set world coords containing nEnt.
                            nEnt - id of the entity from getEntId(sBlockName).
   Returns: true
   Sintax: setWorldEnt(x, y, z, nEnt)]]
+
   if not tWorld[x] then tWorld[x] = {} end
   if not tWorld[x][y] then tWorld[x][y] = {} end
   tWorld[x][y][z] = nEnt
@@ -109,6 +112,7 @@ end
 function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
   24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
   Returns: number the id of the block in that coords.]]
+
   if not tWorld[x] then return nil end
   if not tWorld[x][y] then return nil end
   return tWorld[x][y][z]
@@ -149,14 +153,13 @@ function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
 	return math.sqrt((p1[1]-p2[1])*(p1[1]-p2[1])+(p1[2]-p2[2])*(p1[2]-p2[2])+(p1[3]-p2[3])*(p1[3]-p2[3]))
 end
 
---not tested
 function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block.
   15-09-2022 Param: sBlock - string name of block.
                     nAmp = radius of scan.
   Sintax: getNearestBlock([sBlock="unknown"][, nAmp = 10])
   Return: x,y,z, nID - coords of nearest block and its id.
           false - If then block name was not found in tWorld.
-          nil - If parameter is not string or number.
+          nil - if the block name, was never scanned, is not in database.
   Note: if sBlock = "any" it returns the nearest block.
         if sBlock = "empty" or 0 it returns the nearest empty space.
         if sBlock = "unreachable" or -1 it returns the nearest block space marked as unreachable.
@@ -165,9 +168,11 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
 
   nAmp = nAmp or 10
 	local nBlock
-	if type sBlock == "string" then
-		if tEnt[sBlock] then nBlock = tEnt[sBlock]
-	elseif type sBlock == "number" then nBlock = sBlock
+	if type(sBlock) == "string" then
+		if tEnts[sBlock] then nBlock = tEnts[sBlock]
+    elseif sBlock ~= "any" then return nil, 'getNearestBlock([sBlock="unknown"][, nAmp=10]) - block name not in database.'
+    end
+	elseif type(sBlock) == "number" then nBlock = sBlock
   end
 
 	local x, y ,z = getCoords()
@@ -667,7 +672,9 @@ function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
   return math.abs(tTurtle.x-x)+math.abs(tTurtle.y-y)+math.abs(tTurtle.z-z)
 end
 
+
 ------ COMPARE FUNCTIONS ------
+
 --not tested
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
   21/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
@@ -2658,10 +2665,8 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
       digDir(-3, "up") - Digs 3 blocks down.]]
 
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
-  negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1}
   sDir = string.lower(sDir)
   
-  --if type(nBlocks) ~= "number" then return nil, 'digDir([Dir="foreward"][, Blocks=1]) - Blocks must be a number.' end
   if nBlocks < 0 then
     nBlocks = math.abs(nBlocks)
     sDir = negOrient[sDir]
@@ -2669,24 +2674,21 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
 
   local success, message = turnDir(sDir)
 
-  local facing = tTurtle.facing
   if not success then
-    if (sDir == "up") or (sDir == "down") then tTurtle.looking = lookingType[sDir] end
+    if (sDir == "up") or (sDir == "down") then tTurtle.facing = dirType[sDir] end
   else sDir = "forward"
   end
   
   for i = 1, nBlocks do
-    if not digF[sDir]() then return false, "No block to dig." end
+    local success, message = digF[sDir]()
+    if not success then return false, message end
     if i ~= nBlocks then
 			if not movF[sDir]() then
-        tTurtle.facing = facing
         return false, "Can't move that way."
       else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
       end
 		end
   end
-
-  tTurtle.facing = facing
   return true
 end
 
@@ -2705,7 +2707,8 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
-    if not turtle.dig() then return false, "No block to dig." end
+    local success, message = turtle.dig()
+    if not success then return false, message end
     if i~= nBlocks then
 			if not turtle.forward() then return false, "Can't advance more."
       else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
@@ -2760,7 +2763,8 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
   if nBlocks < 0 then return digDown(math.abs(nBlocks)) end
 
   for i = 1, nBlocks do
-    if not turtle.digUp() then return false, "No block to dig." end
+    local success, message = turtle.digUp()
+    if not success then return false, message end
     if i ~= nBlocks then
 			if not turtle.up() then return false, "Can't go up."
       else tTurtle.y = tTurtle.y + 1
@@ -2783,7 +2787,8 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
   if nBlocks < 0 then return digUp(math.abs(nBlocks)) end
 
   for i = 1, nBlocks do
-    if not turtle.digDown() then return false, "No block to dig." end
+    local success, message = turtle.digDown()
+    if not success then return false, message end
     if i ~= nBlocks then
 			if not turtle.down() then return false, "Can't go down."
       else tTurtle.y = tTurtle.y - 1
@@ -2806,7 +2811,8 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
   local dir = sign(nBlocks)
 
   for i = 1, math.abs(nBlocks) do
-    if not turtle.digUp() then return false, "Can't dig up." end
+    local success, message = turtle.digUp()
+    if not success then return false, message end
     if i~= nBlocks then
 			if not forward(dir) then return false end
 		end
@@ -2827,7 +2833,8 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
   local dir = sign(nBlocks)
 	
   for i = 1, math.abs(nBlocks) do
-    if not turtle.digDown() then return false, "Can't dig down." end
+    local success, message = turtle.digDown()
+    if not success then return false, message end
     if i~= nBlocks then
 			if not forward(dir) then return false, "Can't move forward" end
 		end
@@ -2847,7 +2854,8 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
   if type(nBlocks) ~= "number" then return false, "digBack(Blocks) - Blocks must be a number." end
   if nBlocks > 0 then turnBack() end
   for i = 1, math.abs(nBlocks) do
-    if not turtle.dig() then return false, "Can't dig." end
+    local success, message = turtle.dig()
+    if not success then return false, message end
     if i ~= nBlocks then
 			if not forward() then return false, "Can't go forward." end
 		end
@@ -3615,6 +3623,8 @@ end
 
 INIT()
 
-print(getDist3D({0,0,-2}))
+print(digDir("up", 2))
+--print(down())
+
 
 TERMINATE()
