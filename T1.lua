@@ -130,8 +130,23 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   return true
 end
 
-function getDist3D(p1, p2)
-	return math.sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z))
+function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
+  01-10-2022 Param: p1, p2 - points in space 3d.
+  Sintax: getDist3D([p1=tTurtle coords, ]p2)   ___________________________
+  Return: number - the distance from p1 to p2 √(x1-x2)²+(y1-y2)²+(z1-z2)²)
+          nil - If no parameter is supplied.
+  ex: getDist3D({1,1,1}, {10,101,10}) - gets the distance from point (1,1,1) to point (10, 101, 10)
+      getDist3D({10,1,10}) - gets the distance from turtle to point (10,1,10)]]
+
+  if not p1 then return nil, "getDist3D([p1=tTurtle coords, ]p2) - Must supplie at least p2 = {x, y, z}." end
+  if not p2 then
+    p2 = p1
+    p1 = {}
+    p1[1] = tTurtle.x
+    p1[2] = tTurtle.y
+    p1[3] = tTurtle.z
+  end
+	return math.sqrt((p1[1]-p2[1])*(p1[1]-p2[1])+(p1[2]-p2[2])*(p1[2]-p2[2])+(p1[3]-p2[3])*(p1[3]-p2[3]))
 end
 
 --implementing
@@ -177,15 +192,9 @@ function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
           if (v2==nID or sBlock=="any") and v2~=0 then --check entity
             nDist=getDist3D(nTX, nTY, nTz, k, k1, k2) --distance from world center to entity
 						if not nRDist then
-							nRDist=nDist
-              nRZ=k
-              nRX=k1
-              nRY=k2
+							nRDist=nDist; nRZ=k; nRX=k1; nRY=k2
 						elseif nDist<nRDist then --is lower
-              nRDist=nDist
-              nRZ=k
-              nRX=k1
-              nRY=k2
+              nRDist=nDist; nRZ=k; nRX=k1; nRY=k2
             end
           end
         end
@@ -3621,6 +3630,6 @@ end
 
 INIT()
 
-print(digDir("up"))
+print(getDist3D({0,0,-2}))
 
 TERMINATE()
