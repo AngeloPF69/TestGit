@@ -149,61 +149,46 @@ function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
 	return math.sqrt((p1[1]-p2[1])*(p1[1]-p2[1])+(p1[2]-p2[2])*(p1[2]-p2[2])+(p1[3]-p2[3])*(p1[3]-p2[3]))
 end
 
---implementing
-function getNearestBlock(sBlock) --[[ Gets the coords of the nearest block.
+--not tested
+function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block.
   15-09-2022 Param: sBlock - string name of block.
-  Sintax: getNearestBlock([sBlock="any"])
-  Return: x,y,z, distance - coords of nearest block and the distance to it.
-          false - If then block name is not in tWorld.
+                    nAmp = radius of scan.
+  Sintax: getNearestBlock([sBlock="unknown"][, nAmp = 10])
+  Return: x,y,z, nID - coords of nearest block and its id.
+          false - If then block name was not found in tWorld.
           nil - If parameter is not string or number.
   Note: if sBlock = "any" it returns the nearest block.
         if sBlock = "empty" or 0 it returns the nearest empty space.
         if sBlock = "unreachable" or -1 it returns the nearest block space marked as unreachable.
         if sBlock = "unknown" or nil it returns the first unscanned block space.
-  ex: getNearestBlock("any") or getNearestBlock() - returns coords of the nearest block.]]
+  ex: getNearestBlock("any") - returns coords and id of the nearest block.]]
 
-  sBlock = sBlock or "any"
-  if type(sBlock) == "number" then
-
+  nAmp = nAmp or 10
+	local nBlock
+	if type sBlock == "string" then
+		if tEnt[sBlock] then nBlock = tEnt[sBlock]
+	elseif type sBlock == "number" then nBlock = sBlock
   end
+
+	local x, y ,z = getCoords()
+  local nID
+	for amp = 1, nAmp do
+		for dx = -amp, amp do
+			for dy = -amp, amp do
+				for dz = -amp, amp do
+					local tx, ty, tz = x+dx, y+dy, z+dz
+					local nID = getWorldEnt(tx, ty, tz)
+					if sBlock == "any" then
+						if (nID ~= nil) and (nID ~= 0) then return tx, ty, tz, nID end
+					elseif nID == nBlock then return tx, ty, tz, nID
+					end
+				end
+			end
+		end
+	end
+	return false
+end
   
-    local nID;
-    --no param, search for any block
-    if not sBlock then sBlock="any"
-    else	if type(sBlock)=="number" then nID=sBlock
-          --else is a string get the id of sFamName
-          else	if type(sBlock)=="string" then
-                  nID=entGetFamID(sBlock);
-                  if not nID then return false, "wGetNearestEnt(sBlock) - sFamNameORID not registed." end;
-                else	return nil, "wGetNearestEnt(sBlock) - sFamNameORID invalid type parameter.";
-                end
-          end
-    end
-    
-    local nTX, nTY, nTZ = getCoords();
-    local nRDist,nDist, nRZ, nRX, nRY --distance and coords
-    --search world for entity
-    local k,v
-    for k,v in pairs(tWorld) do --loop for z indez
-      local k1,v1
-      for k1,v1 in pairs(tWorld[k]) do --loop for x index
-        local k2,v2
-        for k2,v2 in pairs(tWorld[k][k1]) do --loop for y index
-          if (v2==nID or sBlock=="any") and v2~=0 then --check entity
-            nDist=getDist3D(nTX, nTY, nTz, k, k1, k2) --distance from world center to entity
-						if not nRDist then
-							nRDist=nDist; nRZ=k; nRX=k1; nRY=k2
-						elseif nDist<nRDist then --is lower
-              nRDist=nDist; nRZ=k; nRX=k1; nRY=k2
-            end
-          end
-        end
-      end
-    end
-    --return shortest distance to entity
-    return nRZ, nRX, nRY, nRDist
-  end
-        
 --not tested
 function WorldFindBlock(sBlock)
 	local tRetBlocks = {}
