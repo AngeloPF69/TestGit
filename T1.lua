@@ -603,7 +603,7 @@ function attackDir(sDir) --[[ Turtle attack in sDir direction.
   sDir = sDir or "forward"
   sDir = string.lower(sDir)
   
-	turnDir(sDir)
+	if turnDir(sDir) then sDir = "forward" end
 
   if attF[sDir] then return attF[sDir]()
 	else return nil, 'attackDir([Direction="forward"]) - Diretion must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3'
@@ -633,6 +633,7 @@ function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
   Returns:  x,y,z adding nSteps in direction turtle is facing.
             false - if nSteps is not a number.
   Note: accepts positive and negative numbers.
+        resets tTurtle.looking to 0.
   ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
 
   if not facing then
@@ -703,8 +704,7 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	sDir  = string.lower(sDir)
 	
-	local success, message = turnDir(sDir)
-  if success then sDir = "forward" end
+	if turnDir(sDir) then sDir = "forward" end
 	
 	if type(nSlot) ~= "number" then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
   if (nSlot < 0) or (nSlot > 16) then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot must be between 1 and 16.' end
@@ -715,7 +715,7 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	local success, worldData
 
 	if insF[sDir] then success, worldData = insF[sDir]()
-	else return nil, "compareDir(Dir, Slot) - Invalid direction."
+	else return nil, 'compareDir(Dir, Slot) - Invalid direction, must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3'
 	end
 	
   if success then
@@ -865,7 +865,7 @@ end
 
 
 ------ INSPECT FUNCTIONS ------
---not tested
+
 function inspectDir(sDir) --[[ Inspect a block in sDir direction.
   05/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true, table with data - If turtle detects a block.
@@ -878,9 +878,7 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction.
 	sDir = sDir or "forward"
   sDir = string.lower(sDir)
 
-	if turnTo(sDir) then sDir = "forward"
-	elseif turnDir(sDir) then sDir = "forward"
-	end
+	if turnDir(sDir) then sDir = "forward" end
 	
 	if insF[sDir] then return insF[sDir]()
 	else return nil, 'inspectDir([Dir="forward"]) - Invalid parameter: Dir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
@@ -2875,26 +2873,38 @@ end
 
 
 ------ PLACE FUNCTIONS ------  
---not tested
+
 function placeDir(sDir, message) --[[ Places one selected block in sDir direction.
   27/08/2021 v0.4.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle places the selected block.
             false - if turtle doesn't place the selected block
+                  - if the selected slot is empty.
 						nil - if invalid parameter.
 	Note: message is the text when placing a sign:
 				ex: placeDir("north", "Cobblestone/n-----------") - places a sign to the north that says Cobblestone and dashes in the next line.
-  Sintax: placeDir([sDir="forward"])
+  Sintax: placeDir([sDir="forward"][, message])
   ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
 	
   sDir = sDir or "forward"
   sDir = string.lower(sDir)
 
-	if turnTo(sDir) then sDir = "forward"
-	elseif turnDir(sDir) then sDir = "forward"
-	end
+  local sItemName = getItemName()
+  if not sItemName then return false, "Empty selected slot" end
+
+	if turnDir(sDir) then sDir = "forward"
+  elseif (sDir == "y+") or (sDir == "y-") then
+      sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
+      print(sDir)
+  elseif not plaF[sDir] then
+      if not string.find(sItemName,"sign") then
+        return nil, 'placeDir([sDir = "forward"][, message]) - invalid direction, must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.'
+      end
+      message = sDir
+      sDir = "forward"
+  end
 	
 	if plaF[sDir] then return plaF[sDir](message)
-  else return nil, 'placeDir([sDir][, message]) - invalid direction sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
+  else return nil, 'placeDir([sDir][, message]) - invalid direction, sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
 	end
 end
 
@@ -3462,10 +3472,11 @@ function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot star
   return false --couldn't select nSlot
 end
 
+
 ------ SUCK FUNCTIONS ------
 --not tested
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
-  05/09/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+  05/09/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
                             nItems - number of items to suck.
   Returns:  true - if turtle collects some items.
             false - if there are no items to take.
@@ -3474,17 +3485,16 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   Note: if nItems < 0 it drops nItems from selected slot.
   ex: suckDir() - Turtle sucks all the items forward.]]
 	
-  sDir, nItems = getParam("sn", {"forward"}, sDir, nItems)
+  sDir = sDir or "forward"
+  nItems = nItems or 1
   sDir = string.lower(sDir)
 
   if nItems and nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
   
-	if turnTo(sDir) then sDir = "forward"
-	elseif turnDir(sDir) then sDir = "forward"
-	end
+	if turnDir(sDir) then sDir = "forward" end
   
   if suckF[sDir] then return suckF[sDir](nItems)
-	else return nil, 'suckDir(sDir, nItems) - invalid direction sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3'
+	else return nil, 'suckDir(sDir, nItems) - invalid direction sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.'
 	end
 end
 
@@ -3633,7 +3643,7 @@ end
 
 INIT()
 
-print(compareDir())
+print(placeDir("y-"))
 
 
 TERMINATE()
