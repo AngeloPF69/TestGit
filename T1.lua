@@ -2361,8 +2361,8 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 			turnDir("z-") or turnDir("north") or turnDir(0) - Turns the turtle to z-, north.]]
 			
   sDir = sDir or "back"
-  sDir = string.lower(sDir)
-  
+  if type(sDir) ~= "number" then sDir = string.lower(sDir) end
+
 	if turnTo(sDir) then return true
 	else
     if sDir == "forward" then return true
@@ -2371,6 +2371,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 		elseif sDir == "right" then return turnRight()
 		end
 	end
+  print(sDir)
 	return false
 end
 
@@ -2894,7 +2895,6 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	if turnDir(sDir) then sDir = "forward"
   elseif (sDir == "y+") or (sDir == "y-") then
       sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
-      print(sDir)
   elseif not plaF[sDir] then
       if not string.find(sItemName,"sign") then
         return nil, 'placeDir([sDir = "forward"][, message]) - invalid direction, must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.'
@@ -3474,7 +3474,7 @@ end
 
 
 ------ SUCK FUNCTIONS ------
---not tested
+
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   05/09/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
                             nItems - number of items to suck.
@@ -3482,17 +3482,36 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
             false - if there are no items to take.
 						nil - if invalid parameter.
   Sintax: suckDir([sDir="forward][,nItems=all the items])
-  Note: if nItems < 0 it drops nItems from selected slot.
-  ex: suckDir() - Turtle sucks all the items forward.]]
+
+  Note: if nItems < 0 it sucks nItems from oposite direction.
+  ex: suckDir() - Turtle sucks all the items forward.
+      suckDir(0) - suck all the items in 0, "z-", north direction.
+      suckDir(4) - suck 4 items in front of the turtle.]]
 	
   sDir = sDir or "forward"
-  nItems = nItems or 1
-  sDir = string.lower(sDir)
+  if type(sDir) ~= "number" then sDir = string.lower(sDir)
+  elseif sDir > 3 then
+    if not nItems then
+      nItems = sDir
+      sDir = "forward"
+    else local tmp = nItems
+      nItems = sDir
+      sDir = tmp
+    end
+  end
 
   if nItems and nItems < 0 then return dropDir(sDir, math.abs(nItems)) end
-  
-	if turnDir(sDir) then sDir = "forward" end
-  
+
+	if turnDir(sDir) then sDir = "forward"
+  elseif (sDir == "y+") or (sDir == "y-") then
+    sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
+  elseif not suckF[sDir] then
+    if type(sDir) == "number" then
+      nItems = sDir
+      sDir = "forward"
+    end
+  end
+
   if suckF[sDir] then return suckF[sDir](nItems)
 	else return nil, 'suckDir(sDir, nItems) - invalid direction sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.'
 	end
@@ -3510,7 +3529,7 @@ end
 ------ DROP FUNCTIONS ------  
 --not tested
 function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
-  29/08/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west".
+  29/08/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
                             nBlocks - number of blocks to drop/suck
   Returns:  number of dropped items.
             true - if suck some items.
@@ -3523,9 +3542,17 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
       dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
       dropDir(-5, "down") - Suck 5 items from down.]]
 
-  sDir, nBlocks = getParam("sn", {"forward"}, sDir, nBlocks) --sDir as direction, nBlocks as a number.
-  sDir = string.lower(sDir)
-	
+	if type(sDir) ~= "number" then sDir = string.lower(sDir)
+  elseif sDir > 3 then
+    if not nBlocks then
+      nBlocks = sDir
+      sDir = "forward"
+    else local tmp = nBlocks
+      nBlocks = sDir
+      sDir = tmp
+    end
+  end
+
   if turnTo(sDir) then sDir = "forward"
 	elseif turnDir(sDir) then sDir = "forward"
 	end
@@ -3643,7 +3670,7 @@ end
 
 INIT()
 
-print(placeDir("y-"))
+print(suckDir(4))
 
 
 TERMINATE()
