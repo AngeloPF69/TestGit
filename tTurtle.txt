@@ -4,6 +4,6 @@
   leftHand = "empty",
   z = -1,
   rightHand = "minecraft:diamond_pickaxe",
-  facing = 0,
   looking = 0,
+  facing = 0,
 }

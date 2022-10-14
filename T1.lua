@@ -1216,6 +1216,21 @@ function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value 
   return 1
 end
 
+function strLower(...) --[[ Converts only lowercase strings.
+  14/10/2022 v0.4.0 Param: ... - strings
+  Sintax: strLower([string][, ...])
+  Returns: nil - if empty arguments.
+           strings - converted to lower case.]]
+
+  if #arg == 0 then return nil, "strLower(string[, ...])" end
+  local tRS = {}
+  for i = 1, #arg do
+    if type(arg[i]) == "string" then tRS[#tRS+1] = string.lower(arg[i])
+    else tRS[#tRS+1] = arg[i]
+    end
+  end
+  return table.unpack(tRS)
+end
 
 ------ STACK FUNCTIONS ------
 function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
@@ -2361,7 +2376,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 			turnDir("z-") or turnDir("north") or turnDir(0) - Turns the turtle to z-, north.]]
 			
   sDir = sDir or "back"
-  if type(sDir) ~= "number" then sDir = string.lower(sDir) end
+  sDir = strLower(sDir)
 
 	if turnTo(sDir) then return true
 	else
@@ -2887,7 +2902,7 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
   ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
 	
   sDir = sDir or "forward"
-  sDir = string.lower(sDir)
+  sDir = strLower(sDir)
 
   local sItemName = getItemName()
   if not sItemName then return false, "Empty selected slot" end
@@ -3489,14 +3504,16 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
       suckDir(4) - suck 4 items in front of the turtle.]]
 	
   sDir = sDir or "forward"
-  if type(sDir) ~= "number" then sDir = string.lower(sDir)
-  elseif sDir > 3 then
-    if not nItems then
-      nItems = sDir
-      sDir = "forward"
-    else local tmp = nItems
-      nItems = sDir
-      sDir = tmp
+  sDir = strLower(sDir)
+  if type(sDir) == "number" then
+    if sDir > 3 then
+      if not nItems then
+        nItems = sDir
+        sDir = "forward"
+      else local tmp = nItems
+        nItems = sDir
+        sDir = tmp
+      end
     end
   end
 
@@ -3538,18 +3555,22 @@ function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot a
   Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
   Note: if nBlocks not supplied, drops all items in selected slot.
         if nBlocks < 0 sucks nBlocks.
+        if type(sDir) == "number"
   ex: dropDir() - Drops all blocks from selected slot, forward.
       dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
       dropDir(-5, "down") - Suck 5 items from down.]]
 
-	if type(sDir) ~= "number" then sDir = string.lower(sDir)
-  elseif sDir > 3 then
-    if not nBlocks then
-      nBlocks = sDir
-      sDir = "forward"
-    else local tmp = nBlocks
-      nBlocks = sDir
-      sDir = tmp
+  sDir = sDir or "forward"
+	sDir = strLower(sDir)
+  if type(sDir) == "number" then
+    if sDir > 3 then
+      if not nBlocks then
+        nBlocks = sDir
+        sDir = "forward"
+      else local tmp = nBlocks
+        nBlocks = sDir
+        sDir = tmp
+      end
     end
   end
 
@@ -3666,11 +3687,12 @@ function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
 end
 
 
----- TEST AREA ------
+------ TEST AREA ------
 
 INIT()
 
-print(suckDir(4))
+local a, b = strLower(1)
+print(type(a), type(b))
 
 
 TERMINATE()
