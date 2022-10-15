@@ -1,7 +1,7 @@
 {
   "minecraft:grass_block",
   "minecraft:cobblestone",
-  "minecraft:spruce_planks",
+  "minecraft:oak_sign",
   "minecraft:oak_log",
   "minecraft:warped_planks",
   "minecraft:birch_planks",

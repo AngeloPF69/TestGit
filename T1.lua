@@ -40,7 +40,7 @@ tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table ent
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity 20-07-2022
 tWorld = {} --[x][y][z] = nEnt
 tSpots = {} --[sSpotName]={x, y, z, nFacing}
-
+tFuel = {} --[itemName] = quantity of fuel 15-10-2022
 
 ------ Spots ------
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
@@ -191,7 +191,7 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
 			end
 		end
 	end
-	return false
+	return false, "Block not found in the world."
 end
   
 --not tested
@@ -333,7 +333,38 @@ function loadRevEnt() --[[ Loads tRevEnts.txt into tRevEnts table.
   return true
 end
 
+
 ------ FUEL ------
+--not tested
+function getFuel(sItem)
+  return tFuel[sItem]
+end
+
+--not tested
+function setFuel(sItem, nQFuel)
+  tFuel[sItem] = nQFuel
+end
+
+--not tested
+function getFuelSlot(nSlot)
+  nSlot = nSlot or turtle.getSelectedSlot()
+  local tData = turtle.getItemDetail(nSlot)
+  if not tData then return 0 end
+  if tFuel[tData.name] then return tFuel[tData.name] end
+  return false 
+end
+
+function testForFuel(sItem)
+end
+
+--not tested
+function getFuelInv()
+end
+
+--not tested
+function isFuel(Sitem)
+end
+
 function checkFuel(...) --[[ Checks if the fuel is enough.
   29/06/2022 v0.4.1 Param: ... - number of turtle moves.
                                - coords where to go (x, y, z).
@@ -929,6 +960,7 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "forward([Blocks=1]) - Blocks must be a number." end
+  if SCAN then scanAll() end
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.forward() then return false, "Can't advance forward."
@@ -951,6 +983,7 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "back([Blocks=1]) - Blocks must be a number." end
+  if SCAN then scanAll() end
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.back() then return false, "Can't go backward."
@@ -973,6 +1006,7 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "up([Blocks=1]) - Blocks must be a number." end
+  if SCAN then scanAll() end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   for i = 1, nBlocks do
     if not turtle.up() then return false, "Can't move up."
@@ -996,6 +1030,7 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "down([Blocks=1]) - Blocks must be a number." end
+  if SCAN then scanAll() end
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
       if not turtle.down() then return false, "I can't go down anymore."
@@ -1220,7 +1255,8 @@ function strLower(...) --[[ Converts only lowercase strings.
   14/10/2022 v0.4.0 Param: ... - strings
   Sintax: strLower([string][, ...])
   Returns: nil - if empty arguments.
-           strings - converted to lower case.]]
+           strings - converted to lower case.
+  ex: strLower("Hello", "This is ME", 12) - returns: hello, this is me, 12]]
 
   if #arg == 0 then return nil, "strLower(string[, ...])" end
   local tRS = {}
@@ -2386,7 +2422,6 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 		elseif sDir == "right" then return turnRight()
 		end
 	end
-  print(sDir)
 	return false
 end
 
@@ -2432,19 +2467,27 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   return true
 end
 
-function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
-  21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3
-  Returns: true - if it turn to specified direction
-           nil - if nsFacing is not a string or number or invalid direction.
+function turnTo(...) --[[ Turtle turns to direction, block name, empty space, unscanned space.
+  21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space
+  Returns: true - if it turn to specified direction, or block.
+           nil - if the function has 2 or > 3 arguments
 					 false - if it couldn't turn to that directions ex: up|down.
-  sintax: turnTo(nsFacing)
+  sintax: turnTo([... = unscanned space])
 	ex: turnTo("up") - it returns false.
 			turnTo("z+") - turns to axis z, on the positive way.
 			turnTo("north") - turns to north (z-).
-			turnTo(0) - turns to z-, north.]]
+			turnTo(0) - turns to z-, north.
+      turnTo() - turns to the nearest unscanned space.]]
+
+  if #arg == 3 then return turnToCoord(arg[1], arg[2], arg[3]) end
+  if #arg == 0 then return turnToBlock() end
+  if #arg ~= 1 then
+    return nil, 'turnTo(something) - Invalid number of arguments. "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space'
+  end
+  if tEnts[arg[1] ] then return turnToBlock(arg[1]) end
 
   local nDir, nRotate;
-	if not nsFacing then return true end --no parameters
+	nsFacing = arg[1]
 
   if type(nsFacing) == "number" then
     nsFacing = bit32.band(nsFacing, 3)
@@ -2456,12 +2499,12 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
       nRotate = carDirType[nsFacing] - tTurtle.facing
 
     elseif facingType[nsFacing] then --is "z+", "z-", "x+", "x-", "y+", "y-"
-      if facingType[nsFacing] > 3 then return false, 'turnTo(Facing) - Facing must be "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3' end 
+      if facingType[nsFacing] > 3 then return false, 'turnTo(something) - Something must be "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space' end 
       nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
 
-    else return nil, 'turnTo(Facing) - Invalid direction "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
+    else return nil, 'turnTo(something) - Invalid direction or block not scanned "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space'
     end
-  else return nil, 'turnTo(Facing) - Invalid Facing type "z+"|"x+"|"z-"|"x-"|"north"|"south"|"west"|"east"|0..3';
+  else return nil, 'turnTo(something) - Invalid type only strings or numbers.'
   end
 
 	if nRotate == 0 then return true end; --no need to rotate
@@ -2476,9 +2519,17 @@ function turnTo(nsFacing) --[[ Turtle turns to nsFacing.
 	return true
 end
 
---not tested
-function turnToBlock(sBlock)
-	local x, y, z = getNearestBlock(sBlock)
+function turnToBlock(sBlock) --[[ Turtle turns to the nearest block.
+  15-10-2022 v0.4.0 Param: sBlock - name of the block to turn to.
+  Returns: true - if it turn to sBlock.
+           nil - if sBlock is not known.
+					 false - if the block was not found in the world.
+  sintax: turnToBlock([sBlock=unknown space])
+	ex: turnToBlock("minecraft:cobblestone") - turns to the nearest cobblestone.
+      turnToBlock() - turns to the nearest unscanned space.]]
+
+  local x, y, z = getNearestBlock(sBlock)
+  if not x then return x, y end
 	return turnToCoord(x, y, z)
 end
         
@@ -3526,6 +3577,7 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
     if type(sDir) == "number" then
       nItems = sDir
       sDir = "forward"
+    else return nil, 'suckDir(sDir, nItems) - Invalid direction must be: "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.'
     end
   end
 
@@ -3544,74 +3596,83 @@ end
 
 
 ------ DROP FUNCTIONS ------  
---not tested
-function dropDir(sDir, nBlocks) --[[ Drops or sucks nBlocks from selected slot and inventory into the world in front, up or down the turtle.
+
+function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and inventory into the world to sDir direction.
   29/08/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
-                            nBlocks - number of blocks to drop/suck
-  Returns:  number of dropped items.
-            true - if suck some items.
+                            nItems - number of items to drop/suck
+  Returns:  number of dropped itemsm, name of item.
             false - empty selected slot.
             nil - if invalid direction.
-  Sintax: drop([sDir="forward"] [, nBlocks=stack of items])
-  Note: if nBlocks not supplied, drops all items in selected slot.
-        if nBlocks < 0 sucks nBlocks.
-        if type(sDir) == "number"
+                - if nItems is not a number.
+  Sintax: drop([sDir="forward"] [, nItems=stack of items])
+  Note: if nItems not supplied, drops all items in selected slot.
+        if nItems < 0 sucks nItems.
   ex: dropDir() - Drops all blocks from selected slot, forward.
       dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
-      dropDir(-5, "down") - Suck 5 items from down.]]
+      dropDir(-5, "down") - Suck 5 items from down.
+      dropDir(0) - Drops all the items in selected slot to 0, "z-", "north" direction.
+      dropDir(4) - Drops 4 items forward.]]
 
   sDir = sDir or "forward"
 	sDir = strLower(sDir)
   if type(sDir) == "number" then
     if sDir > 3 then
-      if not nBlocks then
-        nBlocks = sDir
+      if not nItems then
+        nItems = sDir
         sDir = "forward"
-      else local tmp = nBlocks
-        nBlocks = sDir
+      else local tmp = nItems
+        nItems = sDir
         sDir = tmp
       end
     end
   end
-
-  if turnTo(sDir) then sDir = "forward"
-	elseif turnDir(sDir) then sDir = "forward"
-	end
+  
+  if turnDir(sDir) then sDir = "forward"
+  elseif (sDir == "y+") or (sDir == "y-") then
+    sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
+  elseif not dropF[sDir] then
+    if type(sDir) == "number" then
+      nItems = sDir
+      sDir = "forward"
+    else return nil, 'dropDir(sDir, nItems) - Invalid direction must be: "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.'
+    end
+  end
 	
   local selectedSlot = turtle.getSelectedSlot() --save selected slot
   tData = turtle.getItemDetail() --check the selected slot for items
   
-  
-  if not nBlocks then --drop all the stack from selected slot
+  if not nItems then --drop all the stack from selected slot
     if tData then --is there a item to frop?
       dropF[sDir]()
       return tData.count
-    else return false
+    else return dropF[sDir]()
     end
-	else if type(nBlocks) ~= "number" then return nil end
+	else if type(nItems) ~= "number" then
+    return nil, "dropDir(Dir, Items) - Items must be a number."
+  end
   end
 
-  if (not tData) and (nBlocks > -1) then return false, "Empty selected slot." end --no items                
+  if (not tData) and (nItems > -1) then return false, "Empty selected slot." end --no items                
 
-  if nBlocks < 0 then return suckDir(sDir, math.abs(nBlocks)) end
-  nBlocks = math.abs(nBlocks) --nBlocks must be a positive number
+  if nItems < 0 then return suckDir(sDir, math.abs(nItems)) end
 	local blocksDropped = 0 --total blocks dropped
 
-	while (blocksDropped < nBlocks) do
-    if tData.count > (nBlocks-blocksDropped) then
-      dropF[sDir](nBlocks-blocksDropped)
-      blocksDropped = blocksDropped + (nBlocks-blocksDropped)
+	while (blocksDropped < nItems) do
+    if tData.count > (nItems-blocksDropped) then
+      dropF[sDir](nItems-blocksDropped)
+      blocksDropped = blocksDropped + (nItems-blocksDropped)
     else
       dropF[sDir]()
       blocksDropped = blocksDropped + tData.count
       nextSlot, tData.count = search(tData.name)
       if nextSlot then turtle.select(nextSlot)
-      elseif blocksDropped < nBlocks then break
+      elseif blocksDropped < nItems then break
       end
     end
   end
+
   turtle.select(selectedSlot) --restore selected slot
-  return blocksDropped
+  return blocksDropped, tData.name
 end
 
 function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
@@ -3691,8 +3752,7 @@ end
 
 INIT()
 
-local a, b = strLower(1)
-print(type(a), type(b))
-
+print(turnTo())
+--print(turnDir("right"))
 
 TERMINATE()

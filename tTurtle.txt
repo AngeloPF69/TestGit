@@ -1,9 +1,9 @@
 {
-  y = 1,
-  x = -1,
+  y = 0,
+  x = 0,
   leftHand = "empty",
-  z = -1,
+  z = 0,
   rightHand = "minecraft:diamond_pickaxe",
+  facing = 3,
   looking = 0,
-  facing = 0,
 }
