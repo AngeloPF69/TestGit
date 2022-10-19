@@ -28,6 +28,7 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           looking = lookingType["forward"],
           leftHand = "empty",
           rightHand = "empty",
+          fuelLimit = turtle.getFuelLimit(),
 } 
 
 tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
@@ -35,8 +36,9 @@ tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol 
                    ["lastRecipe"] = sLastRecipe
                    ["CSlot"] = Crafting slot.
                    ["lastIndex"] = last recipe index]]
+
+tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity 20-07-2022                   
 tStacks = {} --["itemName"] = nStack
-tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity 20-07-2022
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity 20-07-2022
 tWorld = {} --[x][y][z] = nEnt
 tSpots = {} --[sSpotName]={x, y, z, nFacing}
@@ -345,6 +347,11 @@ function setFuel(sItem, nQFuel)
   tFuel[sItem] = nQFuel
 end
 
+function addFuel(sItem, nQFuel)
+  addEnt(sItem)
+  setFuel(sItem, nQFuel)
+end
+
 --not tested
 function getFuelSlot(nSlot)
   nSlot = nSlot or turtle.getSelectedSlot()
@@ -354,7 +361,30 @@ function getFuelSlot(nSlot)
   return false 
 end
 
-function testForFuel(sItem)
+--not tested
+function fuelTestSlot(nSlot) --Returns:false/nFuel amount of fuel given by item - CHECKED
+	--[[	03/07/2018	sintax:fuelTestSlot([nSlot=selected slot]) - 1 item is consummed if fuel
+				complete name - FUEL TEST SLOT ( [NSLOT=selected slot] ) ]]
+
+  if type(tTurtle.fuelLimit) ~= "number" then return false, "Turtle doesn't need fuel." end
+
+  if nSlot then
+		if isInRange(1, {1,16}) then return nil, "fuelTestSlot(nSlot) - nSlot must be [1..16]" end
+		turtle.select(nSlot)
+	end
+	
+	if turtle.getFuelLevel() > tTurtle.fuelLimit*0.90 then return false end --fuel is near maximum, can't test for fuel
+	
+	local tData = turtle.getItemDetail()
+  if not tData the return false, "fuelTestSlot(nSlot) - Empty slot." end
+
+  local nIFuel = turtle.getFuelLevel() --initial fuel
+	turtle.refuel(1) --test 1 entity
+	
+  local nFuel = turtle.getFuelLevel() - nIFuel --get fuel given by entity
+	 
+	if tData then addFuel(tData.name, nFuel) end
+  return nFuel
 end
 
 --not tested
@@ -1044,6 +1074,7 @@ end
 
 
 ------ GENERAL FUNCTIONS ------
+
 function checkNil(nArg, ...) --[[ Checks for nil parameters.
 	21-07-2022 v0.4.0 Param: nArg - number of parameters
                            ... - parameters to test
@@ -1061,6 +1092,24 @@ function checkNil(nArg, ...) --[[ Checks for nil parameters.
 	if dif < 0 then return true, math.abs(dif)
   else return false
   end
+end
+
+function isInRange(nValue, ...)
+  local bInRange = false
+  for i = 1, #arg do
+    local lower, higher
+    if type(arg[i]) == "table" then
+      lower = arg[i][1]; higher = arg[i][2]
+    elseif type(arg[i]) == "number" then
+      lower = arg[i]
+    else return nil, "checkRange(nValue, {nLowerLimit, nHigherLimit}) - invalid type, nValue, nLowerLimit and nHogherLimit must be numbers."
+    end
+    if higher then
+      if nValue >= lower and nValue <= higher then bInRange = true end
+    elseif lower == nValue then bInRange = true
+    end
+  end
+  return bInRange
 end
 
 function loadTable(sFileName) --[[ Loads a text file into a table.
@@ -3752,7 +3801,7 @@ end
 
 INIT()
 
-print(turnTo())
---print(turnDir("right"))
+print(isInRange(22, {1,16}, {18,21}))
+
 
 TERMINATE()
