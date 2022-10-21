@@ -39,12 +39,14 @@ tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol 
 
 tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity 20-07-2022                   
 tStacks = {} --["itemName"] = nStack
+tFuel = {} --[itemName] = quantity of fuel 15-10-2022
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity 20-07-2022
 tWorld = {} --[x][y][z] = nEnt
 tSpots = {} --[sSpotName]={x, y, z, nFacing}
-tFuel = {} --[itemName] = quantity of fuel 15-10-2022
+
 
 ------ Spots ------
+
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
   05-08-2022 v0.4.0]]
   return saveTable(tSpots,"tSpots.txt")
@@ -98,10 +100,12 @@ function goToSpot(sSpotName) --[[ Turtle walks to the spot coords, and turns to 
   return true
 end
 
+
 ------ World ------
+
 function setWorldEnt(x, y, z, nEnt) --[[ Set world coords containing nEnt.
   24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
-                           nEnt - id of the entity from getEntId(sBlockName).
+                           nEnt - id of the entity from entGetId(sBlockName).
   Returns: true
   Sintax: setWorldEnt(x, y, z, nEnt)]]
 
@@ -210,8 +214,11 @@ function WorldFindBlock(sBlock)
 	end
 	return tRetBlocks
 end
-        
+
+
 ------ Entity ------
+
+--not tested
 function addEnt(sEntName) --[[ Adds a entity name to table ent.
   21-07-2022 v0.4.0 Param: sEntName - string name of entity.
   Returns: number - entity id
@@ -223,13 +230,14 @@ function addEnt(sEntName) --[[ Adds a entity name to table ent.
 
   if not sEntName then return nil, "addEnt(EntName) - Must supply entity name." end
 	if type(sEntName) ~= "string" then return nil, "addEnt(EntName) - Entity name must be a string." end
-	if tEnts[sEntName] then return tEnts[sEntName] end
-	tEnts[sEntName] = tEnts.next
+	if tEnts[sEntName] then return tEnts[sEntName].id end
+	tEnts[sEntName].id = tEnts.next
 	tRevEnts[tEnts.next] = sEntName
 	tEnts.next = tEnts.next + 1
 	return tEnts.next-1
 end
 
+--not tested
 function addInvEnts() --[[ Adds all the inventory items to tEnts.
   24-07-2022 v0.4.0 Returns: true, number quantity of entities added.
                              false, if no entities added.]]
@@ -238,7 +246,7 @@ function addInvEnts() --[[ Adds all the inventory items to tEnts.
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
-      if not getEntId(tData.name) then
+      if not entGetId(tData.name) then
         addEnt(tData.name)
         nAdded = nAdded + 1
       end
@@ -249,48 +257,52 @@ function addInvEnts() --[[ Adds all the inventory items to tEnts.
   end
 end
 
-function addSlotEnt(nSlot) --[[ Adds item in nSlot to tEnts.
+--not tested
+function entAddSlot(nSlot) --[[ Adds item in nSlot to tEnts.
   24-07-2022 v0.4.0]]
 
   nSlot = nSlot or turtle.selectedSlot()
-  if type(nSlot) ~= "number" then return nil, "addSlotEnt(Slot) - Slot must be a number." end
-  if nSlot < 1 or nSlot > 16 then return nil, "addSlotEnt(Slot) - Slot must be between 1 and 16" end
+  if type(nSlot) ~= "number" then return nil, "entAddSlot(Slot) - Slot must be a number." end
+  if not isInRange(nSlot,{1,16}) then return nil, "entAddSlot(Slot) - Slot must be between 1 and 16" end
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return false, "Empty Slot." end
   return addEnt(tData.name)
 end
 
-function getSlotEnt(nSlot) --[[ Gets or adds the nSlot item tEnts.
-  24-07-2022 v0.4.0 Alias for addSlotEnt()]]
-  return addSlotEnt(nSlot)
+--not tested
+function slotGetEntId(nSlot) --[[ Gets or adds the nSlot item tEnts.
+  24-07-2022 v0.4.0 Alias for entAddSlot()]]
+  return entAddSlot(nSlot)
 end
 
-function getEntId(sEntName) --[[ Gets the entity id.
+--not tested
+function entGetId(sEntName) --[[ Gets the entity id.
   21-07-2022 v0.4.0 Param: sEntName - string the entity name.
   Returns: number - the entity id.
            false - the entity name was not found.
            nil - the entity name was not supplied.
                - the entity name was not a string.
-  Sintax: getEntId(sEntName)
-  ex: getEntId("minecraft:stick") - it returns a number the id.]]
+  Sintax: entGetId(sEntName)
+  ex: entGetId("minecraft:stick") - it returns a number the id.]]
 
-  if not sEntName then return nil, "getEntId(EntName) - Entity name must be supplied." end
-	if type(sEntName) ~= "string" then return nil, "getEntId(EntName) - Ent name must be a string." end
-	if tEnts[sEntName] then return tEnts[sEntName] end
+  if not sEntName then return nil, "entGetId(EntName) - Entity name must be supplied." end
+	if type(sEntName) ~= "string" then return nil, "entGetId(EntName) - Ent name must be a string." end
+	if tEnts[sEntName] then return tEnts[sEntName].id end
 	return false
 end
 
-function getEntName(nId) --[[ Gets the entity name.
+--not tested
+function entGetName(nId) --[[ Gets the entity name.
   21-07-2022 v0.4.0 Param: nId - number the id of the entity to get the name.
   Returns: string - the name of the entity.
            false - if nId was not found.
            nil - if nId was not supplied.
                - if nId is not a number
-  Sintax: getEntName(nId)
-  ex: getEntName(1) - gets the intity name witch has 1 for id.]]
+  Sintax: entGetName(nId)
+  ex: entGetName(1) - gets the intity name witch has 1 for id.]]
 
-  if not nId then return nil, "getEntName(Id) - The id of the entity must be supplied." end
-	if type(nId) ~= "number" then return nil, "getEntName(Id) - The id of the entity must be a number." end
+  if not nId then return nil, "entGetName(Id) - The id of the entity must be supplied." end
+	if type(nId) ~= "number" then return nil, "entGetName(Id) - The id of the entity must be a number." end
 	if tRevEnts[nId] then return tRevEnts[nId] end
 	return false
 end
@@ -339,17 +351,27 @@ end
 ------ FUEL ------
 --not tested
 function getFuel(sItem)
-  return tFuel[sItem]
+	if tEnts[sItem] and tEnts[sItem].fuel then return tEnts[sItem].fuel end
+  return false, "Item not tested."
 end
 
 --not tested
 function setFuel(sItem, nQFuel)
-  tFuel[sItem] = nQFuel
+	if checkNil(2, sItem, nQFuel) then
+		return nil, "setFuel(sItem, nQFuel) - Item name and fuel quantity must be supplied."
+	end
+  if not tEnts[sItem] then return addFuel(sItem, nQFuel) end
+	tEnts[sItem].fuel = nQFuel
+	return true
 end
 
 function addFuel(sItem, nQFuel)
-  addEnt(sItem)
-  setFuel(sItem, nQFuel)
+	local success, message = addEnt(sItem)
+  if not success then return success, message end
+	
+  success, message = setFuel(sItem, nQFuel)
+	if not success then return success, message end
+	return true
 end
 
 --not tested
@@ -389,10 +411,28 @@ end
 
 --not tested
 function getFuelInv()
+	local nTotFuel = 0
+	for nSlot = 1, 16 do
+		local tData = turtle.getItemDetail(nSlot)
+		local bFuel, nFuel
+		if tData then
+			bFuel, nFuel = isFuel(tData.name)
+			if bFuel then nTotFuel = nTotFuel + nFuel end
+		else
+			nFuel = fuelTestSlot(nSlot)
+			if nFuel then nTotFuel = nTotFuel + nFuel
+		end
+	end
+	return nTotFuel
 end
 
 --not tested
-function isFuel(Sitem)
+function isFuel(sItem)
+	if not tEnts[sItem] then return false, "Item name not in database."
+	elseif not tEnts[sItem].fuel then return false, "Item not tested for fuel."
+	elseif tEnts[sItem].fuel == 0 then return false, "Item is not fuel."
+	end
+	return true, tEnts[sItem].fuel
 end
 
 function checkFuel(...) --[[ Checks if the fuel is enough.
@@ -439,7 +479,8 @@ function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,
   21-07-2022 v0.4.0 Param: x, y, z (numbers) - coords of the point where to go.
   Returns: checkFuel(...)
   Sintax: isFuelEnoughTo(x, y, z)
-  ex: isFuelEnoughTo(10, 20, 50) - checks if there is enough fuel to go to (10, 20, 50)]]
+  ex: isFuelEnoughTo(10, 20, 50) - checks if there is enough fuel to go to (10, 20, 50)
+			isFuelEnoughTo(10) - checks if turtle has fuel for 10 move functions.]]
 
   return checkFuel(x, y, z)
 end
@@ -3597,7 +3638,6 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
             false - if there are no items to take.
 						nil - if invalid parameter.
   Sintax: suckDir([sDir="forward][,nItems=all the items])
-
   Note: if nItems < 0 it sucks nItems from oposite direction.
   ex: suckDir() - Turtle sucks all the items forward.
       suckDir(0) - suck all the items in 0, "z-", north direction.
