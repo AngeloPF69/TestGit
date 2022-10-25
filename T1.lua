@@ -54,11 +54,11 @@ end
 
 function loadSpots() --[[ Loads from file tSpots.txt to table tSpots
   05-08-2022 v0.4.0]]
-  tSpots = loadTable("tSpots.txt")
-	if not tSpots then
-		tSpots = {}
-		return false,"can't load tworld.txt"
-	end
+  local t = loadTable("tSpots.txt")
+	if not t then return false,"Can't load tSpots.txt"
+  elseif t and isDicEmpty(t) then return false, "File tSpots.txt is empty."
+  end
+  tSpots = t
   return true
 end
 
@@ -132,11 +132,11 @@ end
 function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   24-07-2022 v0.4.0 Returns: true - if success.
                              false - if it couldn't load file "tworld.txt".]]
-  tWorld = loadTable("tworld.txt")
-	if not tWorld then
-		tWorld={}
-		return false,"can't load tworld.txt"
-	end
+  local t = loadTable("tWorld.txt")
+	if not t then return false,"Can't load tWorls.txt"
+  elseif t and isDicEmpty(t) then return false, "File tWorld.txt is empty."
+  end
+  tWorld = t
   return true
 end
 
@@ -218,64 +218,66 @@ end
 
 ------ Entity ------
 
---not tested
-function addEnt(sEntName) --[[ Adds a entity name to table ent.
+function entAdd(sEntName) --[[ Adds a entity name to table ent.
   21-07-2022 v0.4.0 Param: sEntName - string name of entity.
   Returns: number - entity id
            nil - if not sEntName not supplied.
                - if sEntName is not a number.
-  Sintax: addEnt(sEntName)
+  Sintax: entAdd(sEntName)
   Note: if entity already exists, it returns the existing one.
-  ex: addEnt("minecraft:cobblestone") - it returns tEnts.next or the existing tEnt["minecraft:cobblestone"] ]]
+  ex: entAdd("minecraft:cobblestone") - it returns tEnts.next or the existing tEnt["minecraft:cobblestone"] ]]
 
-  if not sEntName then return nil, "addEnt(EntName) - Must supply entity name." end
-	if type(sEntName) ~= "string" then return nil, "addEnt(EntName) - Entity name must be a string." end
+  if not sEntName then return nil, "entAdd(EntName) - Must supply entity name." end
+	if type(sEntName) ~= "string" then return nil, "entAdd(EntName) - Entity name must be a string." end
 	if tEnts[sEntName] then return tEnts[sEntName].id end
-	tEnts[sEntName].id = tEnts.next
+	tEnts[sEntName] = {}
+  tEnts[sEntName].id = tEnts.next
 	tRevEnts[tEnts.next] = sEntName
 	tEnts.next = tEnts.next + 1
 	return tEnts.next-1
 end
 
---not tested
-function addInvEnts() --[[ Adds all the inventory items to tEnts.
+function entAddInv() --[[ Adds all the inventory items to tEnts.
   24-07-2022 v0.4.0 Returns: true, number quantity of entities added.
                              false, if no entities added.]]
 
-  local nAdded = 0
+  local nTotAdded = 0
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
       if not entGetId(tData.name) then
-        addEnt(tData.name)
-        nAdded = nAdded + 1
+        entAdd(tData.name)
+        nTotAdded = nTotAdded + 1
       end
     end
   end
-  if nAdded == 0 then  return false
-  else return true, nAdded
+  if nTotAdded == 0 then  return false
+  else return true, nTotAdded
   end
 end
 
---not tested
 function entAddSlot(nSlot) --[[ Adds item in nSlot to tEnts.
-  24-07-2022 v0.4.0]]
+  24-07-2022 v0.4.0 Param: nSlot - number of slot where is the item to add.
+  Return: number the id of the item in nSlot.
+          nil - if nSlot is not a number.
+              - if nSlot is not in range[1..16] 
+          false - if nslot is empty.
+  Sintax: entAddSlot([nSlot = selected slot])
+  ex: entAddSlot(1) - adds the item in slot 1 to table tEnts]]
 
-  nSlot = nSlot or turtle.selectedSlot()
+  nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "entAddSlot(Slot) - Slot must be a number." end
   if not isInRange(nSlot,{1,16}) then return nil, "entAddSlot(Slot) - Slot must be between 1 and 16" end
   local tData = turtle.getItemDetail(nSlot)
   if not tData then return false, "Empty Slot." end
-  return addEnt(tData.name)
+  return entAdd(tData.name)
 end
 
---not tested
-function slotGetEntId(nSlot) --[[ Gets or adds the nSlot item tEnts.
+function entGetSlotId(nSlot) --[[ Gets or adds the nSlot item tEnts.
   24-07-2022 v0.4.0 Alias for entAddSlot()]]
   return entAddSlot(nSlot)
 end
 
---not tested
 function entGetId(sEntName) --[[ Gets the entity id.
   21-07-2022 v0.4.0 Param: sEntName - string the entity name.
   Returns: number - the entity id.
@@ -291,7 +293,6 @@ function entGetId(sEntName) --[[ Gets the entity id.
 	return false
 end
 
---not tested
 function entGetName(nId) --[[ Gets the entity name.
   21-07-2022 v0.4.0 Param: nId - number the id of the entity to get the name.
   Returns: string - the name of the entity.
@@ -322,7 +323,9 @@ function loadEnt() --[[ Loads tEnts.txt into table tEnts.
   ex: loadEnt()]]
 
   local t = loadTable("tEnts.txt")
-	if not t then return false,"Can't load tEnts.txt" end
+	if not t then return false,"Can't load tEnts.txt"
+  elseif t and isDicEmpty(t) then return false, "File tEnts.txt is empty."
+  end
 	tEnts = t
   return true
 end
@@ -342,7 +345,9 @@ function loadRevEnt() --[[ Loads tRevEnts.txt into tRevEnts table.
   ex: loadRevEnt()]]
 
   local t = loadTable("tRevEnts.txt")
-	if not t then return false,"Can't load tRevEnts.txt" end
+	if not t then return false,"Can't load tRevEnts.txt"
+  elseif t and isDicEmpty(t) then return false, "File tRevEnts.txt is empty."
+  end
 	tRevEnts = t
   return true
 end
@@ -350,7 +355,7 @@ end
 
 ------ FUEL ------
 --not tested
-function getFuel(sItem)
+function fuelGet(sItem)
 	if tEnts[sItem] and tEnts[sItem].fuel then return tEnts[sItem].fuel end
   return false, "Item not tested."
 end
@@ -366,7 +371,7 @@ function setFuel(sItem, nQFuel)
 end
 
 function addFuel(sItem, nQFuel)
-	local success, message = addEnt(sItem)
+	local success, message = entAdd(sItem)
   if not success then return success, message end
 	
   success, message = setFuel(sItem, nQFuel)
@@ -398,7 +403,7 @@ function fuelTestSlot(nSlot) --Returns:false/nFuel amount of fuel given by item 
 	if turtle.getFuelLevel() > tTurtle.fuelLimit*0.90 then return false end --fuel is near maximum, can't test for fuel
 	
 	local tData = turtle.getItemDetail()
-  if not tData the return false, "fuelTestSlot(nSlot) - Empty slot." end
+  if not tData then return false, "fuelTestSlot(nSlot) - Empty slot." end
 
   local nIFuel = turtle.getFuelLevel() --initial fuel
 	turtle.refuel(1) --test 1 entity
@@ -420,7 +425,7 @@ function getFuelInv()
 			if bFuel then nTotFuel = nTotFuel + nFuel end
 		else
 			nFuel = fuelTestSlot(nSlot)
-			if nFuel then nTotFuel = nTotFuel + nFuel
+			if nFuel then nTotFuel = nTotFuel + nFuel end
 		end
 	end
 	return nTotFuel
@@ -605,7 +610,9 @@ function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
   ex: turtleLoad() ]] 
   
   local t = loadTable("tTurtle.txt")
-  if not t then return false,"Can't load tTurtle.txt" end
+  if not t then return false,"Can't load tTurtle.txt"
+  elseif t and isDicEmpty(t) then return false, "File tTurtle.txt is empty."
+  end
 	tTurtle = t
   return true
 end
@@ -1001,7 +1008,7 @@ function scan(sDir)
   local x, y, z = addSteps(1, sDir)
   local nID
   if not success then nID = 0
-  else nID = addEnt(tData.name)
+  else nID = entAdd(tData.name)
   end
 
   setWorldEnt(x, y, z, nID)
@@ -1214,6 +1221,13 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 	return true
 end
 
+function isDicEmpty(tDic)
+  for k, v in pairs(tDic) do
+    return false
+  end
+  return true
+end
+
 function getKey(value, t) --[[ Gets the first key from table t where the key is the index of value.
   09-08-2022 v0.4.0 Param: value - the value in table t.
                            t - the table that has the value.
@@ -1373,14 +1387,16 @@ function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
   sintax: loadStacks()]]
   
   local t = loadTable("tStacks.txt")
-	if not t then return false, "loadStacks() - Couldn't load tStacks.txt" end
+	if not t then return false,"Can't load tStacks.txt"
+  elseif t and isDicEmpty(t) then return false, "File tStacks.txt is empty."
+  end
 	tStacks = t
   return true
 end
 
 function getStack(nSlot) --[[ Returns how many items can stack.
   10/11/2021 v0.2.0 Param: nSlot - slot number 1..16, or the item name.
-  Sintax: loadStacks()
+  Sintax: getStack()
   Return: number - quantity a item can stack.
              nil - if slot is out of range[1..16].
            false - if slot is empty.
@@ -1401,7 +1417,6 @@ function getStack(nSlot) --[[ Returns how many items can stack.
   elseif type(nSlot) == "string" then
       if tStacks[nSlot] then nStack = tStacks[nSlot]
       else
-        print(nSlot)
         nSlot = search(nSlot)
         if not nSlot then return false, "Item not found" end
         tData = turtle.getItemDetail(nSlot)
@@ -1631,7 +1646,9 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
   sintax: loadRecipes()]]
   
 	local t = loadTable("tRecipes.txt")
-	if not t then return false,"loadRecipes() - Couldn't load tRecipes.txt" end
+	if not t then return false,"Can't load tRecipes.txt"
+  elseif t and isDicEmpty(t) then return false, "File tRecipes.txt is empty."
+  end
 	tRecipes = t
   return true
 end
@@ -2829,7 +2846,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
       digDir(-3, "up") - Digs 3 blocks down.]]
 
   sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
-  sDir = string.lower(sDir)
+  sDir = strLower(sDir)
   
   if nBlocks < 0 then
     nBlocks = math.abs(nBlocks)
@@ -3841,7 +3858,7 @@ end
 
 INIT()
 
-print(isInRange(22, {1,16}, {18,21}))
+print(fuelGet("minecraft:oak_log"))
 
 
 TERMINATE()
