@@ -3,7 +3,8 @@
   x = 0,
   leftHand = "empty",
   z = 0,
-  rightHand = "minecraft:diamond_pickaxe",
-  facing = 3,
   looking = 0,
+  fuelLimit = 20000,
+  facing = 3,
+  rightHand = "minecraft:diamond_pickaxe",
 }

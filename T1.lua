@@ -354,13 +354,20 @@ end
 
 
 ------ FUEL ------
---not tested
-function fuelGet(sItem)
+
+function getFuel(sItem) --[[ Get the fuel for sItem.
+  30-10-2022 v0.4.0 Param: sItem - string name of item to get fuel quantity.
+  Sintax: getFuel([sItem = selected slot item name])
+  Return: number - quantity of fuel from sItem.
+          false - if item was not tested
+  ex: getFuel("minecraft:cobblestone") - returns 0 or "Item not tested" if was not tested.
+      getFuel() - gets the fuel from item in selected slot.]]
+
+  sItem = sItem or getItemName()
 	if tEnts[sItem] and tEnts[sItem].fuel then return tEnts[sItem].fuel end
   return false, "Item not tested."
 end
 
---not tested
 function setFuel(sItem, nQFuel)
 	if checkNil(2, sItem, nQFuel) then
 		return nil, "setFuel(sItem, nQFuel) - Item name and fuel quantity must be supplied."
@@ -388,23 +395,33 @@ function getFuelSlot(nSlot)
   return false 
 end
 
---not tested
-function fuelTestSlot(nSlot) --Returns:false/nFuel amount of fuel given by item - CHECKED
-	--[[	03/07/2018	sintax:fuelTestSlot([nSlot=selected slot]) - 1 item is consummed if fuel
-				complete name - FUEL TEST SLOT ( [NSLOT=selected slot] ) ]]
+function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
+  30-10-2022 v0.4.0 Param: nSlot - number of slot to test.
+  Return: nFuel - the fuel that this item gives.
+          nil - if the nSlot is out of range [1..16]
+          false - if the turtle doesn't need fuel.
+                - if the fuel level is above 90% in the turtle.
+                - if the slot is empty.
+  Note: it consumes 1 item if it is fuel and have not been tested.
+  Sintax: fuelTestSlot([nSlot = selected slot])
+  ex: fuelTestSlot() - test the selected slot for fuel.]]
 
+  if not tTurtle.fuelLimit then tTurtle.fuelLimit = turtle.getFuelLimit() end        
   if type(tTurtle.fuelLimit) ~= "number" then return false, "Turtle doesn't need fuel." end
 
   if nSlot then
-		if isInRange(1, {1,16}) then return nil, "fuelTestSlot(nSlot) - nSlot must be [1..16]" end
+		if not isInRange(nSlot, {1,16}) then return nil, "fuelTestSlot(nSlot) - nSlot must be [1..16]" end
 		turtle.select(nSlot)
-	end
-	
-	if turtle.getFuelLevel() > tTurtle.fuelLimit*0.90 then return false end --fuel is near maximum, can't test for fuel
-	
-	local tData = turtle.getItemDetail()
-  if not tData then return false, "fuelTestSlot(nSlot) - Empty slot." end
+  end
 
+  local tData = turtle.getItemDetail()
+  if not tData then return false, "fuelTestSlot(nSlot) - Empty slot." end
+  if tEnts[tData.name] and tEnts[tData.name].fuel then return tEnts[tData.name].fuel end
+
+	if turtle.getFuelLevel() > tTurtle.fuelLimit*0.90 then
+    return false, "Fuel is near the maximum, couldn't test item."
+  end --fuel is near maximum, can't test for fuel
+	
   local nIFuel = turtle.getFuelLevel() --initial fuel
 	turtle.refuel(1) --test 1 entity
 	
@@ -1142,7 +1159,15 @@ function checkNil(nArg, ...) --[[ Checks for nil parameters.
   end
 end
 
-function isInRange(nValue, ...)
+function isInRange(nValue, ...) --[[ Checks if nValue is in ... range
+  30-10/2022 v0.4.0 Param: nValue - value to test.
+                           ... - is a table with a lower limit and higher limit, or a number.
+  Sintax: isInRange(nValue, ...)
+  Return: true  - if nValue is in range.
+          false - if value is not in range.
+  ex: isInrange(1, {0,2}) - return true
+      isInRange(17, {1,15},17) - return true]]
+
   local bInRange = false
   for i = 1, #arg do
     local lower, higher
@@ -3858,7 +3883,7 @@ end
 
 INIT()
 
-print(fuelGet("minecraft:oak_log"))
+print(setFuel("minecraft:oak_log", 20))
 
 
 TERMINATE()

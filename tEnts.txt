@@ -4,6 +4,7 @@
   },
   [ "minecraft:oak_log" ] = {
     id = 3,
+    fuel = 20,
   },
   [ "minecraft:spruce_planks" ] = {
     id = 6,
