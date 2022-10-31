@@ -1,6 +1,7 @@
 {
   [ "minecraft:stick" ] = {
     id = 4,
+    fuel = 5,
   },
   [ "minecraft:oak_log" ] = {
     id = 3,
@@ -8,19 +9,24 @@
   },
   [ "minecraft:spruce_planks" ] = {
     id = 6,
+    fuel = 15,
   },
   next = 9,
   [ "minecraft:crafting_table" ] = {
     id = 2,
+    fuel = 15,
   },
   [ "minecraft:warped_planks" ] = {
     id = 8,
+    fuel = 0,
   },
   [ "minecraft:gravel" ] = {
     id = 7,
+    fuel = 0,
   },
   [ "minecraft:dirt" ] = {
     id = 5,
+    fuel = 0,
   },
   empty = 0,
   [ "minecraft:holla" ] = {

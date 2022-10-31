@@ -386,13 +386,23 @@ function addFuel(sItem, nQFuel)
 	return true
 end
 
---not tested
-function getFuelSlot(nSlot)
+function getFuelSlot(nSlot) --[[ Gets the quantity of fuel given by item in nSlot.
+  30-10-2022 v0.4.0 Param: nSlot - number of slot where is the item to get the fuel from.
+  Return: number - quantity of fuel given by item.
+          nil - if nSlot is not a number.
+              - if nSlot is not in range [1..16]
+          false - if nSlot is empty.
+                - if item was never tested for fuel.
+  Sintax: getFuelSlot([nSlot = selected slot])
+  ex: getFuelSlot() - gets quantity of fuel given by item in selected slot.]]
+
   nSlot = nSlot or turtle.getSelectedSlot()
+  if type(nSlot) ~= "number" then return nil, "Invalid Slot type, must be a number." end
+  if not isInRange(nSlot, {1,16}) then return nil, "Slot out of range [1..16]" end
   local tData = turtle.getItemDetail(nSlot)
-  if not tData then return 0 end
-  if tFuel[tData.name] then return tFuel[tData.name] end
-  return false 
+  if not tData then return false, "Empty slot." end
+  if tEnts[tData.name] and tEnts[tData.name].fuel then return tEnts[tData.name].fuel end
+  return false, tData.name.." - Item not tested"
 end
 
 function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
@@ -431,30 +441,25 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
   return nFuel
 end
 
---not tested
-function getFuelInv()
+function getFuelInv() --[[ Gets the total fuel in inventory.
+  31-10-2022 v0.4.0 Return: number - the total fuel in inventory.
+  Note: it consumes 1 item if it is fuel and have not been tested.
+  Sintax: getFuelInv()]]
+
 	local nTotFuel = 0
 	for nSlot = 1, 16 do
 		local tData = turtle.getItemDetail(nSlot)
-		local bFuel, nFuel
+    local nFuel
 		if tData then
-			bFuel, nFuel = isFuel(tData.name)
-			if bFuel then nTotFuel = nTotFuel + nFuel end
-		else
-			nFuel = fuelTestSlot(nSlot)
-			if nFuel then nTotFuel = nTotFuel + nFuel end
+			nFuel = getFuel(tData.name)
+			if nFuel then nTotFuel = nTotFuel + nFuel * tData.count
+      else
+        nFuel = fuelTestSlot(nSlot)
+			  if nFuel then nTotFuel = nTotFuel + nFuel * (tData.count - 1) end
+      end
 		end
 	end
 	return nTotFuel
-end
-
---not tested
-function isFuel(sItem)
-	if not tEnts[sItem] then return false, "Item name not in database."
-	elseif not tEnts[sItem].fuel then return false, "Item not tested for fuel."
-	elseif tEnts[sItem].fuel == 0 then return false, "Item is not fuel."
-	end
-	return true, tEnts[sItem].fuel
 end
 
 function checkFuel(...) --[[ Checks if the fuel is enough.
@@ -3883,7 +3888,7 @@ end
 
 INIT()
 
-print(setFuel("minecraft:oak_log", 20))
+print(getFuelInv())
 
 
 TERMINATE()
