@@ -11,7 +11,11 @@
     id = 6,
     fuel = 15,
   },
-  next = 9,
+  next = 11,
+  [ "minecraft:stone" ] = {
+    id = 10,
+    stack = 1,
+  },
   [ "minecraft:crafting_table" ] = {
     id = 2,
     fuel = 15,
@@ -19,18 +23,23 @@
   [ "minecraft:warped_planks" ] = {
     id = 8,
     fuel = 0,
+    stack = 64,
   },
-  [ "minecraft:gravel" ] = {
-    id = 7,
-    fuel = 0,
+  unreachable = -1,
+  [ "minecraft:holla" ] = {
+    id = 1,
   },
   [ "minecraft:dirt" ] = {
     id = 5,
     fuel = 0,
   },
   empty = 0,
-  [ "minecraft:holla" ] = {
-    id = 1,
+  [ "minecraft:gravel" ] = {
+    id = 7,
+    fuel = 0,
   },
-  unreachable = -1,
+  [ "minecraft:diamond_sword" ] = {
+    id = 9,
+    stack = 1,
+  },
 }

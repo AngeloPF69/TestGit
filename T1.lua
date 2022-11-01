@@ -648,7 +648,6 @@ function INIT() --[[ Loads files to tables, so that the turtle won't forget what
   loadWorld()
 	loadTurtle()
 	loadRecipes()
-  loadStacks()
   loadSpots()
 	return true
 end
@@ -662,7 +661,6 @@ function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
   saveWorld()
 	saveTurtle()
 	saveRecipes()
-  saveStacks()
   saveSpots()
 	return true
 end
@@ -1402,77 +1400,55 @@ function strLower(...) --[[ Converts only lowercase strings.
   return table.unpack(tRS)
 end
 
+
 ------ STACK FUNCTIONS ------
-function saveStacks() --[[ Saves tStacks in a file as "tStacks.txt"
-  10/11/2021 v0.2.0 Returns false - if it couldn't save file.
-                            true - if it could save file.
-  sintax: saveStacks()]]
-  
-  return saveTable(tStacks, "tStacks.txt")
-end
 
-function loadStacks() --[[ Loads tStacks from file "tStacks.txt"
-  10/11/2021 v0.2.0 Returns false - if it couldn't load file.
-                            true - if it could load file.
-  sintax: loadStacks()]]
-  
-  local t = loadTable("tStacks.txt")
-	if not t then return false,"Can't load tStacks.txt"
-  elseif t and isDicEmpty(t) then return false, "File tStacks.txt is empty."
-  end
-	tStacks = t
-  return true
-end
-
-function getStack(nSlot) --[[ Returns how many items can stack.
-  10/11/2021 v0.2.0 Param: nSlot - slot number 1..16, or the item name.
+function getStack(nSlot) --[[ Returns how many items can stack in slot.
+  10-11-2021 v0.4.0 Param: nSlot - slot number 1..16, or the item name.
   Sintax: getStack()
   Return: number - quantity a item can stack.
              nil - if slot is out of range[1..16].
-           false - if slot is empty.
-                 - if item was not found in inventory.
+                 - if nSlot is not a number or string
+           false - if item was not found in inventory.
+                 - if slot is empty.
   sintax: getStack([nSlot/sItemName = selected slot]).
   ex: getStack() - gets the stack of item in selected slot.
-      getStack("minecraft:oak_planks") - gets the stack for oak_planks, in inventory or in tStacks.]]
+      getStack("minecraft:oak_planks") - gets the stack for oak_planks.]]
   
   nSlot = nSlot or turtle.getSelectedSlot()
 
-  local tData, nStack
-  if type(nSlot) == "number" then
-    if nSlot < 1 or nSlot > 16 then return nil, "getStack(Slot/ItemName) - Slot out of range[1..16]." end
-    tData = turtle.getItemDetail(nSlot)
-    if not tData then return false, "getStack(Slot/ItemName) - Empty slot." end
-    nStack = turtle.getItemSpace(nSlot) + tData.count
-    if not tStacks[tData.name] then tStacks[tData.name] = nStack  end
-  elseif type(nSlot) == "string" then
-      if tStacks[nSlot] then nStack = tStacks[nSlot]
-      else
-        nSlot = search(nSlot)
-        if not nSlot then return false, "Item not found" end
-        tData = turtle.getItemDetail(nSlot)
-        nStack = tData.count + turtle.getItemSpace(nSlot)
-        tStacks[tData.name] = nStack
-      end
-  else
-    return false, "getStack(Slot/ItemName) - Slot/ItemName must be a string/number"
+  local tData
+  if type(nSlot) == "string" then
+    if tEnts[nSlot] and tEnts[nSlot].stack then return tEnts[nSlot].stack end
+    nSlot = search(nSlot)
+    if not nSlot then return false, "Item not found" end
+
+  elseif type(nSlot) == "number" then
+    if not isInRange(nSlot, {1,16}) then return nil, "getStack(Slot/ItemName) - Slot out of range[1..16]." end
+  else return nil, "getStack(nSlot/item name) - Invalid type nSlot, must be number or string."
   end
-  return nStack
+
+  tData = turtle.getItemDetail(nSlot)
+  if not tData then return false, "Empty slot." end
+  if not tEnts[tData.name] then entAdd(tData.name) end
+  if tEnts[tData.name].stack then return tEnts[tData.name].stack end
+  tEnts[tData.name].stack = turtle.getItemSpace(nSlot) + tData.count
+  return tEnts[tData.name].stack
 end
 
 function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory, the slot and the name of item.
   17/12/2021 v0.2.0 Param: sItem - string - item name.
   Return: number, number, string - the lowerstack of items in inventory, the Slot, the name of item.
           false - if item not found.
-  sintax: invLowerStack([sItem]).
+  sintax: invLowerStack([sItem = all the inventory]).
   ex: invLowerStack() - gets the lowest stack of items in inventory, the slot, and the item name.
   invLowerStack("minecraft:oak_planks") - gets the lowest stack for oak_planks in inventory, the slot and the item name.]]
   
-  local nLower, nRSlot = false
+  local nLower, nRSlot = 9999, false
   local sName = ""
   for nSlot = 1, 16 do
     local tData = turtle.getItemDetail(nSlot)
     if tData then
-      if not nLower then nLower = 9999 end
       if sItem then
         if sItem == tData.name then
           if nLower > tData.count then
@@ -1495,6 +1471,7 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
   end
 end
 
+--not tested
 function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
   24-07-2022 v0.4.0 Param: nSlot - number 1..16, where to get how many the item can stack.
   Returns: number - how many the item can stack.
@@ -1515,19 +1492,22 @@ function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
   return nStack
 end
 
-function setStack(sItemName, nStack) --[[ Sets the item stack value in tStacks.
-  10/11/2021 v0.2.0 Param: sItemName - string item name.
+function setStack(sItemName, nStack) --[[ Sets the item stack value in tEnts[item name].stack
+  10-11-2021 v0.4.0 Param: sItemName - string item name.
                            nStack - number how much item can stack.
   Return: true - if it could set the stack for item.
            nil - if no item name supplied.
                - if no stack number is supplied.
-  sintax: setStack(sItemName = selected slot) ]]
+               - if stack is < 0
+  Sintax: setStack(sItemName, nStack)
+  ex: setStack("minecraft:cobblestone", 64) - set stack for "minecraft:cobblestone" for 64.]]
   
-  sItemName, nStacks = getParam("sn", {"", -1}, sItemName, nStack)
+  sItemName, nStack = getParam("sn", {"", -1}, sItemName, nStack)
   if sItemName == "" then return nil, "Must supply item name." end
   if nStack == -1 then return nil, "Must supply stack." end
   if nStack < 1 then return nil, "Stack out of range [1..]." end
-  tStacks[sItemName] = nStack
+  if not tEnts[sItemName] then entAdd(sItemName) end
+  tEnts[sItemName].stack = nStack
   return true
 end
 
@@ -3888,7 +3868,7 @@ end
 
 INIT()
 
-print(getFuelInv())
+print(setStack("minecraft:stone", 1))
 
 
 TERMINATE()
