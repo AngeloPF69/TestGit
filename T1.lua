@@ -28,7 +28,6 @@ tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
           looking = lookingType["forward"],
           leftHand = "empty",
           rightHand = "empty",
-          fuelLimit = turtle.getFuelLimit(),
 } 
 
 tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
@@ -397,8 +396,7 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
   Sintax: fuelTestSlot([nSlot = selected slot])
   ex: fuelTestSlot() - test the selected slot for fuel.]]
 
-  if not tTurtle.fuelLimit then tTurtle.fuelLimit = turtle.getFuelLimit() end        
-  if type(tTurtle.fuelLimit) ~= "number" then return false, "Turtle doesn't need fuel." end
+  if type(turtle.getFuelLimit()) ~= "number" then return false, "Turtle doesn't need fuel." end
 
   if nSlot then
 		if not isInRange(nSlot, {1,16}) then return nil, "fuelTestSlot(nSlot) - nSlot must be [1..16]" end
@@ -409,7 +407,7 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
   if not tData then return false, "fuelTestSlot(nSlot) - Empty slot." end
   if tEnts[tData.name] and tEnts[tData.name].fuel then return tEnts[tData.name].fuel end
 
-	if turtle.getFuelLevel() > tTurtle.fuelLimit*0.90 then
+	if turtle.getFuelLevel() > turtle.getFuelLimit()*0.90 then
     return false, "Fuel is near the maximum, couldn't test item."
   end --fuel is near maximum, can't test for fuel
 	
@@ -504,11 +502,10 @@ function refuel(nCount) --[[ Refuels the turtle with nCount items in the selecte
 	sintax: refuel([nCount=stack of items])
   ex: refuel(123) - Fuels the turtle with 123 items.]] 
   
-	local fuelLimit = turtle.getFuelLimit()
-	if type(fuelLimit) == "string" then return false, "Turtle doesn't need fuel." end
+	if type(turtle.getFuelLimit()) == "string" then return false, "Turtle doesn't need fuel." end
 	
 	local fuelLevel = turtle.getFuelLevel()
-	if fuelLevel == fuelLimit then return false, "Turtle is at maximum fuel." end
+	if fuelLevel == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
 	
 	local tData = turtle.getItemDetail()
 	
