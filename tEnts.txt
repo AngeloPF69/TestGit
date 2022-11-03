@@ -25,21 +25,22 @@
     fuel = 0,
     stack = 64,
   },
-  unreachable = -1,
-  [ "minecraft:holla" ] = {
-    id = 1,
+  [ "minecraft:diamond_sword" ] = {
+    id = 9,
+    stack = 1,
+  },
+  [ "minecraft:gravel" ] = {
+    id = 7,
+    fuel = 0,
+    stack = 64,
   },
   [ "minecraft:dirt" ] = {
     id = 5,
     fuel = 0,
   },
   empty = 0,
-  [ "minecraft:gravel" ] = {
-    id = 7,
-    fuel = 0,
+  [ "minecraft:holla" ] = {
+    id = 1,
   },
-  [ "minecraft:diamond_sword" ] = {
-    id = 9,
-    stack = 1,
-  },
+  unreachable = -1,
 }

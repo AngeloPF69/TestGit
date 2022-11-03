@@ -140,25 +140,6 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   return true
 end
 
-function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
-  01-10-2022 Param: p1, p2 - points in space 3d.
-  Sintax: getDist3D([p1=tTurtle coords, ]p2)   ___________________________
-  Return: number - the distance from p1 to p2 √(x1-x2)²+(y1-y2)²+(z1-z2)²)
-          nil - If no parameter is supplied.
-  ex: getDist3D({1,1,1}, {10,101,10}) - gets the distance from point (1,1,1) to point (10, 101, 10)
-      getDist3D({10,1,10}) - gets the distance from turtle to point (10,1,10)]]
-
-  if not p1 then return nil, "getDist3D([p1=tTurtle coords, ]p2) - Must supplie at least p2 = {x, y, z}." end
-  if not p2 then
-    p2 = p1
-    p1 = {}
-    p1[1] = tTurtle.x
-    p1[2] = tTurtle.y
-    p1[3] = tTurtle.z
-  end
-	return math.sqrt((p1[1]-p2[1])*(p1[1]-p2[1])+(p1[2]-p2[2])*(p1[2]-p2[2])+(p1[3]-p2[3])*(p1[3]-p2[3]))
-end
-
 function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block.
   15-09-2022 Param: sBlock - string name of block.
                     nAmp = radius of scan.
@@ -742,19 +723,6 @@ end
 
 ------ MEASUREMENTS FUNCTIONS ------
 
-function dirType2Facing(sDir, nFacing) --[[ Converts values of dirType to facingType.]]
-  sDir = sDir or "forward"
-  nFacing = nFacing or tTurtle.facing
-
-  if not dirType[sDir] then return false end
-
-  local facing
-  facing = (sDir == "forward" and nFacing or 0) + (sDir == "back" and incFacing(2, nFacing) or 0)
-  facing = facing + (sDir == "left" and decFacing(1, nFacing) or 0) + (sDir == "right" and incFacing(1, nFacing) or 0)
-  facing = facing + (sDir == "up" and dirType[sDir] or 0) + (sDir == "down" and dirType[sDir] or 0)
-  return facing
-end
-
 function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
   24/09/2021 v0.4.0 Param: nSteps - number of waking steps for turtle.
                            nFacing - number or string "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3 direction of turtle.
@@ -792,6 +760,24 @@ function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
   y = y+(facing == 4 and nSteps or 0)+(facing == 8 and -nSteps or 0)
   z = z+(facing == 2 and nSteps or 0)+(facing == 0 and -nSteps or 0)
   return x, y, z
+end
+
+function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
+  01-10-2022 Param: p1, p2 - points in space 3d.
+  Sintax: getDist3D([p1=tTurtle coords, ]p2)   ___________________________
+  Return: number - the distance from p1 to p2 √(x1-x2)²+(y1-y2)²+(z1-z2)²)
+          nil - If no parameter is supplied.
+  ex: getDist3D({1,1,1}, {10,101,10}) - gets the distance from point (1,1,1) to point (10, 101, 10)
+      getDist3D({10,1,10}) - gets the distance from turtle to point (10,1,10)]]
+
+  if not p1 then return nil, "getDist3D([p1=tTurtle coords, ]p2) - Must supplie at least p2 = {x, y, z}." end
+  if not p2 then
+    p2 = {}
+    p2[1] = tTurtle.x
+    p2[2] = tTurtle.y
+    p2[3] = tTurtle.z
+  end
+	return math.sqrt((p1[1]-p2[1])*(p1[1]-p2[1])+(p1[2]-p2[2])*(p1[2]-p2[2])+(p1[3]-p2[3])*(p1[3]-p2[3]))
 end
 
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
@@ -836,7 +822,7 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 	if turnDir(sDir) then sDir = "forward" end
 	
 	if type(nSlot) ~= "number" then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot is not a number.' end
-  if (nSlot < 0) or (nSlot > 16) then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot must be between 1 and 16.' end
+  if not isInRange(nSlot, {1, 16}) then return nil, 'compareDir([Dir="forward"][, Slot=selected slot]) - Slot must be between 1 and 16.' end
   
 	local invData = turtle.getItemDetail(nSlot)
 	if not invData then return nil, 'empty slot' end
@@ -1016,7 +1002,13 @@ end
 
 ------ SCANNING ------
 
-function scan(sDir)
+function scan(sDir) --[[ Inspects the block in sDir, and sets tWorld.
+  02-11-2022 v0.4.0 Param: sDir - direction to inspect "forward"|"up"|"down"
+  Return: true - if could set tWorld with tEnt code.
+          nil - if sDir is not a string.
+              - if sDir is not "forward"|"up"|"down"
+  Sintax: scan([sDir = "forward"])
+  ex: scan("up") - inspects the block up, sets tEnt and tWorld with its code.]]
   sDir = sDir or "forward"
   if type(sDir) ~= "string" then
     return nil, 'scan(sDir) - Invalid sDir type, must be a string ""forward"|"up"|"down"'
@@ -1035,7 +1027,8 @@ function scan(sDir)
   return true
 end
 
-function scanAll()
+function scanAll() --[[ Inspects up, down and forward, puts the result in tWorld.
+  02-11-2022 v0.4.0 Return: true]]
   local tDir = {"up", "forward", "down"}
   for i = 1, #tDir do
     scan(tDir[i])
@@ -1116,7 +1109,6 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   return true
 end
 
-
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk down.
   Returns:  true - if turtle goes all way.
@@ -1160,6 +1152,19 @@ function checkNil(nArg, ...) --[[ Checks for nil parameters.
 	if dif < 0 then return true, math.abs(dif)
   else return false
   end
+end
+
+function dirType2Facing(sDir, nFacing) --[[ Converts values of dirType to facingType.]]
+  sDir = sDir or "forward"
+  nFacing = nFacing or tTurtle.facing
+
+  if not dirType[sDir] then return false end
+
+  local facing
+  facing = (sDir == "forward" and nFacing or 0) + (sDir == "back" and incFacing(2, nFacing) or 0)
+  facing = facing + (sDir == "left" and decFacing(1, nFacing) or 0) + (sDir == "right" and incFacing(1, nFacing) or 0)
+  facing = facing + (sDir == "up" and dirType[sDir] or 0) + (sDir == "down" and dirType[sDir] or 0)
+  return facing
 end
 
 function isInRange(nValue, ...) --[[ Checks if nValue is in ... range
@@ -1383,7 +1388,7 @@ function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value 
   return 1
 end
 
-function strLower(...) --[[ Converts only lowercase strings.
+function strLower(...) --[[ Converts only strings to lowercase.
   14/10/2022 v0.4.0 Param: ... - strings
   Sintax: strLower([string][, ...])
   Returns: nil - if empty arguments.
@@ -1471,9 +1476,8 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
   end
 end
 
---not tested
-function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
-  24-07-2022 v0.4.0 Param: nSlot - number 1..16, where to get how many the item can stack.
+function setStackSlot(nSlot) --[[ Sets stack for item in nSlot.
+  24-07-2022 v0.4.0 Param: nSlot - number 1..16, the slot where is the item to set stack.
   Returns: number - how many the item can stack.
            false - if slot is empty
            nil - if nSlot is not a number.
@@ -1483,11 +1487,13 @@ function setStackSlot(nSlot) --[[ Sets table tStacks with item in nSlot.
   nSlot = nSlot or turtle.getSelectedSlot()
 	
 	local tData, nStack
-	if type(nSlot) ~= "number" then return nil, "setSlotStack(Slot) - Must be a number [1..16]." end --nSlot is not a number
-	if nSlot < 1 or nSlot > 16 then return nil, "setSlotStack(Slot) - Must be between 1 and 16."end --is valid
+	if type(nSlot) ~= "number" then return nil, "setStackSlot(Slot) - Must be a number [1..16]." end --nSlot is not a number
+	if not isInRange(nSlot, {1, 16}) then return nil, "setStackSlot(Slot) - Must be between 1 and 16."end --is valid
+
   tData = turtle.getItemDetail(nSlot)
 	if not tData then return false, "Slot is empty." end --is empty nSlot
-	nStack = turtle.getItemSpace(nSlot) + tData.count --calculate stack for this item
+
+  nStack = turtle.getItemSpace(nSlot) + tData.count --calculate stack for this item
 	setStack(tData.name, nStack) --store nStack in tStacks[id]=nStack
   return nStack
 end
@@ -1513,6 +1519,7 @@ end
 
 
 ------ RECIPES FUNCTIONS ------
+
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
   20/11/2021 v0.3.0 Return: table - with ingredient name and quantity.]]
   
@@ -2845,7 +2852,7 @@ end
 
 --not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
-  08/09/2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
+  08-09-2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
                         nBlocks - number of blocks to walk in sDir direction. 
   Returns:  true if turtle digs all the way.
             false if blocked, empty space, can't turn that way.
@@ -2855,7 +2862,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
       digDir() - Digs 1 block forward.
       digDir(-3, "up") - Digs 3 blocks down.]]
 
-  sDir, nBlocks =getParam("sn", {"forward", 1}, sDir, nBlocks)
+  nBlocks = nBlocks or 1
   sDir = strLower(sDir)
   
   if nBlocks < 0 then
@@ -3868,7 +3875,7 @@ end
 
 INIT()
 
-print(setStack("minecraft:stone", 1))
+print(detectDir("ola"))
 
 
 TERMINATE()
