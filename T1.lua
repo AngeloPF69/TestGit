@@ -348,7 +348,14 @@ function getFuel(sItem) --[[ Get the fuel for sItem.
   return false, "Item not tested."
 end
 
-function setFuel(sItem, nQFuel)
+function setFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
+  04/11/2022 v0.4.0 Param: sItem - item name.
+                           nQFuel - quantity of fuel given by item.
+  Return: nil - if sItem or nQFuel not supplied.
+          true
+  Sintax: setFuel(sItem, nQFuel)
+  ex: setFuel("minecraft:cobblestone", 0) - sets cobblestone to give 0 fuel.]]
+  
 	if checkNil(2, sItem, nQFuel) then
 		return nil, "setFuel(sItem, nQFuel) - Item name and fuel quantity must be supplied."
 	end
