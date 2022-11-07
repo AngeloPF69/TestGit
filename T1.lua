@@ -1258,7 +1258,11 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 	return true
 end
 
-function isDicEmpty(tDic)
+--not tested
+function isDicEmpty(tDic) --[[ Checks if dictionary is empty.
+  05-11-2022  v0.4.0 Param: tDic - dictionary to check.
+  Sintax: isDicEmpty(tDic)
+  ex: isDicEmpty({}) - returns true.]]
   for k, v in pairs(tDic) do
     return false
   end
@@ -2797,13 +2801,16 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
 	return tRetPoints
 end
 
-function goToNeighbor(x, y, z)
+--not tested
+function goToNeighbor(x, y, z) --[[ Turtle goes to neighbor, and turns to point x,y,z.
+  05-11-2022 v0.4.0 Param: x, y, z - numbers coords of cnter point of neighbors to go to.
+  Sintax: goToNeighbor(x,y,z)
+  ex: goToNeighbor(1, 5, 10) - goes to neighbor of point (1,5,10)]]
+  
 	local tNeighbors = getNeighbors(x, y, z)
 	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
 	for i = 1, #tDist do
-    -- print(tDist[i][1], tDist[i][2], tDist[i][3])
 		if goTo(tDist[i][1], tDist[i][2], tDist[i][3]) then
-      print(x,y,z)
 			turnToCoord(x, y, z)
 			return true
 		end
