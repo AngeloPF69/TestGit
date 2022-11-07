@@ -9,7 +9,7 @@
   "minecraft:warped_planks",
   "minecraft:diamond_sword",
   "minecraft:stone",
-  "minecraft:dirt",
+  "minecraft:cobblestone",
   "minecraft:acacia_planks",
   "minecraft:crimson_planks",
   "minecraft:grass_block",

@@ -1,6 +1,6 @@
 {
   y = 0,
-  x = 0,
+  x = -1,
   leftHand = "empty",
   z = 0,
   looking = 0,

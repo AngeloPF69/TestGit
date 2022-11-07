@@ -11,7 +11,7 @@
     id = 6,
     fuel = 15,
   },
-  next = 11,
+  next = 12,
   [ "minecraft:stone" ] = {
     id = 10,
     stack = 1,
@@ -33,6 +33,9 @@
     id = 7,
     fuel = 0,
     stack = 64,
+  },
+  [ "minecraft:cobblestone" ] = {
+    id = 11,
   },
   [ "minecraft:dirt" ] = {
     id = 5,

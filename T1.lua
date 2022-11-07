@@ -511,8 +511,7 @@ function refuel(nCount) --[[ Refuels the turtle with nCount items in the selecte
   
 	if type(turtle.getFuelLimit()) == "string" then return false, "Turtle doesn't need fuel." end
 	
-	local fuelLevel = turtle.getFuelLevel()
-	if fuelLevel == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
+	if turtle.getFuelLevel() == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
 	
 	local tData = turtle.getItemDetail()
 	
@@ -1258,11 +1257,12 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 	return true
 end
 
---not tested
 function isDicEmpty(tDic) --[[ Checks if dictionary is empty.
   05-11-2022  v0.4.0 Param: tDic - dictionary to check.
   Sintax: isDicEmpty(tDic)
   ex: isDicEmpty({}) - returns true.]]
+
+  if not tDic then return true end
   for k, v in pairs(tDic) do
     return false
   end
@@ -2801,7 +2801,6 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
 	return tRetPoints
 end
 
---not tested
 function goToNeighbor(x, y, z) --[[ Turtle goes to neighbor, and turns to point x,y,z.
   05-11-2022 v0.4.0 Param: x, y, z - numbers coords of cnter point of neighbors to go to.
   Sintax: goToNeighbor(x,y,z)
@@ -2861,7 +2860,6 @@ end
 
 ------ DIG FUNCTIONS ------  
 
---not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   08-09-2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
                         nBlocks - number of blocks to walk in sDir direction. 
@@ -2884,17 +2882,23 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   local success, message = turnDir(sDir)
 
   if not success then
-    if (sDir == "up") or (sDir == "down") then tTurtle.looking = dirType[sDir] end
-  else sDir = "forward"
+    if (sDir == "up") or (sDir == "down") then
+      tTurtle.looking = dirType[sDir] 
+    elseif (sDir == "y+") or (sDir == "y-") then
+      sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
+    else return nil, "Invalid direction."
+    end
   end
-  
+
   for i = 1, nBlocks do
     local success, message = digF[sDir]()
     if not success then return false, message end
+    local x, y, z = addSteps(1, sDir)
+    setWorldEnt(x, y, z, 0)
     if i ~= nBlocks then
 			if not movF[sDir]() then
         return false, "Can't move that way."
-      else tTurtle.x, tTurtle.y, tTurtle.z = addSteps(1, sDir)
+      else tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
       end
 		end
   end
@@ -2918,10 +2922,12 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
   for i = 1, nBlocks do
     local success, message = turtle.dig()
     if not success then return false, message end
+    local x, y, z = addSteps(1, "forward")
+    setWorldEnt(x, y, z, 0)
     if i~= nBlocks then
 			if not movF["forward"]() then
         return false, "Can't advance more."
-      else tTurtle.x, tTurtle.y, tTurtle.z = addSteps()
+      else tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
       end
 		end
   end
@@ -3886,7 +3892,7 @@ end
 
 INIT()
 
-print(detectDir("ola"))
+print(dig(1))
 
 
 TERMINATE()
