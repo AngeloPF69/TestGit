@@ -140,7 +140,7 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
 end
 
 function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block.
-  15-09-2022 Param: sBlock - string name of block.
+  15-09-2022 Param: sBlock - string, number or table name of block.
                     nAmp = radius of scan.
   Sintax: getNearestBlock([sBlock="unknown"][, nAmp = 10])
   Return: x,y,z, nID - coords of nearest block and its id.
@@ -150,13 +150,15 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
         if sBlock = "empty" or 0 it returns the nearest empty space.
         if sBlock = "unreachable" or -1 it returns the nearest block space marked as unreachable.
         if sBlock = "unknown" or nil it returns the first unscanned block space.
-  ex: getNearestBlock("any") - returns coords and id of the nearest block.]]
+        if sBlock = getAllFuelItems() gets the nearest fuel block.
+  ex: getNearestBlock({"minecraft:cobblestone", "minecraft:oak_log"}) - returns coords and id of the nearest cobblestone or oak_log.]]
 
   nAmp = nAmp or 10
 	local nBlock
 	if type(sBlock) == "string" then
 		if tEnts[sBlock] then nBlock = tEnts[sBlock]
-    elseif sBlock ~= "any" then return nil, 'getNearestBlock([sBlock="unknown"][, nAmp=10]) - block name not in database.'
+    elseif sBlock ~= "any" then
+			return nil, 'getNearestBlock([sBlock="unknown"][, nAmp=10]) - block name not in database.'
     end
 	elseif type(sBlock) == "number" then nBlock = sBlock
   end
@@ -169,7 +171,14 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
 				for dz = -amp, amp do
 					local tx, ty, tz = x+dx, y+dy, z+dz
 					local nID = getWorldEnt(tx, ty, tz)
-					if sBlock == "any" then
+					if type(sBlock) == "table" then
+						for k,v in pairs(sBlock) do
+              if type(k) == "number" then k = v end
+							if tEnts[k] then 
+								if nID == tEnts[k].id then return tx, ty, tz, nID end
+						  end
+            end
+					elseif sBlock == "any" then
 						if (nID ~= nil) and (nID ~= 0) then return tx, ty, tz, nID end
 					elseif nID == nBlock then return tx, ty, tz, nID
 					end
@@ -179,7 +188,7 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
 	end
 	return false, "Block not found in the world."
 end
-  
+
 --not tested
 function WorldFindBlock(sBlock)
 	local tRetBlocks = {}
@@ -334,6 +343,16 @@ end
 
 
 ------ FUEL ------
+
+function getAllFuelItems()
+  local tItems = {}
+  for k, v in pairs(tEnts) do
+    if type(tEnts[k]) == "table" and tEnts[k].fuel and tEnts[k].fuel > 0 then
+      tItems[k] = tEnts[k].fuel
+    end
+  end
+  return tItems
+end
 
 function getFuel(sItem) --[[ Get the fuel for sItem.
   30-10-2022 v0.4.0 Param: sItem - string name of item to get fuel quantity.
@@ -2602,7 +2621,7 @@ end
 function turnTo(...) --[[ Turtle turns to direction, block name, empty space, unscanned space.
   21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space
   Returns: true - if it turn to specified direction, or block.
-           nil - if the function has 2 or > 3 arguments
+           nil - if the function has 2 arguments
 					 false - if it couldn't turn to that directions ex: up|down.
   sintax: turnTo([... = unscanned space])
 	ex: turnTo("up") - it returns false.
@@ -2611,11 +2630,14 @@ function turnTo(...) --[[ Turtle turns to direction, block name, empty space, un
 			turnTo(0) - turns to z-, north.
       turnTo() - turns to the nearest unscanned space.]]
 
-  if #arg == 3 then return turnToCoord(arg[1], arg[2], arg[3]) end
+  if #arg >= 3 then return turnToCoord(arg[1], arg[2], arg[3]) end
   if #arg == 0 then return turnToBlock() end
   if #arg ~= 1 then
     return nil, 'turnTo(something) - Invalid number of arguments. "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space'
   end
+
+  if arg[1] == "fuel" then return turnTo(getNearestBlock(getAllFuelItems())) end
+
   if tEnts[arg[1] ] then return turnToBlock(arg[1]) end
 
   local nDir, nRotate;
@@ -2664,7 +2686,12 @@ function turnToBlock(sBlock) --[[ Turtle turns to the nearest block.
   if not x then return x, y end
 	return turnToCoord(x, y, z)
 end
-        
+
+--implementing
+function turnToFuel()
+
+end
+
 function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
   15-09-2022 v0.4.0 Param: x, y, z - numbers coords of point.
   Returns: true - if it turn to specified direction
@@ -3892,7 +3919,8 @@ end
 
 INIT()
 
-print(dig(1))
+--turnLeft()
+print(turnTo("fuel"))
 
 
 TERMINATE()
