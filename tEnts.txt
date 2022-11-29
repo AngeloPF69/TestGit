@@ -28,6 +28,7 @@
   [ "minecraft:diamond_sword" ] = {
     id = 9,
     stack = 1,
+    fuel = 0,
   },
   [ "minecraft:gravel" ] = {
     id = 7,
@@ -36,6 +37,7 @@
   },
   [ "minecraft:cobblestone" ] = {
     id = 11,
+    fuel = 0,
   },
   [ "minecraft:dirt" ] = {
     id = 5,

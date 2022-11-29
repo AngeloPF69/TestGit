@@ -1,13 +1,20 @@
 {
-  state = {
-    axis = "y",
+  {
+    nQ = 18,
+    fuel = 20,
+    name = "minecraft:oak_log",
+    slot = 16,
   },
-  ent = 4,
-  name = "minecraft:oak_log",
-  tags = {
-    [ "minecraft:oak_logs" ] = true,
-    [ "minecraft:logs_that_burn" ] = true,
-    [ "minecraft:logs" ] = true,
-    [ "neapolitan:vanilla_plantable_on" ] = true,
+  {
+    nQ = 26,
+    fuel = 15,
+    name = "minecraft:spruce_planks",
+    slot = 14,
+  },
+  {
+    nQ = 3,
+    fuel = 5,
+    name = "minecraft:stick",
+    slot = 12,
   },
 }

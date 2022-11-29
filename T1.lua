@@ -342,9 +342,11 @@ function loadRevEnt() --[[ Loads tRevEnts.txt into tRevEnts table.
 end
 
 
------- FUEL ------
+------ FUEL FUNCTIONS ------
 
-function getAllFuelItems()
+function getAllFuelItems()  --[[ Gets a table with all fuel items.
+16-11-2022 v0.4.0 Returns: tItems[sItemName] = quantity of fuel. ]]
+
   local tItems = {}
   for k, v in pairs(tEnts) do
     if type(tEnts[k]) == "table" and tEnts[k].fuel and tEnts[k].fuel > 0 then
@@ -383,7 +385,13 @@ function setFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
 	return true
 end
 
-function addFuel(sItem, nQFuel)
+function addFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
+  21-11-2022 v0.4.0 Param: sItem - name of item to set fuel.
+                           nQFuel - quantity of fuel sItem have.
+  Sintax: addFuel(sItem, nQFuel)
+  Note: if sItem is not in tEnts, adds it.
+  Returns: true ]]
+
 	local success, message = entAdd(sItem)
   if not success then return success, message end
 	
@@ -446,10 +454,10 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
   return nFuel
 end
 
-function getFuelInv() --[[ Gets the total fuel in inventory.
+function getInvFuel() --[[ Gets the total fuel in inventory.
   31-10-2022 v0.4.0 Return: number - the total fuel in inventory.
   Note: it consumes 1 item if it is fuel and have not been tested.
-  Sintax: getFuelInv()]]
+  Sintax: getInvFuel()]]
 
 	local nTotFuel = 0
 	for nSlot = 1, 16 do
@@ -517,21 +525,71 @@ function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,
   return checkFuel(x, y, z)
 end
 
-function refuel(nCount) --[[ Refuels the turtle with nCount items in the selected slot.
-  23/09/2021 v0.1.0 Param: nCount - number of items to refuel.
-  Returns:	number of items refueled.
-						false - "Empty selected slot."
-                  -	"Item is not fuel."
-									- "Turtle doesn't need fuel."
+--implementing
+function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to fuel nFuel.
+  29-11-2022 v0.4.0 Param: nFuel - quantity of fuel.]]
+
+  if type(turtle.getFuelLimit()) == "string" then
+    return false, "Turtle dosn't need fuel"
+  end
+  local nNeedFuel = turtle.getFuelLimit() - turtle.getFuelLevel()
+  if nNeedFuel == 0 then
+    return false, "Turtle is at maximum fuel."
+  end
+  if type(nFuel) ~= "number" then
+    return nil, "getSlotsToFuel(Fuel) - Fuel must be a number > 0"
+  end
+  nFuel = nFuel or nNeedFuel
+  if nFuel <= 0 then return nil, "getSlotsToFuel(Fuel) - Fuel must be > 0"  end
+  local tSlots = getInvFuelItems()
+
+  for i, tFuel in pairs(tSlots) do
+    
+  end
+
+end
+
+function getInvFuelItems() --[[ Gets the inventory slots and items that are fuel.
+  29-11-2022 v9.4.0 
+  Return: table in decrescent order by fuel, with slot, name, fuel, quantity]]
+
+  local tFuelItems --tFuelItems = {nSlot, sName, nFuel, nQ} - slot, fuel, and quantity of items
+  for iSlot = 1, 16 do
+    local tData = turtle.getItemDetail(iSlot)
+    local nFuel
+    if tData then
+      nFuel = getFuel(tData.name)
+      if not nFuel then nFuel = fuelTestSlot(iSlot) end
+      if nFuel > 0 then
+        if not tFuelItems then tFuelItems = {} end
+        tFuelItems[#tFuelItems+1] = {slot = iSlot, name = tData.name, fuel = nFuel, nQ = tData.count}
+      end
+    end
+  end
+  table.sort(tFuelItems, function(a, b) return a.fuel > b.fuel end)
+  return tFuelItems
+end
+
+--implementing
+function refuel(sItemName, nCount) --[[ Refuels the turtle with nCount items or fuel from inventory.
+  23/09/2021 v0.4.0 Param: sItemName - name of the item to refuel.
+                           nCount - number of items to refuel.
+  Returns:	number of items refueled, fuel level.
+						false	- "Turtle doesn't need fuel."
 									- "Turtle is at maximum fuel."
+
+             - "Empty selected slot."
+                  -	"Item is not fuel."
+
                   - "refuel(nItems) - nItems must be a number."
 	sintax: refuel([nCount=stack of items])
   ex: refuel(123) - Fuels the turtle with 123 items.]] 
   
 	if type(turtle.getFuelLimit()) == "string" then return false, "Turtle doesn't need fuel." end
-	
 	if turtle.getFuelLevel() == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
 	
+  sItemName, nCount = getParam("sn", {"", DEFSTACK}, sItemName, nCount)
+
 	local tData = turtle.getItemDetail()
 	
 	if not tData then return false, "Empty selected slot." end
@@ -2687,9 +2745,8 @@ function turnToBlock(sBlock) --[[ Turtle turns to the nearest block.
 	return turnToCoord(x, y, z)
 end
 
---implementing
 function turnToFuel()
-
+  return turnTo("fuel")
 end
 
 function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
@@ -3919,8 +3976,7 @@ end
 
 INIT()
 
---turnLeft()
-print(turnTo("fuel"))
-
+print(textutils.serialize(getInvFuelItems()))
+--saveTable(getInvFuelItems(), "test.txt")
 
 TERMINATE()
