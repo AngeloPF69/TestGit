@@ -529,17 +529,14 @@ function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to f
   29-11-2022 v0.4.0
   Param: nFuel - number quantity of fuel to search in slots.
   Sintax: getSlotsToFuel([nFuel=fuel limit-fuel level])
-  Return: number, table - total fuel available, table with slot, quantity of items, needed to fuel.
+  Return: number, table{{nQ, slot},} - total fuel available, table with slot, quantity of items, needed to fuel.
   ex: getSlotsToFuel() - gets total of fuel, and table with slots and quantity to full up turtle.
       getSlotsToFuel(100) - gets total fuel available, and the table with slots and quantity needed to fill up 100 fuel.]]
 
-  if nFuel and nFuel <= 0 then return nil, "getSlotsToFuel(Fuel) - Fuel must be > 0"  end
   if type(turtle.getFuelLimit()) == "string" then
     return false, "Turtle doesn't need fuel"
   end
 
-  local tSlots, sMess = getInvFuelItems()
-  if not tSlot then return false, sMess end
   local nNeedFuel = turtle.getFuelLimit() - turtle.getFuelLevel()
   if nNeedFuel == 0 then
     return false, "Turtle is at maximum fuel."
@@ -547,8 +544,13 @@ function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to f
 
   nFuel = nFuel or nNeedFuel
   if type(nFuel) ~= "number" then
-    return nil, "getSlotsToFuel(Fuel) - Fuel must be a number > 0"
+    return nil, "getSlotsToFuel(Fuel) - Fuel must be a number > 0."
   end
+
+  if nFuel <= 0 then return nil, "getSlotsToFuel(Fuel) - Fuel must be > 0."  end
+
+  local tSlots, sMess = getInvFuelItems()
+  if not tSlots then return false, sMess end
 
   local totFuel, tQ = nFuel
   for i, tFuel in pairs(tSlots) do
@@ -591,33 +593,33 @@ function getInvFuelItems() --[[ Gets the inventory slots and items that are fuel
   return tFuelItems
 end
 
---implementing
 function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount items or fuel from inventory.
-  23/09/2021 v0.4.0 Param: sItemName - name of the item to refuelItems.
-                           nCount - number of items to refuelItems.
+  23/09/2021 v0.4.0 Param: sItemName - name of the item.
+                           nCount - number of items.
   Returns:	number of items refueled, fuel level.
 						false	- "Turtle doesn't need fuel."
 									- "Turtle is at maximum fuel."
-
-             - "Empty selected slot."
+                  - "Couldn't find item name."
+                  - "Empty selected slot."
                   -	"Item is not fuel."
-
-                  - "refuel(nItems) - nItems must be a number."
-	sintax: refuelItems([nCount=stack of items])
+	sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
   ex: refuelItems(123) - Fuels the turtle with 123 items.]] 
   
 	if type(turtle.getFuelLimit()) == "string" then return false, "Turtle doesn't need fuel." end
 	if turtle.getFuelLevel() == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
 	
-  sItemName, nCount = getParam("sn", {"", DEFSTACK}, sItemName, nCount)
+  sItemName, nCount = getParam("sn", {"", -1}, sItemName, nCount)
 
 	local tData
-	if sItemName then
+	if sItemName ~= "" then
     if not itemSelect(sItemName) then return false, "Couldn't find item name." end
   end
+
   tData = turtle.getItemDetail()
   if not tData then return false, "Empty selected slot." end
-  if not turtle.refuel(0) then return false, "Item is not fuel." end
+  if not turtle.refuel(0) then return false, "Selected Item is not fuel." end
+
+	if nCount == -1 then nCount = tData.count end
 
 	totRefuel = 0
 	while totRefuel < nCount do
@@ -629,7 +631,7 @@ function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount item
 				if not itemSelect(tData.name) then break end
 		end
 	end
-	return totRefuel
+	return totRefuel, turtle.getFuelLevel()
 end
 
 
@@ -1354,6 +1356,19 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 		if sType:sub(i,i) ~= type(Args[i]):sub(1,1) then return false end
 	end
 	return true
+end
+
+function dicCount(tDic) --[[ Counts number of items in a dictionary.
+  17-12-2022 v0.4.0 Param: tDic - dictionary to count items.
+  Return: number - total items in dictionary.
+          nil - if tDic is not a table.
+  Sintax: dicCount(tDic)
+  ex: dicCount({1,2,3}) - returns 3]]
+
+  if type(tDic) ~= "table" then return nil, "Parameter is not a table." end
+  local nItems = 0
+  for k,v in pairs(tDic) do nItems = nItems + 1 end
+  return nItems
 end
 
 function isDicEmpty(tDic) --[[ Checks if dictionary is empty.
@@ -3716,13 +3731,14 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
     if (itemName < 1) or (itemName > 16) then return nil, "itemSelect([itemName/slot]=selected slot) - Slot must be number 1..16." end
     nSlot = itemName
   elseif type(itemName) == "string" then
-      nSlot = search(itemName)
-      if not nSlot then return false, "Item name not found." end
+    nSlot = search(itemName)
+    if not nSlot then return false, "Item name not found." end
   else
     return nil, "itemSelect([itemName/slot]=selected slot) - Slot/itemName must be a number 1..16 or a string (item name)."
   end
   
-  tData = turtle.getItemDetail(nSlot)
+  turtle.select(nSlot)
+  tData = turtle.getItemDetail()
   if tData then return nSlot, tData.count
   else return nSlot, 0
   end
@@ -3998,10 +4014,6 @@ end
 
 INIT()
 
-local t, v = getSlotsToFuel()
-if type(v) == "table" then print(t, textutils.serialize(v))
-else print(t, m)
-end
---saveTable(getInvFuelItems(), "test.txt")
+print(dicCount{["angelo"]=1,2,3})
 
 TERMINATE()
