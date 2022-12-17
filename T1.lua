@@ -525,41 +525,62 @@ function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,
   return checkFuel(x, y, z)
 end
 
---implementing
 function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to fuel nFuel.
-  29-11-2022 v0.4.0 Param: nFuel - quantity of fuel.]]
+  29-11-2022 v0.4.0
+  Param: nFuel - number quantity of fuel to search in slots.
+  Sintax: getSlotsToFuel([nFuel=fuel limit-fuel level])
+  Return: number, table - total fuel available, table with slot, quantity of items, needed to fuel.
+  ex: getSlotsToFuel() - gets total of fuel, and table with slots and quantity to full up turtle.
+      getSlotsToFuel(100) - gets total fuel available, and the table with slots and quantity needed to fill up 100 fuel.]]
 
+  if nFuel and nFuel <= 0 then return nil, "getSlotsToFuel(Fuel) - Fuel must be > 0"  end
   if type(turtle.getFuelLimit()) == "string" then
-    return false, "Turtle dosn't need fuel"
+    return false, "Turtle doesn't need fuel"
   end
+
+  local tSlots, sMess = getInvFuelItems()
+  if not tSlot then return false, sMess end
   local nNeedFuel = turtle.getFuelLimit() - turtle.getFuelLevel()
   if nNeedFuel == 0 then
     return false, "Turtle is at maximum fuel."
   end
+
+  nFuel = nFuel or nNeedFuel
   if type(nFuel) ~= "number" then
     return nil, "getSlotsToFuel(Fuel) - Fuel must be a number > 0"
   end
-  nFuel = nFuel or nNeedFuel
-  if nFuel <= 0 then return nil, "getSlotsToFuel(Fuel) - Fuel must be > 0"  end
-  local tSlots = getInvFuelItems()
 
+  local totFuel, tQ = nFuel
   for i, tFuel in pairs(tSlots) do
-    
+    local nQ = math.floor(nFuel / tFuel.fuel)
+    if nQ > tFuel.nQ then nQ = tFuel.nQ end
+    if nQ > 0 then
+      if not tQ then tQ = {} end
+      tQ[#tQ+1] = {slot = tFuel.slot, nQ = nQ}
+      nFuel = nFuel - (nQ * tFuel.fuel)
+      if nFuel <= 0 then break end
+    end
   end
-
+  return totFuel-nFuel, tQ
 end
 
 function getInvFuelItems() --[[ Gets the inventory slots and items that are fuel.
   29-11-2022 v9.4.0 
-  Return: table in decrescent order by fuel, with slot, name, fuel, quantity]]
+  Return: table in decrescent order by fuel, with slot, name, fuel, quantity
+          false - if the turtle doesn't need fuel.
+                - if the fuel level is above 90% in the turtle.]]
 
   local tFuelItems --tFuelItems = {nSlot, sName, nFuel, nQ} - slot, fuel, and quantity of items
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
-    local nFuel
+    local nFuel, sMess
     if tData then
       nFuel = getFuel(tData.name)
-      if not nFuel then nFuel = fuelTestSlot(iSlot) end
+      if not nFuel then
+        nFuel, sMess = fuelTestSlot(iSlot)
+        if not nFuel then return false, sMess end
+        tData.count = tData.count - 1
+      end
       if nFuel > 0 then
         if not tFuelItems then tFuelItems = {} end
         tFuelItems[#tFuelItems+1] = {slot = iSlot, name = tData.name, fuel = nFuel, nQ = tData.count}
@@ -571,9 +592,9 @@ function getInvFuelItems() --[[ Gets the inventory slots and items that are fuel
 end
 
 --implementing
-function refuel(sItemName, nCount) --[[ Refuels the turtle with nCount items or fuel from inventory.
-  23/09/2021 v0.4.0 Param: sItemName - name of the item to refuel.
-                           nCount - number of items to refuel.
+function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount items or fuel from inventory.
+  23/09/2021 v0.4.0 Param: sItemName - name of the item to refuelItems.
+                           nCount - number of items to refuelItems.
   Returns:	number of items refueled, fuel level.
 						false	- "Turtle doesn't need fuel."
 									- "Turtle is at maximum fuel."
@@ -582,21 +603,22 @@ function refuel(sItemName, nCount) --[[ Refuels the turtle with nCount items or 
                   -	"Item is not fuel."
 
                   - "refuel(nItems) - nItems must be a number."
-	sintax: refuel([nCount=stack of items])
-  ex: refuel(123) - Fuels the turtle with 123 items.]] 
+	sintax: refuelItems([nCount=stack of items])
+  ex: refuelItems(123) - Fuels the turtle with 123 items.]] 
   
 	if type(turtle.getFuelLimit()) == "string" then return false, "Turtle doesn't need fuel." end
 	if turtle.getFuelLevel() == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
 	
   sItemName, nCount = getParam("sn", {"", DEFSTACK}, sItemName, nCount)
 
-	local tData = turtle.getItemDetail()
-	
-	if not tData then return false, "Empty selected slot." end
-	if not nCount then nCount = tData.count end
-  if type(nCount) ~="number" then return false, "refuel(nItems) - nItems must be a number." end
-	if not turtle.refuel(0) then return false, "Item is not fuel." end
-	
+	local tData
+	if sItemName then
+    if not itemSelect(sItemName) then return false, "Couldn't find item name." end
+  end
+  tData = turtle.getItemDetail()
+  if not tData then return false, "Empty selected slot." end
+  if not turtle.refuel(0) then return false, "Item is not fuel." end
+
 	totRefuel = 0
 	while totRefuel < nCount do
 		if tData.count >= nCount then
@@ -3976,7 +3998,10 @@ end
 
 INIT()
 
-print(textutils.serialize(getInvFuelItems()))
+local t, v = getSlotsToFuel()
+if type(v) == "table" then print(t, textutils.serialize(v))
+else print(t, m)
+end
 --saveTable(getInvFuelItems(), "test.txt")
 
 TERMINATE()
