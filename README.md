@@ -1,32 +1,6 @@
 # computercraft turtle lua improved commands.
 <p id="top"></p>
 
-## Used tables
-
-    Type of values:
-    dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down"]=8 } --moving direction options
-    lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
-    facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8}
-    
-    Table for turtle properties.
-    tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
-      facing = facingType["z-"], --the axis where the turtle is facing at.
-      leftHand = "empty",
-      rightHand = "empty",
-    }
-    
-    -------------------------------------------------
-    Table of recipes properties.
-    tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, }
-                       ["Name"][index]["count"] = resulting number of items}
-                       ["lastRecipe"] = sLastRecipe
-                       ["lastIndex"]= nLastIndex
-                       ["CSlot"] = Crafting slot.]]
-
-    -------------------------------------------------
-    Table of items stack.
-    tStacks = {} --["itemName"] = nStack
-            
 ## Initialize
 
   <a href="#INIT">INIT() Loads files to tables, so that the turtle won't forget what it has learned.</a>
