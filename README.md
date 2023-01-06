@@ -3,15 +3,15 @@
 
 ## Initialize
 
-  <a href="#INIT">INIT() Loads files to tables, so that the turtle won't forget what it has learned.</a>
+  <a href="#INIT">INIT() Loads text files to tables.</a>
 
 ## Finalize
 
-  <a href="#TERMINATE">TERMINATE() Saves tTurtle, tRecipes, tStacks from tables to text files.</a>
+  <a href="#TERMINATE">TERMINATE() Saves tables to text files, so that the turtle won't forget what it has learned..</a>
   
 ## Measurements
 
-   <a href="#addSteps">addSteps(nSteps) Returns nSteps added to turtle coords, where it is facing.</a><br>
+   <a href="#addSteps">addSteps(nSteps, facing) Returns nSteps added to turtle coords.</a><br>
    <a href="#distTo">distTo(x, y, z) Gets the three components of the distance from the turtle to point.</a>
     
 ## Turtle
@@ -21,10 +21,10 @@
     
 ## Turtle facing
 
-   <a href="#decFacing">decFacing(nTurns) Decrements tTurtle.facing by nTurns.</a><br>
+   <a href="#decFacing">decFacing([nTurns=1][, nFacing = tTurtle.facing]) Decrements nFacing by nTurns.</a><br>
    <a href="#getFacing">getFacing() Returns tTurtle.facing.</a><br>
-   <a href="#incFacing">incFacing(nTurns) Increments tTurtle.facing by nTurns.</a><br>
-   <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing. sFacing= "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|0..3</a>
+   <a href="#incFacing">incFacing([nTurns=1][, nFacing = tTurtle.facing]) Increments nFacing by nTurns.</a><br>
+   <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing.</a>
     
 ## Turtle coords
 
@@ -34,7 +34,7 @@
 ## Equipment
   
    <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
-   <a href="#getFreeHand">getFreeHand() Gets turtle free hand: "left"|"right"|false.</a>
+   <a href="#getFreeHand">getFreeHand([sHand = PREFEREDHAND]) Gets turtle free hand: "left"|"right"|false.</a>
     
 ## Fuel
 
