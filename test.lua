@@ -2,27 +2,20 @@ local tInv = {
 	bChanged = false, --if a inventory slot has changed
 	tSlots, --wich slot has changed tSlots[nSlot] = {name, count}
 	tLastInv, --snapshot of last inventory (before it changed)
-  bTerminate, --if the handling is to be terminated
-  bActive, --if the handling is not active, but it is not terminated
-	}
+    bTerminate, --if the handling is to be terminated
+}
+
+function tInv.init()
+    tInv.bChanged = false
+    tInv.bTerminate = false
+    tInv.tLastInv = getInventory()
+    parallel.waitForAny(HandleInvChange, main)
+end
 
 function tInv.terminate()
-  if tInv.bTerminate then return true
-  else tInv.bTerminate = true
-  end
-end
-
-function tInv.deactivate()
-  if not tInv.bActive then return true
-  else tInv.bActive = false
-  end
-end
-
-function tInv.activate()
-  if tInv.bTerminate == false then return false, "Inventory event is not running." end
-  if tInv.bActive then return true
-  else tInv.bActive = true
-  end
+    tInv.bTerminate = true
+    os.queueEvent("turtle_inventory")
+    return true
 end
 
 function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
@@ -32,33 +25,32 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
                 table - if snapshots are diferent.
     Sintax: cmpInventory(tInv1, tInv2)
     ex: cmpInventory(tInv1, tInv2) - compares tInv1 with tInv2.]]
-        if (not tInv1) or (not tInv2) then return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare" end
-        local tDif
-        for iSlot = 1, 16 do
-            if tInv1[iSlot] then
-                for k, v in pairs(tInv1[iSlot]) do
-                    if tInv2[iSlot] and tInv2[iSlot][k] then
-                        if tInv2[iSlot][k] ~= tInv1[iSlot][k] then
-                            if not tDif then tDif = {} end	
-                            tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k] - tInv1[iSlot][k]}
-                        end
-                    else
+    if (not tInv1) or (not tInv2) then
+        return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare"
+    end
+    local tDif
+    for iSlot = 1, 16 do
+        if tInv1[iSlot] then
+            for k, v in pairs(tInv1[iSlot]) do
+                if tInv2[iSlot] and tInv2[iSlot][k] then
+                    if tInv2[iSlot][k] ~= tInv1[iSlot][k] then
                         if not tDif then tDif = {} end	
-                        tDif[iSlot] = {["name"] = k, ["count"] = -tInv1[iSlot][k]}
+                        tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k] - tInv1[iSlot][k]}
                     end
+                elseif not tDif then tDif = {}
+                    tDif[iSlot] = {["name"] = k, ["count"] = -tInv1[iSlot][k]}
                 end
-            else
-                if tInv2[iSlot] then
-                    for k, v in pairs(tInv2[iSlot]) do
-                        if not tDif then tDif = {} end	
-                        tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k]}
-                    end
-        end
+            end
+        elseif tInv2[iSlot] then
+            for k, v in pairs(tInv2[iSlot]) do
+                if not tDif then tDif = {} end	
+                tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k]}
             end
         end
-        if tDif then return false, tDif
-        else return true
-        end
+    end
+
+    if tDif then return false, tDif
+    else return true
     end
 end
 
@@ -79,22 +71,21 @@ end
 function main()
     while true do
         print("this is main")
-        sleep(5)
+        sleep(20)
+        tInv.terminate()
     end
 end
 
 function HandleInvChange()
-    tInv.bChanged = false
     while true do
-        tInv.tLastInv = getInventory()
         os.pullEvent("turtle_inventory")
+        if tInv.bTerminate then return true, "Handle turtle inventory change terminated." end
         tInv.bChanged = true
         local inv2 = getInventory()
         local _, tDif = cmpInventory(tInv.tLastInv, inv2)
+        tInv.tLastInv = inv2
         print(textutils.serialize(tDif))
     end
 end
 
-parallel.waitForAny(HandleInvChange, main)
-print(tInv.bChanged)
-local _, key = os.pullEvent("key")
+tInv.init()

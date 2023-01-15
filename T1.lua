@@ -1239,6 +1239,18 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+function b2N(value) --[[ Converts boolean value to number (true - 1, false - 0)
+  01-01-2023 v0.4.0 Param: value - boolean (true/false)
+  Returns: number 1 or 0]]
+	return value and 1 or 0
+end
+
+function n2B(value) --[[ Converts number value to boolean (~= 0 - true, 0 - false)
+  01-01-2023 v0.4.0 Param: value - number
+  Returns: boolean (true/false)]]
+  return not (value == 0)
+end
+
 function checkNil(nArg, ...) --[[ Checks for nil parameters.
 	21-07-2022 v0.4.0 Param: nArg - number of parameters
                            ... - parameters to test
@@ -1246,8 +1258,8 @@ function checkNil(nArg, ...) --[[ Checks for nil parameters.
            false - there is no nil parameters
            nil - if nArg not supplied.
                - if nArg not a number.
-  sintax:checkNil(nArg, ...)
-	ex: checkNil(2, 2) - returns true, 1]]
+  Sintax:checkNil(nArg, ...)
+	Ex: checkNil(2, 2) - returns true, 1]]
 
   if not nArg then return nil, "checkNil(nArg, ...) - Must supply nArg as the number of arguments." end
   if type(nArg) ~= "number" then return nil, "checkNil(nArg, ...) - narg must be a number." end
@@ -1258,7 +1270,16 @@ function checkNil(nArg, ...) --[[ Checks for nil parameters.
   end
 end
 
-function dirType2Facing(sDir, nFacing) --[[ Converts values of dirType to facingType.]]
+function dirType2Facing(sDir, nFacing) --[[ Adjusts the facing after a turn.
+  15-01-2022 v0.4.0 Param: sDir - "forward"|"back"|"up"|"down"|"left"|"right"
+                           nFacing - 0..3
+  Return: facing - adjusted after a turn.
+  Sintax: dirType2Facing([sDir = "forward"][, nFacing = turtle.facing])
+  Ex: dirType2Facing("left", 2) - returns 1
+      dirType2Facing("up", 1) - returns 4
+      if turtle.facing = 0 - dirType2Facing("right") - returns 1
+      if turtle.facing = 1 - dirType2Facing() - returns 1]]
+      
   sDir = sDir or "forward"
   nFacing = nFacing or tTurtle.facing
 
@@ -1919,74 +1940,6 @@ function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a sl
   return false
 end
 
-function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
-  19/10/2021 v0.2.0 Param: sItemName - string name of the item.
-                              nQuant - number quantity of items to leave in selected slot.
-                               bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
-  Returns:  true - if there is nQuant of items in selected slot.
-           false - if sItemName not supplied.
-           false - if there is no items to tranfer to selected slot or no space to tranfer items to.
-  Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
-  ex: leaveItems() - Removes items from selected slot.
-      leaveItems("minecraft:cobblestone") - Removes items from selected slot.
-      leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot]]
-  
-  sItemName, nQuant, bWrap = getParam("snb", {"", 0, true}, sItemName, nQuant, bWrap)
-  local tData = turtle.getItemDetail()
-
-  local nOrgSlot, nStored = turtle.getSelectedSlot()
-  local nLastSlot = nOrgSlot
-
-  if sItemName == "" then
-    if not tData then return false, "Slot empty and item name not supplied."
-    else sItemName = tData.name
-    end
-  else
-    if tData then
-      if tData.name ~= sItemName then
-        clearSlot(nOrgSlot, bWrap)
-        tData = turtle.getItemDetail()
-      end
-    end
-  end
-
-  if tData then nStored = tData.count
-  else nStored = 0
-  end
-
-  if nQuant < 0 then nQuant = nStored + nQuant end
-
-  while (nStored ~= nQuant) do
-    local nDestSlot, nDestSpace, nOrgSpace
-    nLastSlot = incSlot(nLastSlot, bWrap)
-    if not nLastSlot then break end
-
-    if nStored > nQuant then
-      nDestSlot, nDestSpace = searchSpace(sItemName, nLastSlot, bWrap)
-
-      if not nDestSlot or (nDestSlot == nOrgSlot) then
-        nDestSlot = getFreeSlot(nLastSlot, bWrap)
-        if not nDestSlot then break end
-        nDestSpace=64
-      end
-
-      if nDestSpace > (nStored - nQuant) then
-        turtle.transferTo(nDestSlot, nStored - nQuant)
-      else 
-        turtle.transferTo(nDestSlot, nDestSpace)
-      end
-    else
-      nDestSlot = search(sItemName, nLastSlot, bWrap)
-      if not nDestSlot then break end
-      transferFrom(nDestSlot, nQuant - nStored)
-    end
-    nLastSlot = nDestSlot
-    nStored = turtle.getItemCount()
-  end
-  if nStored == nQuant then return true end
-  return false
-end
-
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
   19/10/2021 v0.2.0 Param: nSlot - number slot to clear.
                            bWrap - slot where to put excess items can be lower than nSlot(wrap around inventory).
@@ -2491,63 +2444,6 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
   nIndex = addRecipe(sRecipe, tRecipe, nCount )
 
   return true, sRecipe, nIndex, nCount
-end
-
-function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities have increased.
-  03/07/2022 v0.3.0 Param: tInv1, tInv2 - snapshot of inventory from getInventory()
-  Returns: true, t - if items have increased, table with slot, name, quantity.
-           false - if items haven't increased.
-  Sintax: cmpInvIncreased(tInv1, tInv2)
-  ex: cmpInvIncreased(inv1, inv2) - verifies if inventory snapshot inv2 has more items than inv1.]]
-	local bDif, tInvCmpRes = cmpInventory(tInv1, tInv2)
-	if bDif then return false end
-	
-	local tInc
-	for kSlot, v in pairs(tInvCmpRes) do
-    if tInvCmpRes[kSlot].count > 0 then
-      if not tInc then tInc = {} end
-      tInc[kSlot] = {["name"] = tInvCmpRes[kSlot].name, ["count"] = tInvCmpRes[kSlot].count}
-    end
-	end
-	if tInc then return true, tInc
-	else return false
-	end
-end
-
-function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
-  11/05/2022 v0.3.0 Param: tInv1, tInv2 - snapshots from inventory (getInventory).
-  Returns: nil - if tInv1 or tInv2 not supplied.
-           true - if snapshots are equals.
-           table - if snapshots are diferent.
-  Sintax: cmpInventory(tInv1, tInv2)
-  ex: cmpInventory(tInv1, tInv2) - compares tInv1 with tInv2.]]
-	if (not tInv1) or (not tInv2) then return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare" end
-	local tDif
-	for iSlot = 1, 16 do
-		if tInv1[iSlot] then
-			for k, v in pairs(tInv1[iSlot]) do
-				if tInv2[iSlot] and tInv2[iSlot][k] then
-					if tInv2[iSlot][k] ~= tInv1[iSlot][k] then
-						if not tDif then tDif = {} end	
-						tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k] - tInv1[iSlot][k]}
-					end
-				else
-					if not tDif then tDif = {} end	
-					tDif[iSlot] = {["name"] = k, ["count"] = -tInv1[iSlot][k]}
-				end
-			end
-		else
-			if tInv2[iSlot] then
-				for k, v in pairs(tInv2[iSlot]) do
-					if not tDif then tDif = {} end	
-					tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k]}
-				end
-      end
-		end
-	end
-	if tDif then return false, tDif
-	else return true
-	end
 end
 
 function getLowestKey(t) --[[ Gets the lowest key of the table t.
@@ -3488,6 +3384,63 @@ end
 
 
 ------ INVENTORY FUNCTIONS ------
+function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
+  11/05/2022 v0.3.0 Param: tInv1, tInv2 - snapshots from inventory (getInventory).
+  Returns: nil - if tInv1 or tInv2 not supplied.
+              true - if snapshots are equals.
+              table - if snapshots are diferent.
+  Sintax: cmpInventory(tInv1, tInv2)
+  ex: cmpInventory(tInv1, tInv2) - compares tInv1 with tInv2.]]
+  if (not tInv1) or (not tInv2) then
+      return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare"
+  end
+  local tDif
+  for iSlot = 1, 16 do
+      if tInv1[iSlot] then
+          for k, v in pairs(tInv1[iSlot]) do
+              if tInv2[iSlot] and tInv2[iSlot][k] then
+                  if tInv2[iSlot][k] ~= tInv1[iSlot][k] then
+                      if not tDif then tDif = {} end	
+                      tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k] - tInv1[iSlot][k]}
+                  end
+              elseif not tDif then tDif = {}
+                  tDif[iSlot] = {["name"] = k, ["count"] = -tInv1[iSlot][k]}
+              end
+          end
+      elseif tInv2[iSlot] then
+          for k, v in pairs(tInv2[iSlot]) do
+              if not tDif then tDif = {} end	
+              tDif[iSlot] = {["name"] = k, ["count"] = tInv2[iSlot][k]}
+          end
+      end
+  end
+
+  if tDif then return false, tDif
+  else return true
+  end
+end
+
+function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities have increased.
+  03/07/2022 v0.3.0 Param: tInv1, tInv2 - snapshot of inventory from getInventory()
+  Returns: true, t - if items have increased, table with slot, name, quantity.
+           false - if items haven't increased.
+  Sintax: cmpInvIncreased(tInv1, tInv2)
+  ex: cmpInvIncreased(inv1, inv2) - verifies if inventory snapshot inv2 has more items than inv1.]]
+	local bDif, tInvCmpRes = cmpInventory(tInv1, tInv2)
+	if bDif then return false end
+	
+	local tInc
+	for kSlot, v in pairs(tInvCmpRes) do
+    if tInvCmpRes[kSlot].count > 0 then
+      if not tInc then tInc = {} end
+      tInc[kSlot] = {["name"] = tInvCmpRes[kSlot].name, ["count"] = tInvCmpRes[kSlot].count}
+    end
+	end
+	if tInc then return true, tInc
+	else return false
+	end
+end
+
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
   04/12/2021 v0.2.0 Returns: table[itemName]=Slots ocupied by item.
   Sintax: countItemSlots()]]
@@ -3742,6 +3695,74 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
   if tData then return nSlot, tData.count
   else return nSlot, 0
   end
+end
+
+function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
+  19/10/2021 v0.2.0 Param: sItemName - string name of the item.
+                              nQuant - number quantity of items to leave in selected slot.
+                               bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
+  Returns:  true - if there is nQuant of items in selected slot.
+           false - if sItemName not supplied.
+           false - if there is no items to tranfer to selected slot or no space to tranfer items to.
+  Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
+  ex: leaveItems() - Removes items from selected slot.
+      leaveItems("minecraft:cobblestone") - Removes items from selected slot.
+      leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot]]
+  
+  sItemName, nQuant, bWrap = getParam("snb", {"", 0, true}, sItemName, nQuant, bWrap)
+  local tData = turtle.getItemDetail()
+
+  local nOrgSlot, nStored = turtle.getSelectedSlot()
+  local nLastSlot = nOrgSlot
+
+  if sItemName == "" then
+    if not tData then return false, "Slot empty and item name not supplied."
+    else sItemName = tData.name
+    end
+  else
+    if tData then
+      if tData.name ~= sItemName then
+        clearSlot(nOrgSlot, bWrap)
+        tData = turtle.getItemDetail()
+      end
+    end
+  end
+
+  if tData then nStored = tData.count
+  else nStored = 0
+  end
+
+  if nQuant < 0 then nQuant = nStored + nQuant end
+
+  while (nStored ~= nQuant) do
+    local nDestSlot, nDestSpace, nOrgSpace
+    nLastSlot = incSlot(nLastSlot, bWrap)
+    if not nLastSlot then break end
+
+    if nStored > nQuant then
+      nDestSlot, nDestSpace = searchSpace(sItemName, nLastSlot, bWrap)
+
+      if not nDestSlot or (nDestSlot == nOrgSlot) then
+        nDestSlot = getFreeSlot(nLastSlot, bWrap)
+        if not nDestSlot then break end
+        nDestSpace=64
+      end
+
+      if nDestSpace > (nStored - nQuant) then
+        turtle.transferTo(nDestSlot, nStored - nQuant)
+      else 
+        turtle.transferTo(nDestSlot, nDestSpace)
+      end
+    else
+      nDestSlot = search(sItemName, nLastSlot, bWrap)
+      if not nDestSlot then break end
+      transferFrom(nDestSlot, nQuant - nStored)
+    end
+    nLastSlot = nDestSlot
+    nStored = turtle.getItemCount()
+  end
+  if nStored == nQuant then return true end
+  return false
 end
 
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
@@ -4014,6 +4035,6 @@ end
 
 INIT()
 
-print(dicCount{["angelo"]=1,2,3})
+print(dig())
 
 TERMINATE()
