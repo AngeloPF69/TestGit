@@ -25,6 +25,7 @@
   "minecraft:wooden_pickaxe",
   "minecraft:flint",
   "minecraft:sand",
+  "minecraft:grass_block",
   [ -1 ] = "unreachable",
   [ 0 ] = "empty",
 }

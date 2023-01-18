@@ -2905,11 +2905,14 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
       sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
     else return nil, "Invalid direction."
     end
+  else sDir = "forward"
   end
 
   for i = 1, nBlocks do
-    local success, message = digF[sDir]()
-    if not success then return false, message end
+    while detF[sDir]() do
+      local success, message = digF[sDir]()
+      if not success then return false, message end
+    end
     local x, y, z = addSteps(1, sDir)
     setWorldEnt(x, y, z, 0)
     if i ~= nBlocks then
@@ -2997,8 +3000,10 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
   if nBlocks < 0 then return digDown(math.abs(nBlocks)) end
 
   for i = 1, nBlocks do
-    local success, message = turtle.digUp()
-    if not success then return false, message end
+    while turtle.detectUp() do
+      local success, message = turtle.digUp()
+      if not success then return false, message end
+    end
     if i ~= nBlocks then
 			if not turtle.up() then return false, "Can't go up."
       else tTurtle.y = tTurtle.y + 1
@@ -3045,8 +3050,10 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
   local dir = sign(nBlocks)
 
   for i = 1, math.abs(nBlocks) do
-    local success, message = turtle.digUp()
-    if not success then return false, message end
+    while turtle.detectUp() do
+      local success, message = turtle.digUp()
+      if not success then return false, message end
+    end
     if i~= nBlocks then
 			if not forward(dir) then return false end
 		end
@@ -3087,14 +3094,7 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
   
   if type(nBlocks) ~= "number" then return false, "digBack(Blocks) - Blocks must be a number." end
   if nBlocks > 0 then turnBack() end
-  for i = 1, math.abs(nBlocks) do
-    local success, message = turtle.dig()
-    if not success then return false, message end
-    if i ~= nBlocks then
-			if not forward() then return false, "Can't go forward." end
-		end
-  end
-  return true
+  return dig(math.abs(nBlocks))
 end
 
 
@@ -4036,6 +4036,6 @@ end
 
 INIT()
 
-print(dig())
+print(digBack(2))
 
 TERMINATE()
