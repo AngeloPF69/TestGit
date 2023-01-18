@@ -2922,9 +2922,8 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   return true
 end
 
---not tested
 function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig.
+  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to dig.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: dig([nBlocks=1])
@@ -2937,8 +2936,10 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
   nBlocks = math.abs(nBlocks)
 
   for i = 1, nBlocks do
-    local success, message = turtle.dig()
-    if not success then return false, message end
+    while turtle.detect() do
+      local success, message = turtle.dig()
+      if not success then return false, message end
+    end
     local x, y, z = addSteps(1, "forward")
     setWorldEnt(x, y, z, 0)
     if i~= nBlocks then

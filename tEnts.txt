@@ -2,6 +2,9 @@
   [ "minecraft:holla" ] = {
     id = 1,
   },
+  [ "minecraft:sand" ] = {
+    id = 26,
+  },
   [ "minecraft:dead_bush" ] = {
     id = 12,
     fuel = 5,
@@ -23,17 +26,17 @@
     id = 4,
     fuel = 5,
   },
-  [ "minecraft:birch_planks" ] = {
-    id = 16,
-    fuel = 15,
+  [ "minecraft:dirt" ] = {
+    id = 5,
+    fuel = 0,
   },
   [ "immersiveengineering:seed" ] = {
     id = 13,
     fuel = 0,
   },
-  [ "minecraft:dirt" ] = {
-    id = 5,
-    fuel = 0,
+  [ "minecraft:birch_planks" ] = {
+    id = 16,
+    fuel = 15,
   },
   empty = 0,
   unreachable = -1,
@@ -49,25 +52,26 @@
     id = 3,
     fuel = 20,
   },
-  [ "minecraft:egg" ] = {
-    id = 17,
+  [ "minecraft:gravel" ] = {
+    id = 7,
     fuel = 0,
+    stack = 64,
   },
-  next = 26,
+  next = 27,
   [ "minecraft:stone" ] = {
     id = 10,
     stack = 1,
   },
-  [ "minecraft:apple" ] = {
-    id = 21,
+  [ "minecraft:flint" ] = {
+    id = 25,
     fuel = 0,
   },
   [ "minecraft:wooden_pickaxe" ] = {
     id = 24,
     fuel = 10,
   },
-  [ "minecraft:flint" ] = {
-    id = 25,
+  [ "minecraft:apple" ] = {
+    id = 21,
     fuel = 0,
   },
   [ "minecraft:spruce_planks" ] = {
@@ -86,10 +90,9 @@
     id = 15,
     fuel = 0,
   },
-  [ "minecraft:gravel" ] = {
-    id = 7,
+  [ "minecraft:egg" ] = {
+    id = 17,
     fuel = 0,
-    stack = 64,
   },
   [ "minecraft:coal" ] = {
     id = 23,

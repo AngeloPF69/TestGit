@@ -24,6 +24,7 @@
   "minecraft:coal",
   "minecraft:wooden_pickaxe",
   "minecraft:flint",
+  "minecraft:sand",
   [ -1 ] = "unreachable",
   [ 0 ] = "empty",
 }
