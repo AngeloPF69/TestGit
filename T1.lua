@@ -189,8 +189,12 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
 	return false, "Block not found in the world."
 end
 
---not tested
-function WorldFindBlock(sBlock)
+function worldFindBlock(sBlock) --[[ Gets the coords for sBlock in tWorld.
+  19-01-2023 v0.4.0 Param: sBlock - string name of block to search
+  Return: table with coords (x,y,z)
+  Sintax: worldFindBlock(sBlock)
+  Ex: worldFindBlock("minecraft:cobblestone") - find coords of "minecraft:cobblestone" in tWorld]]
+  
 	local tRetBlocks = {}
 	for kx, vx in pairs(tWorld) do
 		for ky, vy in pairs(tWorld[kx]) do
@@ -701,6 +705,7 @@ function unequip(sHand)
 end
 
 ------ TURTLE ------
+
 function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
   23/09/2021 v0.2.0 Returns:	true - if it could save the file.
 											        false - if it couldn't save file.
@@ -726,6 +731,7 @@ end
 
 
 ------ INIT ------
+
 function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
   02/11/2021 v0.4.0 Returns:	true]] 
   loadEnt()
@@ -739,6 +745,7 @@ end
 
 
 ------ TERMINATE ------
+
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
   02/11/2021 v0.4.0 Returns:	true]] 
   saveEnt()
@@ -752,6 +759,7 @@ end
 
 
 ------ TURTLE STATUS FUNCTIONS ----
+
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
   02/10/2021 v0.2.0 Param: sFacing - "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
@@ -3385,6 +3393,7 @@ end
 
 
 ------ INVENTORY FUNCTIONS ------
+
 function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
   11/05/2022 v0.3.0 Param: tInv1, tInv2 - snapshots from inventory (getInventory).
   Returns: nil - if tInv1 or tInv2 not supplied.
@@ -4036,6 +4045,6 @@ end
 
 INIT()
 
-print(digBack(2))
+print(textutils.serializeJSON(worldFindBlock("minecraft:cobblestone")))
 
 TERMINATE()
