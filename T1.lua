@@ -6,6 +6,7 @@ local PREFEREDHAND = "right" --default equip hand
 local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
 local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
+local DIG = false --on walking turtle digs it's way through
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
