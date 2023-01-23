@@ -1167,11 +1167,13 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   if SCAN then scanAll() end
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-    if not turtle.forward() then return false, "Can't advance forward."
-    else
-      tTurtle.x, tTurtle.y, tTurtle.z = addSteps(1, "forward")
-      if SCAN then scanAll() end
-    end
+    if not turtle.forward() then
+			if not DIG then return false, "Can't advance forward."
+			else not dig() then return false, "Can't dig/advance forward."
+			end
+		end
+    tTurtle.x, tTurtle.y, tTurtle.z = addSteps(1, "forward")
+    if SCAN then scanAll() end
   end
   return true
 end
@@ -1213,11 +1215,13 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   if SCAN then scanAll() end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-    if not turtle.up() then return false, "Can't move up."
-    else
-      tTurtle.y = tTurtle.y + 1
-      if SCAN then scanAll() end
-    end
+    if not turtle.up() then
+			if not DIG then return false, "Can't advance up."
+			else not digUp() then return false, "Can't dig/advance up."
+			end
+		end
+    tTurtle.y = tTurtle.y + 1
+    if SCAN then scanAll() end
   end
   return true
 end
@@ -1236,11 +1240,13 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   if SCAN then scanAll() end
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   for i = 1, nBlocks do
-      if not turtle.down() then return false, "I can't go down anymore."
-      else
-        tTurtle.y = tTurtle.y -1
-        if SCAN then scanAll() end
-      end
+		if not turtle.down() then
+			if not DIG then return false, "Can't advance down."
+			else not digDown() then return false, "Can't dig/advance down."
+			end
+		end
+		tTurtle.y = tTurtle.y -1
+		if SCAN then scanAll() end
   end
   return true
 end
