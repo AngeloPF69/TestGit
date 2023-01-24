@@ -1025,6 +1025,9 @@ end
 
 
 ------ DETECT FUNCTIONS ------
+function detect(x,y,z)
+  
+end
 
 function detectDir(sDir) --[[ Detects if is a block in sDir direction.
   03/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
@@ -1093,6 +1096,8 @@ end
 
 
 ------ INSPECT FUNCTIONS ------
+function inspect(x,y,z)
+end
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction.
   05/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
@@ -3148,6 +3153,9 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	end
 end
 
+function place(x,y,z)
+end
+
 function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
@@ -3841,6 +3849,9 @@ end
 
 
 ------ SUCK FUNCTIONS ------
+
+function suck(x,y,z)
+end
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   05/09/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
