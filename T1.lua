@@ -6,6 +6,7 @@ local PREFEREDHAND = "right" --default equip hand
 local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
 local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
+local DIG = false --on walking turtle digs.
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
@@ -194,7 +195,7 @@ function worldFindBlock(sBlock) --[[ Gets the coords for sBlock in tWorld.
   Return: table with coords (x,y,z)
   Sintax: worldFindBlock(sBlock)
   Ex: worldFindBlock("minecraft:cobblestone") - find coords of "minecraft:cobblestone" in tWorld]]
-  
+
 	local tRetBlocks = {}
 	for kx, vx in pairs(tWorld) do
 		for ky, vy in pairs(tWorld[kx]) do
@@ -529,6 +530,7 @@ function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,
   return checkFuel(x, y, z)
 end
 
+--not tested
 function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to fuel nFuel.
   29-11-2022 v0.4.0
   Param: nFuel - number quantity of fuel to search in slots.
@@ -557,13 +559,13 @@ function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to f
   if not tSlots then return false, sMess end
 
   local totFuel, tQ = nFuel
-  for i, tFuel in pairs(tSlots) do
-    local nQ = math.floor(nFuel / tFuel.fuel)
-    if nQ > tFuel.nQ then nQ = tFuel.nQ end
+  for i, itFuel in pairs(tSlots) do
+    local nQ = math.floor(nFuel / itFuel.fuel)
+    if nQ > itFuel.nQ then nQ = itFuel.nQ end
     if nQ > 0 then
       if not tQ then tQ = {} end
-      tQ[#tQ+1] = {slot = tFuel.slot, nQ = nQ}
-      nFuel = nFuel - (nQ * tFuel.fuel)
+      tQ[#tQ+1] = {slot = itFuel.slot, nQ = nQ}
+      nFuel = nFuel - (nQ * itFuel.fuel)
       if nFuel <= 0 then break end
     end
   end
@@ -4045,6 +4047,6 @@ end
 
 INIT()
 
-print(textutils.serializeJSON(worldFindBlock("minecraft:cobblestone")))
+print(textutils.serializeJ(getSlotsToFuel(100)))
 
 TERMINATE()
