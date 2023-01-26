@@ -6,7 +6,7 @@ local PREFEREDHAND = "right" --default equip hand
 local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
 local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
-local DIG = false --on walking turtle digs.
+local DIG = false --on walking turtle digs it's way through
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
@@ -1026,6 +1026,9 @@ end
 
 
 ------ DETECT FUNCTIONS ------
+function detect(x,y,z)
+  
+end
 
 function detectDir(sDir) --[[ Detects if is a block in sDir direction.
   03/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
@@ -1094,6 +1097,8 @@ end
 
 
 ------ INSPECT FUNCTIONS ------
+function inspect(x,y,z)
+end
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction.
   05/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
@@ -1165,14 +1170,16 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "forward([Blocks=1]) - Blocks must be a number." end
-  if SCAN then scanAll() end
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
+  if SCAN then scanAll() end
   for i = 1, nBlocks do
-    if not turtle.forward() then return false, "Can't advance forward."
-    else
-      tTurtle.x, tTurtle.y, tTurtle.z = addSteps(1, "forward")
-      if SCAN then scanAll() end
-    end
+    if not turtle.forward() then
+			if not DIG then return false, "Can't advance forward."
+			elseif not dig() then return false, "Can't dig/advance forward."
+			end
+		end
+    tTurtle.x, tTurtle.y, tTurtle.z = addSteps(1, "forward")
+    if SCAN then scanAll() end
   end
   return true
 end
@@ -1188,8 +1195,8 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "back([Blocks=1]) - Blocks must be a number." end
-  if SCAN then scanAll() end
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
+  if SCAN then scanAll() end
   for i = 1, nBlocks do
     if not turtle.back() then return false, "Can't go backward."
     else
@@ -1211,14 +1218,16 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "up([Blocks=1]) - Blocks must be a number." end
-  if SCAN then scanAll() end
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
+  if SCAN then scanAll() end
   for i = 1, nBlocks do
-    if not turtle.up() then return false, "Can't move up."
-    else
-      tTurtle.y = tTurtle.y + 1
-      if SCAN then scanAll() end
-    end
+    if not turtle.up() then
+			if not DIG then return false, "Can't advance up."
+			elseif not digUp() then return false, "Can't dig/advance up."
+			end
+		end
+    tTurtle.y = tTurtle.y + 1
+    if SCAN then scanAll() end
   end
   return true
 end
@@ -1234,14 +1243,16 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "down([Blocks=1]) - Blocks must be a number." end
-  if SCAN then scanAll() end
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
+  if SCAN then scanAll() end
   for i = 1, nBlocks do
-      if not turtle.down() then return false, "I can't go down anymore."
-      else
-        tTurtle.y = tTurtle.y -1
-        if SCAN then scanAll() end
-      end
+		if not turtle.down() then
+			if not DIG then return false, "Can't advance down."
+			elseif not digDown() then return false, "Can't dig/advance down."
+			end
+		end
+		tTurtle.y = tTurtle.y -1
+		if SCAN then scanAll() end
   end
   return true
 end
@@ -3143,6 +3154,9 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	end
 end
 
+function place(x,y,z)
+end
+
 function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
@@ -3836,6 +3850,9 @@ end
 
 
 ------ SUCK FUNCTIONS ------
+
+function suck(x,y,z)
+end
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   05/09/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
