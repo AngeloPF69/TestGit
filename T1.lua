@@ -530,7 +530,6 @@ function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,
   return checkFuel(x, y, z)
 end
 
---not tested
 function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to fuel nFuel.
   29-11-2022 v0.4.0
   Param: nFuel - number quantity of fuel to search in slots.
@@ -1026,8 +1025,22 @@ end
 
 
 ------ DETECT FUNCTIONS ------
-function detect(x,y,z)
-  
+
+function detect(x,y,z) --[[ Detect if block at x,y,z exists.
+  26-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to detect.
+  Returns: true - if block exists.
+           0 - if block doesn't exist (code for empty space).
+           false - if it couldn't get to neighbor.
+           nil - if parameters < 3.
+               - if x,y,z are not numbers.
+  Sintax: detect(x,y,z)
+  ex: detect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detect that block.]]
+
+  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if not detectDir(getKey(tTurtle.looking, lookingType)) then return 0 end
+  return true
 end
 
 function detectDir(sDir) --[[ Detects if is a block in sDir direction.
@@ -1434,6 +1447,7 @@ function getKey(value, t) --[[ Gets the first key from table t where the key is 
   ex: getKey(2, {"first"=1, "second"=2}) - returns second]]
 
   if checkNil(2, value, t) then return nil, "getKey(value, t) - you must supply value and t table." end
+  value, t = getParam("nt", {{}, -1}, value, t)
 	for k, v in pairs(t) do
 		if v == value then return k end
 	end
@@ -2722,7 +2736,11 @@ function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
 	if tLongerDist[1]<0 then sDir = sDir.."-"
 	else sDir = sDir .. "+"
 	end
-	return turnTo(sDir)
+	if not turnTo(sDir) then
+    tTurtle.looking = (sDir == "y+" and 4 or 0) + (sDir == "y-" and 8 or 0)
+  else tTurtle.looking = 0
+  end
+  return true
 end
 
 
@@ -2840,16 +2858,17 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
 end
 
 function goToNeighbor(x, y, z) --[[ Turtle goes to neighbor, and turns to point x,y,z.
-  05-11-2022 v0.4.0 Param: x, y, z - numbers coords of cnter point of neighbors to go to.
+  05-11-2022 v0.4.0 Param: x, y, z - numbers coords of center point of neighbors to go to.
   Sintax: goToNeighbor(x,y,z)
+  Return: true - if it get to one neighbor of x,y,z
+          false - if it didn't
   ex: goToNeighbor(1, 5, 10) - goes to neighbor of point (1,5,10)]]
   
 	local tNeighbors = getNeighbors(x, y, z)
 	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
 	for i = 1, #tDist do
 		if goTo(tDist[i][1], tDist[i][2], tDist[i][3]) then
-			turnToCoord(x, y, z)
-			return true
+			return turnToCoord(x, y, z)
 		end
 	end
 	return false
@@ -4064,6 +4083,7 @@ end
 
 INIT()
 
-print(textutils.serializeJ(getSlotsToFuel(100)))
+print(detect(-1,1,0))
+
 
 TERMINATE()

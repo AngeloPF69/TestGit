@@ -4,6 +4,7 @@
   },
   [ "minecraft:sand" ] = {
     id = 26,
+    fuel = 0,
   },
   [ "minecraft:dead_bush" ] = {
     id = 12,
@@ -26,26 +27,26 @@
     id = 4,
     fuel = 5,
   },
-  [ "minecraft:redstone" ] = {
-    id = 22,
-    fuel = 0,
-  },
-  [ "minecraft:dirt" ] = {
-    id = 5,
-    fuel = 0,
-  },
-  [ "minecraft:bucket" ] = {
-    id = 18,
+  [ "immersiveengineering:seed" ] = {
+    id = 13,
     fuel = 0,
   },
   [ "minecraft:birch_planks" ] = {
     id = 16,
     fuel = 15,
   },
+  [ "minecraft:bucket" ] = {
+    id = 18,
+    fuel = 0,
+  },
+  [ "minecraft:dirt" ] = {
+    id = 5,
+    fuel = 0,
+  },
   empty = 0,
-  [ "minecraft:oak_log" ] = {
-    id = 3,
-    fuel = 20,
+  [ "minecraft:stripped_birch_log" ] = {
+    id = 19,
+    fuel = 15,
   },
   unreachable = -1,
   [ "minecraft:gravel" ] = {
@@ -53,9 +54,9 @@
     fuel = 0,
     stack = 64,
   },
-  [ "minecraft:wheat_seeds" ] = {
-    id = 15,
-    fuel = 0,
+  [ "minecraft:oak_log" ] = {
+    id = 3,
+    fuel = 20,
   },
   [ "minecraft:spruce_planks" ] = {
     id = 6,
@@ -66,8 +67,8 @@
     id = 10,
     stack = 1,
   },
-  [ "minecraft:sugar_cane" ] = {
-    id = 14,
+  [ "minecraft:apple" ] = {
+    id = 21,
     fuel = 0,
   },
   [ "minecraft:wooden_pickaxe" ] = {
@@ -85,24 +86,24 @@
     id = 11,
     fuel = 0,
   },
-  [ "minecraft:apple" ] = {
-    id = 21,
+  [ "minecraft:sugar_cane" ] = {
+    id = 14,
     fuel = 0,
   },
   [ "minecraft:egg" ] = {
     id = 17,
     fuel = 0,
   },
-  [ "minecraft:stripped_birch_log" ] = {
-    id = 19,
-    fuel = 15,
+  [ "minecraft:wheat_seeds" ] = {
+    id = 15,
+    fuel = 0,
   },
   [ "minecraft:coal" ] = {
     id = 23,
     fuel = 80,
   },
-  [ "immersiveengineering:seed" ] = {
-    id = 13,
+  [ "minecraft:redstone" ] = {
+    id = 22,
     fuel = 0,
   },
   [ "minecraft:diamond_sword" ] = {
