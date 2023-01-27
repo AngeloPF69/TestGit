@@ -1110,7 +1110,23 @@ end
 
 
 ------ INSPECT FUNCTIONS ------
-function inspect(x,y,z)
+
+function inspect(x,y,z) --[[ Detect if block at x,y,z exists.
+  27-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to inspect.
+  Returns: true, table - if block exists.
+           0 - if there is no block (empty space).
+           false - if it couldn't go to the neighbor of x,y,z.
+           nil - if parameters < 3.
+               - if x,y,z are not numbers.
+  Sintax: inspect(x,y,z)
+  ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.]]
+
+  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
+  if not success the return 0 end
+  return success, t
 end
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction.
@@ -4083,7 +4099,9 @@ end
 
 INIT()
 
-print(detect(-1,1,0))
+local success, t = inspect(-1,1,0)
+saveTable(t, "test.txt")
+print(success, textutils.serialize(t))
 
 
 TERMINATE()
