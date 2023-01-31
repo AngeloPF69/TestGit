@@ -44,7 +44,41 @@ tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table enti
 tWorld = {} --[x][y][z] = nEnt
 tSpots = {} --[sSpotName]={x, y, z, nFacing}
 
+------ Events ------
 
+local tEvInv = {
+	bChanged = false, --if a inventory slot has changed
+	tSlots, --wich slot has changed tSlots[nSlot] = {name, count}
+	tLastInv, --snapshot of last inventory (before it changed)
+    bTerminate, --if the handling is to be terminated
+}
+
+function tInv.init()
+    tInv.bChanged = false
+    tInv.bTerminate = false
+    tInv.tLastInv = getInventory()
+    parallel.waitForAny(HandleInvChange, main)
+end
+
+function tInv.terminate()
+    tInv.bTerminate = true
+    os.queueEvent("turtle_inventory")
+    return true
+end
+
+function HandleInvChange()
+    while true do
+        os.pullEvent("turtle_inventory")
+        if tInv.bTerminate then return true, "Handle turtle inventory change terminated." end
+        tInv.bChanged = true
+        local inv2 = getInventory()
+        local _, tDif = cmpInventory(tInv.tLastInv, inv2)
+        tInv.tLastInv = inv2
+        if tDif then tInv.tSlots = tDif
+				else tInv.tSlots = false
+				end
+    end
+end
 ------ Spots ------
 
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
@@ -4097,11 +4131,15 @@ end
 
 ------ TEST AREA ------
 
-INIT()
+function TEST()
+  INIT()
 
-local success, t = inspect(-1,1,0)
-saveTable(t, "test.txt")
-print(success, textutils.serialize(t))
+  local success, t = inspect(-1,1,0)
+  saveTable(t, "test.txt")
+  print(success, textutils.serialize(t))
 
 
-TERMINATE()
+  TERMINATE()
+end
+
+TEST()
