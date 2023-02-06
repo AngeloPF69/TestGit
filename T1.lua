@@ -1145,7 +1145,7 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
-function inspect(x,y,z) --[[ Detect if block at x,y,z exists.
+function inspect(x,y,z) --[[ Returns the information for block at x,y,z.
   27-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to inspect.
   Returns: true, table - if block exists.
            0 - if there is no block (empty space).
@@ -1155,9 +1155,9 @@ function inspect(x,y,z) --[[ Detect if block at x,y,z exists.
   Sintax: inspect(x,y,z)
   ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.]]
 
-  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if checkNil(3, x, y, z) then return nil, "inspect(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
   local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
   if not success the return 0 end
   return success, t
