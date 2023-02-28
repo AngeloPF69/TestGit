@@ -3227,9 +3227,16 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	end
 end
 
-function place(x,y,z)
+--not tested
+function placeXYZ(x, y, z, sMessage)
+  nBlocks = nBlocks or 1
+  if checkNil(3, x, y, z) then return nil, "placeXYZ(x,y,z) - invalid number of parameters." end
+  if not isNumber(x,y,z) then return nil, "placeXYZ(x,y,z) - invalid parameter type." end
+  if not goto(x, y, z) then return false, "Couldn't get to x,y,z." end
+  return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
+--not tested
 function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
@@ -3237,6 +3244,7 @@ function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or b
   Sintax: place([nBlocks=1])
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
   ex: place(1) or place() - Places 1 Block in front of turtle.]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "place(Blocks) - Blocks must be a number." end
