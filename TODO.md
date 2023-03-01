@@ -2,29 +2,65 @@
 
 improving commands in lua for computer craft turtle.
 
-## ## TODO TO VERSION 0.4.0
+## TODO TO VERSION 0.4.0
 
-- [x] cataloging each block in a table ex: tEnt[sEntityName] = nId.
-- [x] create set/get functions for tEnt.
-- [x] create a reversed table of tEnt: tRevEnt[nID] = sEntityName
-- [x] create set/get functions for tRevEnt.
-- [x] inspectDir function must update tEnt, tRevEnt on positive inspect.
-- [x] create tFuel\[sItemName] = fuel.
-- [x] create set/getfunctions for tFuel.
-- [x] create function isFuel(nSlot)
-- [x] create getInvFuel(sItemName)
-- [x] haveFuelTo(x, y, z)
-- [x] upgrade refuel(sItemName, nCount)
-- [x] create tWorld\[x]\[y]\[z]=nEntId
-- [x] create set/get for tWorld
-- [x] and finally create getPath(P1, P2)
+- [ ] inspect functions must update tEnt, tRevEnt and tWorld on positive inspect.
+- [ ] create function isFuel(nSlot)
+- [ ] and finally create getPath(P1, P2)
 - [x] goto(x,y,z) using pathfinding.
-- [x] create tSpot[sSpotName] = {x, y, z, facing}
-- [x] upgrade getFreeHand(prefered hand="right")
 - [ ] create table for equipable tools
 
 ## DONE
 
+- [x] cataloging each block in a table ex: tEnt[sEntityName] = nId.
+	- [x] entAdd(sEntName) Adds a entity name to table ent.
+	- [x] entAddInv() Adds all the inventory items to tEnts.
+	- [x] entAddSlot(nSlot) Adds item in nSlot to tEnts.
+	- [x] entGetSlotId(nSlot) Gets or adds the nSlot item tEnts.
+	- [x] entGetId(sEntName) Gets the entity id.
+- [x] save and load tEnts into/from file
+	- [x] saveEnt() Saves table tEnts into tEnts.txt file.
+	- [x] loadEnt() --[[ Loads tEnts.txt into table tEnts.
+- [x] create set/get functions for tEnt.
+- [x] create a reversed table of tEnt: tRevEnt[nID] = sEntityName	
+- [x] save and load table into/from file
+	- [x] saveRevEnt() Saves tRevEnts into tRevEnts.txt file.
+	- [x] loadRevEnt() Loads tRevEnts.txt into tRevEnts table.
+- [x] create set/get functions for tRevEnt.
+	- [x] entGetName(nId) Gets the entity name.
+- [x] create a table for fuel, ex: tEnts[sItemName].fuel = fuel.
+- [x] create set/get functions for tFuel.
+	- [x] setFuel(sItem, nQFuel) Sets tEnts[sItem].fuel to nQFuel.
+	- [x] addFuel(sItem, nQFuel) Sets tEnts[sItem].fuel to nQFuel.
+	- [x] getFuel(sItem) Get the fuel for sItem.
+- [x] getAllFuelItems()  Gets a table with all fuel items.
+- [x] getFuelSlot(nSlot) Gets the quantity of fuel given by item in nSlot.
+- [x] fuelTestSlot(nSlot) Test the item in nSlot for fuel.
+- [x] getInvFuel() Gets the total fuel in inventory.
+- [x] checkFuel(...) Checks if the fuel is enough.
+- [x] isFuelEnoughTo(x, y, z) Checks if the fuel is enough to go to x,y,z
+- [x] getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to fuel nFuel.
+- [x] getInvFuelItems() Gets the inventory slots and items that are fuel.
+- [x] upgrade refuel to refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.
+- [x] create tWorld(x, y, z, nEntId)
+- [x] create set/get for tWorld
+	- [x] setWorldEnt(x, y, z, nEnt) Set world coords containing nEnt.
+	- [x] getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
+- [x] save and load tWorld into/from file
+	- [x] saveWorld() Saves tWorldinto tWorld.txt
+	- [x] loadWorld() Loads tWorld.txt into tWorld table.
+- [x] getNearestBlock(sBlock, nAmp) Gets the coords of the nearest block.
+- [x] worldFindBlock(sBlock) Gets the coords for sBlock in tWorld.
+- [x] create tSpot[sSpotName] = {x, y, z, facing}
+- [x] save and load tSpots into/from file
+	- [x] saveSpots() Saves table tSpots in text file tSpots.txt
+	- [x] loadSpots() Loads from file tSpots.txt to table tSpots
+- [x] setSpot(sSpotName, x, y, z, nFacing) Sets a spot in tSpots table.
+- [x]getSpot(sSpotName) Gets the spot.
+- [x] goToSpot(sSpotName) Turtle walks to the spot coords, and turns to spot facing.
+- [x] getFreeHand(sHand) Gets turtle free hand: "right"|"left"|false.
+- [x] unequip(sHand)
+	
 ### POSTPONED
 
 
