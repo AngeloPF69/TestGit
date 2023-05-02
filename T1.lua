@@ -3228,11 +3228,10 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 end
 
 --not tested
-function placeXYZ(x, y, z, sMessage)
-  nBlocks = nBlocks or 1
-  if checkNil(3, x, y, z) then return nil, "placeXYZ(x,y,z) - invalid number of parameters." end
-  if not isNumber(x,y,z) then return nil, "placeXYZ(x,y,z) - invalid parameter type." end
-  if not goto(x, y, z) then return false, "Couldn't get to x,y,z." end
+function placeAt(x, y, z, sMessage)
+  if checkNil(3, x, y, z) then return nil, "placeAt(x,y,z) - invalid number of parameters." end
+  if not isNumber(x,y,z) then return nil, "placeAt(x,y,z) - invalid parameter type." end
+  if not gotoNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
   return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
@@ -3932,7 +3931,11 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-function suck(x,y,z)
+function suckAt(x, y, z, nQuant)
+	if checkNil(3, x, y, z) then return nil, "suckAt(x,y,z) - invalid number of parameters." end
+  if not isNumber(x,y,z) then return nil, "suckAt(x,y,z) - invalid parameter type." end
+  if not gotoNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
+  return suckDir(getKey(tTurtle.looking, lookingType), nQuant)
 end
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
