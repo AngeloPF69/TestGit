@@ -4152,6 +4152,24 @@ function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
 end
 
 
+------ TERMINAL FUNCTIONS ------
+
+--not tested
+function printAT(nCol, nLin, ...)
+	term.setCursorPos(nCol, nLin)
+	for i = 1, #arg do
+		term.write(arg[i].."\t")
+	end
+end
+
+--not tested
+function writeAT(nCol, nLin, ...)
+	term.setCursorPos(nCol, nLin)
+	for i = 1, #arg do
+		term.write(arg[i])
+	end
+end
+
 ------ TEST AREA ------
 
 function TEST()
