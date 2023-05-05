@@ -2629,8 +2629,11 @@ function turnBack() --[[ Turtle turns back.
   Sintax: turnBack()
   ex: turnBack() - Turns the turtle back.]]
   turtle.turnRight()
+	tTurtle.facing = incFacing()
+	if SCAN then scan() end
   turtle.turnRight()
-  tTurtle.facing = incFacing(2)
+  tTurtle.facing = incFacing()
+	if SCAN then scan() end
   return true
 end
 
