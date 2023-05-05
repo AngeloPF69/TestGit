@@ -2624,6 +2624,7 @@ function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
   return nFacing
 end
 
+--not tested
 function turnBack() --[[ Turtle turns back.
   11/09/2021 v0.1.0 Returns:  true.
   Sintax: turnBack()
@@ -2659,6 +2660,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 	return false
 end
 
+--not tested
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the left.
   Returns: true
@@ -2676,10 +2678,12 @@ function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   for i=1,nTurns do
     turtle.turnLeft()
     tTurtle.facing = decFacing()
+    if SCAN then scan() end
   end
   return true
 end
 
+--not tested
 function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the right.
   Returns: true
@@ -2697,6 +2701,7 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   for i=1,nTurns do
     turtle.turnRight()
     tTurtle.facing = incFacing()
+		if SCAN then scan() end
   end
   return true
 end
