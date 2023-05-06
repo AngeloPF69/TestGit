@@ -49,17 +49,18 @@
     id = 19,
     fuel = 15,
   },
-  [ "minecraft:spruce_planks" ] = {
-    id = 6,
-    fuel = 15,
+  [ "minecraft:gravel" ] = {
+    id = 7,
+    fuel = 0,
+    stack = 64,
   },
   [ "minecraft:wheat_seeds" ] = {
     id = 15,
     fuel = 0,
   },
-  [ "minecraft:egg" ] = {
-    id = 17,
-    fuel = 0,
+  [ "minecraft:spruce_planks" ] = {
+    id = 6,
+    fuel = 15,
   },
   next = 28,
   [ "minecraft:stone" ] = {
@@ -89,10 +90,9 @@
     id = 14,
     fuel = 0,
   },
-  [ "minecraft:gravel" ] = {
-    id = 7,
+  [ "minecraft:egg" ] = {
+    id = 17,
     fuel = 0,
-    stack = 64,
   },
   [ "minecraft:oak_log" ] = {
     id = 3,

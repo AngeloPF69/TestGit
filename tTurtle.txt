@@ -1,9 +1,9 @@
 {
   y = 0,
-  x = 2,
+  x = -1,
   leftHand = "empty",
-  z = 0,
+  z = -1,
   fuelLimit = 20000,
   facing = 3,
-  looking = 4,
+  looking = 8,
 }

@@ -61,7 +61,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing}
 
 ------ Events ------
 
-local tEvInv = {
+local tInv = {
 	bChanged = false, --if a inventory slot has changed
 	tSlots, --wich slot has changed tSlots[nSlot] = {name, count}
 	tLastInv, --snapshot of last inventory (before it changed)
@@ -1164,7 +1164,6 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
---not tested
 function inspect(...) --[[ Returns the information for block.
   27-01-2023 v0.4.0 Param: x,y,z - nmbers coords of block to inspect.
 													 sDir - inspects a block in sDir.
@@ -1173,16 +1172,19 @@ function inspect(...) --[[ Returns the information for block.
            false - if it couldn't go to the neighbor of x,y,z.
            nil - if parameters < 3.
                - if x,y,z are not numbers.
-  Sintax: inspect(x,y,z)
-  ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.]]
+  Sintax: inspect([x,y,z]|[sDir])
+  ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.
+      inspect("left") - inspects the block in the left. ]]
 
-  if #arg == 1 then return inspectDir(arg[1]) end
-	if #arg == 0 then return inspectDir("forward") end
-	if checkNil(3, x, y, z) then return nil, "inspect(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if #arg == 0 then return inspectDir("forward") end
+  if #arg == 1 then
+     if not inspectDir(arg[1]) then return false, "inspect([x,y,z]|[sDir]) - invalid direction" end
+  end
+	if #arg ~= 3 then return nil, "inspect(x,y,z) - invalid number os parameters." end
+  if not isNumber(arg[1], arg[2], arg[3]) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(arg[1], arg[2], arg[3]) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
   local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
-  if not success the return true, 0 end
+  if not success then return true, 0 end
   return success, t
 end
 
@@ -1196,9 +1198,9 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction.
 			inspectDir("z-") or inspectDir("north") or inspect(0) - inspects a block to the north.]]
   
 	sDir = sDir or "forward"
-  sDir = string.lower(sDir)
+  sDir = strLower(sDir)
 
-	if turnDir(sDir) then sDir = "forward" end
+  if turnDir(sDir) then sDir = "forward" end
 	
 	if insF[sDir] then return insF[sDir]()
 	else return nil, 'inspectDir([Dir="forward"]) - Invalid parameter: Dir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
@@ -2777,6 +2779,7 @@ function turnTo(...) --[[ Turtle turns to direction, block name, empty space, un
 	if nRotate < 0 then turnLeft(math.abs(nRotate))
 	else turnRight(nRotate)
 	end
+
 	return true
 end
 
@@ -3265,10 +3268,9 @@ end
 --not tested
 function placeSign(sMessage)
   local sItem = getItemName()
-  if not sItem then
-    if not itemSelect("sign") then return false, ""
-     return false, "placeSign([sMessage]) - empty selected slot" end
-  if not string.find(sItem, "sign") then return false, "placeSign(sMessage)"
+  if not sItem then return false, "placeSign([sMessage]) - empty selected slot" end
+  if not itemSelect("sign") then return false, "sign not found" end
+  if not string.find(sItem, "sign") then return false, "placeSign(sMessage)" end
 end
 
 --not tested
@@ -3296,10 +3298,10 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
         if isDirType(arg[i]) then sDir = arg[i]
         elseif isFacingType(arg[i]) then sDir = arg[i]
         elseif isCarDirType(arg[i]) then sDir = arg[i]
+        end
       end
       if isEnt(arg[i]) then
         sItem = arg[i]
-      
 			end
     end
   end
@@ -4243,7 +4245,7 @@ end
 function TEST()
   INIT()
 
-  local success, t = inspect(-1,1,0)
+  local success, t = inspect("ola")
   saveTable(t, "test.txt")
   print(success, textutils.serialize(t))
 
