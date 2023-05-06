@@ -1,6 +1,6 @@
 {
   y = 0,
-  x = -1,
+  x = 2,
   leftHand = "empty",
   z = 0,
   fuelLimit = 20000,

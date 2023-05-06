@@ -18,10 +18,25 @@ detF = {["up"] = turtle.detectUp, ["down"] = turtle.detectDown, ["forward"] = tu
 attF = {["up"] = turtle.attackUp, ["down"] = turtle.attackDown, ["forward"] = turtle.attack} --original attack functions
 plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turtle.place} --original place functions
 
-dirType = { ["forward"]=0, ["right"]=1, ["back"]=2, ["left"]=3, ["up"]=4, ["down"]=8 } --moving direction options
-lookingType = { ["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
-facingType = {["z-"]=0, ["x+"]=1, ["z+"]=2, ["x-"]=3, ["y+"]=4, ["y-"]=8} --axis type values
+dirType = {["forward"] = 0, ["right"] = 1, ["back"] = 2, ["left"] = 3, ["up"] = 4, ["down"] = 8} --moving direction options
+function isDirType(sDir)
+	return dirType[sDir]
+end
+
+lookingType = {["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
+function isLookingType(sLook)
+	return lookingType[sLook]
+end
+
+facingType = {["z-"] = 0, ["x+"] = 1, ["z+"] = 2, ["x-"] = 3, ["y+"] = 4, ["y-"] = 8} --axis type values
+function isFacingType(sFacing)
+	return facingType[sFacing]
+end
+
 carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions
+function isCarDirType(sCar)
+	return carDirType[sCar]
+end
 negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}
 
 tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
@@ -270,6 +285,10 @@ end
 function entGetSlotId(nSlot) --[[ Gets or adds the nSlot item tEnts.
   24-07-2022 v0.4.0 Alias for entAddSlot()]]
   return entAddSlot(nSlot)
+end
+
+function isEnt(sEntName) --[[ Alias for entGetId()]]
+  return entGetId(sEntName)
 end
 
 function entGetId(sEntName) --[[ Gets the entity id.
@@ -1026,20 +1045,20 @@ end
 
 ------ DETECT FUNCTIONS ------
 
-function detect(x,y,z) --[[ Detect if block at x,y,z exists.
-  26-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to detect.
+function detectCoord(x,y,z) --[[ Detect if block at x,y,z exists.
+  26-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to detectCoord.
   Returns: true - if block exists.
            0 - if block doesn't exist (code for empty space).
            false - if it couldn't get to neighbor.
            nil - if parameters < 3.
                - if x,y,z are not numbers.
-  Sintax: detect(x,y,z)
-  ex: detect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detect that block.]]
+  Sintax: detectCoord(x,y,z)
+  ex: detectCoord(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
 
-  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
-  if not detectDir(getKey(tTurtle.looking, lookingType)) then return 0 end
+  if checkNil(3, x, y, z) then return nil, "detectCoord(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "detectCoord(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "detectCoord(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if not detectCoordDir(getKey(tTurtle.looking, lookingType)) then return 0 end
   return true
 end
 
@@ -1111,7 +1130,8 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
-function inspect(x,y,z) --[[ Detect if block at x,y,z exists.
+--not tested
+function inspectCoord(x,y,z) --[[ Detect if block at x,y,z exists.
   27-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to inspect.
   Returns: true, table - if block exists.
            0 - if there is no block (empty space).
@@ -1121,11 +1141,11 @@ function inspect(x,y,z) --[[ Detect if block at x,y,z exists.
   Sintax: inspect(x,y,z)
   ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.]]
 
-  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if checkNil(3, x, y, z) then return nil, "inspectCoord(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "inspectCoord(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "inspectCoord(x,y,z) - couldn't get to neighbor of x,y,z." end
   local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
-  if not success the return 0 end
+  if not success then return 0 end
   return success, t
 end
 
@@ -3189,36 +3209,91 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	end
 end
 
-function place(x,y,z)
+--not tested
+function placeCoord(x, y, z)
+  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  
 end
 
-function place(nBlocks) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
+--not tested
+function placeSign(sMessage)
+  local sItem = getItemName()
+  if not sItem then
+    if not itemSelect("sign") then return false, ""
+     return false, "placeSign([sMessage]) - empty selected slot" end
+  if not string.find(sItem, "sign") then return false, "placeSign(sMessage)"
+end
+
+--not tested
+function place(...) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
             false - invalid parameter.
   Sintax: place([nBlocks=1])
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
-  ex: place(1) or place() - Places 1 Block in front of turtle.]]
-  nBlocks = nBlocks or 1
+  ex: place(1) or place() - Places 1 Block in front of turtle.
+      place("left") or place("left", 1) - places 1 selected block to the left.
+      place("minecraft:cobblestone", "left", 2) - places 2 cobblestone to the left.
+      place(0, 1) - places 1 selected block to the south.]]
   
-  if type(nBlocks) ~= "number" then return false, "place(Blocks) - Blocks must be a number." end
-  if nBlocks < 0 then
-    turnBack()
-    nBlocks=math.abs(nBlocks)
+  local sItem, sDir, nQ, nDir, sMessage
+  
+  for i = 1, #arg do
+    if type(arg[i]) == "number" then
+      if nDir then nQ = arg[i]
+      else nDir = arg[i]
+      end
+
+    elseif type(arg[i]) == "string" then
+      if not sDir then
+        if isDirType(arg[i]) then sDir = arg[i]
+        elseif isFacingType(arg[i]) then sDir = arg[i]
+        elseif isCarDirType(arg[i]) then sDir = arg[i]
+      end
+      if isEnt(arg[i]) then
+        sItem = arg[i]
+      
+			end
+    end
   end
 
-  for i = 2, nBlocks do
+  if not sItem then
+    sItem = getItemName()
+    if not sItem then return false, "place(...) - empty selected slot." end
+  end
+
+  if not nQ then
+    if nDir then nQ = nDir
+    else nQ = 1
+    end
+  end
+  
+  if nQ < 0 then
+    turnBack()
+    nQ = math.abs(nQ)
+  end
+
+  for i = 2, nQ do
     if not forward() then
-      nBlocks = i - 2
-      back(sign(nBlocks))
+      nQ = i - 2
+      back(sign(nQ))
       break
     end
   end
 
   local placed = 0
-  for i = 1, nBlocks do
-    if turtle.place() then placed = placed + 1 end
-    if i ~= nBlocks then
+  for i = 1, nQ do
+    local bPlaced = turtle.place()
+    if (not bPlaced) and isEmptySlot() and itemSelect(sItem) then
+      bPlaced = turtle.place()
+    end
+    if bPlaced then
+      placed = placed + 1
+    end
+      
+    if i ~= nQ then
       if not back() then return placed end
     end
   end
@@ -3733,9 +3808,9 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
             False - if it didn't find the item name.
             nil - if type of itemName/Slot is not a number or string.
                 - if itemName/Slot is a number out of range [1..16].
-  Note: if executed select() is the same as turtle.getSelectedSlot()
-  Sintax: select([Slot/Item Name])
-  ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  Note: if executed itemSelect() is the same as turtle.getSelectedSlot()
+  Sintax: itemSelect([Slot/Item Name])
+  ex: itemSelect("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
   local nSlot
   local tData
 
@@ -3838,6 +3913,7 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
         if not supplied nStartSlot, default is the selected slot.
         if not supplied bWrap, it defaults to true.
   Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
+
 	sItemName, nStartSlot , bWrap= getParam("snb", {"", turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
   if sItemName == "" then return nil, "search(sItemName, nStartSlot, bWrap) - Item name must be supplied." end
   if type(nStartSlot) ~= "number" then return nil, "search(sItemName, nStartSlot, bWrap) - Start slot must be a number." end
@@ -4098,10 +4174,8 @@ end
 ------ TEST AREA ------
 
 INIT()
-
-local success, t = inspect(-1,1,0)
-saveTable(t, "test.txt")
-print(success, textutils.serialize(t))
+--back(4)
+print(place(4))
 
 
 TERMINATE()
