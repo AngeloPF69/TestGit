@@ -59,7 +59,41 @@ tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table enti
 tWorld = {} --[x][y][z] = nEnt
 tSpots = {} --[sSpotName]={x, y, z, nFacing}
 
+------ Events ------
 
+local tEvInv = {
+	bChanged = false, --if a inventory slot has changed
+	tSlots, --wich slot has changed tSlots[nSlot] = {name, count}
+	tLastInv, --snapshot of last inventory (before it changed)
+    bTerminate, --if the handling is to be terminated
+}
+
+function tInv.init()
+    tInv.bChanged = false
+    tInv.bTerminate = false
+    tInv.tLastInv = getInventory()
+    parallel.waitForAny(HandleInvChange, main)
+end
+
+function tInv.terminate()
+    tInv.bTerminate = true
+    os.queueEvent("turtle_inventory")
+    return true
+end
+
+function HandleInvChange()
+    while true do
+        os.pullEvent("turtle_inventory")
+        if tInv.bTerminate then return true, "Handle turtle inventory change terminated." end
+        tInv.bChanged = true
+        local inv2 = getInventory()
+        local _, tDif = cmpInventory(tInv.tLastInv, inv2)
+        tInv.tLastInv = inv2
+        if tDif then tInv.tSlots = tDif
+				else tInv.tSlots = false
+				end
+    end
+end
 ------ Spots ------
 
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
@@ -1131,21 +1165,24 @@ end
 ------ INSPECT FUNCTIONS ------
 
 --not tested
-function inspectCoord(x,y,z) --[[ Detect if block at x,y,z exists.
-  27-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to inspect.
+function inspect(...) --[[ Returns the information for block.
+  27-01-2023 v0.4.0 Param: x,y,z - nmbers coords of block to inspect.
+													 sDir - inspects a block in sDir.
   Returns: true, table - if block exists.
-           0 - if there is no block (empty space).
+           true, 0 - if there is no block (empty space).
            false - if it couldn't go to the neighbor of x,y,z.
            nil - if parameters < 3.
                - if x,y,z are not numbers.
   Sintax: inspect(x,y,z)
   ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.]]
 
-  if checkNil(3, x, y, z) then return nil, "inspectCoord(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "inspectCoord(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "inspectCoord(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if #arg == 1 then return inspectDir(arg[1]) end
+	if #arg == 0 then return inspectDir("forward") end
+	if checkNil(3, x, y, z) then return nil, "inspect(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
   local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
-  if not success then return 0 end
+  if not success the return true, 0 end
   return success, t
 end
 
@@ -2606,13 +2643,17 @@ function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
   return nFacing
 end
 
+--not tested
 function turnBack() --[[ Turtle turns back.
   11/09/2021 v0.1.0 Returns:  true.
   Sintax: turnBack()
   ex: turnBack() - Turns the turtle back.]]
   turtle.turnRight()
+	tTurtle.facing = incFacing()
+	if SCAN then scan() end
   turtle.turnRight()
-  tTurtle.facing = incFacing(2)
+  tTurtle.facing = incFacing()
+	if SCAN then scan() end
   return true
 end
 
@@ -2638,6 +2679,7 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 	return false
 end
 
+--not tested
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the left.
   Returns: true
@@ -2655,10 +2697,12 @@ function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   for i=1,nTurns do
     turtle.turnLeft()
     tTurtle.facing = decFacing()
+    if SCAN then scan() end
   end
   return true
 end
 
+--not tested
 function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the right.
   Returns: true
@@ -2676,6 +2720,7 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   for i=1,nTurns do
     turtle.turnRight()
     tTurtle.facing = incFacing()
+		if SCAN then scan() end
   end
   return true
 end
@@ -3210,11 +3255,11 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 end
 
 --not tested
-function placeCoord(x, y, z)
-  if checkNil(3, x, y, z) then return nil, "detect(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "detect(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "detect(x,y,z) - couldn't get to neighbor of x,y,z." end
-  
+function placeAt(x, y, z, sMessage)
+  if checkNil(3, x, y, z) then return nil, "placeAt(x,y,z) - invalid number of parameters." end
+  if not isNumber(x,y,z) then return nil, "placeAt(x,y,z) - invalid parameter type." end
+  if not gotoNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
+  return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
 --not tested
@@ -3962,7 +4007,11 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-function suck(x,y,z)
+function suckAt(x, y, z, nQuant)
+	if checkNil(3, x, y, z) then return nil, "suckAt(x,y,z) - invalid number of parameters." end
+  if not isNumber(x,y,z) then return nil, "suckAt(x,y,z) - invalid parameter type." end
+  if not gotoNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
+  return suckDir(getKey(tTurtle.looking, lookingType), nQuant)
 end
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
@@ -4171,11 +4220,35 @@ function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
 end
 
 
+------ TERMINAL FUNCTIONS ------
+
+--not tested
+function printAT(nCol, nLin, ...)
+	term.setCursorPos(nCol, nLin)
+	for i = 1, #arg do
+		term.write(arg[i].."\t")
+	end
+end
+
+--not tested
+function writeAT(nCol, nLin, ...)
+	term.setCursorPos(nCol, nLin)
+	for i = 1, #arg do
+		term.write(arg[i])
+	end
+end
+
 ------ TEST AREA ------
 
-INIT()
---back(4)
-print(place(4))
+function TEST()
+  INIT()
+
+  local success, t = inspect(-1,1,0)
+  saveTable(t, "test.txt")
+  print(success, textutils.serialize(t))
 
 
-TERMINATE()
+  TERMINATE()
+end
+
+TEST()
