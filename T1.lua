@@ -3224,6 +3224,7 @@ end
 
 ------ PLACE FUNCTIONS ------  
 
+--not tested
 function placeDir(sDir, message) --[[ Places one selected block in sDir direction.
   27/08/2021 v0.4.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle places the selected block.
@@ -3252,7 +3253,19 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
       sDir = "forward"
   end
 	
-	if plaF[sDir] then return plaF[sDir](message)
+	if plaF[sDir] then
+		local success, message = plaF[sDir](message)
+		if not success then return false, "placeDir([sDir = "forward"][, message]) - couldn't place block"
+		else
+			local success, t = inspectDir(sDir)
+      local ent
+			if success then
+				ent = entAdd(t.name)
+			else ent = 0
+			end
+			local x, y, z = addSteps(sDir)
+			setWorldEnt(x, y, z, ent)
+		end
   else return nil, 'placeDir([sDir][, message]) - invalid direction, sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
 	end
 end
