@@ -1079,19 +1079,19 @@ end
 
 ------ DETECT FUNCTIONS ------
 
-function detectCoord(x,y,z) --[[ Detect if block at x,y,z exists.
+function detectAt(x,y,z) --[[ Detect if block at x,y,z exists.
   26-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to detectCoord.
   Returns: true - if block exists.
            0 - if block doesn't exist (code for empty space).
            false - if it couldn't get to neighbor.
            nil - if parameters < 3.
                - if x,y,z are not numbers.
-  Sintax: detectCoord(x,y,z)
-  ex: detectCoord(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
+  Sintax: detectAt(x,y,z)
+  ex: detectAt(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
 
-  if checkNil(3, x, y, z) then return nil, "detectCoord(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "detectCoord(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "detectCoord(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if checkNil(3, x, y, z) then return nil, "detectAt(x,y,z) - invalid number os parameters." end
+  if not isNumber(x,y,z) then return nil, "detectAt(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x,y,z) then return false, "detectAt(x,y,z) - couldn't get to neighbor of x,y,z." end
   if not detectCoordDir(getKey(tTurtle.looking, lookingType)) then return 0 end
   return true
 end
