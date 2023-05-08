@@ -1092,7 +1092,7 @@ function detectAt(x,y,z) --[[ Detect if block at x,y,z exists.
   if checkNil(3, x, y, z) then return nil, "detectAt(x,y,z) - invalid number os parameters." end
   if not isNumber(x,y,z) then return nil, "detectAt(x,y,z) - x,y,z must be numbers." end
   if not goToNeighbor(x,y,z) then return false, "detectAt(x,y,z) - couldn't get to neighbor of x,y,z." end
-  if not detectCoordDir(getKey(tTurtle.looking, lookingType)) then return 0 end
+  if not detectDir(getKey(tTurtle.looking, lookingType)) then return 0 end
   return true
 end
 
