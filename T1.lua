@@ -1348,6 +1348,25 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+--not tested
+function strLeft(s, sep)
+	if type(sep) == "number" then return string.sub(s, 1, sep)
+	else return string.sub(s, 1, string.find(s, sep)-1)
+	end
+end
+
+--not tested
+function strRight(s, sep)
+	if type(sep) == "number" then return string.sub(s, sep, #s)
+	else return string.sub(s, string.find(s, sep)+1, #s)
+	end
+end
+
+--not tested
+function strLR(s, sep)
+	return strLeft(s, sep), strRight(s, sep)
+end
+
 function b2N(value) --[[ Converts boolean value to number (true - 1, false - 0)
   01-01-2023 v0.4.0 Param: value - boolean (true/false)
   Returns: number 1 or 0]]
