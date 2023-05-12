@@ -4272,6 +4272,32 @@ function writeAT(nCol, nLin, ...)
 	end
 end
 
+--not tested
+function term.getWidth()
+	local width, _ = term.getSize()
+	return width
+end
+
+--not tested\
+function term.getHeight()
+	local _, height = term.getSize()
+	return height
+end
+
+--not tested
+function writeCenter(s, line)
+	local col = term.getWidth()/2 - #s/2 + 1
+	term.setCursorPos(col, line)
+	term.write(s)
+end
+
+--not tested
+function printCenter(s, line)
+	local col = term.getWidth()/2 - #s/2 + 1
+	term.setCursorPos(col, line)
+	print(s)
+end
+
 ------ TEST AREA ------
 
 function TEST()
