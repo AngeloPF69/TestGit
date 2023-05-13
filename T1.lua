@@ -899,6 +899,12 @@ function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
         resets tTurtle.looking to 0.
   ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
 
+  if type(nSteps) == "string" then
+      local tmp = facing
+      facing = nSteps
+      nSteps = tmp
+  end
+
   if not facing then
     if tTurtle.looking ~= 0 then
       facing = tTurtle.looking
@@ -906,11 +912,10 @@ function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
     end
   end
 
-  facing = facing or tTurtle.facing
   nSteps = nSteps or 1
 
   if type(facing) == "table" then
-    return false, 'addSteps([Steps=1][, facing = turtle facing]) - facing must be "z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3.'
+    return false, 'addSteps([Steps=1][, facing = turtle facing]) - facing must be "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3.'
   end
 
   if type(facing) == "string" then
@@ -1079,7 +1084,7 @@ end
 
 ------ DETECT FUNCTIONS ------
 
-function detectCoord(x,y,z) --[[ Detect if block at x,y,z exists.
+function detectAt(x, y, z) --[[ Detect if block at x,y,z exists.
   26-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to detectCoord.
   Returns: true - if block exists.
            0 - if block doesn't exist (code for empty space).
@@ -1090,8 +1095,8 @@ function detectCoord(x,y,z) --[[ Detect if block at x,y,z exists.
   ex: detectCoord(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
 
   if checkNil(3, x, y, z) then return nil, "detectCoord(x,y,z) - invalid number os parameters." end
-  if not isNumber(x,y,z) then return nil, "detectCoord(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(x,y,z) then return false, "detectCoord(x,y,z) - couldn't get to neighbor of x,y,z." end
+  if not isNumber(x, y, z) then return nil, "detectCoord(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x, y, z) then return false, "detectCoord(x,y,z) - couldn't get to neighbor of x,y,z." end
   if not detectCoordDir(getKey(tTurtle.looking, lookingType)) then return 0 end
   return true
 end
@@ -1164,15 +1169,24 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
+function inspectAt(x, y, z)
+  if not isNumber(x, y, z) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
+  if not goToNeighbor(x, y, z) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
+  local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
+  if not success then return true, 0 end
+  return success, t
+end
+
 function inspect(...) --[[ Returns the information for block.
   27-01-2023 v0.4.0 Param: x,y,z - nmbers coords of block to inspect.
 													 sDir - inspects a block in sDir.
   Returns: true, table - if block exists.
            true, 0 - if there is no block (empty space).
            false - if it couldn't go to the neighbor of x,y,z.
-           nil - if parameters < 3.
+           nil - if number of parameters ~= 0|1|3
                - if x,y,z are not numbers.
   Sintax: inspect([x,y,z]|[sDir])
+  sDir = "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3
   ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.
       inspect("left") - inspects the block in the left. ]]
 
@@ -1181,11 +1195,7 @@ function inspect(...) --[[ Returns the information for block.
      if not inspectDir(arg[1]) then return false, "inspect([x,y,z]|[sDir]) - invalid direction" end
   end
 	if #arg ~= 3 then return nil, "inspect(x,y,z) - invalid number os parameters." end
-  if not isNumber(arg[1], arg[2], arg[3]) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
-  if not goToNeighbor(arg[1], arg[2], arg[3]) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
-  local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
-  if not success then return true, 0 end
-  return success, t
+  return inspectAt(arg[1], arg[2], arg[3])
 end
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction.
@@ -3252,16 +3262,20 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
       sDir = "forward"
   end
 	
-	if plaF[sDir] then return plaF[sDir](message)
+	if plaF[sDir] then
+    local success, message = plaF[sDir](message)
+    local blockId = entAdd(getItemName())
+    local x, y, z = addSteps(sDir)
+    if success then return setWorldEnt(x, y, z, blockId) end
   else return nil, 'placeDir([sDir][, message]) - invalid direction, sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
 	end
+  return false, "placeDir([sDir][, message]) - couldn't place block"
 end
 
---not tested
 function placeAt(x, y, z, sMessage)
   if checkNil(3, x, y, z) then return nil, "placeAt(x,y,z) - invalid number of parameters." end
-  if not isNumber(x,y,z) then return nil, "placeAt(x,y,z) - invalid parameter type." end
-  if not gotoNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
+  if not isNumber(x, y, z) then return nil, "placeAt(x,y,z) - invalid parameter type." end
+  if not goToNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
   return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
@@ -4245,10 +4259,8 @@ end
 function TEST()
   INIT()
 
-  local success, t = inspect("ola")
-  saveTable(t, "test.txt")
-  print(success, textutils.serialize(t))
-
+  print(place("right", 2))
+  
 
   TERMINATE()
 end
