@@ -3,11 +3,11 @@
 
 ## Initialize
 
-  <a href="#INIT">INIT() Loads text files to tables.</a>
+  <a href="#INIT">INIT() Loads files to tables, so that the turtle won't forget what it has learned.</a>
 
 ## Finalize
 
-  <a href="#TERMINATE">TERMINATE() Saves tables to text files, so that the turtle won't forget what it has learned..</a>
+  <a href="#TERMINATE">TERMINATE() Saves tables to text files, so that the turtle won't forget what it has learned.</a>
   
 ## Measurements
 

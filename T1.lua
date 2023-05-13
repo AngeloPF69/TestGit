@@ -1091,8 +1091,8 @@ function detectAt(x, y, z) --[[ Detect if block at x,y,z exists.
            false - if it couldn't get to neighbor.
            nil - if parameters < 3.
                - if x,y,z are not numbers.
-  Sintax: detectCoord(x,y,z)
-  ex: detectCoord(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
+  Sintax: detectAt(x,y,z)
+  ex: detectAt(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
 
   if checkNil(3, x, y, z) then return nil, "detectCoord(x,y,z) - invalid number os parameters." end
   if not isNumber(x, y, z) then return nil, "detectCoord(x,y,z) - x,y,z must be numbers." end
@@ -1357,6 +1357,25 @@ end
 
 
 ------ GENERAL FUNCTIONS ------
+
+--not tested
+function strLeft(s, sep)
+	if type(sep) == "number" then return string.sub(s, 1, sep)
+	else return string.sub(s, 1, string.find(s, sep)-1)
+	end
+end
+
+--not tested
+function strRight(s, sep)
+	if type(sep) == "number" then return string.sub(s, sep, #s)
+	else return string.sub(s, string.find(s, sep)+1, #s)
+	end
+end
+
+--not tested
+function strLR(s, sep)
+	return strLeft(s, sep), strRight(s, sep)
+end
 
 function b2N(value) --[[ Converts boolean value to number (true - 1, false - 0)
   01-01-2023 v0.4.0 Param: value - boolean (true/false)
@@ -3234,6 +3253,7 @@ end
 
 ------ PLACE FUNCTIONS ------  
 
+--not tested
 function placeDir(sDir, message) --[[ Places one selected block in sDir direction.
   27/08/2021 v0.4.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle places the selected block.
@@ -3263,10 +3283,18 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
   end
 	
 	if plaF[sDir] then
-    local success, message = plaF[sDir](message)
-    local blockId = entAdd(getItemName())
-    local x, y, z = addSteps(sDir)
-    if success then return setWorldEnt(x, y, z, blockId) end
+		local success, message = plaF[sDir](message)
+		if not success then return false, "placeDir([sDir = "forward"][, message]) - couldn't place block"
+		else
+			local success, t = inspectDir(sDir)
+      local ent
+			if success then
+				ent = entAdd(t.name)
+			else ent = 0
+			end
+			local x, y, z = addSteps(sDir)
+			setWorldEnt(x, y, z, ent)
+		end
   else return nil, 'placeDir([sDir][, message]) - invalid direction, sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
 	end
   return false, "placeDir([sDir][, message]) - couldn't place block"
@@ -4252,6 +4280,32 @@ function writeAT(nCol, nLin, ...)
 	for i = 1, #arg do
 		term.write(arg[i])
 	end
+end
+
+--not tested
+function term.getWidth()
+	local width, _ = term.getSize()
+	return width
+end
+
+--not tested\
+function term.getHeight()
+	local _, height = term.getSize()
+	return height
+end
+
+--not tested
+function writeCenter(s, line)
+	local col = term.getWidth()/2 - #s/2 + 1
+	term.setCursorPos(col, line)
+	term.write(s)
+end
+
+--not tested
+function printCenter(s, line)
+	local col = term.getWidth()/2 - #s/2 + 1
+	term.setCursorPos(col, line)
+	print(s)
 end
 
 ------ TEST AREA ------
