@@ -5,5 +5,5 @@
   z = 0,
   fuelLimit = 20000,
   looking = 8,
-  facing = 0,
+  facing = 2,
 }

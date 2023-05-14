@@ -1358,22 +1358,40 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
---not tested
-function strLeft(s, sep)
+function strLeft(s, sep) --[[ Returns the left part of a string.
+14-05-2023 v0.4.0 Param: s - the complete string.
+                         sep - the character separator or the length of the string to return.
+Returns:  nil - if the string is not supplied.
+ex: strLeft("Hello", 2) - returns He.
+    strLeft("Hello", "l") - returns He.]]
+
+  if not s then return nil, "strLeft(string, separator/length) - string not supplied" end
+  if not sep then return s end
 	if type(sep) == "number" then return string.sub(s, 1, sep)
 	else return string.sub(s, 1, string.find(s, sep)-1)
 	end
 end
 
---not tested
-function strRight(s, sep)
-	if type(sep) == "number" then return string.sub(s, sep, #s)
+function strRight(s, sep) --[[ Returns the right part of a string.
+  14-05-2023 v0.4.0 Param: s - the complete string.
+                           sep - the character separator or the length of the string to return.
+  Returns:  nil - if the string is not supplied.
+  ex: strRight("Hello", 2) - returns lo.
+      strRight("Hello", "l") - returns o.]]
+
+  if not s then return nil, "strLeft(string, separator/length) - string not supplied" end
+  if not sep then return s end
+	if type(sep) == "number" then return string.sub(s, #s - sep + 1, #s)
 	else return string.sub(s, string.find(s, sep)+1, #s)
 	end
 end
 
---not tested
-function strLR(s, sep)
+function strLR(s, sep) --[[ Returns the left and right part of a string.
+  14-05-2023 v0.4.0 Param: s - the complete string.
+                           sep - the character separator or the length of the string to return.
+  Returns:  nil - if the string is not supplied.
+  ex: strLR("Hello", 2) - returns He, lo.
+      strLR("Hello", "l") - returns He, o.]]
 	return strLeft(s, sep), strRight(s, sep)
 end
 
@@ -2674,18 +2692,12 @@ function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
   return nFacing
 end
 
---not tested
 function turnBack() --[[ Turtle turns back.
   11/09/2021 v0.1.0 Returns:  true.
   Sintax: turnBack()
   ex: turnBack() - Turns the turtle back.]]
-  turtle.turnRight()
-	tTurtle.facing = incFacing()
-	if SCAN then scan() end
-  turtle.turnRight()
-  tTurtle.facing = incFacing()
-	if SCAN then scan() end
-  return true
+
+  return turnRight(2)
 end
 
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
@@ -2710,22 +2722,22 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 	return false
 end
 
---not tested
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the left.
   Returns: true
            nil - if nTurns is not a number.
   Note: if nTurns < 0 it turns to the right.
+         if SCAN if on stores the block in front of it, after the turn, in the tWorld table
   Sintax: turnLeft([nTurns=1])
   ex: turnLeft() - turns once to the left.
       turnLeft(-1) - turns once to the right.]]
   
   local i
-  nTurns = nTurns or 1 --default 1 turn
+  nTurns = nTurns or 1
   if type(nTurns) ~= "number" then return nil, "turnLeft(Turns) - Turns must be a number." end
   if nTurns < 0 then return turnRight(math.abs(nTurns)) end
-  nTurns=bit32.band(nTurns, 3) --nTurns muest be 0..3 (4=0...)
-  for i=1,nTurns do
+  nTurns = bit32.band(nTurns, 3) --nTurns must be 0..3
+  for i = 1, nTurns do
     turtle.turnLeft()
     tTurtle.facing = decFacing()
     if SCAN then scan() end
@@ -2733,12 +2745,12 @@ function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
   return true
 end
 
---not tested
 function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the right.
   Returns: true
            nil - if nTurns is not a number.
   Note: if nTurns < 0 it turns to the left.
+        if SCAN if on stores the block in front of it, after the turn, in the tWorld table
   Sintax: turnRight([nTurns=1])
   ex: turnRight() - turns once to the right.
       turnRight(-1) - turns once to the left.]]
@@ -2747,8 +2759,8 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
   nTurns = nTurns or 1
   if type(nTurns) ~= "number" then return nil, "turnRight(Turns) - Turns must be a number." end
   if nTurns < 0 then return turnLeft(math.abs(nTurns)) end
-  nTurns=bit32.band(nTurns, 3)
-  for i=1,nTurns do
+  nTurns = bit32.band(nTurns, 3)
+  for i = 1, nTurns do
     turtle.turnRight()
     tTurtle.facing = incFacing()
 		if SCAN then scan() end
@@ -2999,29 +3011,29 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
   if dX == 0 and dY == 0 and dZ == 0 then return true end
   
   repeat
-    local bHasMoved=false
-    if dZ>0 then
-      if goDir("z+",dZ) then bHasMoved=true end
+    local bHasMoved = false
+    if dZ > 0 then
+      if goDir("z+", dZ) then bHasMoved = true end
     end
-    if dZ<0 then
-      if goDir("z-",math.abs(dZ)) then bHasMoved=true end
-    end
-
-    if dX>0 then
-      if goDir("x+",dX) then bHasMoved=true end
-    end
-    if dX<0 then
-      if goDir("x-",math.abs(dX)) then  bHasMoved=true end
+    if dZ < 0 then
+      if goDir("z-", math.abs(dZ)) then bHasMoved = true end
     end
 
-    if dY>0 then
-      if goDir("up", dY) then bHasMoved=true end
+    if dX > 0 then
+      if goDir("x+", dX) then bHasMoved = true end
     end
-    if dY<0 then
-      if goDir("down", math.abs(dY)) then bHasMoved=true end
+    if dX < 0 then
+      if goDir("x-", math.abs(dX)) then  bHasMoved = true end
     end
 
-    dX, dY, dZ = distTo(x,y, z)
+    if dY > 0 then
+      if goDir("up", dY) then bHasMoved = true end
+    end
+    if dY < 0 then
+      if goDir("down", math.abs(dY)) then bHasMoved = true end
+    end
+
+    dX, dY, dZ = distTo(x, y, z)
   until (bHasMoved == false) or (dX == 0 and dY == 0 and dZ == 0)
   if (dX == 0) and (dY == 0) and (dZ == 0) then return true end
   return false
@@ -3253,7 +3265,6 @@ end
 
 ------ PLACE FUNCTIONS ------  
 
---not tested
 function placeDir(sDir, message) --[[ Places one selected block in sDir direction.
   27/08/2021 v0.4.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle places the selected block.
@@ -3284,12 +3295,11 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	
 	if plaF[sDir] then
 		local success, message = plaF[sDir](message)
-		if not success then return false, "placeDir([sDir = "forward"][, message]) - couldn't place block"
+		if not success then return false, 'placeDir([sDir = "forward"][, message]) - couldn\'t place block'
 		else
 			local success, t = inspectDir(sDir)
       local ent
-			if success then
-				ent = entAdd(t.name)
+			if success then ent = entAdd(t.name)
 			else ent = 0
 			end
 			local x, y, z = addSteps(sDir)
@@ -3297,25 +3307,37 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 		end
   else return nil, 'placeDir([sDir][, message]) - invalid direction, sDir must be "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.'
 	end
-  return false, "placeDir([sDir][, message]) - couldn't place block"
+  return true
 end
 
-function placeAt(x, y, z, sMessage)
+function placeAt(x, y, z, sMessage) --[[ Places a block/item at coords x, y, z.
+  14/05/2023 v0.4.0 Param: x, y, z - coords of spot to place block/item.
+                           sMessage - if placing a sign, this is the message on the sign.
+  Returns: nil - if x, y, z is not supplied
+               - if x, y, z are not numbers.
+           false - if the turtle couldn't get to x, y, z.
+  ex: placeAt(10, 10, 2) - places the selected slot block/item in the coords 10, 10, 2.
+      placeAt(10, 10, 2, "Wellcome") - if selected slot has a sign, places it at 10, 10, 2 with the word "Wellcome".]]
+
   if checkNil(3, x, y, z) then return nil, "placeAt(x,y,z) - invalid number of parameters." end
   if not isNumber(x, y, z) then return nil, "placeAt(x,y,z) - invalid parameter type." end
   if not goToNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
   return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
---not tested
-function placeSign(sMessage)
+function placeSign(sMessage) --[[ Places a sign in front of the turtle.
+  14-05-2023 v0.4.0 Param: sMessage - the message printed in the sign.
+  Returns:  false - if no sign was found in inventory.
+            number - 1 (Quantity of items placed).
+  ex: placeSign("Hello") - places a selected sign with the word "Hello".]]
+
   local sItem = getItemName()
-  if not sItem then return false, "placeSign([sMessage]) - empty selected slot" end
-  if not itemSelect("sign") then return false, "sign not found" end
-  if not string.find(sItem, "sign") then return false, "placeSign(sMessage)" end
+  if (not sItem) or (not string.find(sItem, "sign")) then
+    if not itemSelect("sign") then return false, "sign not found" end
+  end
+  return place(sMessage)
 end
 
---not tested
 function place(...) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
@@ -3327,30 +3349,40 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
       place("minecraft:cobblestone", "left", 2) - places 2 cobblestone to the left.
       place(0, 1) - places 1 selected block to the south.]]
   
-  local sItem, sDir, nQ, nDir, sMessage
+  local sItem, sDir, nQ, nDir, sMessage --arguments: sItem - item name, sDir - direction, nQ - quantity, nDir - number direction[0..3], sMessage - if placing sign.
   
   for i = 1, #arg do
-    if type(arg[i]) == "number" then
-      if nDir then nQ = arg[i]
-      else nDir = arg[i]
+    if type(arg[i]) == "number" then --argument is a number
+      if nDir then nQ = arg[i] --the second is quantity
+      else nDir = arg[i] --the first is the direction
       end
 
-    elseif type(arg[i]) == "string" then
-      if not sDir then
-        if isDirType(arg[i]) then sDir = arg[i]
-        elseif isFacingType(arg[i]) then sDir = arg[i]
-        elseif isCarDirType(arg[i]) then sDir = arg[i]
+    elseif type(arg[i]) == "string" then --the argument is a string
+      if (not sDir) and (isDirType(arg[i]) or isFacingType(arg[i]) or isCarDirType(arg[i])) then --is a valid direction
+          sDir = arg[i]
+      elseif isEnt(arg[i]) then --is a item
+        sItem = arg[i]
+			else --it must be a message to the sign item
+        if not sItem then
+          sItem = getItemName()
+          if not sItem then
+            sItem = getItemName(itemSelect(arg[i]))
+            if not sItem then return false, "place(...) - could't find item, "..arg[i] end
+          end
+          if string.find(sItem, "sign") then sMessage = arg[i]
+          else sItem = arg[i]            
+          end
+        else sMessage = arg[i]
         end
       end
-      if isEnt(arg[i]) then
-        sItem = arg[i]
-			end
     end
   end
 
   if not sItem then
     sItem = getItemName()
     if not sItem then return false, "place(...) - empty selected slot." end
+  elseif sItem ~= getItemName() then
+    if not itemSelect(sItem) then return false, "place(...) - item not found." end
   end
 
   if not nQ then
@@ -3359,6 +3391,10 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
     end
   end
   
+  if sDir then
+    if turnDir(sDir) then sDir = "forward" end
+  end
+
   if nQ < 0 then
     turnBack()
     nQ = math.abs(nQ)
@@ -3367,14 +3403,14 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
   for i = 2, nQ do
     if not forward() then
       nQ = i - 2
-      back(sign(nQ))
+      if nQ > 0 then back() end
       break
     end
   end
 
   local placed = 0
   for i = 1, nQ do
-    local bPlaced = turtle.place()
+    local bPlaced = placeDir(sDir, sMessage)
     if (not bPlaced) and isEmptySlot() and itemSelect(sItem) then
       bPlaced = turtle.place()
     end
@@ -3460,6 +3496,7 @@ function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and return
   Sintax: placeDown([nBlocks=1])
   Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
   ex: placeDown(1) or placeDown() - Places 1 Block Down.]]
+
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeDown(Blocks) - Blocks must be a number." end
@@ -3491,6 +3528,7 @@ function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns
   Sintax: placeLeft([nBlocks=1])
   Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
   ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
+
   nBlocks = nBlocks or 1
 
   if type(nBlocks) ~= "number" then return false, "placeLeft(Blocks) - Blocks must be a number." end
@@ -3509,6 +3547,7 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
   Sintax: placeRight([nBlocks=1])
   Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
   ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
+
   nBlocks = nBlocks or 1
 
   if type(nBlocks) ~= "number" then return false, "placeRight(Blocks) - Blocks must be a number." end
@@ -3526,6 +3565,7 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
                   - invalid parameter.
   Sintax: placeAbove([nBlocks=1])
   ex: placeAbove(1) or placeAbove() - Places one Block above turtle.]]
+
     nBlocks = nBlocks or 1
     
     if type(nBlocks) ~= "number" then return false, "placeAbove(Blocks) - Blocks must be a number." end
@@ -3570,6 +3610,7 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
                   - invalid parameter.
   Sintax: placeBelow([Blocks=1])
   ex: placeBelow(1) or placeBelow() - Places one Block below turtle.]]
+
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeBelow(Blocks) - Blocks must be a number." end
@@ -4015,7 +4056,8 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
     tData = turtle.getItemDetail(slot + 1)
 
     if tData then
-      if tData.name == sItemName then
+      --if tData.name == sItemName then
+      if string.find(tData.name, sItemName) then
         return slot + 1, tData.count
       end
     end
@@ -4040,6 +4082,7 @@ function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot star
   Sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
   ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
       selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
+
   local nSlot
 
   nSlot=getFreeSlot(nStartSlot, bWrap) --get a free slot
@@ -4051,7 +4094,15 @@ end
 
 ------ SUCK FUNCTIONS ------
 
-function suckAt(x, y, z, nQuant)
+function suckAt(x, y, z, nQuant) --[[ Sucks items at coords x, y, z.
+  14-05-2024 v0.4.0 Param: x, y, z - numbers the coords where are the items to suck.
+                           nQuant - number of items to suck
+  Returns:  nil - if x,y,z not supplied.
+                - if x, y, z are not numbers.
+            false - if the turtle could't get to coords.
+  Sintax: suckAt(x, y, z, nQuant)
+  ex: suckAt(10, 10, 10, 10) - sucks 10 items at coords 10, 10, 10.]]
+
 	if checkNil(3, x, y, z) then return nil, "suckAt(x,y,z) - invalid number of parameters." end
   if not isNumber(x,y,z) then return nil, "suckAt(x,y,z) - invalid parameter type." end
   if not gotoNeighbor(x, y, z) then return false, "Couldn't get to x,y,z." end
@@ -4104,6 +4155,7 @@ end
 
 
 ------ FILE SYSTEM FUNCTIONS ------
+
 function fsGetFreeSpace() --[[ Gets the total free space on disk.
   02/10/2021 v0.2.0 Returns:  Free space on disk.
   ex: fsGetFreeSpace() - Outputs free space on disk.]]
@@ -4267,7 +4319,7 @@ end
 ------ TERMINAL FUNCTIONS ------
 
 --not tested
-function printAT(nCol, nLin, ...)
+function printAt(nCol, nLin, ...)
 	term.setCursorPos(nCol, nLin)
 	for i = 1, #arg do
 		term.write(arg[i].."\t")
@@ -4275,7 +4327,7 @@ function printAT(nCol, nLin, ...)
 end
 
 --not tested
-function writeAT(nCol, nLin, ...)
+function writeAt(nCol, nLin, ...)
 	term.setCursorPos(nCol, nLin)
 	for i = 1, #arg do
 		term.write(arg[i])
@@ -4288,7 +4340,7 @@ function term.getWidth()
 	return width
 end
 
---not tested\
+--not tested
 function term.getHeight()
 	local _, height = term.getSize()
 	return height
@@ -4313,8 +4365,8 @@ end
 function TEST()
   INIT()
 
-  print(place("right", 2))
-  
+  print(printAt(10, 10, "angelo", "freitas"))
+
 
   TERMINATE()
 end

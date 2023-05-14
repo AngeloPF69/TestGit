@@ -26,6 +26,7 @@
   "minecraft:flint",
   "minecraft:sand",
   "minecraft:grass_block",
+  "minecraft:jungle_sign",
   [ -1 ] = "unreachable",
   [ 0 ] = "empty",
 }

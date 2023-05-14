@@ -2,6 +2,10 @@
   [ "minecraft:holla" ] = {
     id = 1,
   },
+  [ "minecraft:stick" ] = {
+    id = 4,
+    fuel = 5,
+  },
   [ "minecraft:sand" ] = {
     id = 26,
     fuel = 0,
@@ -23,17 +27,16 @@
     id = 20,
     fuel = 0,
   },
-  [ "minecraft:stick" ] = {
-    id = 4,
-    fuel = 5,
-  },
   [ "minecraft:redstone" ] = {
     id = 22,
     fuel = 0,
   },
-  [ "minecraft:dirt" ] = {
-    id = 5,
+  [ "immersiveengineering:seed" ] = {
+    id = 13,
     fuel = 0,
+  },
+  [ "minecraft:jungle_sign" ] = {
+    id = 28,
   },
   [ "minecraft:bucket" ] = {
     id = 18,
@@ -49,20 +52,19 @@
     fuel = 20,
   },
   unreachable = -1,
-  [ "minecraft:egg" ] = {
-    id = 17,
-    fuel = 0,
+  [ "minecraft:spruce_planks" ] = {
+    id = 6,
+    fuel = 15,
   },
   [ "minecraft:wheat_seeds" ] = {
     id = 15,
     fuel = 0,
   },
-  [ "minecraft:gravel" ] = {
-    id = 7,
+  [ "minecraft:egg" ] = {
+    id = 17,
     fuel = 0,
-    stack = 64,
   },
-  next = 28,
+  next = 29,
   [ "minecraft:stone" ] = {
     id = 10,
     stack = 1,
@@ -82,28 +84,29 @@
   [ "minecraft:grass_block" ] = {
     id = 27,
   },
-  [ "minecraft:cobblestone" ] = {
-    id = 11,
-    fuel = 0,
-  },
   [ "minecraft:apple" ] = {
     id = 21,
     fuel = 0,
   },
-  [ "minecraft:spruce_planks" ] = {
-    id = 6,
-    fuel = 15,
+  [ "minecraft:gravel" ] = {
+    id = 7,
+    fuel = 0,
+    stack = 64,
   },
   [ "minecraft:stripped_birch_log" ] = {
     id = 19,
     fuel = 15,
   },
+  [ "minecraft:dirt" ] = {
+    id = 5,
+    fuel = 0,
+  },
   [ "minecraft:coal" ] = {
     id = 23,
     fuel = 80,
   },
-  [ "immersiveengineering:seed" ] = {
-    id = 13,
+  [ "minecraft:cobblestone" ] = {
+    id = 11,
     fuel = 0,
   },
   [ "minecraft:diamond_sword" ] = {
