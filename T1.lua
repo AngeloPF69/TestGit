@@ -72,7 +72,7 @@ function tInv.init()
     tInv.bChanged = false
     tInv.bTerminate = false
     tInv.tLastInv = getInventory()
-    parallel.waitForAny(HandleInvChange, main)
+    parallel.waitForAny(HandleInvChange, TEST)
 end
 
 function tInv.terminate()
@@ -4360,15 +4360,20 @@ function printCenter(s, line)
 	print(s)
 end
 
------- TEST AREA ------
-
-function TEST()
-  INIT()
-
-  print(printAt(10, 10, "angelo", "freitas"))
-
-
-  TERMINATE()
+--not tested
+function main()
+	tInv.init()
 end
 
-TEST()
+print(main())
+
+------ TEST AREA ------
+function TEST()
+	INIT()
+	-- test you code below this line
+	
+  print(printAt(10, 10, "Hello", "people"))
+  
+	-- test you code above this line
+	TERMINATE()
+end
