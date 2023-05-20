@@ -65,23 +65,33 @@ local tInv = {
 	bChanged = false, --if a inventory slot has changed
 	tSlots, --wich slot has changed tSlots[nSlot] = {name, count}
 	tLastInv, --snapshot of last inventory (before it changed)
-    bTerminate, --if the handling is to be terminated
+  bTerminate, --if the handling is to be terminated
 }
 
-function tInv.init()
+function tInv.init() --[[ Initializes the handlind of the event turtle_inventory.
+  20-05-2023 v0.4.0 Returns: true
+  Sintax: tInv.init()]]
+
     tInv.bChanged = false
     tInv.bTerminate = false
     tInv.tLastInv = getInventory()
     parallel.waitForAny(HandleInvChange, TEST)
+    return true
 end
 
-function tInv.terminate()
+function tInv.terminate() --[[ Terminates the handlind of the event turtle_inventory.
+  20-05-2023 v0.4.0 Returns: true
+  Sintax: tInv.terminate()]]
+
     tInv.bTerminate = true
     os.queueEvent("turtle_inventory")
     return true
 end
 
-function HandleInvChange()
+function HandleInvChange() --[[ Function to handle the event turtle_inventory.
+  20-05-2023 v0.4.0 Returns: true
+  Sintax: HandleInvChange()]]
+
     while true do
         os.pullEvent("turtle_inventory")
         if tInv.bTerminate then return true, "Handle turtle inventory change terminated." end
@@ -94,6 +104,8 @@ function HandleInvChange()
 				end
     end
 end
+
+
 ------ Spots ------
 
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
@@ -788,6 +800,7 @@ end
 
 function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
   02/11/2021 v0.4.0 Returns:	true]] 
+  tInv.init()
   loadEnt()
   loadRevEnt()
   loadWorld()
@@ -801,7 +814,8 @@ end
 ------ TERMINATE ------
 
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
-  02/11/2021 v0.4.0 Returns:	true]] 
+  02/11/2021 v0.4.0 Returns:	true]]
+  tInv.terminate()
   saveEnt()
   saveRevEnt()
   saveWorld()
@@ -4318,62 +4332,92 @@ end
 
 ------ TERMINAL FUNCTIONS ------
 
---not tested
-function printAt(nCol, nLin, ...)
+function printAt(nCol, nLin, ...) --[[ Prints at col, lin args separated by spaces (tab).
+  20-05-2023 v0.4.0 Param: nCol, nLin - numbers, column and line where to print.
+  Returns:  true.
+  Sintax: printAt(nColumn, nLine[, ...])
+  Note: if no args to print it only sets the cursor at nCol, nLine.
+  ex: printAt(10, 10, "hello", "world") - prints at 10, 10, "hello world"]]
+
 	term.setCursorPos(nCol, nLin)
 	for i = 1, #arg do
 		term.write(arg[i].."\t")
 	end
+  return true
 end
 
---not tested
-function writeAt(nCol, nLin, ...)
+function writeAt(nCol, nLin, ...) --[[ Writes at col, lin args.
+  20-05-2023 v0.4.0 Param: nCol, nLin - numbers, column and line where to write.
+  Returns:  true.
+  Sintax: writeAt(nColumn, nLine[, ...])
+  Note: if no args to write it only sets the cursor at nCol, nLine.
+  ex: printAt(10, 10, "hello", "world") - prints at 10, 10, "helloworld"]]
+
 	term.setCursorPos(nCol, nLin)
 	for i = 1, #arg do
 		term.write(arg[i])
 	end
+  return true
 end
 
---not tested
-function term.getWidth()
+function term.getWidth() --[[ Returns the width of the terminal.
+  20-05-2023 v0.4.0 Returns:  number - the width of the terminal
+  Sintax: term.getWidth()
+  ex: term.getWidth() - returns the width of the terminal.]]
+
 	local width, _ = term.getSize()
 	return width
 end
 
---not tested
-function term.getHeight()
+function term.getHeight() --[[ Returns the height of the terminal.
+  20-05-2023 v0.4.0 Returns:  number - the height of the terminal
+  Sintax: term.geHeight()
+  ex: term.getHeight() - returns the height of the terminal.]]
+
 	local _, height = term.getSize()
 	return height
 end
 
---not tested
-function writeCenter(s, line)
-	local col = term.getWidth()/2 - #s/2 + 1
-	term.setCursorPos(col, line)
-	term.write(s)
+function writeCenter(s, line) --[[ Writes a string or number centered in line.
+  20-05-2023 v0.4.0 Param: s - the string or number to write.
+                           line - the number of the line where to write.
+  Returns:  true
+  Sintax: writeCenter([s][, line])
+  ex: writeCenter("hello world", 1) - writes "hello world" centered in line 1.
+      writeCenter() - places the cursor at the center of the current line.]]
+
+  if type(s) == "number" then s = tostring(s) end
+	local col = term.getWidth()/2 - (s and (#s/2) or 0) + 1
+  if not line then _, line = term.getCursorPos() end
+  term.setCursorPos(col, line)
+	if s then term.write(s) end
+  return true
 end
 
---not tested
-function printCenter(s, line)
-	local col = term.getWidth()/2 - #s/2 + 1
-	term.setCursorPos(col, line)
-	print(s)
-end
+function printCenter(s, line) --[[ Prints a string or number centered, and moves the cursor to the beginning of the next line.
+  20-05-2023 v0.4.0 Param: s - the string or number to print.
+                           line - the number of the line where to print.
+  Returns:  true
+  Sintax: printCenter([s][, line])
+  ex: printCenter("hello world", 1) - prints "hello world" centered in line 1.
+      printCenter() - places the cursor at the center of the current line.]]
 
---not tested
-function main()
-	tInv.init()
+	if type(s) == "number" then s = tostring(s) end
+	local col = term.getWidth()/2 - (s and (#s/2) or 0) + 1
+  if not line then _, line = term.getCursorPos() end
+  term.setCursorPos(col, line)
+	if s then print(s) end
+  return true
 end
-
-print(main())
 
 ------ TEST AREA ------
+
 function TEST()
-	INIT()
-	-- test you code below this line
-	
-  print(printAt(10, 10, "Hello", "people"))
-  
-	-- test you code above this line
+
+	--test code bellow this line
+  print(term.getHeight())
+  --test code above this line
 	TERMINATE()
 end
+
+INIT()

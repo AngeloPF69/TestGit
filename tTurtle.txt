@@ -3,7 +3,7 @@
   x = 0,
   leftHand = "empty",
   z = 0,
-  fuelLimit = 20000,
-  looking = 8,
-  facing = 2,
+  rightHand = "empty",
+  looking = 0,
+  facing = 0,
 }
