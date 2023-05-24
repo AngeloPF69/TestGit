@@ -1,5 +1,5 @@
 {
   empty = 0,
-  next = 1,
   unreachable = -1,
+  next = 1,
 }

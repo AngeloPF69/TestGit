@@ -800,14 +800,13 @@ end
 
 function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
   02/11/2021 v0.4.0 Returns:	true]] 
-  tInv.init()
   loadEnt()
   loadRevEnt()
   loadWorld()
 	loadTurtle()
 	loadRecipes()
   loadSpots()
-	return true
+  tInv.init()  --must be the last instruction
 end
 
 
@@ -2819,7 +2818,6 @@ function turnTo(...) --[[ Turtle turns to direction, block name, empty space, un
     elseif facingType[nsFacing] then --is "z+", "z-", "x+", "x-", "y+", "y-"
       if facingType[nsFacing] > 3 then return false, 'turnTo(something) - Something must be "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space' end 
       nRotate = facingType[nsFacing] - tTurtle.facing --{-3..3}
-
     else return nil, 'turnTo(something) - Invalid direction or block not scanned "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space'
     end
   else return nil, 'turnTo(something) - Invalid type only strings or numbers.'
@@ -4067,11 +4065,12 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
 	slot = nStartSlot
 	
 	repeat
-    tData = turtle.getItemDetail(slot + 1)
+    local tData = turtle.getItemDetail(slot + 1)
 
     if tData then
-      --if tData.name == sItemName then
-      if string.find(tData.name, sItemName) then
+      if string.sub(sItemName,1,1) == "=" then
+        if tData.name == string.sub(sItemName,2,#sItemName) then return slot + 1, tData.count end
+      elseif string.find(tData.name, sItemName) then
         return slot + 1, tData.count
       end
     end
@@ -4221,12 +4220,11 @@ function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and
   end
 	
   local selectedSlot = turtle.getSelectedSlot() --save selected slot
-  tData = turtle.getItemDetail() --check the selected slot for items
-  
+  local tData = turtle.getItemDetail() --check the selected slot for items
   if not nItems then --drop all the stack from selected slot
     if tData then --is there a item to frop?
       dropF[sDir]()
-      return tData.count
+      return tData.count, tData.name
     else return dropF[sDir]()
     end
 	else if type(nItems) ~= "number" then
@@ -4246,7 +4244,7 @@ function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and
     else
       dropF[sDir]()
       blocksDropped = blocksDropped + tData.count
-      nextSlot, tData.count = search(tData.name)
+      nextSlot, tData.count = search("="..tData.name)
       if nextSlot then turtle.select(nextSlot)
       elseif blocksDropped < nItems then break
       end
@@ -4257,16 +4255,52 @@ function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and
   return blocksDropped, tData.name
 end
 
-function drop(nBlocks) --[[ Drops or sucks nBlocks in front of the turtle.
-  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop forward.
-  Returns:  number of dropped items.
-            false - empty selected slot.
-            true - if suck some items.
-  Sintax: drop([nBlocks])
-  Note: if nBlocks not supplied, drops all items from selected slot.
+function drop(...) --[[ Drops or sucks nBlocks.
+  24-05-2023 v0.4.0
+  Param: dir - string/number: "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..4,8(z-,x+,z+,x-,y+,y-).
+         item - string: name of the item.
+         q - number: quantity of items to drop.
+         slot - number: slot number.
+  Returns:  number of dropped items, name of the item.
+            false - if item was not found.
+  Sintax: drop([Dir=forward][, Item=selected][, Q=stack])
   ex: drop() - Drops all blocks from selected slot, in front of the turtle.
-      drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.]]
-  return dropDir("forward", nBlocks)
+      drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.
+      drop("left", 5) - drops 5 items to the left from the selected slot.
+      drop(0, 6) - drops 6 items from the selected slot to z-
+      drop{slot = 10, q = 8} - drops 8 items from slot 10, forward.]]
+
+  local snDir, nDir, nQ, sItem, nSlot
+
+  for i = 1, #arg do
+    if type(arg[i] ) == "number" then
+      if not nQ then nQ = arg[i]
+      else
+        snDir = nQ
+        nQ = arg[i]
+      end
+
+    elseif type(arg[i]) == "string" then
+      if dirType[arg[i] ] or facingType[arg[i] ] or carDirType[arg[i] ] then snDir = arg[i]
+      else sItem = arg[i]
+      end
+
+    elseif type(arg[i]) == "table" then
+      if arg[i].slot then turtle.select(arg[i].slot) end
+      if arg[i].dir then snDir = arg[i].dir end
+      if arg[i].item then sItem = arg[i].item end
+      if arg[i].q then nQ = arg[i].q end
+
+    end
+  end
+
+  if sItem and (getItemName() ~= sItem) then
+      nSlot, _ = search(sItem)
+      if not nSlot then return false, "drop([Dir=forward][, Item=selected][, Q=stack]) - item not found." end
+      turtle.select(nSlot)
+  end
+  if not snDir then snDir = "forward" end
+  return dropDir(snDir, nQ)
 end
 
 function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
@@ -4414,8 +4448,20 @@ end
 
 function TEST()
 
-	--test code bellow this line
-  print(term.getHeight())
+  --test code bellow this line
+  -- print(drop()) PASS
+  -- print(drop(2)) PASS
+  -- print(drop("left")) PASS
+  -- print(drop("left", 2)) PASS
+  -- print(drop("west", 2)) PASS
+  -- print(drop(3, 2)) PASS
+  -- print(drop("wheat", 2)) PASS
+  -- print(drop("minecraft:wheat", 2)) PASS
+  -- print(drop("wheat", 2)) PASS
+  -- print(drop{slot = 10})
+
+print(drop{q = 65})
+
   --test code above this line
 	TERMINATE()
 end
