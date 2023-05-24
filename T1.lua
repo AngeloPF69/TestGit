@@ -4531,13 +4531,27 @@ function ink(color) --[[ Sets the text color.
   term.setTextColor(color)
 end
 
+function fillScr(sChar) --[[ Fills the screen with sChar.
+  24-05-2023 v0.4.0 Param: sChar - string: the character to fill the screen.
+  Sintax: fillScr(sChar)
+  ex: fillScr("-") - fills the screen with -.]]
+  local width, height = term.getSize()
+  for col = 1, width do
+    for lin = 1, height do
+      term.setCursorPos(col, lin)
+      term.write(sChar)
+    end
+  end
+end
+
+
 ------ TEST AREA ------
 
 function TEST()
 
   --test code bellow this line
-  
-
+  fillScr("")
+  term.setCursorPos(1, 1)
   --test code above this line
 	TERMINATE()
 end
