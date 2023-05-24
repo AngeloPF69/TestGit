@@ -1371,6 +1371,16 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
+  24-05-2023 v0.4.0 Param: nSpaces - number: the length of the string to return.
+  Returns:  string - filled with spaces with length nSpaces.
+  ex: spc(6) - returns a string with 6 spaces.]]
+
+  local sRet = ""
+  while #sRet < nSpaces do sRet = sRet.." " end
+  return sRet
+end
+
 function strLeft(s, sep) --[[ Returns the left part of a string.
 14-05-2023 v0.4.0 Param: s - the complete string.
                          sep - the character separator or the length of the string to return.
@@ -4255,7 +4265,7 @@ function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and
   return blocksDropped, tData.name
 end
 
-function drop(...) --[[ Drops or sucks nBlocks.
+function drop(...) --[[ Drops or sucks items.
   24-05-2023 v0.4.0
   Param: dir - string/number: "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..4,8(z-,x+,z+,x-,y+,y-).
          item - string: name of the item.
@@ -4264,8 +4274,8 @@ function drop(...) --[[ Drops or sucks nBlocks.
   Returns:  number of dropped items, name of the item.
             false - if item was not found.
   Sintax: drop([Dir=forward][, Item=selected][, Q=stack])
-  ex: drop() - Drops all blocks from selected slot, in front of the turtle.
-      drop(205) - Drops 205 blocks from inventory like the one on selected slot, forward.
+  ex: drop() - Drops all items from selected slot, in front of the turtle.
+      drop(205) - Drops 205 items from inventory like the one on selected slot, forward.
       drop("left", 5) - drops 5 items to the left from the selected slot.
       drop(0, 6) - drops 6 items from the selected slot to z-
       drop{slot = 10, q = 8} - drops 8 items from slot 10, forward.]]
@@ -4444,23 +4454,89 @@ function printCenter(s, line) --[[ Prints a string or number centered, and moves
   return true
 end
 
+function clearLineTo(column) --[[ Clears the cursor line from column 1 to column.
+  24-05-2023 v0.4.0 Param: column - number: the last column to be cleared.
+  Sintax: clearLineTo(column)
+  ex: clearLineTo(10) - clears from column 1 to column 10.]]
+
+  local _, line = term.getCursorPos()
+  term.setCursorPos(1, line)
+  term.write(spc(column))
+end
+
+function clearLineFrom(column) --[[ Clears the cursor line from column, to the last column.
+  24-05-2023 v0.4.0 Param: column - number: the first column to be cleared.
+  Sintax: clearLineFrom(column)
+  ex: clearLineFrom(10) - clears from column 10 to the last column.]]
+
+  local _, line = term.getCursorPos()
+  local width = term.getWidth() - column + 1
+  term.setCursorPos(column, line)
+  term.write(spc(width))
+end
+
+function clearColumn(column) --[[ Clears the column.
+  24-05-2023 v0.4.0 Param: column - number: the column to be cleared.
+  Sintax: clearColumn(column)
+  ex: clearColumn(10) - clears column 10.]]
+
+  local height = term.getHeight()
+  for i = 1, height do
+    term.setCursorPos(column, i)
+    term.write(" ")
+  end
+end
+
+function clearColumnTo(line) --[[ Clears the cursor column from line 1 to line.
+  24-05-2023 v0.4.0 Param: line - number: the last line to be cleared.
+  Sintax: clearColumnTo(line)
+  ex: clearColumnTo(10) - clears the cursor column, from line 1 to  10.]]
+
+  local column, _ = term.getCursorPos()
+  for i = 1, line do
+    term.setCursorPos(column, i)
+    term.write(" ")
+  end
+end
+
+function clearColumnFrom(line) --[[ Clears the cursor column from line to last line.
+  24-05-2023 v0.4.0 Param: line - number: the last line to be cleared.
+  Sintax: clearColumnFrom(line)
+  ex: clearColumnFrom(10) - clears the cursor column, from line 10 to last line.]]
+
+  local column, _ = term.getCursorPos()
+  for i = line, term.getHeight() do
+    term.setCursorPos(column, i)
+    term.write(" ")
+  end
+end
+
+function paper(color) --[[ Sets the background color.
+  24-05-2023 v0.4.0 Param: color - number/string: the color code or name.
+  Sintax: paper(color)
+  ex: paper("white") - sets the background color to white.
+      paper(32768) - sets the background color to black.]]
+
+  if type(color) == "string" then color = colors[color] end
+  term.setBackgroundColor(color)
+end
+
+function ink(color) --[[ Sets the text color.
+  24-05-2023 v0.4.0 Param: color - number/string: the color code or name.
+  Sintax: ink(color)
+  ex: ink("white") - sets the text color to white.
+      ink(32768) - sets the text color to black.]]
+
+  if type(color) == "string" then color = colors[color] end
+  term.setTextColor(color)
+end
+
 ------ TEST AREA ------
 
 function TEST()
 
   --test code bellow this line
-  -- print(drop()) PASS
-  -- print(drop(2)) PASS
-  -- print(drop("left")) PASS
-  -- print(drop("left", 2)) PASS
-  -- print(drop("west", 2)) PASS
-  -- print(drop(3, 2)) PASS
-  -- print(drop("wheat", 2)) PASS
-  -- print(drop("minecraft:wheat", 2)) PASS
-  -- print(drop("wheat", 2)) PASS
-  -- print(drop{slot = 10})
-
-print(drop{q = 65})
+  
 
   --test code above this line
 	TERMINATE()
