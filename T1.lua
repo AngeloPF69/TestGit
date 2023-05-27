@@ -975,14 +975,36 @@ function distTo(x, y, z) --[[ Gets the three components of the distance from the
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
+--not tested
+function distFromTo(x1, y1, z1, x2, y2, z2) --return:number,number,number the distances betwen 2 points - CHECKED
+  --[[  05/07/2018	sintax: getDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})
+        complete name - GET DISTance ( Z1,X1,Y1, Z2,X2,Y2 ) ]]
+  if not x1 then return false end
+  if type(x1) == "table" then
+    return x1[1] - y1[1], x1[2] - y1[2], x1[3] - y1[3]
+  end
+  return x1 - x2, y1 - y2, z1 - z2
+end
+
 function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
   15-08-2022 v0.4.0 Param: x, y, z - numbers the destination coords.
   Sintax: ABSDistTo(x, y, z)
   Returns: number - the distance from turtle to point x, y, z.]]
 
-  return math.abs(tTurtle.x-x)+math.abs(tTurtle.y-y)+math.abs(tTurtle.z-z)
+  return math.abs(tTurtle.x - x) + math.abs(tTurtle.y - y) + math.abs(tTurtle.z - z)
 end
 
+--not tested
+function ABSDistFromTo(x1, y1, z1, x2, y2, z2)
+  --[[  05/07/2018	sintax: getSumDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})
+        complete name - GET SUM of DISTance ( Z1,X1,Y1, Z2,X2,Y2 ) ]]
+
+  if not x1 then return false end
+  if type(x1) == "table" then
+    return math.abs(x1[1] - y1[1]) + math.abs(x1[2] - y1[2]) + math.abs(x1[3] - y1[3])
+  end
+  return math.abs(x1 - x2) + math.abs(y1 - y2) + math.abs(z1 - z2)
+end
 
 ------ COMPARE FUNCTIONS ------
 
@@ -1239,6 +1261,7 @@ function scan(sDir) --[[ Inspects the block in sDir, and sets tWorld.
               - if sDir is not "forward"|"up"|"down"
   Sintax: scan([sDir = "forward"])
   ex: scan("up") - inspects the block up, sets tEnt and tWorld with its code.]]
+
   sDir = sDir or "forward"
   if type(sDir) ~= "string" then
     return nil, 'scan(sDir) - Invalid sDir type, must be a string ""forward"|"up"|"down"'
@@ -2966,15 +2989,21 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
   return forward(math.abs(nBlocks))
 end
 
-function getNeighbors(x,y,z) --[[ Gets the neighbor's coords of x, y, z, or of the turtle.
+function getNeighbors(x, y, z) --[[ Gets the neighbor's coords of x, y, z, or of the turtle.
   12/09/2022 v0.4.0 Param: x, y, z - numbers coords of block.
   Returns:  table with coords of 6 neighbors.
   Sintax: getNeighbors([x,y,z] = turtle coords)
   ex: getNeighbors() - gets the neighbor's coords, of turtle.]]
 
-  x = x or tTurtle.x
-  y = y or tTurtle.y
-  z = z or tTurtle.z
+  if type(x) == "table" then
+    z = x[3]
+    y = x[2]
+    x = x[1]
+  else
+    x = x or tTurtle.x
+    y = y or tTurtle.y
+    z = z or tTurtle.z
+  end
 	return {{x+1, y, z}, {x-1, y, z}, {x, y+1, z}, {x, y-1, z}, {x, y, z+1}, {x, y, z-1}}
 end
 
@@ -3061,6 +3090,19 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
   return false
 end
 
+function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
+	09-02-2020	v0.4.0 Param: x, y, z - destination coords.
+  Sintax: goToPath(x, y, z) 
+	ex: goToPath(10, 10, 10) - turtle goes to 10, 10, 10]]
+
+  if not isNumber(x, y, z) then return false end
+	
+  local tPath = getPath(x, y, z)
+  for i = #tPath, 1, -1 do
+    if not goTo(table.unpack(tPath[i])) then return false end
+  end
+  return true
+end
 
 ------ DIG FUNCTIONS ------  
 
@@ -4373,6 +4415,201 @@ function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
   return dropDir("back", nBlocks)
 end
 
+------ PATHFINDING ------
+
+function getWorldPassableNeighbors(p, tIncludeEnt) --[[ Gets the neighbors of p passable.
+  14-07-2018 Param: p - table central block {x, y, z}
+                    tIncludeEnt - table entities passables.
+  sintax: getWorldPassableNeighbors(p[, tIncludeEnt)]]
+
+  if not p then return false end --p not supplied
+  if not tIncludeEnt then --exclude block type
+    tIncludeEnt = {-1, 0} -- nil unknown,-1 unreachable, 0 empty - passable entitys
+  end
+	
+  local nTable = getNeighbors(p)--neighbours table
+  local i, j, rTable = 1, 1, {} -- counter for neighbours table, i.e. exclude blocks table, return table
+  for i = 1, #nTable do
+    local block = getWorldEnt(nTable[i][1], nTable[i][2], nTable[i][3]) --get block from world
+    for j = 1, #tIncludeEnt do
+      if (not block) or block == tIncludeEnt[j] then --is in exclude table or is unknown then is passable
+        table.insert(rTable, #rTable+1, nTable[i])
+        break
+      end
+    end
+  end
+  return rTable
+end
+
+
+function getPath(...) --[[ Returns the path, a table of points.
+  27-05-2023 v0.4.0 Param: {x1, y1, z1}, {x2, y2, z2}|x1, y1, z1, x2, y2, z2 - the start and ending point
+  Sintax: getPath({x1, y1, z1}|x1, y1, z1[, {x2, y2, z2}|x2, y2, z2] = tTurtle coords)
+  ex: getPath(0, 0, 0) - returns the path from 0, 0, 0 to the coords of the turtle.
+      getPath(0, 0, 0, 10, 10, 10) - gets the path from 0, 0, 0 to 10, 10, 10.
+      getPath({2, 3, 5}) - gets the path from coords 2, 3, 5 to the turtle coords.
+      getPath({3, 10, 5}, {10, 10, 10}) - gets the path from coords 3, 10, 5 to 10, 10, 10.]]
+
+  local p1Index, p2Index = 1, 4 --if there is no table in the arg table
+  local x1, y1, z1, x2, y2, z2
+  if not arg[1] then return false --there is no arg
+  elseif type(arg[1]) == "table" then
+    x1, y1, z1 = table.unpack(arg[1])
+    p2Index = 2
+  elseif type(arg[1]) == "number" then
+    x1, y1, z1 = table.unpack(arg)
+  else return false
+  end
+
+  if not arg[p2Index] then
+    x2 = tTurtle.x
+    y2 = tTurtle.y
+    z2 = tTurtle.z
+  elseif type(arg[p2Index]) == "table" then
+    x2, y2, z2 = table.unpack(arg[p2Index])
+  elseif type(arg[p2Index]) == "number" then
+    x2 = arg[p2Index]
+    y2 = arg[p2Index+1]
+    z2 = arg[p2Index+2]
+  else return false
+  end
+
+  local destBlock = getWorldEnt(x2, y2, z2)
+  local pTable={} --to return table with all the points
+  local pStart = {x1, y1, z1, ["totDist"] = 0, ["checked"] = false, ["parent"] = false }
+  local pEnd ={x2, y2, z2, ["totDist"] = 0, ["checked"] = false, ["parent"] = false }
+  local pForTurning = ABSDistFromTo(pStart, pEnd) --penalty for turning
+  local pForWrongDir = pForTurning * pForTurning --penalty for wrong way
+
+  function pGetDir(p1,p2) --get the direction from p1 to p2
+    local dx, dy, dz = distFromTo(p1, p2)
+    return (dx>0 and 1 or 0) + (dx<0 and 3 or 0) + (dy > 0 and 4 or 0) + (dy < 0 and 8 or 0) + (dz > 0 and 2 or 0) + (dz < 0 and 0 or 0)
+  end
+
+  function pAdd(pPoint, parent) --return:table adds a point to the table and sets the parent if supplied
+    if pPoint == nil then return false end --must have point
+
+    if not pTable[pPoint[1] ] then pTable[pPoint[1] ] = {} end --is there a x coord on table
+    if not pTable[pPoint[1] ][pPoint[2] ] then pTable[pPoint[1] ][pPoint[2] ] = {} end --is there a y coord on table
+    if not pTable[pPoint[1] ][pPoint[2] ][pPoint[3] ] then pTable[pPoint[1] ][pPoint[2] ][pPoint[3] ] = {} end --is there a z coord on table
+
+    local pT = pTable[pPoint[1] ][pPoint[2] ][pPoint[3] ] --pt is shorter than ...
+    if pT.checked == true then return true end --this point was checked before
+
+    local totDist = ABSDistFromTo(pPoint[1], pPoint[2], pPoint[3], pEnd[1], pEnd[2], pEnd[3]) --distance to end point
+    totDist = totDist + ABSDistFromTo(pStart[1], pStart[2], pStart[3], pPoint[1], pPoint[2], pPoint[3]) --dist to start point
+    local dir
+    if parent then --there is a parent of this point
+      totDist = totDist + parent.totDist --add total distance of parent
+      dir = pGetDir(parent, pPoint) --the direction from parent to this
+      --if bit32.band(pGetDir(pPoint, pEnd),dir)==0 then totDist=totDist+pForWrongDir end --penalty for wrong direction
+      if parent.dir then --parent has direction? start hasn't
+        if dir ~= parent.dir then --there was change in direction
+          totDist = totDist + pForTurning --penalty for turning direction
+        end
+      end
+    end
+
+
+    if pT.totDist then --this point was calculated before
+      if totDist >= pT.totDist then return true end
+      pT.totDist = totDist
+    else
+      pT[1] = pPoint[1] --save cords for easy handling
+      pT[2] = pPoint[2]
+      pT[3] = pPoint[3]
+      pT.totDist = totDist
+      pT.checked = false --this point is not checked
+    end
+    pT.parent = parent --and set the parent
+    pT.dir = dir
+    return true
+  end
+
+  function pCompare(p1, p2) --return:boolean if p1==p2
+    if (p1[1] == p2[1]) and (p1[2] == p2[2]) and (p1[3] == p2[3]) then return true end
+    return false
+  end
+
+  function pGetLowerDistPoint(bChecked) -- return:point the lower totDist of all points and the point.checked==bChecked
+    if bChecked == nil then bChecked = false end
+
+    local distLow, iPoint --lower distance, pointIndex
+    local kx, ky, kz, v --keys and value for points
+    local x, y, z --cords
+    for kx,v in pairs(pTable) do --first key=kz v=table(kx,v)
+      for ky,v in pairs(v) do	--key=kx, v=(ky,v)
+        for kz,v in pairs(v) do	--key=ky v={z,x,y,totDist,checked,parent}
+          if v.checked == bChecked then --this point was checked?
+            if not distLow then --is the first distance?
+              distLow = v.totDist
+              iPoint = pTable[kx][ky][kz] --set ipoint to return later
+            else
+              if v.totDist < distLow then --is not the first distance
+                distLow = v.totDist
+                iPoint = pTable[kx][ky][kz]
+              end
+            end
+          end
+        end
+      end
+    end
+    return iPoint
+  end
+
+  function pReturn(p) --return:path points, only when the turtle turn direction
+    local i, rTable = 1, {}
+    local ip = p --ip is the last point = endPoint
+    repeat --lets reverse the order
+      if ip.parent then 
+        if ip.parent.dir ~= ip.dir then i = i + 1 end --if point has parent and did turn count 1 point
+        --print("d:", "(", ip[1],",",ip[2],",",ip[3],")",ip.parent.dir, ip.dir)
+      end
+      ip = ip.parent
+    until not ip
+    ip = p
+    rTable[i] = {} --save the last point
+    rTable[i][1] = ip[1]
+    rTable[i][2] = ip[2]
+    rTable[i][3] = ip[3]
+    i = i - 1
+    repeat
+      if ip.parent then
+        if ip.parent.dir ~= ip.dir then --if point did turn direction save parent point, that's where it changed direction
+          rTable[i] = {}
+          rTable[i][1] = ip.parent[1]
+          rTable[i][2] = ip.parent[2]
+          rTable[i][3] = ip.parent[3]
+          i = i - 1
+        end
+      end
+      ip = ip.parent
+    until not ip
+    return rTable
+  end
+
+
+  ---- main ----
+  
+  pAdd(pStart) --add start point
+  local actPoint = pStart
+	local iter = 0
+  while not pCompare(pEnd, actPoint) do
+		iter = iter + 1
+		if iter > 2000 then return false end --cant find a path
+    if not actPoint then return false end
+    actPoint.checked = true --lets checked this point
+    local neighbours = getWorldPassableNeighbors(actPoint) --get empty or unknown neighbours
+    local i
+    for i = 1,#neighbours do
+      pAdd(neighbours[i], actPoint)
+    end
+    actPoint = pGetLowerDistPoint()
+		if not actPoint then return false end
+  end
+  return pReturn(actPoint)
+end 
+
 
 ------ TERMINAL FUNCTIONS ------
 
@@ -4544,15 +4781,36 @@ function fillScr(sChar) --[[ Fills the screen with sChar.
   end
 end
 
+function cls(backColor, textColor) --[[ Sets the background and text colors, the cursor pos to 1,1, and clears the screen.
+  24-05-2023 v0.4.0 Param: backColor - string/number: the background color.
+                           textColor - string/number: the text color.
+  Sintax: cls(backColor, textColor)
+  ex: cls("white", 32768) - sets the background color to white, and the text color to black.]]
+
+  if type(backColor) == "string" then backColor = colors[backColor] end
+  if type(textColor) == "string" then textColor = colors[textColor] end
+  term.setBackgroundColor(backColor)
+  term.setTextColor(textColor)
+  term.setCursorPos(1, 1)
+  term.clear()
+end
 
 ------ TEST AREA ------
 
 function TEST()
 
-  --test code bellow this line
-  fillScr("")
-  term.setCursorPos(1, 1)
-  --test code above this line
+  -- test code bellow this line
+  -----------------------------
+
+--local t = getPath(-3, 0, 0, 0, 0, 0)
+--saveTable(t, "PassN.txt")
+print(goToPath(-3, 0, 0))
+
+--goTo(0, 0, 0)
+
+
+  ---------------------------
+  -- test code above this line
 	TERMINATE()
 end
 

@@ -1,4 +1,9 @@
 {
-  [ -1 ] = "unreachable",
+  "minecraft:cobblestone",
+  "minecraft:oak_sign",
+  "minecraft:stone",
+  "minecraft:sand",
+  "minecraft:grass_block",
   [ 0 ] = "empty",
+  [ -1 ] = "unreachable",
 }
