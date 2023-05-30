@@ -1391,6 +1391,17 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   return true
 end
 
+--not tested
+function strafeLeft(nSteps)
+	goLeft(nSteps)
+	turnRight()
+end
+
+--not tested
+function strafeRight(nSteps)
+	goRight(nSteps)
+	turnLeft()
+end
 
 ------ GENERAL FUNCTIONS ------
 
@@ -3134,6 +3145,20 @@ function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
   return true
 end
 
+--not tested
+function left(nSteps)
+  if nSteps then return goLeft(nSteps)
+  else return turnDir("left")
+  end
+end
+
+--not tested
+function right(nSteps)
+  if nSteps then return goRight(nSteps)
+  else return turnDir("right")
+  end
+end
+
 ------ DIG FUNCTIONS ------  
 
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
@@ -4823,6 +4848,24 @@ function cls(backColor, textColor) --[[ Sets the background and text colors, the
   term.setTextColor(textColor)
   term.setCursorPos(1, 1)
   term.clear()
+end
+
+
+------ BUILD FUNCTIONS ------
+
+--not tested
+function buildWall(width, height, sBlock)
+	local sw = sign(width)
+	local sh = sign(height)
+	for h = 1, height, sign(height) do
+		for w = 1, width, sign(width) do
+			place(sBlock)
+			goRight(sw))
+			turnLeft(sw)
+		end
+		sw = -sw
+		goUp(sh)
+	end
 end
 
 ------ TEST AREA ------
