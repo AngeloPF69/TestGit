@@ -1392,13 +1392,13 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
 end
 
 --not tested
-function stafeLeft(nSteps)
+function strafeLeft(nSteps)
 	goLeft(nSteps)
 	turnRight()
 end
 
 --not tested
-function stafeRight(nSteps)
+function strafeRight(nSteps)
 	goRight(nSteps)
 	turnLeft()
 end
