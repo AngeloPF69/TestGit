@@ -3115,6 +3115,20 @@ function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
   return true
 end
 
+--not tested
+function left(nSteps)
+  if nSteps then return goLeft(nSteps)
+  else return turnDir("left")
+  end
+end
+
+--not tested
+function right(nSteps)
+  if nSteps then return goRight(nSteps)
+  else return turnDir("right")
+  end
+end
+
 ------ DIG FUNCTIONS ------  
 
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
