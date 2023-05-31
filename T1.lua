@@ -1405,6 +1405,22 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+--not tested
+function rTrim(s)
+	for i = #s, 1, -1 do
+		if s[i] ~= " " then return string.sub(s,1, i) end
+	end
+	return ""
+end
+
+--no tested
+function lTrim(s)
+	for i = 1, #s do
+		if s[s] ~= " " then return string.sub(s,i,#s) end
+	end
+	return ""
+end
+
 function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
   24-05-2023 v0.4.0 Param: nSpaces - number: the length of the string to return.
   Returns:  string - filled with spaces with length nSpaces.
