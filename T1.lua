@@ -1406,6 +1406,15 @@ end
 ------ GENERAL FUNCTIONS ------
 
 --not tested
+function fillStr(sChar, nChars)
+	local sRet = ""
+	for i = 1, nChars do
+		sRet = sRet..sChar
+	end
+	return sRet
+end
+
+--not tested
 function rTrim(s)
 	for i = #s, 1, -1 do
 		if s[i] ~= " " then return string.sub(s,1, i) end
