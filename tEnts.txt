@@ -2,19 +2,19 @@
   [ "minecraft:grass_block" ] = {
     id = 5,
   },
-  [ "minecraft:cobblestone" ] = {
-    id = 1,
-  },
   [ "minecraft:sand" ] = {
     id = 4,
   },
-  next = 6,
+  [ "minecraft:oak_sign" ] = {
+    id = 2,
+  },
+  [ "minecraft:cobblestone" ] = {
+    id = 1,
+  },
   [ "minecraft:stone" ] = {
     id = 3,
   },
   empty = 0,
-  [ "minecraft:oak_sign" ] = {
-    id = 2,
-  },
+  next = 6,
   unreachable = -1,
 }

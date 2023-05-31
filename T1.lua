@@ -1405,8 +1405,12 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
---not tested
-function fillStr(sChar, nChars)
+function fillStr(sChar, nChars) --[[ Returns a filled string with sChar having a width of nChars
+  31-05-2023 v0.4.0 Param: sChar - the char to fill the string.
+                           nChar - the number of chars to fill the string.
+  Sintax: fillStr(sChar, nChar)
+  ex: fillStr("-", 10) - returns a string with 10 "-" (minus).]]
+
 	local sRet = ""
 	for i = 1, nChars do
 		sRet = sRet..sChar
@@ -1414,18 +1418,24 @@ function fillStr(sChar, nChars)
 	return sRet
 end
 
---not tested
-function rTrim(s)
+function rTrim(s) --[[ Removes the right spaces from a string.
+  31-05-2023 Param: s - the string from where to remove spaces.
+  Sintax: rTrim(s)
+  ex: rTrim("Hello world      ") - returns "Hello world"]]
+
 	for i = #s, 1, -1 do
-		if s[i] ~= " " then return string.sub(s,1, i) end
+		if string.byte(s, i) ~= 32 then return string.sub(s, 1, i) end
 	end
 	return ""
 end
 
---no tested
-function lTrim(s)
+function lTrim(s) --[[ Removes the left spaces from a string.
+  31-05-2023 Param: s - the string from where to remove spaces.
+  Sintax: lTrim(s)
+  ex: lTrim("   Hello world") - returns "Hello world"]]
+
 	for i = 1, #s do
-		if s[s] ~= " " then return string.sub(s,i,#s) end
+		if string.byte(s, i) ~= 32 then return string.sub(s, i, #s) end
 	end
 	return ""
 end
@@ -3170,15 +3180,23 @@ function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
   return true
 end
 
---not tested
-function left(nSteps)
+function left(nSteps) --[[ Turtle turns left and walks nSteps.
+  31-05-2023 v0.4.0 Param: nSteps - number the quantity of steps to walk.
+  Sintax: left(nSteps)
+  ex: left() - turtle turns left.
+      left(10) - turtle turns left and walks 10 steps]]
+
   if nSteps then return goLeft(nSteps)
   else return turnDir("left")
   end
 end
 
---not tested
-function right(nSteps)
+function right(nSteps) --[[ Turtle turns right and walks nSteps.
+  31-05-2023 v0.4.0 Param: nSteps - number the quantity of steps to walk.
+  Sintax: right(nSteps)
+  ex: right() - turtle turns left.
+      right(10) - turtle turns left and walks 10 steps]]
+
   if nSteps then return goRight(nSteps)
   else return turnDir("right")
   end
@@ -4885,7 +4903,7 @@ function buildWall(width, height, sBlock)
 	for h = 1, height, sign(height) do
 		for w = 1, width, sign(width) do
 			place(sBlock)
-			goRight(sw))
+			goRight(sw)
 			turnLeft(sw)
 		end
 		sw = -sw
@@ -4900,11 +4918,7 @@ function TEST()
   -- test code bellow this line
   -----------------------------
 
---local t = getPath(-3, 0, 0, 0, 0, 0)
---saveTable(t, "PassN.txt")
-print(goToPath(-3, 0, 0))
-
---goTo(0, 0, 0)
+print(buildWall(1, 1))
 
 
   ---------------------------
