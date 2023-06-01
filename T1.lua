@@ -2962,33 +2962,62 @@ end
 
 ------ BUILD FUNCTIONS ------
 
---nopt tested
-function buildWall(width, height, sBlockName) --[[ Builds a wall in front of the turtle.
-  29-07-2018	Param: width, height - number: dimensions of the wall.
-                     sBlockName - string: name of the block, in inventory, to build the wall from.
-  Sintax: buildWall(width, height[, sBlockName = selected slot])
-  ex: buildWall(10, 10) - builds a wall, 10 blocks width, and 10 blocks height, with the selected block.]]
-
-  if checkNil(2,nWidth,nHeight) then return false,"tBuildWall(nWidth, nHeight[, sFamName]) - nil argument." end --check for nil
-	if not checkType("nn",nWidth,nHeight) then return false, "tBuildWall(nWidth, nHeight[, sFamName]) - invalid argument type." end --check for type
-  if nWidth < 1 or nHeight < 1 then return false,"tBuildWall(nWidth, nHeight[, sFamName]) - invalid 0 width/height." end --check limit
-  if sFamName then --is there a block name
-		if type(sFamName) ~= "string" then return false,"tBuildWall(nWidth, nHeight[, sFamName]) - invalid sFamName, must be a string." end --it's not a string
-    nSlot=tInvSelectItem(sFamName) --select item in inventory
-    if not nSlot then return false,"tBuildWall(nWidth, nHeight[, sFamName]) - no block selected in inventory." end --no item
-  end
-	
-  local tData = turtle.getItemDetail()
-	if not sFamName then	sFamName = tData.name end --sFamName==nil then get sFamName from inventory
-	if tData.count < nWidth*nHeight then return false,"tBuildWall(nWidth, nHeight[, sFamName]) - not enough blocks in inventory" end --there is not enough blocks in inventory
-	
-	local nZ,nX,nY = tAddSteps() --start point 1 step ahead
-	if not isFuelEnough(nWidth * nHeight + nZ, nX, nY) then return false, "tBuildWall(nWidth, nHeight[, sFamName]) - not enough fuel." end --check fuel if is enough
-	
-  local tPoints = getWallPoints(nZ, nX, nY, nWidth, nHeight, tTurtle.facing) --get the points forming wall
-  return tPlaceTable(tPoints, sFamName) --place table of points
+--not tested
+function buildWall(width, height, sBlock)
+	local sw = sign(width)
+	local sh = sign(height)
+	for h = 1, height, sign(height) do
+		for w = 1, width, sign(width) do
+			place(sBlock)
+			if w ~= width then
+				goRight(sw))
+				turnLeft(sw)
+			end
+		end
+		sw = -sw
+		if h ~= height then goUp(sh) end
+	end
 end
 
+--not tested
+function buildFloor(width, depth [, sBlock])
+end
+
+--not tested
+function buildCube(Side [, sBlock])
+end
+
+--not tested
+function buildSquare(Side [, sBlock])
+end
+
+--not tested
+function buildRect(width, depth [, sBlock])
+end
+
+--not tested
+function buildTriangle(width, height [,sBlock])
+end
+
+--not tested
+function buildPiramid(width, depth, height [, sBlock])
+end
+
+--not tested
+function buildCircle(Radius [, sBlock])
+end
+
+--not tested
+function buildOval(Radius1, Radius2 [, sBlock)]
+end
+
+--not tested
+function buildCylinder(Radius, height [, sBlock])
+end
+
+--not tested
+function buildCone(Radius, height [, sBlock])
+end
 
 ------ MOVING AND ROTATING FUNCTIONS ------
 
