@@ -1394,13 +1394,13 @@ end
 --not tested
 function strafeLeft(nSteps)
 	goLeft(nSteps)
-	turnRight()
+	turnRight(sign(nSteps))
 end
 
 --not tested
 function strafeRight(nSteps)
 	goRight(nSteps)
-	turnLeft()
+	turnLeft(sign(nSteps))
 end
 
 ------ GENERAL FUNCTIONS ------
