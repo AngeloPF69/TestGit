@@ -2972,16 +2972,15 @@ end
 function buildWall(width, height, sBlock)
 	local sw = sign(width)
 	local sh = sign(height)
-	for h = 1, height, sign(height) do
-		for w = 1, width, sign(width) do
+	for w = 1, width, sign(width) do
+		for h = 1, height, sign(height) do
 			place(sBlock)
-			if w ~= width then
-				goRight(sw))
-				turnLeft(sw)
+			if h ~= height then
+				up(sh)
 			end
 		end
-		sw = -sw
-		if h ~= height then goUp(sh) end
+		sh = -sh
+		if w ~= width then strafeRight(sw) end
 	end
 end
 
