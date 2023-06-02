@@ -2969,6 +2969,7 @@ end
 ------ BUILD FUNCTIONS ------
 
 --not tested
+--teste
 function buildWall(width, height, sBlock)
 	local sw = sign(width)
 	local sh = sign(height)
