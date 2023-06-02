@@ -4944,6 +4944,7 @@ function buildWall(width, height, sBlock)
 		sh = -sh
 		if w ~= width then strafeRight(sw) end
 	end
+  helo
 end
 
 ------ TEST AREA ------
