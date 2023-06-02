@@ -1440,6 +1440,12 @@ function lTrim(s) --[[ Removes the left spaces from a string.
 	return ""
 end
 
+--not tested
+function trim(s)
+	s = lTrim(s)
+	retrun rTrim(s)
+end
+
 function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
   24-05-2023 v0.4.0 Param: nSpaces - number: the length of the string to return.
   Returns:  string - filled with spaces with length nSpaces.
