@@ -1391,16 +1391,44 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   return true
 end
 
---not tested
-function strafeLeft(nSteps)
-	goLeft(nSteps)
-	turnRight(sign(nSteps))
+function strafeLeft(nSteps) --[[ Turns left or right and walks nSteps, turns to the initial direction.
+  03-06-2023 v0.4.0 Param: nSteps - number: steps to walk.
+  Return: true - all went well.
+          false - if it couldn't walk left/right.
+          nil - if nSteps has invalid type.
+  Sintax: strafeLeft([nSteps=1])
+  Dependencies: goLeft, turnRight
+  ex: strafeLeft() - turns left, advances 1 and turns right.
+      strafeLeft(5) - turns left, advances 5 blocks and turns right.
+      strafeLeft(-6) - turns right, advances 6 blocks and turns left.]]
+
+      nSteps = nSteps or 1
+      if tonumber(nSteps) then nSteps = tonumber(nSteps) end
+      if type(nSteps) ~= "number" then return nil, "strafeLeft([Steps = 1]) - Steps must be a number."end
+      local success, message = goLeft(nSteps)
+      if not success then return success, message end
+      turnRight(sign(nSteps))
+      return true
 end
 
---not tested
-function strafeRight(nSteps)
-	goRight(nSteps)
+function strafeRight(nSteps) --[[ Turns right or left and walks nSteps, turns to the initial direction.
+  03-06-2023 v0.4.0 Param: nSteps - number: steps to walk.
+  Return: true - all went well.
+          false - if it couldn't walk right/left.
+          nil - if nSteps has invalid type.
+  Sintax: strafeRight([nSteps=1])
+  Dependencies: goRight, turnLeft
+  ex: strafeRight() - turns right, advances 1 and turns left.
+      strafeRight(5) - turns right, advances 5 blocks and turns left.
+      strafeRight(-6) - turns left, advances 6 blocks and turns right.]]
+
+  nSteps = nSteps or 1
+  if tonumber(nSteps) then nSteps = tonumber(nSteps) end
+  if type(nSteps) ~= "number" then return nil, "strafeRight([Steps = 1]) - Steps must be a number."end
+	local success, message = goRight(nSteps)
+  if not success then return success, message end
 	turnLeft(sign(nSteps))
+  return true
 end
 
 ------ GENERAL FUNCTIONS ------
@@ -1443,7 +1471,7 @@ end
 --not tested
 function trim(s)
 	s = lTrim(s)
-	retrun rTrim(s)
+	return rTrim(s)
 end
 
 function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
@@ -1683,39 +1711,30 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
   sintax: getParam(sParamOrder, tDefault[, ...])
   ex: getParam("sns", {"default" }, number, string) - Outputs: string, number, default.
   Note: Only sorts parameters type (string, table, number and boolean).]]
-  
+
   if not sParamOrder then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply string with parameters order." end
   if not tDefault then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply table with default values." end
   local Args={...}
-  --if #Args == 0 then return nil, "getParam(sParamOrder, tDefault, ...) - Must supply parameters to order." end
-  
+    
   local retTable = {}
-  local checked={}
+  local argChecked = {}
+  local paramChecked = {}
 
-  function addParam(sType) --add parameter do returning table
-    for i = 1, #Args do
-      if type(Args[i]) == sType then
-        if not checked[i] then
-          checked[i]=true
-          table.insert(retTable, Args[i])
-          return
-        end
+  for parami = 1, #sParamOrder do
+    for argi = 1, #Args do
+      if Args[argi] and (sParamOrder:sub(parami, parami) == type(Args[argi]):sub(1, 1)) and (not argChecked[argi]) then
+        argChecked[argi] = true
+        paramChecked[parami] = true
+        table.insert(retTable, Args[argi])
+        break
       end
     end
-
-    for k, v in pairs(tDefault) do
-      if type(v) == sType then table.insert(retTable, v) end
+    if not paramChecked[parami] then
+      paramChecked[parami] = true
+      table.insert(retTable, tDefault[parami])
     end
   end
 
-  for i = 1, #sParamOrder do
-    if sParamOrder:sub(i,i) == "s" then addParam("string")
-    elseif sParamOrder:sub(i,i) == "t" then addParam("table")
-    elseif sParamOrder:sub(i,i) == "n" then addParam("number")
-    elseif sParamOrder:sub(i,i) == "b" then addParam("boolean")
-    end
-  end
-  
   if #retTable == 0 then return nil
   else return table.unpack(retTable);
   end
@@ -2969,60 +2988,73 @@ end
 ------ BUILD FUNCTIONS ------
 
 --not tested
---teste
 function buildWall(width, height, sBlock)
+  width, height, sBlock = getParam("nns", {1, 2, ""}, width, height, sBlock)
+  print(width, height, sBlock)
+  if sBlock == "" then sBlock = getItemName() end
+  if not sBlock then return false, "buildWall(width, height, blockName) - empty selected slot." end
+  
+  if sBlock ~= getItemName() then
+    if not select(search(sBlock)) then
+      return false, "buildWall(width, height, blockName) - block name not found."
+    end
+  end
+
 	local sw = sign(width)
 	local sh = sign(height)
 	for w = 1, width, sign(width) do
 		for h = 1, height, sign(height) do
-			place(sBlock)
+			if not place(sBlock) then return false, "buildWall(width, height, blockName) - couldn't place block." end
 			if h ~= height then
-				up(sh)
+				if not up(sh) then return false , "buildWall(width, height, blockName) - couldn't go up/down."end
 			end
 		end
 		sh = -sh
-		if w ~= width then strafeRight(sw) end
+		if w ~= width then
+      if not strafeRight(sw) then return false end
+    end
 	end
+  return true
 end
 
 --not tested
-function buildFloor(width, depth [, sBlock])
+function buildFloor(width, depth , sBlock)
 end
 
 --not tested
-function buildCube(Side [, sBlock])
+function buildCube(Side , sBlock)
 end
 
 --not tested
-function buildSquare(Side [, sBlock])
+function buildSquare(Side , sBlock)
 end
 
 --not tested
-function buildRect(width, depth [, sBlock])
+function buildRect(width, depth , sBlock)
 end
 
 --not tested
-function buildTriangle(width, height [,sBlock])
+function buildTriangle(width, height ,sBlock)
 end
 
 --not tested
-function buildPiramid(width, depth, height [, sBlock])
+function buildPiramid(width, depth, height , sBlock)
 end
 
 --not tested
-function buildCircle(Radius [, sBlock])
+function buildCircle(Radius , sBlock)
 end
 
 --not tested
-function buildOval(Radius1, Radius2 [, sBlock)]
+function buildOval(Radius1, Radius2 , sBlock)
 end
 
 --not tested
-function buildCylinder(Radius, height [, sBlock])
+function buildCylinder(Radius, height , sBlock)
 end
 
 --not tested
-function buildCone(Radius, height [, sBlock])
+function buildCone(Radius, height , sBlock)
 end
 
 ------ MOVING AND ROTATING FUNCTIONS ------
@@ -3619,16 +3651,18 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
       if not back() then return placed end
     end
   end
-  return placed
+  return placed ~= 0, placed
 end
 
+--not tested
 function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
   27/08/2021 v0.3.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
             nil - invalid parameter.
   Sintax: placeBack([nBlocks=1])
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
-  ex: place(1) or place() - Places 1 Block in front of turtle.]]
+  ex: placeBack(1) or placeBack() - Places 1 Block in front of turtle.]]
+
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "placeBack(Blocks) - Blocks must be a number." end
@@ -4928,25 +4962,6 @@ function cls(backColor, textColor) --[[ Sets the background and text colors, the
   term.clear()
 end
 
-
------- BUILD FUNCTIONS ------
-
---not tested
-function buildWall(width, height, sBlock)
-	local sw = sign(width)
-	local sh = sign(height)
-	for w = 1, width, sign(width) do
-		for h = 1, height, sign(height) do
-			place(sBlock)
-			if h ~= height then
-				up(sh)
-			end
-		end
-		sh = -sh
-		if w ~= width then strafeRight(sw) end
-	end
-end
-
 ------ TEST AREA ------
 
 function TEST()
@@ -4954,7 +4969,7 @@ function TEST()
   -- test code bellow this line
   -----------------------------
 
-print(buildWall(1, 1))
+  print(buildWall("minecraft:gravel"))
 
 
   ---------------------------

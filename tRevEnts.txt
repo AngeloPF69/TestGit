@@ -4,6 +4,7 @@
   "minecraft:stone",
   "minecraft:sand",
   "minecraft:grass_block",
-  [ 0 ] = "empty",
+  "minecraft:gravel",
   [ -1 ] = "unreachable",
+  [ 0 ] = "empty",
 }
