@@ -682,7 +682,7 @@ function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount item
 
 	local tData
 	if sItemName ~= "" then
-    if not itemSelect(sItemName) then return false, "Couldn't find item name." end
+    if not selectItem(sItemName) then return false, "Couldn't find item name." end
   end
 
   tData = turtle.getItemDetail()
@@ -698,7 +698,7 @@ function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount item
 			totRefuel = totRefuel + nCount
 		else	turtle.refuel()
 				totRefuel = totRefuel + tData.count
-				if not itemSelect(tData.name) then break end
+				if not selectItem(tData.name) then break end
 		end
 	end
 	return totRefuel, turtle.getFuelLevel()
@@ -1580,7 +1580,7 @@ function isInRange(nValue, ...) --[[ Checks if nValue is in ... range
   Sintax: isInRange(nValue, ...)
   Return: true  - if nValue is in range.
           false - if value is not in range.
-  ex: isInrange(1, {0,2}) - return true
+  ex: isInRange(1, {0,2}) - return true
       isInRange(17, {1,15},17) - return true]]
 
   local bInRange = false
@@ -2990,12 +2990,12 @@ end
 --not tested
 function buildWall(width, height, sBlock)
   width, height, sBlock = getParam("nns", {1, 2, ""}, width, height, sBlock)
-  print(width, height, sBlock)
+
   if sBlock == "" then sBlock = getItemName() end
   if not sBlock then return false, "buildWall(width, height, blockName) - empty selected slot." end
   
   if sBlock ~= getItemName() then
-    if not select(search(sBlock)) then
+    if not selectSlot(search(sBlock)) then
       return false, "buildWall(width, height, blockName) - block name not found."
     end
   end
@@ -3004,7 +3004,14 @@ function buildWall(width, height, sBlock)
 	local sh = sign(height)
 	for w = 1, width, sign(width) do
 		for h = 1, height, sign(height) do
-			if not place(sBlock) then return false, "buildWall(width, height, blockName) - couldn't place block." end
+			if not place(sBlock) then
+        if not getItemName() then
+          if not selectSlot(search(sBlock)) then
+            return false, "buildWall(width, height, blockName) - no more blocks."
+          end
+        else return false, "buildWall(width, height, blockName) - couldn't place block."
+        end
+      end
 			if h ~= height then
 				if not up(sh) then return false , "buildWall(width, height, blockName) - couldn't go up/down."end
 			end
@@ -3562,7 +3569,7 @@ function placeSign(sMessage) --[[ Places a sign in front of the turtle.
 
   local sItem = getItemName()
   if (not sItem) or (not string.find(sItem, "sign")) then
-    if not itemSelect("sign") then return false, "sign not found" end
+    if not selectItem("sign") then return false, "sign not found" end
   end
   return place(sMessage)
 end
@@ -3595,7 +3602,7 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
         if not sItem then
           sItem = getItemName()
           if not sItem then
-            sItem = getItemName(itemSelect(arg[i]))
+            sItem = getItemName(selectItem(arg[i]))
             if not sItem then return false, "place(...) - could't find item, "..arg[i] end
           end
           if string.find(sItem, "sign") then sMessage = arg[i]
@@ -3611,7 +3618,7 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
     sItem = getItemName()
     if not sItem then return false, "place(...) - empty selected slot." end
   elseif sItem ~= getItemName() then
-    if not itemSelect(sItem) then return false, "place(...) - item not found." end
+    if not selectItem(sItem) then return false, "place(...) - item not found." end
   end
 
   if not nQ then
@@ -3640,7 +3647,7 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
   local placed = 0
   for i = 1, nQ do
     local bPlaced = placeDir(sDir, sMessage)
-    if (not bPlaced) and isEmptySlot() and itemSelect(sItem) then
+    if (not bPlaced) and isEmptySlot() and selectItem(sItem) then
       bPlaced = turtle.place()
     end
     if bPlaced then
@@ -4163,28 +4170,29 @@ function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   return tData.name
 end
 
-function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
+function selectItem(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
   29/08/2021 v0.1.0 Param: slot/itemName - number slot/string name of the item to select.
   Returns:  number, number - The selected slot, and number of items in that slot.
             False - if it didn't find the item name.
             nil - if type of itemName/Slot is not a number or string.
                 - if itemName/Slot is a number out of range [1..16].
-  Note: if executed itemSelect() is the same as turtle.getSelectedSlot()
-  Sintax: itemSelect([Slot/Item Name])
-  ex: itemSelect("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  Note: if executed selectItem() is the same as turtle.getSelectedSlot()
+  Sintax: selectItem([Slot/Item Name])
+  ex: selectItem("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+
   local nSlot
   local tData
 
-  if not itemName then
+  if itemName == nil then
     nSlot = turtle.getSelectedSlot()
   elseif type(itemName) == "number" then
-    if (itemName < 1) or (itemName > 16) then return nil, "itemSelect([itemName/slot]=selected slot) - Slot must be number 1..16." end
+    if not isInRange(itemName, {1, 16}) then return nil, "selectItem([itemName/slot]=selected slot) - Slot must be number 1..16." end
     nSlot = itemName
   elseif type(itemName) == "string" then
     nSlot = search(itemName)
     if not nSlot then return false, "Item name not found." end
   else
-    return nil, "itemSelect([itemName/slot]=selected slot) - Slot/itemName must be a number 1..16 or a string (item name)."
+    return nil, "selectItem([itemName/slot]=selected slot) - Slot/itemName must be a number 1..16 or a string (item name)."
   end
   
   turtle.select(nSlot)
@@ -4192,6 +4200,14 @@ function itemSelect(itemName) --[[ Selects slot [1..16] or first item with Item 
   if tData then return nSlot, tData.count
   else return nSlot, 0
   end
+end
+
+function selectSlot(nSlot) --[[ Selects nSlot
+  04-06-2023 v0.4.0 Param: nSlot - the slot number to be selected.
+  Sintax: selectSlot(nSlot)
+  ex: selectSlot(1) - select slot 1.]]
+
+  return selectItem(nSlot)
 end
 
 function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
@@ -4969,8 +4985,10 @@ function TEST()
   -- test code bellow this line
   -----------------------------
 
-  print(buildWall("minecraft:gravel"))
-
+  --print(buildWall("minecraft:gravel"))
+  --down()
+  --print(selectSlot(search("minecraft:gravel")))
+--print(selectSlot(false))
 
   ---------------------------
   -- test code above this line
