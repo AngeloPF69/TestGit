@@ -3025,7 +3025,18 @@ function buildWall(width, height, sBlock)
 end
 
 --not tested
-function buildFloor(width, depth , sBlock)
+function buildFloor(width, depth, sBlock)
+	local sw = sign(width)
+	local sd = sign(depth)
+	up()
+	for w = 1, width, sign(width) do
+		for d = 1, depth, sign(depth) do
+			placeDown(sBlock)
+			forward(sd))
+		end
+		sw = -sw
+		strafeRight(sw)
+	end
 end
 
 --not tested
