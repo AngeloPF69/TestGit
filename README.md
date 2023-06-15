@@ -200,11 +200,11 @@
 	
   <p id="SETTINGS"></p>
 	
- local PREFEREDHAND = "right" --default equip hand
- local DEFSTACK = 64 --default stack size
- local CSLOT = 13 --default crafting slot
- local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
- local DIG = false --on walking turtle digs it's way through
+  local PREFEREDHAND = "right" --default equip hand<br>
+  local DEFSTACK = 64 --default stack size<br>
+  local CSLOT = 13 --default crafting slot<br>
+  local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
+  local DIG = false --on walking turtle digs it's way through<br>
 	
 # Functions Explained
 
