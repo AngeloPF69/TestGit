@@ -209,7 +209,7 @@
   CSLOT = 13 --default crafting slot<br>
   SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
   DIG = false --on walking turtle digs it's way through<br>
-	
+<a href="#top">Top of page</a>
 ## Original functions arrays
 	
   <p id="OrgF"></p>
