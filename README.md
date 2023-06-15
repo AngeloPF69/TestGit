@@ -1,6 +1,10 @@
 # computercraft turtle lua improved commands.
 <p id="top"></p>
 
+## Settings
+
+<a href="#SETTINGS">Defines the behavior of the turtle and funtions.</a>
+
 ## Initialize
 
   <a href="#INIT">INIT() Loads files to tables, so that the turtle won't forget what it has learned.</a>
@@ -192,8 +196,17 @@
     
 ---------------------------------------------------------------------------------------------------------------------------
 
+## Settings
+	
+  <p id="SETTINGS"></p>
+	
+ local PREFEREDHAND = "right" --default equip hand
+ local DEFSTACK = 64 --default stack size
+ local CSLOT = 13 --default crafting slot
+ local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
+ local DIG = false --on walking turtle digs it's way through
+	
 # Functions Explained
-
 
 ## Initialize
 
