@@ -1371,4 +1371,4 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Note: if nItems < 0 it drops items.
   ex: suckDir() - Turtle sucks all the items forward.</pre>
 
-   <a href="#top">Top of page</a>
+   <a href="#top">top page</a>
