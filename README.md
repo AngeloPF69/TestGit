@@ -1199,7 +1199,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
 					nil if invalid parameter.
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
-   
+<a href="#top">↑</a>
     <p id="compareDir"></p>
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
@@ -1221,7 +1221,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
    <p id="isInventoryEmpty"></p>
 
  - isInventoryEmpty() Checks if inventory is empty.
-
+<a href="#top">↑</a>
    <p id="getSecSumItems"></p>
 
 - getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.<br>
@@ -1231,7 +1231,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Sintax: getSecSumItems([nSlot=selected slot])
   Note: it stops if empty slot or end of inventory.
   ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.)</pre>
-
+<a href="#top">↑</a>
    <p id="clearSlot"></p>
     
 - clearSlot(nSlot) Clears content of slot, moving items to another slot.<br>
@@ -1240,7 +1240,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Returns: false - if there is no space to tranfer items.
            true - if the slot is empty.
   ex: clearSlot() - Clears the selected slot.</pre>
-   
+<a href="#top">↑</a>
    <p id="decSlot"></p>
    
 - decSlot(nSlot) Decreases nSlot in range [1..16].<br>
@@ -1248,14 +1248,14 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Sintax: decSlot(nSlot)
   Returns: the number of slot increased by 1.
   ex: decSlot(1) - Returns 16.</pre>
-   
+<a href="#top">↑</a>
    <p id="freeCount"></p>
    
 - freeCount() Get number of free slots in turtle's inventory.<br>
     <pre>Sintax: freeCount()
   Returns: Number of free slots.
   ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
-   
+<a href="#top">↑</a>
    <p id="getFreeSlot"></p>
    
 - getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
@@ -1268,14 +1268,14 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
       getFreeSlot(-16) - Returns the first empty slot starting at slot 16, searching backwards.
       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
-   
+<a href="#top">↑</a>
    <p id="groupItems"></p>
    
 - groupItems() Groups the same type of items in one slot in inventoy.<br>
     <pre>Sintax: groupItems()
   Returns: true.
   ex: groupItems() - Stacks the same items.</pre>
-   
+<a href="#top">↑</a>
    <p id="incSlot"></p>
    
 - incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].<br>
@@ -1284,7 +1284,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Sintax: incSlot(nSlot)
   Returns: The number of slot increased by 1.
   ex: incSlot(16) - Returns 1</pre>
-   
+<a href="#top">↑</a>
    <p id="itemCount"></p>
    
 - itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
@@ -1296,7 +1296,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   ex: itemCount() counts items in selected slot.
       itemCount("inventory") - counts items in inventory.
       itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
-   
+<a href="#top">↑</a>
    <p id="itemName"></p>
    
 - itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
@@ -1305,7 +1305,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Returns: item name - if selected slot/slot is not empty.
            false - if selected slot/slot is empty.
   ex: itemName(1) - Returns the name of item in slot 1.</pre>
-  
+<a href="#top">↑</a>
    <p id="itemSelect"></p>
    
 - itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
@@ -1317,7 +1317,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
                  - if value is a number and ( < 1 or > 16 )
   Note: if executed select() is the same as turtle.getSelectedSlot()
   ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
-   
+<a href="#top">↑</a>
    <p id="itemSpace"></p>
    
 - itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
@@ -1329,7 +1329,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   ex: itemSpace() gets how many items you can store, like the item in selected slot.
       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
       itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
-   
+<a href="#top">↑</a>
    <p id="search"></p>
    
 - search(sItemName, nStartSlot, bWrap) Search inventory for ItemName, starting at startSlot, and if search wrap.<br>
@@ -1343,7 +1343,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
                  - if nStartSlot is not a number.
   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
-   
+<a href="#top">↑</a>
    <p id="transferFrom"></p>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
@@ -1356,7 +1356,7 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
                  - if nSlot is out of range [1..16].
                  - if selected slot is full.
   ex: transferFrom(1, 3) - Tranfers from slot 1, 3 items to selected slot.</pre>
-   
+<a href="#top">↑</a>
    
 ## Suck
 
@@ -1371,4 +1371,4 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   Note: if nItems < 0 it drops items.
   ex: suckDir() - Turtle sucks all the items forward.</pre>
 
-   <a href="#top">top page</a>
+   <a href="#top">↑</a>
