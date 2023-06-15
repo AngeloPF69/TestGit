@@ -3,7 +3,7 @@
 
 ## Settings
 
-<a href="#SETTINGS">Defines the behavior of the turtle and funtions.</a>
+<a href="#SETT">Defines the behavior of the turtle and funtions.</a>
 
 ## Initialize
 
@@ -198,7 +198,7 @@
 
 ## Settings
 	
-  <p id="SETTINGS"></p>
+  <p id="SETT"></p>
 	
   local PREFEREDHAND = "right" --default equip hand<br>
   local DEFSTACK = 64 --default stack size<br>
