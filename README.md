@@ -5,6 +5,10 @@
 
 <a href="#SETT">Defines the behavior of the turtle and funtions.</a>
 
+## Original functions
+
+<a href="#OrgF">Arrays with original turtle functions.</a>
+
 ## Initialize
 
   <a href="#INIT">INIT() Loads files to tables, so that the turtle won't forget what it has learned.</a>
@@ -205,6 +209,20 @@
   CSLOT = 13 --default crafting slot<br>
   SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
   DIG = false --on walking turtle digs it's way through<br>
+	
+## Original functions arrays
+	
+  <p id="OrgF"></p>
+
+digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions<br>
+movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions<br>
+insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions<br>
+dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions<br>
+suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.<br>
+equipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions<br>
+detF = {["up"] = turtle.detectUp, ["down"] = turtle.detectDown, ["forward"] = turtle.detect} --original detect functions<br>
+attF = {["up"] = turtle.attackUp, ["down"] = turtle.attackDown, ["forward"] = turtle.attack} --original attack functions<br>
+plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turtle.place} --original place functions<br>
 	
 # Functions Explained
 
