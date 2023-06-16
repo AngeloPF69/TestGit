@@ -426,8 +426,8 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
      
    <p id="getFreeHand"></p>
 
-- getFreeHand() Gets turtle free hand: "left"|"right"|false.<br>
-    <pre>Sintax: getFreeHand()
+- getFreeHand(Prefered hand) Gets turtle free hand: "left"|"right"|false.<br>
+    <pre>Sintax: getFreeHand([prefered hand])
   Returns: "left" or "right" the first free hand found.
            false - if no free hand found.
   Note: you must use equip and not turtle.equip  for this function to work.
