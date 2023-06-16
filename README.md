@@ -280,11 +280,11 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - INIT() Loads files to tables, so that the turtle won't forget what it has learned.<br>
     <pre>Sintax: INIT() - tTurtle : turtle coords, facing, equiped tools names in the left and right hand,
                    tEnts - table of entities,
-		   tRevEnts - table for reverse lookup entities,
-		   tWorld - the world,
-		   tSpots - places marked on the world,
-		   tRecipes - table of recipes,
-		   tStacks - table of items stacks.
+                   tRevEnts - table for reverse lookup entities,
+                   tWorld - the world,
+                   tSpots - places marked on the world,
+                   tRecipes - table of recipes,
+                   tStacks - table of items stacks.
   Returns:  true
   ex: INIT()</pre>
    <a href="#top">↑</a>
