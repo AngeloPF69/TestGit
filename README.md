@@ -382,7 +382,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
-    <pre>Param: sFacing:string/number = "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]
+    <pre>Param: sFacing:string/number = "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
