@@ -7,10 +7,10 @@
 
 ## Used variables
 
-<a href="#OrgF">Arrays with original turtle functions.</a>
-<a href="#DirArrays">Directions and inverse directions arrays.</a>
-<a href="#Properties">Turtle properties.</a>
-<a href="#OProperties">Other entities properties.</a>
+<a href="#OrgF">Arrays with original turtle functions.</a><br>
+<a href="#DirArrays">Directions and inverse directions arrays.</a><br>
+<a href="#Properties">Turtle properties.</a><br>
+<a href="#OProperties">Other entities properties.</a><br>
 
 ## Initialize
 
@@ -215,13 +215,25 @@ DIG = false --on walking turtle digs it's way through<br>
 
 ## Direction arrays
 
-   <p id="DirArrays"></p>
+  <p id="DirArrays"></p>
 
-dirType = {["forward"] = 0, ["right"] = 1, ["back"] = 2, ["left"] = 3, ["up"] = 4, ["down"] = 8} --moving direction options
-lookingType = {["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
-facingType = {["z-"] = 0, ["x+"] = 1, ["z+"] = 2, ["x-"] = 3, ["y+"] = 4, ["y-"] = 8} --axis type values
-carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions
-negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}
+dirType = {["forward"] = 0, ["right"] = 1, ["back"] = 2, ["left"] = 3, ["up"] = 4, ["down"] = 8} --moving direction options<br>
+lookingType = {["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.<br>
+facingType = {["z-"] = 0, ["x+"] = 1, ["z+"] = 2, ["x-"] = 3, ["y+"] = 4, ["y-"] = 8} --axis type values<br>
+carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions<br>
+negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}<br>
+<a href="#top">Top of page</a>
+
+## Turtle properties
+
+  <p id="Properties"></p>
+
+tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle<br>
+          facing = facingType["z-"], --the axis where the turtle is facing at<br>
+          looking = lookingType["forward"],<br>
+          leftHand = "empty",<br>
+          rightHand = "empty",<br>
+}<br>
 <a href="#top">Top of page</a>
 	
 ## Original functions arrays
