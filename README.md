@@ -279,8 +279,8 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 		   tRevEnts - table for reverse lookup entities,
 		   tWorld - the world,
 		   tSpots - places marked on the world,
-                   tRecipes - table of recipes,
-                   tStacks - table of items stacks.
+		   tRecipes - table of recipes,
+		   tStacks - table of items stacks.
   Returns:  true
   ex: INIT()</pre>
    <a href="#top">↑</a>
