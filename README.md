@@ -418,10 +418,9 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
     <pre>Param: sSide - String: "left"|"right"
   Sintax:equip([Side=free hand = "left"|"right"])
   Returns: true - if it was equiped.
-           false - if no empty hand.
-                 - if invalid parameter.
-                 - if empty selected slot.
-                 - if it can't equip tool.
+           false - "Invalid side."
+	  	 - "Empty selected slot."
+		 - if it can't equip tool.
   ex: equip("left") - Equips in the left hand, the tool in the selected slot.
       equip() - Equips in the first free hand the tool in the selected slot.</pre>
      
