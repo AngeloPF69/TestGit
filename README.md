@@ -204,6 +204,7 @@
 ---------------------------------------------------------------------------------------------------------------------------
 
 <p id="SETT"></p>
+
 ## Settings
 	
 PREFEREDHAND = "right" --default equip hand<br>
@@ -213,6 +214,7 @@ SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld
 DIG = false --on walking turtle digs it's way through<br>
 
 <p id="DirArrays"></p>
+
 ## Direction arrays
 
 dirType = {["forward"] = 0, ["right"] = 1, ["back"] = 2, ["left"] = 3, ["up"] = 4, ["down"] = 8} --moving direction options<br>
@@ -220,48 +222,50 @@ lookingType = {["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle 
 facingType = {["z-"] = 0, ["x+"] = 1, ["z+"] = 2, ["x-"] = 3, ["y+"] = 4, ["y-"] = 8} --axis type values<br>
 carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions<br>
 negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}<br>
-<a href="#top">Top of page</a>
+   <a href="#top">↑</a>
 
 <p id="Properties"></p>
+
 ## Turtle properties
 
-tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle<br>
-          facing = facingType["z-"], --the axis where the turtle is facing at<br>
-          looking = lookingType["forward"],<br>
-          leftHand = "empty",<br>
-          rightHand = "empty",<br>
-}<br>
-<a href="#top">Top of page</a>
+<pre>tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
+          facing = facingType["z-"], --the axis where the turtle is facing at
+          looking = lookingType["forward"],
+          leftHand = "empty",
+          rightHand = "empty",
+}</pre>
+   <a href="#top">↑</a>
 
 <p id="OProperties"></p>
+
 ## Other Properties arrays
 
-tRecipes = {} --[[ ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}<br>
-                   ["Name"][index]["count"] = resulting number of items}<br>
-                   ["lastRecipe"] = sLastRecipe<br>
-                   ["CSlot"] = Crafting slot.<br>
-                   ["lastIndex"] = last recipe index]]<br>
+<pre>tRecipes = ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
+           ["Name"][index]["count"] = resulting number of items}
+           ["lastRecipe"] = sLastRecipe : last recipe crafted
+           ["CSlot"] = Crafting slot : last sed crafting slot ?
+           ["lastIndex"] = last recipe index
 
-tEnts={["unknown"]=nil, ["unreachable"]=-1, ["empty"]=0, ["next"]=1} --table entity<br>
-tStacks = {} --["itemName"] = nStack<br>
-tFuel = {} --[itemName] = quantity of fuel 15-10-2022<br>
+tEnts = {["unknown"] = nil, ["unreachable"] = -1, ["empty"] = 0, ["next"] = 1} --table entity<br>
+tStacks = {} --["itemName"] = nStack : how many items can stack<br>
+tFuel = {} --[itemName] = quantity of fuel given by item<br>
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity<br>
 tWorld = {} --[x][y][z] = nEnt : the world<br>
-tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go<br>
+tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go<br></pre>
 
-## Original functions arrays<br>
-	
   <p id="OrgF"></p>
 
-digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions<br>
-movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions<br>
-insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions<br>
-dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions<br>
-suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.<br>
-equipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions<br>
-detF = {["up"] = turtle.detectUp, ["down"] = turtle.detectDown, ["forward"] = turtle.detect} --original detect functions<br>
-attF = {["up"] = turtle.attackUp, ["down"] = turtle.attackDown, ["forward"] = turtle.attack} --original attack functions<br>
-plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turtle.place} --original place functions<br>
+## Original functions arrays<br>
+
+- digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions<br>
+- movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions<br>
+- insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions<br>
+- dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions<br>
+- suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.<br>
+- equipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions<br>
+- detF = {["up"] = turtle.detectUp, ["down"] = turtle.detectDown, ["forward"] = turtle.detect} --original detect functions<br>
+- attF = {["up"] = turtle.attackUp, ["down"] = turtle.attackDown, ["forward"] = turtle.attack} --original attack functions<br>
+- plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turtle.place} --original place functions<br>
 	
 # Functions Explained
 
@@ -270,7 +274,11 @@ plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turt
   <p id="INIT"></p>
   
 - INIT() Loads files to tables, so that the turtle won't forget what it has learned.<br>
-    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
+    <pre>Sintax: INIT() - tTurtle : turtle coords, facing, equiped tools names in the left and right hand,
+                   tEnts - table of entities,
+		   tRevEnts - table for reverse lookup entities,
+		   tWorld - the world,
+		   tSpots - places marked on the world,
                    tRecipes - table of recipes,
                    tStacks - table of items stacks.
   Returns:  true
