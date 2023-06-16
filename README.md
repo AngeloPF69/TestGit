@@ -316,8 +316,8 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Returns:  x, y, z adding nSteps to turtle coords.
             false - if nSteps is not a number.
   ex: if tTurtle x=0, y=0, z=0, facing=1 ("x+")
-    addSteps() - Returns 1,0,0.
-    addSteps(-1) - Returns -1,0,0.</pre>
+      addSteps() - Returns 1,0,0.
+      addSteps(-1) - Returns -1,0,0.</pre>
   
    <p id="distTo"></p>
 
