@@ -436,7 +436,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
 ## Fuel
   
-   <p id="refuel"></p>
+   <p id="refuelItems"></p>
 
 - refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.
     <pre>Param: nCount - number of items to refuel.
