@@ -213,6 +213,7 @@ DEFSTACK = 64 --default stack size<br>
 CSLOT = 13 --default crafting slot<br>
 SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
 DIG = false --on walking turtle digs it's way through<br>
+   <a href="#top">↑</a>
 
 <p id="DirArrays"></p>
 
@@ -253,6 +254,7 @@ tFuel = {} --[itemName] = quantity of fuel given by item<br>
 tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity<br>
 tWorld = {} --[x][y][z] = nEnt : the world<br>
 tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go<br></pre>
+   <a href="#top">↑</a>
 
   <p id="OrgF"></p>
 
@@ -267,7 +269,8 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - detF = {["up"] = turtle.detectUp, ["down"] = turtle.detectDown, ["forward"] = turtle.detect} --original detect functions<br>
 - attF = {["up"] = turtle.attackUp, ["down"] = turtle.attackDown, ["forward"] = turtle.attack} --original attack functions<br>
 - plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turtle.place} --original place functions<br>
-	
+   <a href="#top">↑</a>
+
 # Functions Explained
 
 ## Initialize
