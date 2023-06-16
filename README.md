@@ -5,9 +5,12 @@
 
 <a href="#SETT">Defines the behavior of the turtle and funtions.</a>
 
-## Original functions
+## Used variables
 
 <a href="#OrgF">Arrays with original turtle functions.</a>
+<a href="#DirArrays">Directions and inverse directions arrays.</a>
+<a href="#Properties">Turtle properties.</a>
+<a href="#OProperties">Other entities properties.</a>
 
 ## Initialize
 
@@ -204,12 +207,23 @@
 	
   <p id="SETT"></p>
 	
-  PREFEREDHAND = "right" --default equip hand<br>
-  DEFSTACK = 64 --default stack size<br>
-  CSLOT = 13 --default crafting slot<br>
-  SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
-  DIG = false --on walking turtle digs it's way through<br>
+PREFEREDHAND = "right" --default equip hand<br>
+DEFSTACK = 64 --default stack size<br>
+CSLOT = 13 --default crafting slot<br>
+SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
+DIG = false --on walking turtle digs it's way through<br>
+
+## Direction arrays
+
+   <p id="DirArrays"></p>
+
+dirType = {["forward"] = 0, ["right"] = 1, ["back"] = 2, ["left"] = 3, ["up"] = 4, ["down"] = 8} --moving direction options
+lookingType = {["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.
+facingType = {["z-"] = 0, ["x+"] = 1, ["z+"] = 2, ["x-"] = 3, ["y+"] = 4, ["y-"] = 8} --axis type values
+carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions
+negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}
 <a href="#top">Top of page</a>
+	
 ## Original functions arrays
 	
   <p id="OrgF"></p>
