@@ -453,17 +453,15 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   <p id="checkFuel"></p>
 
 - checkFuel(nActions|x,y,z) Checks if the fuel is enough for nActions/to get to x,y,z.
-    <pre>
-Param: nActions - number of turtle moves.
+    <pre>Param: nActions - number of turtle moves.
        x,y,z - numbers coords.
-Returns: true, number remaining fuel - if the fuel is enough.
+  Returns: true, number remaining fuel - if the fuel is enough.
 	 false, negative number missing fuel- if the fuel is not enough.
 	 nil - if nActions is not a number.
 	 turtle.getFuelLevel() - if nActions is not present.
-sintax: checkFuel(nActions|x,y,z)
-ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
-    checkFuel(10, 20, 30) - checks if turtle has fuel to get to 10, 20, 30
-</pre>
+  sintax: checkFuel(nActions|x,y,z)
+  ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
+    checkFuel(10, 20, 30) - checks if turtle has fuel to get to 10, 20, 30</pre>
    <a href="#top">↑</a>
 
 ## General
