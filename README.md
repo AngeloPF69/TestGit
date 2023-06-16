@@ -50,7 +50,7 @@
     
 ## Fuel
 
-   <a href="#refuel">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
+   <a href="#refuelItems">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
    <a href="#checkFuel">checkFuel([nActions]) Checks if the fuel is enough for nActions.</a>
 
 ## General
@@ -438,15 +438,16 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   
    <p id="refuel"></p>
 
-- refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.
+- refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.
     <pre>Param: nCount - number of items to refuel.
-  Sintax: refuel([nCount = all items in selected slot])
-  Returns: number of items refueled.
-           false - "Empty selected slot."
+    	     sItemName - name of the item.
+  Sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
+  Returns: number of items refueled, fuel level.
+	   false - "Turtle doesn't need fuel."
+		 - "Turtle is at maximum fuel."
+                 - "Couldn't find item name."
+                 - "Empty selected slot."
                  - "Item is not fuel."
-                 - "Turtle doesn't need fuel."
-                 - "Turtle is at maximum fuel."
-                 - "refuel(nItems) - nItems must be a number."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   <p id="checkFuel"></p>
