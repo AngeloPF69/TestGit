@@ -309,10 +309,11 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
    <p id="addSteps"></p>
    
-- addSteps(nSteps) Returns nSteps added to turtle coords.<br>
-    <pre>Param: nSteps - number of waking steps for turtle.
-  Sintax: addSteps([nSteps=1])
-  Returns:  x, y, z adding nSteps in direction turtle is facing.
+- addSteps([nSteps=1][, facing = tTurtle.facing]) Returns nSteps added to turtle coords.<br>
+    <pre>Param: nSteps - number of waking steps from turtle coords.
+    		facing - number/string direction of walking.
+  Sintax: addSteps([nSteps=1][, facing = tTurtle.facing])
+  Returns:  x, y, z adding nSteps to turtle coords.
             false - if nSteps is not a number.
   ex: if tTurtle x=0, y=0, z=0, facing=1 ("x+")
     addSteps() - Returns 1,0,0.
