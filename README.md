@@ -377,7 +377,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
   incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
-  if tTurtle.facing>3 then tTurtle.facing and= 3 end</pre>
+  if tTurtle.facing>3 then tTurtle.facing and 3 end</pre>
     
    <p id="setFacing"></p>
    
