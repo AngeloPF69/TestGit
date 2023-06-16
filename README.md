@@ -1,6 +1,6 @@
 <p id="top"></p>
 
-# computercraft turtle lua improved commands.
+# Computercraft turtle lua improved commands.
 
 ## Settings
 
