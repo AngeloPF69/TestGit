@@ -444,10 +444,10 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
   Returns: number of items refueled, fuel level.
 	   false - "Turtle doesn't need fuel."
-		 - "Turtle is at maximum fuel."
-                 - "Couldn't find item name."
-                 - "Empty selected slot."
-                 - "Item is not fuel."
+		   - "Turtle is at maximum fuel."
+                   - "Couldn't find item name."
+                   - "Empty selected slot."
+                   - "Item is not fuel."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   <p id="checkFuel"></p>
