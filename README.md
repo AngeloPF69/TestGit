@@ -327,7 +327,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Returns: distX, distY, distZ From turtle to point x, y, z.
   Note: returns a negative value if turtle is further away than the point x, y, z.
   ex: if turtle x=0, y=0, z=0
-    distTo(10,10,10) Returns 10, 10, 10</pre>
+      distTo(10,10,10) Returns 10, 10, 10</pre>
    <a href="#top">↑</a>
 
 ## Turtle
