@@ -296,11 +296,11 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - TERMINATE() Saves files to tables, so that the turtle won't forget what it has learned.<br>
     <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
     		      tEnts - table of entities,
-		      tRevEnts - table for reverse lookup entities,
-		      tWorld - the world,
-                      tRecipes - table of recipes,
-		      tSpots - places marked on the world,
-                      tStacks - table of items stacks.
+    		      tRevEnts - table for reverse lookup entities,
+    		      tWorld - the world,
+    		      tRecipes - table of recipes,
+    		      tSpots - places marked on the world,
+    		      tStacks - table of items stacks.
   Returns:  true
   ex: TERMINATE()</pre>
    <a href="#top">↑</a>
