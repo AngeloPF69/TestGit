@@ -2989,7 +2989,7 @@ end
 
 --not tested
 function buildWall(width, height, sBlock)
-  width, height, sBlock = getParam("nns", {1, 2, ""}, width, height, sBlock)
+  width, height, sBlock = getParam("nns", {1, 1, ""}, width, height, sBlock)
 
   if sBlock == "" then sBlock = getItemName() end
   if not sBlock then return false, "buildWall(width, height, blockName) - empty selected slot." end
@@ -4985,8 +4985,9 @@ function TEST()
   -- test code bellow this line
   -----------------------------
 
-  --print(buildWall("minecraft:gravel"))
+  print(buildWall("minecraft:cobblestone", 2, 2))
   --down()
+  --strafeLeft()
   --print(selectSlot(search("minecraft:gravel")))
 --print(selectSlot(false))
 
