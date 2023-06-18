@@ -1,5 +1,17 @@
-# computercraft turtle lua improved commands.
 <p id="top"></p>
+
+# Computercraft turtle lua improved commands.
+
+## Settings
+
+<a href="#SETT">Defines the behavior of the turtle and funtions.</a>
+
+## Used variables
+
+<a href="#OrgF">Arrays with original turtle functions.</a><br>
+<a href="#DirArrays">Directions and inverse directions arrays.</a><br>
+<a href="#Properties">Turtle properties.</a><br>
+<a href="#OProperties">Other entities properties.</a><br>
 
 ## Initialize
 
@@ -38,8 +50,8 @@
     
 ## Fuel
 
-   <a href="#refuel">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
-   <a href="#checkFuel">checkFuel([nActions]) Checks if the fuel is enough for nActions.</a>
+   <a href="#refuelItems">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
+   <a href="#checkFuel">checkFuel([nActions|x,y,z]) Checks if the fuel is enough for nActions/to get to x,y,z.</a>
 
 ## General
 
@@ -192,45 +204,120 @@
     
 ---------------------------------------------------------------------------------------------------------------------------
 
-# Functions Explained
+<p id="SETT"></p>
 
+## Settings
+	
+PREFEREDHAND = "right" --default equip hand<br>
+DEFSTACK = 64 --default stack size<br>
+CSLOT = 13 --default crafting slot<br>
+SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.<br>
+DIG = false --on walking turtle digs it's way through<br>
+   <a href="#top">↑</a>
+
+<p id="DirArrays"></p>
+
+## Direction arrays
+
+dirType = {["forward"] = 0, ["right"] = 1, ["back"] = 2, ["left"] = 3, ["up"] = 4, ["down"] = 8} --moving direction options<br>
+lookingType = {["forward"] = 0, ["up"] = 4, ["down"] = 8} --where is the turtle looking, it can't look to the sides or back.<br>
+facingType = {["z-"] = 0, ["x+"] = 1, ["z+"] = 2, ["x-"] = 3, ["y+"] = 4, ["y-"] = 8} --axis type values<br>
+carDirType = {["north"] = 0, ["east"] = 1, ["south"] = 2, ["west"] = 3} --cardinal directions<br>
+negOrient = {["forward"] = "back", ["right"] = "left", ["back"] = "forward", ["left"] = "right", ["up"] = "down", ["down"] = "up", ["z+"] = "z-", ["z-"] = "z+", ["x+"] = "x-", ["x-"] = "x+", ["y+"] = "y-", ["y-"] = "y+", [0] = 2, [2] = 0, [1] = 3, [3] = 1, ["north"] = "south", ["south"] = "north", ["east"] = "west", ["west"] = "east"}<br>
+   <a href="#top">↑</a>
+
+<p id="Properties"></p>
+
+## Turtle properties
+
+<pre>tTurtle = { ["x"] = 0, ["y"] = 0, ["z"] = 0, --coords for turtle
+          facing = facingType["z-"], --the axis where the turtle is facing at
+          looking = lookingType["forward"],
+          leftHand = "empty",
+          rightHand = "empty",
+}</pre>
+   <a href="#top">↑</a>
+
+<p id="OProperties"></p>
+
+## Other Properties arrays
+
+<pre>tRecipes = ["Name"][index]["recipe"] = {{"itemName"}, {"itemName", nCol = nColumn, nLin = nLine}, ...}
+           ["Name"][index]["count"] = resulting number of items}
+           ["lastRecipe"] = sLastRecipe : last recipe crafted
+           ["CSlot"] = Crafting slot : last sed crafting slot ?
+           ["lastIndex"] = last recipe index
+
+tEnts = {["unknown"] = nil, ["unreachable"] = -1, ["empty"] = 0, ["next"] = 1} --table entity<br>
+tStacks = {} --["itemName"] = nStack : how many items can stack<br>
+tFuel = {} --[itemName] = quantity of fuel given by item<br>
+tRevEnts={[-1]="unreachable", [0]="empty"} --table for reverse lookup table entity<br>
+tWorld = {} --[x][y][z] = nEnt : the world<br>
+tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go<br></pre>
+   <a href="#top">↑</a>
+
+  <p id="OrgF"></p>
+
+## Original functions arrays<br>
+
+- digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions<br>
+- movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions<br>
+- insF = {["up"] = turtle.inspectUp, ["down"] = turtle.inspectDown, ["forward"] = turtle.inspect} --original inspect functions<br>
+- dropF = { ["up"] = turtle.dropUp, ["forward"] = turtle.drop, ["down"] = turtle.dropDown } --original drop functions<br>
+- suckF = {["forward"] = turtle.suck, ["up"] = turtle.suckUp, ["down"] = turtle.suckDown} --original suck functions.<br>
+- equipF = {["left"] = turtle.equipLeft, ["right"] = turtle.equipRight} --original equip functions<br>
+- detF = {["up"] = turtle.detectUp, ["down"] = turtle.detectDown, ["forward"] = turtle.detect} --original detect functions<br>
+- attF = {["up"] = turtle.attackUp, ["down"] = turtle.attackDown, ["forward"] = turtle.attack} --original attack functions<br>
+- plaF = {["up"] = turtle.placeUp, ["down"] = turtle.placeDown, ["forward"] = turtle.place} --original place functions<br>
+   <a href="#top">↑</a>
+
+# Functions Explained
 
 ## Initialize
 
   <p id="INIT"></p>
   
 - INIT() Loads files to tables, so that the turtle won't forget what it has learned.<br>
-    <pre>Sintax: INIT() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
+    <pre>Sintax: INIT() - tTurtle : turtle coords, facing, equiped tools names in the left and right hand,
+                   tEnts - table of entities,
+                   tRevEnts - table for reverse lookup entities,
+                   tWorld - the world,
+                   tSpots - places marked on the world,
                    tRecipes - table of recipes,
                    tStacks - table of items stacks.
   Returns:  true
   ex: INIT()</pre>
-
+   <a href="#top">↑</a>
 
 ## Finalize
 
   <p id="TERMINATE"></p>
   
-- TERMINATE() Saves tTurtle, tRecipes, tStacks to text files.<br>
+- TERMINATE() Saves files to tables, so that the turtle won't forget what it has learned.<br>
     <pre>Sintax: TERMINATE() - tTurtle - turtle coords, facing, equiped tools names in the left and right hand,
-                        tRecipes - table of recipes,
-                        tStacks - table of items stacks.
+    		      tEnts - table of entities,
+    		      tRevEnts - table for reverse lookup entities,
+    		      tWorld - the world,
+    		      tRecipes - table of recipes,
+    		      tSpots - places marked on the world,
+    		      tStacks - table of items stacks.
   Returns:  true
   ex: TERMINATE()</pre>
-
+   <a href="#top">↑</a>
 
 ## Measurements
 
    <p id="addSteps"></p>
    
-- addSteps(nSteps) Returns nSteps added to turtle coords.<br>
-    <pre>Param: nSteps - number of waking steps for turtle.
-  Sintax: addSteps([nSteps=1])
-  Returns:  x, y, z adding nSteps in direction turtle is facing.
+- addSteps([nSteps=1][, facing = tTurtle.facing]) Returns nSteps added to turtle coords.<br>
+    <pre>Param: nSteps - number of waking steps from turtle coords.
+    		facing - number/string direction of walking.
+  Sintax: addSteps([nSteps=1][, facing = tTurtle.facing])
+  Returns:  x, y, z adding nSteps to turtle coords.
             false - if nSteps is not a number.
   ex: if tTurtle x=0, y=0, z=0, facing=1 ("x+")
-    addSteps() - Returns 1,0,0.
-    addSteps(-1) - Returns -1,0,0.</pre>
+      addSteps() - Returns 1,0,0.
+      addSteps(-1) - Returns -1,0,0.</pre>
   
    <p id="distTo"></p>
 
@@ -240,7 +327,8 @@
   Returns: distX, distY, distZ From turtle to point x, y, z.
   Note: returns a negative value if turtle is further away than the point x, y, z.
   ex: if turtle x=0, y=0, z=0
-    distTo(10,10,10) Returns 10, 10, 10</pre>
+      distTo(10,10,10) Returns 10, 10, 10</pre>
+   <a href="#top">↑</a>
 
 ## Turtle
 
@@ -259,7 +347,7 @@
   Returns: true - if could save tTurtle to file "tTurtle.txt".
            false - if it couldn't.
   ex: saveTurtle()</pre>
-  
+   <a href="#top">↑</a>
   
 ## Turtle facing
 
@@ -289,12 +377,12 @@
   Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
   incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
-  if tTurtle.facing>3 then tTurtle.facing and= 3 end</pre>
+  if tTurtle.facing>3 then tTurtle.facing and 3 end</pre>
     
    <p id="setFacing"></p>
    
 - setFacing(sFacing) Sets tTurtle.facing.<br>
-    <pre>Param: sFacing:string/number = "z-"|"x+"|"z+"|"x-"|"y+"|"y-"|[0..3]
+    <pre>Param: sFacing:string/number = "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
@@ -302,7 +390,7 @@
                   - if sFacing is not a number neither a string.
   ex: setFacing("z+") - Sets tTurtle.facing = 2
       setFacing(1) - sets tTurtle.facing = 1</pre>
-
+   <a href="#top">↑</a>
 
 ## Turtle coords
 
@@ -320,7 +408,7 @@
   Sintax: setCoords(x, y, z)
   Returns: true
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
-
+   <a href="#top">↑</a>
 
 ## Equipment
   
@@ -330,50 +418,52 @@
     <pre>Param: sSide - String: "left"|"right"
   Sintax:equip([Side=free hand = "left"|"right"])
   Returns: true - if it was equiped.
-           false - if no empty hand.
-                 - if invalid parameter.
-                 - if empty selected slot.
-                 - if it can't equip tool.
+           false - "Invalid side."
+	  	 - "Empty selected slot."
+		 - if it can't equip tool.
   ex: equip("left") - Equips in the left hand, the tool in the selected slot.
       equip() - Equips in the first free hand the tool in the selected slot.</pre>
      
    <p id="getFreeHand"></p>
 
-- getFreeHand() Gets turtle free hand: "left"|"right"|false.<br>
-    <pre>Sintax: getFreeHand()
+- getFreeHand(Prefered hand) Gets turtle free hand: "left"|"right"|false.<br>
+    <pre>Sintax: getFreeHand([prefered hand])
   Returns: "left" or "right" the first free hand found.
            false - if no free hand found.
   Note: you must use equip and not turtle.equip  for this function to work.
   ex: getFreeHand()</pre>
-
+   <a href="#top">↑</a>
 
 ## Fuel
   
-   <p id="refuel"></p>
+   <p id="refuelItems"></p>
 
-- refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.
+- refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.
     <pre>Param: nCount - number of items to refuel.
-  Sintax: refuel([nCount = all items in selected slot])
-  Returns: number of items refueled.
-           false - "Empty selected slot."
-                 - "Item is not fuel."
-                 - "Turtle doesn't need fuel."
-                 - "Turtle is at maximum fuel."
-                 - "refuel(nItems) - nItems must be a number."
+	     sItemName - name of the item.
+  Sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
+  Returns: number of items refueled, fuel level.
+	   false - "Turtle doesn't need fuel."
+		   - "Turtle is at maximum fuel."
+		   - "Couldn't find item name."
+		   - "Empty selected slot."
+		   - "Item is not fuel."
   ex: refuel(10) - Refuels turtle with 10 items.</pre>
 
   <p id="checkFuel"></p>
 
-- checkFuel(nActions) Checks if the fuel is enough for nActions.
+- checkFuel(nActions|x,y,z) Checks if the fuel is enough for nActions/to get to x,y,z.
     <pre>Param: nActions - number of turtle moves.
-  Returns:	true, number remaining fuel - if the fuel is enough.
-					  false, negative number missing fuel- if the fuel is not enough.
-            nil - if nActions is not a number.
-            turtle.getFuelLevel() - if nActions is not present.
-	sintax: checkFuel([nActions])
+         x,y,z - numbers coords.
+  Returns: true, number remaining fuel - if the fuel is enough.
+	       false, negative number missing fuel- if the fuel is not enough.
+	       nil - if nActions is not a number.
+	       turtle.getFuelLevel() - if nActions is not present.
+  sintax: checkFuel(nActions|x,y,z)
   ex: checkFuel(123) - checks if turtle has enough fuel to move 132 steps.
-      checkFuel() - returns turtle.getFuelLevel()</pre>
-  
+      checkFuel(10, 20, 30) - checks if turtle has fuel to get to 10, 20, 30</pre>
+   <a href="#top">↑</a>
+
 ## General
 
   <p id="checkType"></p>
@@ -465,7 +555,7 @@
   Returns: true - tSearch is in t.
            false - at the least one element of tSearch is not in table t.
   ex: tableInTable("forward", {"forward", "left", "right"}) - Returns true.</pre>
-
+   <a href="#top">↑</a>
 
 ## Stacks
    
@@ -505,6 +595,7 @@
             nil - if no item name supplied.
                 - if no stack number is supplied.
    sintax: setStack(sItemName = selected slot)</pre>
+   <a href="#top">↑</a>
 
 ## Attack
 
@@ -517,7 +608,7 @@
            false - if there is nothing to attack, or no weapon.
            nil - if invalid parameter.
   ex: attackDir() - Attacks forward.</pre>
-
+   <a href="#top">↑</a>
   
 ## Recipes
   
@@ -711,7 +802,7 @@
   Returns: nil - if nSlot is not in range[1..16].
            true - if was set tRecipes["CSlot"].
   ex: setCraftSlot(16) - Sets the resulting craft slot to 16.</pre>
-
+   <a href="#top">↑</a>
 
 ## Rotations
   
@@ -730,7 +821,7 @@
   Returns: true if sDir is a valid direction.
            false if sDir is not a valid direction.
   ex: turnDir("left") - Turtle turns left.</pre>
-
+   <a href="#top">↑</a>
 
 ## Moving
  
@@ -777,7 +868,7 @@
                  - if it couldn't complete all the moves.
   Note: if Blocks < 0 it moves downwards.
   ex: up(1) - moves 1 block upwards.</pre>
-  
+   <a href="#top">↑</a>
   
 ## Rotations and Moving
   
@@ -823,7 +914,7 @@
            false - if blocked, or invalid parameter.
   Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
   ex: goRight(3) - Moves 3 Blocks to the right.</pre>
-  
+   <a href="#top">↑</a>
 
 ## Dig
   
@@ -920,7 +1011,7 @@
            false - if bllocked, empty space, or invalid parameter.
   Note: nBlocks < 0 digs down, nBlocks > 0 digs Up.
   ex: digUp(2) - Dig 2 blocks Up.</pre>
-   
+   <a href="#top">↑</a>
 
 ## Drop
 
@@ -986,7 +1077,7 @@
   Returns: Number of blocks dropped.
   Note: Blocks < 0 sucks Blocks from up.
   ex: dropUp() - Drops 1 block upwards.</pre>
-   
+   <a href="#top">↑</a>
 
 ## Placing
 
@@ -1086,7 +1177,7 @@
                  - invalid parameter.
   Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
   ex: placeUp(1) or placeUp() - Places 1 Block up.</pre>
-   
+   <a href="#top">↑</a>
    
 ## Detect
 
@@ -1121,7 +1212,7 @@
            false - if turtle didn't detect a block.
            nil - invalid parameter.
   ex: detectDir() - Detect blocks forward.</pre>
-
+   <a href="#top">↑</a>
 
 ## Disk
 
@@ -1131,7 +1222,7 @@
 		<pre>Sintax: fsGetFreeSpace()
   Returns: Number - Free space on disk.
   ex: fsGetFreeSpace() - Gets the free space on disk.</pre>
-   
+   <a href="#top">↑</a>
    
 ## Inspect
     
@@ -1143,7 +1234,7 @@
   Returns: true, table with data from original turtle.inspect functions - If turtle detects a block.
            false, message from the original turtle.inspect functions - if turtle didn't detect a block.
   ex: detectDir([sDir="forward"]) - Inspects a block forward.</pre>
-   
+   <a href="#top">↑</a>
 
 ## Compare
 
@@ -1168,7 +1259,7 @@
 					nil if invalid parameter.
   Note: nBlocks < 0 turn back and compares forward, nBlocks > 0 compares forwards.
   ex: compareBelow() or compareBelow(1) - Compares 1 block down.</pre>
-   
+
     <p id="compareDir"></p>
    
 - compareDir([sDir="forward"][, nSlot=selected slot]) Compares item in slot with block in sDir direction.<br>
@@ -1183,7 +1274,7 @@
   sintax: compareDir([sDir="forward"][, nSlot=selected slot])
   ex: compareDir() compares selected slot with block in front of turtle.
       compareDir("left", 2) - compares item in slot 2 with block on the left.</pre>
-
+   <a href="#top">↑</a>
 
 ## Inventory
 
@@ -1209,7 +1300,7 @@
   Returns: false - if there is no space to tranfer items.
            true - if the slot is empty.
   ex: clearSlot() - Clears the selected slot.</pre>
-   
+
    <p id="decSlot"></p>
    
 - decSlot(nSlot) Decreases nSlot in range [1..16].<br>
@@ -1217,14 +1308,14 @@
   Sintax: decSlot(nSlot)
   Returns: the number of slot increased by 1.
   ex: decSlot(1) - Returns 16.</pre>
-   
+<a href="#top">↑</a>
    <p id="freeCount"></p>
    
 - freeCount() Get number of free slots in turtle's inventory.<br>
     <pre>Sintax: freeCount()
   Returns: Number of free slots.
   ex: freeCount() - Returns 1 if there is only 1 slot empty.</pre>
-   
+
    <p id="getFreeSlot"></p>
    
 - getFreeSlot(nStartSlot, bWrap) Get the first free slot, wrapig the search or not.<br>
@@ -1237,14 +1328,14 @@
       getFreeSlot(-16) - Returns the first empty slot starting at slot 16, searching backwards.
       getFreeSlot(5) - Returns the first empty slot starting at slot 5, and searching from slot 1 through 4 if needed.
       getFreeSlot(16, false) - Returns if slot 16 is empty.</pre>
-   
+
    <p id="groupItems"></p>
    
 - groupItems() Groups the same type of items in one slot in inventoy.<br>
     <pre>Sintax: groupItems()
   Returns: true.
   ex: groupItems() - Stacks the same items.</pre>
-   
+
    <p id="incSlot"></p>
    
 - incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].<br>
@@ -1253,7 +1344,7 @@
   Sintax: incSlot(nSlot)
   Returns: The number of slot increased by 1.
   ex: incSlot(16) - Returns 1</pre>
-   
+
    <p id="itemCount"></p>
    
 - itemCount([slot/"inventory"/item name=Selected slot]) Counts items in slot, inventory<br>
@@ -1265,7 +1356,7 @@
   ex: itemCount() counts items in selected slot.
       itemCount("inventory") - counts items in inventory.
       itemCount("minecraft:cobblestone") - counts cobblestone in inventory.</pre>
-   
+
    <p id="itemName"></p>
    
 - itemName([Slot=Selected slot]) Gets the item name from Slot.<br>
@@ -1274,7 +1365,7 @@
   Returns: item name - if selected slot/slot is not empty.
            false - if selected slot/slot is empty.
   ex: itemName(1) - Returns the name of item in slot 1.</pre>
-  
+
    <p id="itemSelect"></p>
    
 - itemSelect([Slot/Item Name]) Selects slot [1..16] or first item with Item Name, or the turtle selected slot.<br>
@@ -1286,7 +1377,7 @@
                  - if value is a number and ( < 1 or > 16 )
   Note: if executed select() is the same as turtle.getSelectedSlot()
   ex: select("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"</pre>
-   
+
    <p id="itemSpace"></p>
    
 - itemSpace([slot/item Name=selected slot]) Get the how many items more you can store in inventory.<br>
@@ -1298,7 +1389,7 @@
   ex: itemSpace() gets how many items you can store, like the item in selected slot.
       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
       itemSpace(12) - gets how more items, like item in slot 12, you can store.</pre>
-   
+
    <p id="search"></p>
    
 - search(sItemName, nStartSlot, bWrap) Search inventory for ItemName, starting at startSlot, and if search wrap.<br>
@@ -1312,7 +1403,7 @@
                  - if nStartSlot is not a number.
   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
   ex: search("minecraft:cobblestone") - Returns first slot with "minecraft:cobblestone" and the quantity.</pre>
-   
+
    <p id="transferFrom"></p>
    
 - transferFrom(nSlot, nItems) Transfer nItems from nSlot to selected slot.<br>
@@ -1325,7 +1416,7 @@
                  - if nSlot is out of range [1..16].
                  - if selected slot is full.
   ex: transferFrom(1, 3) - Tranfers from slot 1, 3 items to selected slot.</pre>
-   
+   <a href="#top">↑</a>
    
 ## Suck
 
@@ -1340,4 +1431,4 @@
   Note: if nItems < 0 it drops items.
   ex: suckDir() - Turtle sucks all the items forward.</pre>
 
-   <a href="#top">Top of page</a>
+   <a href="#top">↑</a>
