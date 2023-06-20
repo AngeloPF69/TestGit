@@ -5,6 +5,7 @@
   "minecraft:sand",
   "minecraft:grass_block",
   "minecraft:gravel",
-  [ -1 ] = "unreachable",
+  "minecraft:dirt",
   [ 0 ] = "empty",
+  [ -1 ] = "unreachable",
 }

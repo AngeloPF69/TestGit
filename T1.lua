@@ -435,6 +435,7 @@ function getFuel(sItem) --[[ Get the fuel for sItem.
       getFuel() - gets the fuel from item in selected slot.]]
 
   sItem = sItem or getItemName()
+  if sItem == "" then return false, "getFuel([Item Name=selected slot]) - empty selected slot." end
 	if tEnts[sItem] and tEnts[sItem].fuel then return tEnts[sItem].fuel end
   return false, "Item not tested."
 end
@@ -2987,12 +2988,20 @@ end
 
 ------ BUILD FUNCTIONS ------
 
---not tested
-function buildWall(width, height, sBlock)
-  width, height, sBlock = getParam("nns", {1, 1, ""}, width, height, sBlock)
+function buildWall(width, height, sBlock) --[[ Builds a wall in front of the turtle.
+  18-06-2023 v0.4.0 Param: width, height - numbers: the width and height of the wall.
+                           sBlock - string: name of the block to build the wall.
+  Returns: false - if no block name was supplied and the selected slot is empty.
+                 - if the block name was not found in inventory.
+  sintax: buildWall([width=1][, height=1][, sBlock=selected slot])
+	ex: buildWall() - places the selected block in front of the turtle.
+      buildWall(2) - builds a wall with the selected slot block, having 2 blocks wide.
+      buildWall("minecraft:cobblestone") - places a block of cobblestone.
+      buildWall(3,5,"minecraft:cobblestone") - builds a wall width 3, height 5, from cobblestone.]]
 
-  if sBlock == "" then sBlock = getItemName() end
-  if not sBlock then return false, "buildWall(width, height, blockName) - empty selected slot." end
+  width, height, sBlock = getParam("nns", {1, 1, getItemName()}, width, height, sBlock)
+
+  if sBlock == "" then return false, "buildWall(width, height, blockName) - empty selected slot." end
   
   if sBlock ~= getItemName() then
     if not selectSlot(search(sBlock)) then
@@ -3005,7 +3014,7 @@ function buildWall(width, height, sBlock)
 	for w = 1, width, sign(width) do
 		for h = 1, height, sign(height) do
 			if not place(sBlock) then
-        if not getItemName() then
+        if getItemName() == "" then
           if not selectSlot(search(sBlock)) then
             return false, "buildWall(width, height, blockName) - no more blocks."
           end
@@ -3024,23 +3033,79 @@ function buildWall(width, height, sBlock)
   return true
 end
 
---not tested
 function buildFloor(width, depth, sBlock)
+  width, depth, sBlock = getParam("nns", {1, 1, getItemName()}, width, depth, sBlock)
+
+  if sBlock == "" then return false, "buildFloor(width, depth, blockName) - empty selected slot." end
+  
+  if sBlock ~= getItemName() then
+    if not selectSlot(search(sBlock)) then
+      return false, "buildFloor(width, depth, blockName) - block name not found."
+    end
+  end
+
 	local sw = sign(width)
 	local sd = sign(depth)
-	up()
-	for w = 1, width, sign(width) do
-		for d = 1, depth, sign(depth) do
-			placeDown(sBlock)
-			forward(sd))
+	if not up() then return false, "buildFloor(width, depth, sBlock) - couldn't go up." end
+	for w = 1, width do
+		for d = 1, depth do
+			if placeDown() == 0 then
+        if getItemName() == "" then
+          if not selectSlot(search(sBlock)) then
+            return false, "buildFloor(width, depth, blockName) - no more blocks."
+          end
+        else return false, "buildFloor(width, depth, blockName) - couldn't place block."
+        end
+      end
+      if d ~= depth then
+			  if not forward(sd) then return false, "buildFloor(width, depth, sBlock) - couldn't go forward/back." end
+      end
 		end
-		sw = -sw
-		strafeRight(sw)
+		sd = -sd
+    if w ~= width then
+		  if not strafeRight(sw) then return false, "buildFloor(width, depth, sBlock) - couldn't go right/left." end
+    end
 	end
+  return true
 end
 
---not tested
-function buildCube(Side , sBlock)
+function buildCube(nSide , sBlock)
+  nSide, sBlock = getParam("ns", {1, getItemName()}, nSide, sBlock)
+
+  if sBlock == "" then return false, "buildFloor(width, depth, blockName) - empty selected slot." end
+  
+  if sBlock ~= getItemName() then
+    if not selectSlot(search(sBlock)) then
+      return false, "buildFloor(width, depth, blockName) - block name not found."
+    end
+  end
+
+  if nSide < 0 then nSide = math.abs(nSide) end
+  local sw, sd = 1, 1
+  for nPlane = 1, nSide do
+    if not up() then return false, "buildFloor(width, depth, sBlock) - couldn't go up." end
+    for w = 1, nSide do
+      for d = 1, nSide do
+        if placeDown() == 0 then
+          if getItemName() == "" then
+            if not selectSlot(search(sBlock)) then
+              return false, "buildFloor(width, depth, blockName) - no more blocks."
+            end
+          else return false, "buildFloor(width, depth, blockName) - couldn't place block."
+          end
+        end
+        if d ~= nSide then
+          if not forward(sd) then return false, "buildFloor(width, depth, sBlock) - couldn't go forward/back." end
+        end
+      end
+      sd = -sd
+      if w ~= nSide then
+        if not strafeRight(sw) then return false, "buildFloor(width, depth, sBlock) - couldn't go right/left." end
+      end
+    end
+    sw = -sw
+  end
+  return true
 end
 
 --not tested
@@ -3527,7 +3592,7 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
   sDir = strLower(sDir)
 
   local sItemName = getItemName()
-  if not sItemName then return false, "Empty selected slot" end
+  if sItemName == "" then return false, "Empty selected slot" end
 
 	if turnDir(sDir) then sDir = "forward"
   elseif (sDir == "y+") or (sDir == "y-") then
@@ -3572,6 +3637,7 @@ function placeAt(x, y, z, sMessage) --[[ Places a block/item at coords x, y, z.
   return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
+--not tested
 function placeSign(sMessage) --[[ Places a sign in front of the turtle.
   14-05-2023 v0.4.0 Param: sMessage - the message printed in the sign.
   Returns:  false - if no sign was found in inventory.
@@ -3612,9 +3678,9 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
 			else --it must be a message to the sign item
         if not sItem then
           sItem = getItemName()
-          if not sItem then
+          if sItem == "" then
             sItem = getItemName(selectItem(arg[i]))
-            if not sItem then return false, "place(...) - could't find item, "..arg[i] end
+            if sItem == "" then return false, "place(...) - could't find item, "..arg[i] end
           end
           if string.find(sItem, "sign") then sMessage = arg[i]
           else sItem = arg[i]            
@@ -3625,9 +3691,9 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
     end
   end
 
-  if not sItem then
+  if sItem == "" then
     sItem = getItemName()
-    if not sItem then return false, "place(...) - empty selected slot." end
+    if sItem == "" then return false, "place(...) - empty selected slot." end
   elseif sItem ~= getItemName() then
     if not selectItem(sItem) then return false, "place(...) - item not found." end
   end
@@ -4168,16 +4234,17 @@ end
 function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   05/09/2021 v0.3.0 Param: nSlot - number slot where to get the item name.
               Returns: item name - if slot is not empty.
-                        false - if slot is empty.
+                        "" - if slot is empty.
               Sintax: getItemName([nSlot=selected slot])
               ex: getItemName() - retuns the name of item in selected slot.]]
-  nSlot = nSlot or turtle.getSelectedSlot()
 
-  if type(nSlot) ~= "number" then return nil, "getItemName([Slot=selected slot]) - Slot must be a number." end
-  if (nSlot <1 ) or (nSlot > 16) then return false, "Slot "..nSlot.." out of range." end
+  if not nSlot then nSlot = nSlot or turtle.getSelectedSlot()
+  elseif type(nSlot) ~= "number" then return nil, "getItemName([Slot=selected slot]) - Slot must be a number."
+  elseif not isInRange(nSlot, {1, 16}) then return false, "Slot "..nSlot.." out of range."
+  end
 
   local tData = turtle.getItemDetail(nSlot)
-  if not tData then return false end
+  if not tData then return "" end
   return tData.name
 end
 
@@ -4996,11 +5063,6 @@ function TEST()
   -- test code bellow this line
   -----------------------------
 
-  print(buildWall("minecraft:cobblestone", 2, 2))
-  --down()
-  --strafeLeft()
-  --print(selectSlot(search("minecraft:gravel")))
---print(selectSlot(false))
 
   ---------------------------
   -- test code above this line

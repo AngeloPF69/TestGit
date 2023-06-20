@@ -2,18 +2,21 @@
   [ "minecraft:gravel" ] = {
     id = 6,
   },
-  next = 7,
+  next = 8,
   [ "minecraft:oak_sign" ] = {
     id = 2,
   },
   [ "minecraft:grass_block" ] = {
     id = 5,
   },
+  [ "minecraft:sand" ] = {
+    id = 4,
+  },
   [ "minecraft:cobblestone" ] = {
     id = 1,
   },
-  [ "minecraft:sand" ] = {
-    id = 4,
+  [ "minecraft:dirt" ] = {
+    id = 7,
   },
   empty = 0,
   [ "minecraft:stone" ] = {
