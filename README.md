@@ -33,9 +33,9 @@
     
 ## Turtle facing
 
-   <a href="#decFacing">decFacing([nTurns=1][, nFacing = tTurtle.facing]) Decrements nFacing by nTurns.</a><br>
+   <a href="#decFacing">decFacing(nTurns, nFacing) Decrements nFacing by nTurns.</a><br>
    <a href="#getFacing">getFacing() Returns tTurtle.facing.</a><br>
-   <a href="#incFacing">incFacing([nTurns=1][, nFacing = tTurtle.facing]) Increments nFacing by nTurns.</a><br>
+   <a href="#incFacing">incFacing(nTurns, nFacing) Increments nFacing by nTurns.</a><br>
    <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing.</a>
     
 ## Turtle coords
@@ -353,11 +353,10 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
    <p id="decFacing"></p>
    
-- decFacing(nTurns) Decrements tTurtle.facing by nTurns.<br>
+- decFacing(nTurns, nFacing) Decrements nFacing/tTurtle.facing by nTurns.<br>
     <pre>Param: nTurns - number of 90 degrees turns to the left.
-  Sintax: decFacing([nTurns=1])
+  Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])
   Returns: true
-  Note: This function only changes the value in tTurtle.facing.
   ex: if turtle is facing "x+"=1
     decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
