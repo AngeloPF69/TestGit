@@ -356,7 +356,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - decFacing(nTurns, nFacing) Decrements nFacing/tTurtle.facing by nTurns.<br>
     <pre>Param: nTurns - number of 90 degrees turns to the left.
   Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])
-  Returns: true
+  Returns: number - the new value of nFacing
   ex: if turtle is facing "x+"=1
     decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
@@ -369,14 +369,13 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
     
    <p id="incFacing"></p>
    
-- incFacing(nTurns) Increments tTurtle.facing by nTurns.<br>
+- incFacing(nTurns, nFacing) Increments nFacing by nTurns.<br>
     <pre>Param: nTurns - number of 90 degrees turns to the right.
-  Sintax: incFacing([nTurns=1])
-  Returns: true
-  Note: This function only changes the value in tTurtle.facing.
+  Sintax: incFacing([nTurns=1][, nFacing = tTurtle.facing)
+  Returns: number - the new value of nFacing
   ex: if turtle is facing "x+"=1
-  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
-  if tTurtle.facing>3 then tTurtle.facing and 3 end</pre>
+      incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
+      if tTurtle.facing>3 then tTurtle.facing and 3 end</pre>
     
    <p id="setFacing"></p>
    
@@ -385,7 +384,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Sintax: setFacing(sFacing)
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
-                  - if sFacing is not in facingType.
+                  - if sFacing is not a valid direction.
                   - if sFacing is not a number neither a string.
   ex: setFacing("z+") - Sets tTurtle.facing = 2
       setFacing(1) - sets tTurtle.facing = 1</pre>
@@ -406,6 +405,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
     <pre>Param: number: x,y,z - new coords for tTurtle.x, tTurtle.y, tTurtle.z
   Sintax: setCoords(x, y, z)
   Returns: true
+	   false - if x, y, z are not numbers.
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
    <a href="#top">↑</a>
 
@@ -414,7 +414,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    <p id="equip"></p>
      
 - equip(Side) Equip tool from the selected slot.<br>
-    <pre>Param: sSide - String: "left"|"right"
+    <pre>Param: Side - String: "left"|"right"
   Sintax:equip([Side=free hand = "left"|"right"])
   Returns: true - if it was equiped.
            false - "Invalid side."
