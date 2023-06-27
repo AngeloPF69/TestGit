@@ -2782,7 +2782,7 @@ end
 
 ------ ROTATING FUNCTIONS ------  
 
-function incFacing(nTurns, nFacing) --[[ Increments nFacing by nTurns
+function incFacing(nTurns, nFacing) --[[ Increments nFacing/tTurtle.facing by nTurns
   02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the right.
                            nFacing - where is the turtle facing 0..3
   Returns: the new direction 0..3
@@ -2790,10 +2790,16 @@ function incFacing(nTurns, nFacing) --[[ Increments nFacing by nTurns
       incFacing(1) - Increments nFacing, nFacing turns to "z+"=2
   Sintax: incFacing([nTurns=1][, nFacing = tTurtle.facing])]]
 
+	local bRestore = false
+	if not nFacing then
+		nFacing = tTurtle.facing
+		bRestore = true
+	end
   nFacing = nFacing or tTurtle.facing
   nTurns = nTurns or 1
   nFacing = nFacing + nTurns
   nFacing = bit32.band(nFacing, 3)
+	if bRestore then tTurtle.facing = nFacing end
   return nFacing
 end
 
@@ -2801,12 +2807,18 @@ function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
   02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the left.
                            nFacing - where is the turtle facing 0..3
   Returns: the new direction 0..3
-  Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])]]
+  Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])
+  ex: decFacing() - increments tTurtle.facing]]
 
-  nFacing = nFacing or tTurtle.facing
+	local bRestore = false
+	if not nFacing then
+		nFacing = tTurtle.facing
+		bRestore = true
+	end
   nTurns = nTurns or 1
   nFacing = nFacing - nTurns
   nFacing = bit32.band(nFacing, 3)
+	if bRestore then tTurtle.facing = nFacing end
   return nFacing
 end
 
