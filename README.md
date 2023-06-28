@@ -428,9 +428,10 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - getFreeHand(Prefered hand) Gets turtle free hand: "left"|"right"|false.<br>
     <pre>Sintax: getFreeHand([prefered hand])
   Returns: "left" or "right" the first free hand found.
-           false - if no free hand found.
-  Note: you must use equip and not turtle.equip  for this function to work.
-  ex: getFreeHand()</pre>
+	    nil - if Prefered hand is not "left" or "right" or empty
+	    false - if no free hand found.
+  Note: you must use equip not turtle.equip  for this function to work.
+  ex: getFreeHand() - checks if PREFEREDHAND is empty, if not, checks the other hand.</pre>
    <a href="#top">↑</a>
 
 ## Fuel
@@ -440,7 +441,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.
     <pre>Param: nCount - number of items to refuel.
 	     sItemName - name of the item.
-  Sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
+  Sintax: refuelItems([sItemName = Selected slot item name][, nCount = nItems in selected slot])
   Returns: number of items refueled, fuel level.
 	   false - "Turtle doesn't need fuel."
 		   - "Turtle is at maximum fuel."
