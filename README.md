@@ -50,7 +50,7 @@
     
 ## Fuel
 
-   <a href="#refuelItems">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
+   <a href="#refuelItems">refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.</a><br>
    <a href="#checkFuel">checkFuel([nActions|x,y,z]) Checks if the fuel is enough for nActions/to get to x,y,z.</a>
 
 ## General
@@ -474,6 +474,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Sintax: checkType(sType, ...)
   Returns: true - if all parameters have the type of sType.
            false - if #sType ~= #... (number of parameters are diferent from length of sType).
+	    	 - if there is at least one that doesn't match the type.
   ex: checkType("snt", "hello", number1, tTable) - Outputs: true.</pre>
   
   <p id="getLowestKey"></p>
@@ -501,9 +502,9 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    
 - isValue(value, t) Checks if value is in t table.</a><br>
     <pre>Sintax: isValue(value, t)
-  Returns: true - if value is in t.
+  Returns: true, key - if value is in t.
            false - if value is not in t.
-  ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
+  ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".</pre>
   
    <p id="isNumber"></p>
    
