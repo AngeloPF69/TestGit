@@ -72,7 +72,7 @@
   
 ## Attack
 
-   <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction "forward"|"right"|"back"|"left"|"up"|"down"</a>
+   <a href="#attackDir">attackDir(Dir) Turtle attack in sDir direction: "forward"|"right"|"back"|"left"|"up" |"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3</a>
 
 ## Recipes
 
