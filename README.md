@@ -72,7 +72,7 @@
   
 ## Attack
 
-   <a href="#attackDir">attackDir(Dir) Turtle attack in sDir direction: "forward"|"right"|"back"|"left"|"up" |"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3</a>
+   <a href="#attackDir">attackDir(Dir) Turtle attack in sDir direction: "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3</a>
 
 ## Recipes
 
@@ -585,7 +585,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
    <p id="attackDir"></p>
 
-- attackDir(\[sDir="forward"\]) Turtle attack in sDir direction.
+- attackDir(sDir]) Turtle attack in sDir direction.
     <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
