@@ -46,12 +46,12 @@
 ## Equipment
   
    <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
-   <a href="#getFreeHand">getFreeHand([sHand = PREFEREDHAND]) Gets turtle free hand: "left"|"right"|false.</a>
+   <a href="#getFreeHand">getFreeHand(Hand) Gets turtle free hand: "left"|"right"|false.</a>
     
 ## Fuel
 
    <a href="#refuelItems">refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.</a><br>
-   <a href="#checkFuel">checkFuel([nActions|x,y,z]) Checks if the fuel is enough for nActions/to get to x,y,z.</a>
+   <a href="#checkFuel">checkFuel(Actions|x,y,z]) Checks if the fuel is enough for nActions/to get to x,y,z.</a>
 
 ## General
 
@@ -67,10 +67,8 @@
   
 ## Stacks
    
-   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a><br>
-   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
-   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
-   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
+   <a href="#getStack">getStack(Slot|Item Name) Returns how many items can stack.</a><br>
+   <a href="#setStack">setStack(Item Name, Stack) Sets the item stack value in tStacks.</a><br>
   
 ## Attack
 
@@ -560,31 +558,16 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
 ## Stacks
    
-   <p id="saveStacks"></p>
-   
-- saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
-    <pre>Sintax: saveStacks()
-  Returns: false - if it couldn't save file.
-           true - if it could save file.
-  ex: saveStacks()</pre>
-  
-   <p id="loadStacks"></p>
-  
-- loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
-    <pre>Sintax: loadStacks()
-  Returns false - if it couldn't load file.
-          true - if it could load file.
-  ex: loadStacks()</pre>
-  
    <p id="getStack"></p>
   
- - getStack(\[nSlot=selected slot\]) Returns how many items can stack.</a><br>
+ - getStack(\[nSlot|sItemName=selected slot\]) Returns how many items can stack.</a><br>
     <pre>Param: nSlot - slot number 1..16, or the item name.
-   Sintax: getStack([nSlot=selected slot])
+   Sintax: getStack([nSlot|sItemName=selected slot])
    Return: quantity a item can stack.
-           nil - if slot is out of range[1..16].
+           nil - if nSlot is out of range[1..16].
+	       - if type nSlot is invalid.
            false - if slot is empty.
-                 - if item was not found in inventory.
+                 - if item was not found in inventory, or unknown stack.
    ex: getStack() - gets the stack of item in selected slot.</pre>
   
    <p id="setStack"></p>
@@ -595,15 +578,15 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    Return: true - if it could set the stack for item.
             nil - if no item name supplied.
                 - if no stack number is supplied.
-   sintax: setStack(sItemName = selected slot)</pre>
+   sintax: setStack(sItemName = selected slot, nStack)</pre>
    <a href="#top">↑</a>
 
 ## Attack
 
    <p id="attackDir"></p>
 
-- attackDir([sDir="forward"]) Turtle attack in sDir direction.
-    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+- attackDir(\[sDir="forward"\]) Turtle attack in sDir direction.
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
            false - if there is nothing to attack, or no weapon.
