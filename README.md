@@ -597,6 +597,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 ## Recipes
   
   <p id="addRecipe"></p>
+
 - addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Returns index of recipe.</a><br>
   
   <p id="arrangeRecipe"></p>
