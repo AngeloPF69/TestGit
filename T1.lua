@@ -3084,35 +3084,35 @@ end
 function buildCube(nSide , sBlock)
   nSide, sBlock = getParam("ns", {1, getItemName()}, nSide, sBlock)
 
-  if sBlock == "" then return false, "buildFloor(width, depth, blockName) - empty selected slot." end
+  if sBlock == "" then return false, "buildCube(size, blockName) - empty selected slot." end
   
   if sBlock ~= getItemName() then
     if not selectSlot(search(sBlock)) then
-      return false, "buildFloor(width, depth, blockName) - block name not found."
+      return false, "buildCube(size, blockName) - block name not found."
     end
   end
 
   if nSide < 0 then nSide = math.abs(nSide) end
   local sw, sd = 1, 1
   for nPlane = 1, nSide do
-    if not up() then return false, "buildFloor(width, depth, sBlock) - couldn't go up." end
+    if not up() then return false, "buildCube(size, sBlock) - couldn't go up." end
     for w = 1, nSide do
       for d = 1, nSide do
         if placeDown() == 0 then
           if getItemName() == "" then
             if not selectSlot(search(sBlock)) then
-              return false, "buildFloor(width, depth, blockName) - no more blocks."
+              return false, "buildCube(size, blockName) - no more blocks."
             end
-          else return false, "buildFloor(width, depth, blockName) - couldn't place block."
+          else return false, "buildCube(size, blockName) - couldn't place block."
           end
         end
         if d ~= nSide then
-          if not forward(sd) then return false, "buildFloor(width, depth, sBlock) - couldn't go forward/back." end
+          if not forward(sd) then return false, "buildCube(size, sBlock) - couldn't go forward/back." end
         end
       end
       sd = -sd
       if w ~= nSide then
-        if not strafeRight(sw) then return false, "buildFloor(width, depth, sBlock) - couldn't go right/left." end
+        if not strafeRight(sw) then return false, "buildCube(size, sBlock) - couldn't go right/left." end
       end
     end
     sw = -sw
