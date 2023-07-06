@@ -76,7 +76,7 @@
 
 ## Recipes
 
-   <a href="#addRecipe">addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount]) Returns index of recipe.</a><br>
+   <a href="#addRecipe">addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount]) Adds a recipe to tRecipes.</a><br>
    <a href="#arrangeRecipe">arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
    <a href="#canCraft">canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
    <a href="#colLinMatch">colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.</a><br>
@@ -598,8 +598,17 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   
   <p id="addRecipe"></p>
 
-- addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Returns index of recipe.</a><br>
-  
+- addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Adds a recipe to tRecipes.</a><br>
+    <pre>Param: sRecipe - string: the name of the recipe.
+	    tRecipe - recipe table, get it from getInvRecipe.
+	    nCount - quantity of products made with this recipe.
+	 Returns:  number - index of recipe (tRecipes[sRecipe][index])
+                      nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
+                          - if tRecipe is not supplied and there is no recipe in inventory.
+         Syntax: addRecipe(sRecipe[, tRecipe=recipe in inventory][, nCount])
+         Note: if no nCount is supplied this function crafts the recipe to obtain it.
+         ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"</pre>
+	 
   <p id="arrangeRecipe"></p>
   
 - arrangeRecipe([sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.
