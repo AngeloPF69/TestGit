@@ -452,7 +452,8 @@ function getFuel(sItem) --[[ Get the fuel for sItem.
   Return: number - quantity of fuel from sItem.
           false - if item was not tested
   ex: getFuel("minecraft:cobblestone") - returns 0 or "Item not tested" if was not tested.
-      getFuel() - gets the fuel from item in selected slot.]]
+      getFuel() - gets the fuel from item in selected slot.
+  Dependencies: getItemName]]
 
   sItem = sItem or getItemName()
   if sItem == "" then return false, "getFuel([Item Name=selected slot]) - empty selected slot." end
@@ -466,7 +467,8 @@ function setFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
   Return: nil - if sItem or nQFuel not supplied.
           true
   Sintax: setFuel(sItem, nQFuel)
-  ex: setFuel("minecraft:cobblestone", 0) - sets cobblestone to give 0 fuel.]]
+  ex: setFuel("minecraft:cobblestone", 0) - sets cobblestone to give 0 fuel.
+  Dependencies: checkNil, addFuel]]
   
 	if checkNil(2, sItem, nQFuel) then
 		return nil, "setFuel(sItem, nQFuel) - Item name and fuel quantity must be supplied."
@@ -481,7 +483,8 @@ function addFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
                            nQFuel - quantity of fuel sItem have.
   Sintax: addFuel(sItem, nQFuel)
   Note: if sItem is not in tEnts, adds it.
-  Returns: true ]]
+  Returns: true
+  Dependencies: entAdd, setFuel]]
 
 	local success, message = entAdd(sItem)
   if not success then return success, message end
@@ -499,7 +502,8 @@ function getFuelSlot(nSlot) --[[ Gets the quantity of fuel given by item in nSlo
           false - if nSlot is empty.
                 - if item was never tested for fuel.
   Sintax: getFuelSlot([nSlot = selected slot])
-  ex: getFuelSlot() - gets quantity of fuel given by item in selected slot.]]
+  ex: getFuelSlot() - gets quantity of fuel given by item in selected slot.
+  Dependencies: isInRange]]
 
   nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "Invalid Slot type, must be a number." end
@@ -519,7 +523,8 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
                 - if the slot is empty.
   Note: it consumes 1 item if it is fuel and have not been tested.
   Sintax: fuelTestSlot([nSlot = selected slot])
-  ex: fuelTestSlot() - test the selected slot for fuel.]]
+  ex: fuelTestSlot() - test the selected slot for fuel.
+  Dependencies: isInRange, addFuel]]
 
   if type(turtle.getFuelLimit()) ~= "number" then return false, "Turtle doesn't need fuel." end
 
@@ -548,7 +553,8 @@ end
 function getInvFuel() --[[ Gets the total fuel in inventory.
   31-10-2022 v0.4.0 Return: number - the total fuel in inventory.
   Note: it consumes 1 item if it is fuel and have not been tested.
-  Sintax: getInvFuel()]]
+  Sintax: getInvFuel()
+  Dependencies: getFuel, fuelTestSlot]]
 
 	local nTotFuel = 0
 	for nSlot = 1, 16 do
@@ -609,7 +615,7 @@ end
 function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,z
   21-07-2022 v0.4.0 Param: x, y, z (numbers) - coords of the point where to go.
   Returns: checkFuel(...)
-  Sintax: isFuelEnoughTo(x, y, z)
+  Sintax: isFuelEnoughTo(x, y, z) alias for checkFuel(x,y,z)
   ex: isFuelEnoughTo(10, 20, 50) - checks if there is enough fuel to go to (10, 20, 50)
 			isFuelEnoughTo(10) - checks if turtle has fuel for 10 move functions.]]
 
@@ -622,7 +628,8 @@ function getSlotsToFuel(nFuel) --[[ Gets the quantity of items in each slot to f
   Sintax: getSlotsToFuel([nFuel=fuel limit-fuel level])
   Return: number, table{{nQ, slot},} - total fuel available, table with slot, quantity of items, needed to fuel.
   ex: getSlotsToFuel() - gets total of fuel, and table with slots and quantity to full up turtle.
-      getSlotsToFuel(100) - gets total fuel available, and the table with slots and quantity needed to fill up 100 fuel.]]
+      getSlotsToFuel(100) - gets total fuel available, and the table with slots and quantity needed to fill up 100 fuel.
+  Dependencies: getInvFuelItems]]
 
   if type(turtle.getFuelLimit()) == "string" then
     return false, "Turtle doesn't need fuel"
@@ -661,7 +668,8 @@ function getInvFuelItems() --[[ Gets the inventory slots and items that are fuel
   29-11-2022 v9.4.0 
   Return: table in decrescent order by fuel, with slot, name, fuel, quantity
           false - if the turtle doesn't need fuel.
-                - if the fuel level is above 90% in the turtle.]]
+                - if the fuel level is above 90% in the turtle.
+  Dependencies: getFuel, fuelTestSlot]]
 
   local tFuelItems --tFuelItems = {nSlot, sName, nFuel, nQ} - slot, fuel, and quantity of items
   for iSlot = 1, 16 do
@@ -694,7 +702,8 @@ function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount item
                   - "Empty selected slot."
                   -	"Item is not fuel."
 	sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
-  ex: refuelItems(123) - Fuels the turtle with 123 items.]] 
+  ex: refuelItems(123) - Fuels the turtle with 123 items.
+  Dependencies: getParam, selectItem]] 
   
 	if type(turtle.getFuelLimit()) == "string" then return false, "Turtle doesn't need fuel." end
 	if turtle.getFuelLevel() == turtle.getFuelLimit() then return false, "Turtle is at maximum fuel." end
@@ -733,7 +742,8 @@ function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
 										          false - if no free hand found.
                               nil - if invalid hand.
   Sintax: getFreeHand([sHand=PREFEREDHAND])
-  ex: getFreeHand() - Return the first free hand referenced from PREFEREDHAND and then the other hand, or false.]] 
+  ex: getFreeHand() - Return the first free hand referenced from PREFEREDHAND and then the other hand, or false.
+  Dependencies: getKey]] 
 
   sHand = sHand or PREFEREDHAND
   sHand = string.lower(sHand)
@@ -755,7 +765,8 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 									- "Empty selected slot."
 									- if it can't equip tool.
 	sintax: equip([Side=first free hand(left|right)])
-  ex: equip() - Try to equip tool in the selected slot to one free hand.]] 
+  ex: equip() - Try to equip tool in the selected slot to one free hand.
+  Dependencies: getFreeHand, isValue]] 
   
 	sSide = sSide or getFreeHand()
   sSide = string.lower(sSide)
@@ -771,7 +782,15 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 	return true
 end
 
-function unequip(sHand)
+function unequip(sHand) --[[ Equips a tool in sHand.
+  13-07-2023 v0.4.0 Param: sHand - string: "left"|"right"
+  Returns: true - if tool was equiped.
+           false - if sHand is invalid.
+                 - if turtle doesn't have a empty slot to unequip tool.
+  Sintax: unequip([sHand = PREFEREDHAND])
+  ex: unequip() - try to unequip the PREFEREDHAND.
+  Dependencies: isEmptySlot, getFreeSlot]]
+  
   sHand = sHand or PREFEREDHAND
   sHand = string.lower(sHand)
   
@@ -796,7 +815,8 @@ end
 function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
   23/09/2021 v0.2.0 Returns:	true - if it could save the file.
 											        false - if it couldn't save file.
-  ex: saveTurtle() ]] 
+  ex: saveTurtle()
+  Dependencies: saveTable]] 
   
   local success, reason = saveTable(tTurtle, "tTurtle.txt")
   if success then return success end
@@ -806,7 +826,8 @@ end
 function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
   23/09/2021 v0.2.0 Returns:	true - if it could load the file to tTurtle.
 										      		false - if it couldn't load file.
-  ex: turtleLoad() ]] 
+  ex: turtleLoad()
+  Dependencies: loadTable, isDicEmpty]] 
   
   local t = loadTable("tTurtle.txt")
   if not t then return false,"Can't load tTurtle.txt"
@@ -820,7 +841,9 @@ end
 ------ INIT ------
 
 function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
-  02/11/2021 v0.4.0 Returns:	true]] 
+  02/11/2021 v0.4.0 Returns:	true
+  Dependencies: loadEnt, loadRevEnt, loadWorld, loadTurtle, loadRecipes, loadSpots, tInv.init]]
+  
   loadEnt()
   loadRevEnt()
   loadWorld()
@@ -834,7 +857,8 @@ end
 ------ TERMINATE ------
 
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
-  02/11/2021 v0.4.0 Returns:	true]]
+  02/11/2021 v0.4.0 Returns:	true
+  Dependencies: tInv.terminate, saveEnt, saveRevEnt, saveWorld, saveTurtle, saveRecipes, saveSpots]]
   tInv.terminate()
   saveEnt()
   saveRevEnt()
@@ -884,7 +908,8 @@ function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
   03/09/2021 v0.2.0 Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
   Sintax: setCoords(x, y, z)
   Returns:  true.
-  ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.]] 
+  ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.
+  Dependencies: isNumber, ]] 
   
   if not isNumber(x,y,z) then return false, "setCoords(x, y, z) - Coords must be numbers." end
 	tTurtle.x, tTurtle.y, tTurtle.z = x, y, z
@@ -908,7 +933,8 @@ function attackDir(sDir) --[[ Turtle attack in sDir direction.
             false - if there is nothing to attack, or no weapon.
                nil- if invalid parameter.
   sintax: attackDir([sDir="forward"])
-  ex: attackDir("left") - Rotates left and attacks. ]]
+  ex: attackDir("left") - Rotates left and attacks.
+  Dependencies: turnDir]]
   
   sDir = sDir or "forward"
   sDir = string.lower(sDir)
@@ -931,7 +957,8 @@ function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
             false - if nSteps is not a number.
   Note: accepts positive and negative numbers.
         resets tTurtle.looking to 0.
-  ex: addSteps() - Adds 1 to the coord of the turtle is facing.]] 
+  ex: addSteps() - Adds 1 to the coord of the turtle is facing.
+  Dependencies: getCoords]] 
 
   if type(nSteps) == "string" then
       local tmp = facing
@@ -990,7 +1017,8 @@ function distTo(x, y, z) --[[ Gets the three components of the distance from the
   Sintax: distTo(x, y, z)
   Returns:  the x,y,z distance from turtle to coords x, y, z.
   Note: returns a negative value if turtle is further away than the point x, y, z.
-  ex: distTo(1, 10, 34) - Returns 3 values.]] 
+  ex: distTo(1, 10, 34) - Returns 3 values.
+  Dependencies: isNumber]] 
   
   if not isNumber(x,y,z) then return false, "distTo(x, y, z) - Coords must be numbers." end
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
@@ -1000,6 +1028,7 @@ end
 function distFromTo(x1, y1, z1, x2, y2, z2) --return:number,number,number the distances betwen 2 points - CHECKED
   --[[  05/07/2018	sintax: getDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})
         complete name - GET DISTance ( Z1,X1,Y1, Z2,X2,Y2 ) ]]
+  
   if not x1 then return false end
   if type(x1) == "table" then
     return x1[1] - y1[1], x1[2] - y1[2], x1[3] - y1[3]
@@ -1041,7 +1070,8 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
                - if nSlot is not in [1..16].
   sintax: compareDir([sDir="forward"][, nSlot=selected slot])
   ex: compareDir() compares selected slot with block in front of turtle.
-  compareDir("left", 2) - compares item in slot 2 with block on the left.]]
+  compareDir("left", 2) - compares item in slot 2 with block on the left.
+  Dependencies: getParam, turnDir, isInRange]]
   
 	sDir, nSlot = getParam("sn", {"forward", turtle.getSelectedSlot()}, sDir, nSlot)
 	sDir  = string.lower(sDir)
@@ -1079,7 +1109,8 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
 						nil, string - if invalid parameter.
   sintax: compareAbove([nBlocks=1])
   Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
-  ex: compareAbove() or compareAbove(1) - Compares 1 block up.]]
+  ex: compareAbove() or compareAbove(1) - Compares 1 block up.
+  Dependencies: sign, forward]]
   
   nBlocks = nBlocks or 1
   
@@ -1113,7 +1144,8 @@ function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strai
 						nil, string - if invalid parameter.
   sintax: compareBelow([nBlocks=1])
   Note: nBlocks < 0 compares backwards, nBlocks > 0 compares forwards.
-  ex: compareBelow() or compareBelow(1) - Compares 1 block down.]]
+  ex: compareBelow() or compareBelow(1) - Compares 1 block down.
+  Dependencies: sign, ]]
   
   nBlocks = nBlocks or 1
   
@@ -1148,7 +1180,8 @@ function detectAt(x, y, z) --[[ Detect if block at x,y,z exists.
            nil - if parameters < 3.
                - if x,y,z are not numbers.
   Sintax: detectAt(x,y,z)
-  ex: detectAt(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.]]
+  ex: detectAt(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns detectCoord that block.
+  Dependencies: checkNil, isNumber, goToNeighbor, detectCoordDir, getKey]]
 
   if checkNil(3, x, y, z) then return nil, "detectCoord(x,y,z) - invalid number os parameters." end
   if not isNumber(x, y, z) then return nil, "detectCoord(x,y,z) - x,y,z must be numbers." end
@@ -1164,7 +1197,8 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction.
              nil - invalid parameter.
 	Sintax: detectDir([sDir="forward"])
   ex: detectDir() - Detect blocks forward.
-			detectDir(0) or detectDir("z-") or detectDir("north") - Detect blocks to the north.]]
+			detectDir(0) or detectDir("z-") or detectDir("north") - Detect blocks to the north.
+  Dependencies: turnDir]]
   
 	sDir = sDir or "forward"
   sDir = string.lower(sDir)
@@ -1183,7 +1217,8 @@ function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
 	  				nil - if invalid parameter.
   sintax: detectAbove([nBlocks=1])
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-  ex: detectAbove() or detectAbove(1) - Detects 1 block up.]]
+  ex: detectAbove() or detectAbove(1) - Detects 1 block up.
+  Dependencies: forward]]
   
   nBlocks = nBlocks or 1
   
@@ -1206,7 +1241,8 @@ function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
              nil - if invalid parameter
   sintax: detectBelow([nBlocks=1])
   Note: nBlocks < 0 detects backwards, nBlocks > 0 detects forwards.
-  ex: detectBelow() or detectBelow(1) - Detect 1 block down.]]
+  ex: detectBelow() or detectBelow(1) - Detect 1 block down.
+  Dependencies: sign, forward]]
   
   nBlocks = nBlocks or 1
   
@@ -1225,7 +1261,16 @@ end
 
 ------ INSPECT FUNCTIONS ------
 
-function inspectAt(x, y, z)
+function inspectAt(x, y, z) --[[ Inspects the block at coord x,y,z.
+  13-07-2023 v0.4.0 Param: x,y,z - numbers: coord of block to inspect.
+  Returns: true, table - boolean, data from block.
+           false, 0 - if there is no block to inspect.
+           false - if turtle couldn't get to x,y,z.
+           nil - if x,y,z are not numbers.
+  Sintax: inspect(x,y,z)
+  ex: inspect(10,10,10) - turtle move to a neighbor of 10,10,10 and inspect the block at coord 10,10,10.
+  Dependencies: isNumber, goToNeighbor, inspectDir, getKey]]
+  
   if not isNumber(x, y, z) then return nil, "inspect(x,y,z) - x,y,z must be numbers." end
   if not goToNeighbor(x, y, z) then return false, "inspect(x,y,z) - couldn't get to neighbor of x,y,z." end
   local success, t = inspectDir(getKey(tTurtle.looking, lookingType))
@@ -1244,7 +1289,8 @@ function inspect(...) --[[ Returns the information for block.
   Sintax: inspect([x,y,z]|[sDir])
   sDir = "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3
   ex: inspect(10,10,10) - turtle goes to one neighbor of 10,10,10, turns to 10,10,10, and returns inspect that block.
-      inspect("left") - inspects the block in the left. ]]
+      inspect("left") - inspects the block in the left.
+  Dependencies: inspectDir, inspectAt]]
 
   if #arg == 0 then return inspectDir("forward") end
   if #arg == 1 then
@@ -1261,7 +1307,8 @@ function inspectDir(sDir) --[[ Inspect a block in sDir direction.
             nil - if invalid parameter sDir.
   Sintax: detectDir([sDir="forward"])
 	ex: inspectDir("forward") or inspectDir() - inspects a block forward.
-			inspectDir("z-") or inspectDir("north") or inspect(0) - inspects a block to the north.]]
+			inspectDir("z-") or inspectDir("north") or inspect(0) - inspects a block to the north.
+  Dependencies: strLower, turnDir]]
   
 	sDir = sDir or "forward"
   sDir = strLower(sDir)
@@ -1281,7 +1328,8 @@ function scan(sDir) --[[ Inspects the block in sDir, and sets tWorld.
           nil - if sDir is not a string.
               - if sDir is not "forward"|"up"|"down"
   Sintax: scan([sDir = "forward"])
-  ex: scan("up") - inspects the block up, sets tEnt and tWorld with its code.]]
+  ex: scan("up") - inspects the block up, sets tEnt and tWorld with its code.
+  Dependencies: addSteps, entAdd, setWorldEnt]]
 
   sDir = sDir or "forward"
   if type(sDir) ~= "string" then
@@ -1302,7 +1350,9 @@ function scan(sDir) --[[ Inspects the block in sDir, and sets tWorld.
 end
 
 function scanAll() --[[ Inspects up, down and forward, puts the result in tWorld.
-  02-11-2022 v0.4.0 Return: true]]
+  02-11-2022 v0.4.0 Return: true
+  Dependencies: scan]]
+  
   local tDir = {"up", "forward", "down"}
   for i = 1, #tDir do
     scan(tDir[i])
@@ -1320,7 +1370,8 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
              nil - invalid nBlocks type.
   Sintax: forward([nBlocks=1])
   Note: nBlocks < 0 moves backwards, nBlocks > 0 moves forward.
-  ex: forward(3) - Moves 3 blocks forward.]] 
+  ex: forward(3) - Moves 3 blocks forward.
+  Dependencies: back, scanAll, dig]] 
   
   nBlocks = nBlocks or 1
   
@@ -1345,7 +1396,8 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
   Note: nBlocks < 0 moves forward, nBlocks > 0 moves backwards.
-  ex: back(-3) - Moves 3 blocks forward.]]
+  ex: back(-3) - Moves 3 blocks forward.
+  Dependencies: forward, scanAll]]
   
   nBlocks = nBlocks or 1
   
@@ -1368,7 +1420,8 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
   Note: nBlocks < 0 moves downwards, nBlocks > 0 moves upwards.
-  ex: up(3) - Moves 3 blocks up.]]
+  ex: up(3) - Moves 3 blocks up.
+  Dependencies: down, scanAll, digUp]]
   
   nBlocks = nBlocks or 1
   
@@ -1393,7 +1446,8 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
   Note: nBlocks < 0 moves up, nBlocks > 0 moves down.
-  ex: down(3) - Moves 3 blocks down.]]
+  ex: down(3) - Moves 3 blocks down.
+  Dependencies: up, scanAll, digDown]]
   
   nBlocks = nBlocks or 1
   
@@ -1421,7 +1475,8 @@ function strafeLeft(nSteps) --[[ Turns left or right and walks nSteps, turns to 
   Dependencies: goLeft, turnRight
   ex: strafeLeft() - turns left, advances 1 and turns right.
       strafeLeft(5) - turns left, advances 5 blocks and turns right.
-      strafeLeft(-6) - turns right, advances 6 blocks and turns left.]]
+      strafeLeft(-6) - turns right, advances 6 blocks and turns left.
+  Dependencies: goLeft, turnRight]]
 
       nSteps = nSteps or 1
       if tonumber(nSteps) then nSteps = tonumber(nSteps) end
@@ -1441,7 +1496,8 @@ function strafeRight(nSteps) --[[ Turns right or left and walks nSteps, turns to
   Dependencies: goRight, turnLeft
   ex: strafeRight() - turns right, advances 1 and turns left.
       strafeRight(5) - turns right, advances 5 blocks and turns left.
-      strafeRight(-6) - turns left, advances 6 blocks and turns right.]]
+      strafeRight(-6) - turns left, advances 6 blocks and turns right.
+  Dependencies: goRight, turnLeft]]
 
   nSteps = nSteps or 1
   if tonumber(nSteps) then nSteps = tonumber(nSteps) end
@@ -1538,19 +1594,23 @@ function strLR(s, sep) --[[ Returns the left and right part of a string.
                            sep - the character separator or the length of the string to return.
   Returns:  nil - if the string is not supplied.
   ex: strLR("Hello", 2) - returns He, lo.
-      strLR("Hello", "l") - returns He, o.]]
+      strLR("Hello", "l") - returns He, o.
+  Dependencies: strLeft]]
+  
 	return strLeft(s, sep), strRight(s, sep)
 end
 
 function b2N(value) --[[ Converts boolean value to number (true - 1, false - 0)
   01-01-2023 v0.4.0 Param: value - boolean (true/false)
   Returns: number 1 or 0]]
+
 	return value and 1 or 0
 end
 
 function n2B(value) --[[ Converts number value to boolean (~= 0 - true, 0 - false)
   01-01-2023 v0.4.0 Param: value - number
   Returns: boolean (true/false)]]
+
   return not (value == 0)
 end
 
@@ -1581,7 +1641,8 @@ function dirType2Facing(sDir, nFacing) --[[ Adjusts the facing after a turn.
   Ex: dirType2Facing("left", 2) - returns 1
       dirType2Facing("up", 1) - returns 4
       if turtle.facing = 0 - dirType2Facing("right") - returns 1
-      if turtle.facing = 1 - dirType2Facing() - returns 1]]
+      if turtle.facing = 1 - dirType2Facing() - returns 1
+  Dependencies: incFacing]]
       
   sDir = sDir or "forward"
   nFacing = nFacing or tTurtle.facing
@@ -1608,7 +1669,8 @@ function isInRange(nValue, ...) --[[ Checks if nValue is in ... range
   for i = 1, #arg do
     local lower, higher
     if type(arg[i]) == "table" then
-      lower = arg[i][1]; higher = arg[i][2]
+      lower = arg[i][1]
+      higher = arg[i][2]
     elseif type(arg[i]) == "number" then
       lower = arg[i]
     else return nil, "checkRange(nValue, {nLowerLimit, nHigherLimit}) - invalid type, nValue, nLowerLimit and nHogherLimit must be numbers."
@@ -1634,9 +1696,9 @@ function loadTable(sFileName) --[[ Loads a text file into a table.
 	
   local fh,t
   if not fs.exists(sFileName) then return false, "loadTable - file not found" end
-  fh=fs.open(sFileName, "r")
+  fh = fs.open(sFileName, "r")
 	if not fh then return false, "loadTable - can't open file "..sFileName end
-  t=textutils.unserialize(fh.readAll())
+  t = textutils.unserialize(fh.readAll())
 	if not t then return false, "loadTable - empty file "..sFileName end
   fh.close()
   return t
@@ -1655,7 +1717,7 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
   
 	if not t or not sFileName then return false, "Table or filename not supplied." end --no arguments
 	
-  if not string.find(sFileName, "[.]") then sFileName=sFileName..".txt" end --if no extension add 1
+  if not string.find(sFileName, "[.]") then sFileName = sFileName..".txt" end --if no extension add 1
 	local str2Save = textutils.serialize(t)
 	if string.len(str2Save) > fsGetFreeSpace("/") then return false,"no disk space" end
 	
@@ -1713,7 +1775,8 @@ function getKey(value, t) --[[ Gets the first key from table t where the key is 
   Sintax: getKey(value, t)
   Return: the key corresponding to value in table t.
           false - if value is not found
-  ex: getKey(2, {"first"=1, "second"=2}) - returns second]]
+  ex: getKey(2, {"first"=1, "second"=2}) - returns second
+  Dependencies: checkNil, getParam]]
 
   if checkNil(2, value, t) then return nil, "getKey(value, t) - you must supply value and t table." end
   value, t = getParam("nt", {{}, -1}, value, t)
@@ -1856,7 +1919,8 @@ function getStack(nSlot) --[[ Returns how many items can stack in slot.
                  - if slot is empty.
   sintax: getStack([nSlot/sItemName = selected slot]).
   ex: getStack() - gets the stack of item in selected slot.
-      getStack("minecraft:oak_planks") - gets the stack for oak_planks.]]
+      getStack("minecraft:oak_planks") - gets the stack for oak_planks.
+  Dependencies: search, isInRange]]
   
   nSlot = nSlot or turtle.getSelectedSlot()
 
@@ -1920,7 +1984,8 @@ function setStackSlot(nSlot) --[[ Sets stack for item in nSlot.
            false - if slot is empty
            nil - if nSlot is not a number.
                - if nSlot is out of bounds 1..16
-  Sintax: setStackSlot([nSlot=selected slot])]]
+  Sintax: setStackSlot([nSlot=selected slot])
+  Dependencies: isInRange, setStack]]
 
   nSlot = nSlot or turtle.getSelectedSlot()
 	
@@ -1944,7 +2009,8 @@ function setStack(sItemName, nStack) --[[ Sets the item stack value in tEnts[ite
                - if no stack number is supplied.
                - if stack is < 0
   Sintax: setStack(sItemName, nStack)
-  ex: setStack("minecraft:cobblestone", 64) - set stack for "minecraft:cobblestone" for 64.]]
+  ex: setStack("minecraft:cobblestone", 64) - set stack for "minecraft:cobblestone" for 64.
+  Dependencies: getParam, entAdd]]
   
   sItemName, nStack = getParam("sn", {"", -1}, sItemName, nStack)
   if sItemName == "" then return nil, "Must supply item name." end
@@ -1981,7 +2047,8 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
                 - if tRecipes[sRecipe] dosn't exist, (never was made).
                 - if the tRecipes[sRecipe[nIndex] doesn't exist.
   Sintax: getRecipeItems([sRecipeName = tRecipes.lastRecipe][, nIndex=1])
-  ex: getRecipeItems("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2} ]]
+  ex: getRecipeItems("minecraft:stick", 1) - returns: {["minecraft_oak_planks"] = 2}
+  Dependencies: getParam, ]]
   
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
 
@@ -2023,7 +2090,8 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
                             false - if no recipe can be crafted.
   Sintax: canCraft()
   Note: table={[name]=recipe index}
-  ex: canCraft()]]
+  ex: canCraft()
+  Dependencies: getInvItems, getRecipeItems]]
   
 	local tCRecipes = {} --recipes it can craft with items in inventory
 	local tInvItems = getInvItems() --items in inventory
@@ -2061,7 +2129,8 @@ function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference betwe
   Note: on the table, negative values indicate missing items.
         if not it returns true and the table.
   Sintax: haveItems([sRecipeName = tRecipes.lastRecipe][, nIndex =1])
-  ex: haveItems() = haveItems(tRecipes.lastRecipe, 1) - Retuens the table with the diference between the inventory and the recipe.]]
+  ex: haveItems() = haveItems(tRecipes.lastRecipe, 1) - Retuens the table with the diference between the inventory and the recipe.
+  Dependencies: getParam, getRecipeItems, getInvItems]]
   
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
@@ -2090,7 +2159,8 @@ end
 function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
   19/10/2021 v0.2.0 Returns false - if it couldn't save file.
                             true - if it could save file.
-  sintax: saveRecipes()]]
+  sintax: saveRecipes()
+  Dependencies: saveTable]]
   
 	return saveTable(tRecipes, "tRecipes.txt")
 end
@@ -2098,7 +2168,8 @@ end
 function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
   19/10/2021 v0.2.0 Returns false - if it couldn't load file.
                             true - if it could load file.
-  sintax: loadRecipes()]]
+  sintax: loadRecipes()
+  Dependencies: loadTable, isDicEmpty]]
   
 	local t = loadTable("tRecipes.txt")
 	if not t then return false,"Can't load tRecipes.txt"
@@ -2115,7 +2186,8 @@ function getRecipe(sRecipe, nIndex) --[[ Gets the recipe from tRecipes.
            false - if recipe name is not supplied and doesn't exist last recipe.
                  - if recipe name doesn't exist.
                  - if recipe index doesn't existy.
-  Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1]) ]]
+  Sintax: getRecipe([sRecipe = tRecipes.lastRecipe][, nIndex=1])
+  Dependencies: getParam]]
   
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
@@ -2169,7 +2241,8 @@ end
 function getMaxCraft() --[[ Returns maximum limit to craft the recipe on inventory.
   19/10/2021 v0.2.0 Returns false - if it is not a recipe in the inventory.
                             tRecipe - the recipe with items and positions.
-  sintax: getMaxCraft()]]
+  sintax: getMaxCraft()
+  Dependencies: getInvItems, countItemSlot]]
   
   --if not turtle.craft(0) then return false, "This is not a recipe." end
   local tIng = getInvItems() --[ingredient name] = quantity
@@ -2195,7 +2268,8 @@ function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 
   Returns:  col, lin - the column and line of first item.
                false - if the recipe name was not supplied and doesn't exist in tRecipes.lastRecipe.
                      - if this recipe does not exist.
-  sintax: getFirstItemCoords([sRecipe=tRecipes.lastRecipe][, nIndex=1]) ]]
+  sintax: getFirstItemCoords([sRecipe=tRecipes.lastRecipe][, nIndex=1])
+  Dependencies: getParam]]
   
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
   if type(sRecipe) == "number" then return false, "Must supply recipe name." end
@@ -2221,7 +2295,8 @@ function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a sl
   sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
   ex: searchSpace("minecraft:oak_planks") - Search for a not complete stack of oak boards.
       searchSpace("minecraft:cobblestone", 16, false) - Checks if slot 16 has cobblestone and space for more.
-      searchSpace("minecraft:cobblestone", 5) - Searchs for cobblestone a incomplete stack, starting at slot 5 in all inventory.]]
+      searchSpace("minecraft:cobblestone", 5) - Searchs for cobblestone a incomplete stack, starting at slot 5 in all inventory.
+  Dependencies: search, incSlot]]
   
   local nSlot, nSpace = nStartSlot
   repeat
@@ -2241,7 +2316,8 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
   Returns:  false - if there is no space to tranfer items.
              true - if the slot is empty.
               nil - if nSlot is out of range [1..16].
-  Sintax: clearSlot([nSlot=selected slot][], bWrap)]]
+  Sintax: clearSlot([nSlot=selected slot][], bWrap)
+  Dependencies: getParam, isEmptySlot, leaveItems]]
   
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if nSlot > 16 or nSlot < 1 then return nil, "clearSlot(Slot, Wrap) - Slot out of range." end
@@ -2259,7 +2335,7 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
           false - if nSlot is empty.
                 - if nSlot is out of range [1..16].
                 - if selected slot is full.
-  sintax: transferFrom(nSlot [, nItems=64]) ]]
+  sintax: transferFrom(nSlot [, nItems=64])]]
   
   if not nSlot then return nil, "transferFrom(nSlot, nItems) - Must supply origin slot." end
   nItems = nItems or DEFSTACK --default stack
@@ -2291,7 +2367,8 @@ function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity
                   - if tRecipes[sRecipe] doesn't exist.
                   - if tRecipes[sRecipe][nIndex] doesn't exist.
 	sintax: recipeSlots([sRecipe=tRecipes.lastRecipe][, nIndex=1])
-	ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}]]
+	ex: recipeSlots("minecraft:wooden_shovel") - Returns: {["minecraft:oak_planks"]=1, ["minecraft:stick"]=2}
+  Dependencies: getParam]]
 
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, 1}, sRecipe, nIndex)                       
   if type(sRecipe) == "number" then return false, "recipeSlots(sRecipe, nIndex) - Must supply recipe name." end
@@ -2311,7 +2388,9 @@ end
 function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
   21/01/2022 v0.2.0 Param:  tSlots - table with item name and quantity of slots ocupied in the recipe.
                             tIng - table with item name and quantity in the inventory.
-  Returns:  table with item and average between items and slots.
+  Returns: table with item and average between items and slots.
+           false - if tSlots not supplied.
+                 - if tIng not supplied.
 	sintax: calcAverage(tSlots, tIng)
 	ex: calcAverage(tSlots, tIng)]]
 
@@ -2340,7 +2419,8 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
                   - if it couldn't leave the exact number of items in a slot.
                   - if it doesn't have enough items to craft recipe.
   sintax: arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1])
-	ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.]]
+	ex: arrangeRecipe("minecraft:wooden_shovel") - Arranges items in inventory to craft a wooden shovel.
+  Dependencies: getParam, haveItems, calcAverage, getFirstItemCoords, clearSlot, incSlot, leaveItems]]
 
   sRecipe, nIndex = getParam("sn", {"", 1}, sRecipe, nIndex)              
   if sRecipe == "" then sRecipe = tRecipes.lastRecipe end
