@@ -70,7 +70,8 @@ local tInv = {
 
 function tInv.init() --[[ Initializes the handlind of the event turtle_inventory.
   20-05-2023 v0.4.0 Returns: true
-  Sintax: tInv.init()]]
+  Sintax: tInv.init()
+  Dependencies: getInventory]]
 
     tInv.bChanged = false
     tInv.bTerminate = false
@@ -90,7 +91,8 @@ end
 
 function HandleInvChange() --[[ Function to handle the event turtle_inventory.
   20-05-2023 v0.4.0 Returns: true
-  Sintax: HandleInvChange()]]
+  Sintax: HandleInvChange()
+  Dependencies: getInventory, cmpInventory]]
 
     while true do
         os.pullEvent("turtle_inventory")
@@ -114,7 +116,9 @@ function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
 end
 
 function loadSpots() --[[ Loads from file tSpots.txt to table tSpots
-  05-08-2022 v0.4.0]]
+  05-08-2022 v0.4.0
+  Dependencies: loadTable, isDicEmpty]]
+  
   local t = loadTable("tSpots.txt")
 	if not t then return false,"Can't load tSpots.txt"
   elseif t and isDicEmpty(t) then return false, "File tSpots.txt is empty."
@@ -130,6 +134,7 @@ function setSpot(sSpotName, x, y, z, nFacing) --[[ Sets a spot in tSpots table.
   Returns: true - if spot was set with success.
   Sintax: setSpot(sSpotName[, x, y, z, nFacing]=tTurtle)
   ex: setSpot("minecraft:cobblestone", 10,3,5, 0) - cobblestone at coords (10,3,5) facing z- ]]
+  
   if not x then
     x = tTurtle.x
     y = tTurtle.y
@@ -144,6 +149,7 @@ function getSpot(sSpotName) --[[ Gets the spot.
   06-082022 v0.4.0 Param: sSpotName - string the name of the spot to get the data from.
   Returns: table with spot - {x,y,z,facing}
   Sintax: getSpot(sSpotName)]]
+  
   return tSpots[sSpotName]
 end
 
@@ -152,7 +158,8 @@ function goToSpot(sSpotName) --[[ Turtle walks to the spot coords, and turns to 
   Returns: true - if it goes all the way to the spot.
            false - if it couldn't get there.
            nil - if the spotname was not found.
-  Sintax: goToSpot(sPotName)]]
+  Sintax: goToSpot(sPotName)
+  Dependencies: getSpot, goTo, turnTo]]
   
   local tSpot = getSpot(sSpotName)
   if not tSpot then return nil, "Spot name not found." end
@@ -186,13 +193,17 @@ function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
 end
 
 function saveWorld() --[[ Saves tWorldinto tWorld.txt
-  24-07-2022 v0.4.0 Returns: the same as the saveTable function.]]
+  24-07-2022 v0.4.0 Returns: the same as the saveTable function.
+  Dependencies: saveTable]]
+  
   return saveTable(tWorld,"tworld.txt")
 end
 
 function loadWorld() --[[ Loads tWorld.txt into tWorld table.
   24-07-2022 v0.4.0 Returns: true - if success.
-                             false - if it couldn't load file "tworld.txt".]]
+                             false - if it couldn't load file "tworld.txt".
+  Dependencies: loadTable, isDicEmpty]]
+  
   local t = loadTable("tWorld.txt")
 	if not t then return false,"Can't load tWorls.txt"
   elseif t and isDicEmpty(t) then return false, "File tWorld.txt is empty."
@@ -213,7 +224,8 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
         if sBlock = "unreachable" or -1 it returns the nearest block space marked as unreachable.
         if sBlock = "unknown" or nil it returns the first unscanned block space.
         if sBlock = getAllFuelItems() gets the nearest fuel block.
-  ex: getNearestBlock({"minecraft:cobblestone", "minecraft:oak_log"}) - returns coords and id of the nearest cobblestone or oak_log.]]
+  ex: getNearestBlock({"minecraft:cobblestone", "minecraft:oak_log"}) - returns coords and id of the nearest cobblestone or oak_log.
+  Dependencies: getCoords, getWorldEnt]]
 
   nAmp = nAmp or 10
 	local nBlock
@@ -294,7 +306,8 @@ end
 
 function entAddInv() --[[ Adds all the inventory items to tEnts.
   24-07-2022 v0.4.0 Returns: true, number quantity of entities added.
-                             false, if no entities added.]]
+                             false, if no entities added.
+  Dependencies: entGetId, entAdd]]
 
   local nTotAdded = 0
   for nSlot = 1, 16 do
@@ -318,7 +331,8 @@ function entAddSlot(nSlot) --[[ Adds item in nSlot to tEnts.
               - if nSlot is not in range[1..16] 
           false - if nslot is empty.
   Sintax: entAddSlot([nSlot = selected slot])
-  ex: entAddSlot(1) - adds the item in slot 1 to table tEnts]]
+  ex: entAddSlot(1) - adds the item in slot 1 to table tEnts
+  Dependencies: isInRange, entAdd]]
 
   nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "entAddSlot(Slot) - Slot must be a number." end
@@ -329,7 +343,9 @@ function entAddSlot(nSlot) --[[ Adds item in nSlot to tEnts.
 end
 
 function entGetSlotId(nSlot) --[[ Gets or adds the nSlot item tEnts.
-  24-07-2022 v0.4.0 Alias for entAddSlot()]]
+  24-07-2022 v0.4.0 Alias for entAddSlot()
+  Dependencies: entAddSlot]]
+  
   return entAddSlot(nSlot)
 end
 
@@ -370,7 +386,8 @@ end
 function saveEnt() --[[ Saves table tEnts into tEnts.txt file.
   21-07-2022 v0.4.0 Returns: the same as saveTable
   Sintax: saveEnt()
-  ex: saveEnt()]]
+  ex: saveEnt()
+  Dependencies: saveTable]]
 
   return saveTable(tEnts, "tEnts.txt")
 end
@@ -379,7 +396,8 @@ function loadEnt() --[[ Loads tEnts.txt into table tEnts.
   21-07-2022 v0.4.0 Returns: true - if it loaded the file.
                              false - if it couldn't load the file.
   Sintax: loadEnt()
-  ex: loadEnt()]]
+  ex: loadEnt()
+  Dependencies: loadTable, isDicEmpty]]
 
   local t = loadTable("tEnts.txt")
 	if not t then return false,"Can't load tEnts.txt"
@@ -392,7 +410,8 @@ end
 function saveRevEnt() --[[ Saves tRevEnts into tRevEnts.txt file.
   21-07-2022 v0.4.0 Returns: same as saveTable
   Sintax: saveRevEnt()
-  ex: saveRevEnt()]]
+  ex: saveRevEnt()
+  Dependencies: saveTable]]
 
   return saveTable(tRevEnts, "tRevEnts.txt")
 end
@@ -401,7 +420,8 @@ function loadRevEnt() --[[ Loads tRevEnts.txt into tRevEnts table.
   21-07-2022 v0.4.0 Returns: true - if could load tRevEnts.txt
                              false - if couldn't load file tRevEnts.txt
   Sintax: loadRevEnt()
-  ex: loadRevEnt()]]
+  ex: loadRevEnt()
+  Dependencies: loadTable, isDicEmpty]]
 
   local t = loadTable("tRevEnts.txt")
 	if not t then return false,"Can't load tRevEnts.txt"
