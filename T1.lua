@@ -3829,7 +3829,8 @@ function placeSign(sMessage) --[[ Places a sign in front of the turtle.
   14-05-2023 v0.4.0 Param: sMessage - the message printed in the sign.
   Returns:  false - if no sign was found in inventory.
             number - 1 (Quantity of items placed).
-  ex: placeSign("Hello") - places a selected sign with the word "Hello".]]
+  ex: placeSign("Hello") - places a selected sign with the word "Hello".
+  Dependencies: getItemName, selectItem, place]]
 
   local sItem = getItemName()
   if (not sItem) or (not string.find(sItem, "sign")) then
@@ -3847,7 +3848,8 @@ function place(...) --[[ Turtle places nBlocks in a strait line forward or backw
   ex: place(1) or place() - Places 1 Block in front of turtle.
       place("left") or place("left", 1) - places 1 selected block to the left.
       place("minecraft:cobblestone", "left", 2) - places 2 cobblestone to the left.
-      place(0, 1) - places 1 selected block to the south.]]
+      place(0, 1) - places 1 selected block to the south.
+  Dependencies: isDirType, isFacingType, isCarDirType, isEnt, getItemName, selectItem, turnDir, turnBack, forward, back, placeDir, isEmptySlot]]
   
   local sItem, sDir, nQ, nDir, sMessage --arguments: sItem - item name, sDir - direction, nQ - quantity, nDir - number direction[0..3], sMessage - if placing sign.
   
@@ -3932,14 +3934,15 @@ function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strai
             nil - invalid parameter.
   Sintax: placeBack([nBlocks=1])
   Note: nBlocks < 0 places blocks backwards, nBlocks > 0 places blocks forwards.
-  ex: placeBack(1) or placeBack() - Places 1 Block in front of turtle.]]
+  ex: placeBack(1) or placeBack() - Places 1 Block in front of turtle.
+Dependencies: back, sign, turnBack, forward]]
 
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "placeBack(Blocks) - Blocks must be a number." end
   if nBlocks > 0 then
     turnBack()
-    nBlocks=math.abs(nBlocks)
+    nBlocks = math.abs(nBlocks)
   end
 
   for i = 2, nBlocks do
@@ -3967,7 +3970,9 @@ function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns 
                   - invalid parameter.
   Sintax: placeUp([nBlocks=1])
   Note: nBlocks < 0 places blocks downwards, nBlocks > 0 places blocks upwards.
-  ex: placeUp(1) or placeUp() - Places 1 Block up.]]
+  ex: placeUp(1) or placeUp() - Places 1 Block up.
+  Dependencies: placeDown, up, down, sign]]
+
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeUp(Blocks) - Blocks must be a number." end
@@ -3997,7 +4002,8 @@ function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and return
                   - invalid parameter.
   Sintax: placeDown([nBlocks=1])
   Note: nBlocks < 0 places blocks upwards, nBlocks > 0 places blocks downwards.
-  ex: placeDown(1) or placeDown() - Places 1 Block Down.]]
+  ex: placeDown(1) or placeDown() - Places 1 Block Down.
+  Dependencies: placeUp, down, up, sign]]
 
   nBlocks = nBlocks or 1
   
@@ -4029,7 +4035,8 @@ function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns
                   - couldn't place block.
   Sintax: placeLeft([nBlocks=1])
   Note: nBlocks < 0 places blocks to the right, nBlocks > 0 places blocks to the left.
-  ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.]]
+  ex: placeLeft(1) or placeLeft() - Places one Block to the left of the turtle.
+  Dependencies: turnDir, place]]
 
   nBlocks = nBlocks or 1
 
@@ -4048,7 +4055,8 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
                   - couldn't place block
   Sintax: placeRight([nBlocks=1])
   Note: nBlocks < 0 places blocks to the left, nBlocks > 0 places blocks to the right.
-  ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.]]
+  ex: placeRight(1) or placeLeft() - Places 1 Block on the right of the turtle.
+  Dependencies: turnDir, place]]
 
   nBlocks = nBlocks or 1
 
@@ -4066,13 +4074,14 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
                   - couldn't place block.
                   - invalid parameter.
   Sintax: placeAbove([nBlocks=1])
-  ex: placeAbove(1) or placeAbove() - Places one Block above turtle.]]
+  ex: placeAbove(1) or placeAbove() - Places one Block above turtle.
+  Dependencies: turnBack, forward, down, back]]
 
     nBlocks = nBlocks or 1
     
     if type(nBlocks) ~= "number" then return false, "placeAbove(Blocks) - Blocks must be a number." end
     if nBlocks < 0 then
-      nBlocks=math.abs(nBlocks)
+      nBlocks = math.abs(nBlocks)
       turnBack()
     end
     for i = 2, nBlocks do --goto last pos to place
@@ -4111,13 +4120,14 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
                   - couldn't place block.
                   - invalid parameter.
   Sintax: placeBelow([Blocks=1])
-  ex: placeBelow(1) or placeBelow() - Places one Block below turtle.]]
+  ex: placeBelow(1) or placeBelow() - Places one Block below turtle.
+  Dependencies: turnBackdown, forwardup, back]]
 
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "placeBelow(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then
-    nBlocks=math.abs(nBlocks)
+    nBlocks = math.abs(nBlocks)
     turnBack()
   end
   for i = 2, nBlocks do
@@ -4159,6 +4169,7 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
               table - if snapshots are diferent.
   Sintax: cmpInventory(tInv1, tInv2)
   ex: cmpInventory(tInv1, tInv2) - compares tInv1 with tInv2.]]
+
   if (not tInv1) or (not tInv2) then
       return nil, "cmpInventory(tInv1, tInv2) - You must supply inventory1 and inventory2 to compare"
   end
@@ -4193,7 +4204,9 @@ function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities hav
   Returns: true, t - if items have increased, table with slot, name, quantity.
            false - if items haven't increased.
   Sintax: cmpInvIncreased(tInv1, tInv2)
-  ex: cmpInvIncreased(inv1, inv2) - verifies if inventory snapshot inv2 has more items than inv1.]]
+  ex: cmpInvIncreased(inv1, inv2) - verifies if inventory snapshot inv2 has more items than inv1.
+  Dependencies: cmpInventory]]
+
 	local bDif, tInvCmpRes = cmpInventory(tInv1, tInv2)
 	if bDif then return false end
 	
@@ -4212,6 +4225,7 @@ end
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
   04/12/2021 v0.2.0 Returns: table[itemName]=Slots ocupied by item.
   Sintax: countItemSlots()]]
+
   local tItemSlots = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -4233,7 +4247,9 @@ function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
   Sintax: decSlot([nSlot = turtle.getSelectedSlot()][, bWrap = true])
   ex: decSlot() - Decrements the selected slot.
       decSlot(1, false) - Returns false.
-      decSlot(16, false) - Returns 15]]
+      decSlot(16, false) - Returns 15
+  Dependencies: getParam]]
+
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "decSlot([Slot=selected slot][, Wrap=true]) - Slot must be a number." end
 	nSlot = nSlot - 1
@@ -4244,6 +4260,7 @@ end
 function freeCount() --[[ Get number of free slots in turtle's inventory.
   07/10/2021 v0.2.0 Returns:  number of free slots.
   Sintax: freeCount()]]
+
   local nFree,i=0
   for i = 1, 16 do
     if turtle.getItemCount(i)==0 then nFree=nFree+1 end
@@ -4257,7 +4274,9 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
   Returns:  number - first free slot number.
             false - if no free slot.
   Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
-  Note: if nStartSlot<0 search backwards--]]
+  Note: if nStartSlot<0 search backwards
+  Dependencies: getParam, sign]]
+
 	nStartSlot, bWrap = getParam("nb",{1, true}, nStartSlot, bWrap)
 
   if not type(nStartSlot) == "number" then return false, "getFreeSlot([StartSlot=1][, Wrap=true]) - Slot must be a number." end
@@ -4284,6 +4303,7 @@ end
 function getInventory() --[[ Builds a table with the slot, the name and quantity of items in inventory.
   04/12/2021 v0.2.0 Returns:  table[slot][itemName]=Quantity.
   Sintax: getInventory()]]
+
   local tInv = {}
   for iSlot = 1, 16 do
     local tData = turtle.getItemDetail(iSlot)
@@ -4298,6 +4318,7 @@ end
 function groupItems() --[[ Groups the same type of items in one slot in inventory.
   07/10/2021 v0.2.0 Returns:  true.
   Sintax: groupItems()]]
+
   local destSlot,orgSlot,tmpSlot
  
   for destSlot=1,15 do --destination slot
@@ -4321,7 +4342,9 @@ function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
   Returns:  the number of slot increased by 1.
             false - if it couldn't increase slot.
   Sintax: incSlot([Slot.selecetd slot][, Wrap=true])
-  ex: incSlot(16) - returns 1.]]
+  ex: incSlot(16) - returns 1.
+  Dependencies: getParam]]
+
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "incSlot([Slot.selecetd slot][, Wrap=true]) - Slot must be a number." end
   nSlot = nSlot + 1
@@ -4338,6 +4361,7 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
   ex: itemSpace() gets how many items you can store, like the item in selected slot.
       itemSpace("minecraft:cobblestone") - gets how more cobblestone you can store.
       itemSpace(12) - gets how more items, like item in slot 12, you can store.]]
+
 	nSlot = nSlot or turtle.getSelectedSlot() --default slot is the selected slot
 	local stack = 0
 	
@@ -4372,6 +4396,7 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
   Sintax: isEmptySlot([nSlot=selected slot])
   ex: isEmptySlot() - Checks if selected slot is empty.
       isEmptySlot(12) - checks if slot 12 is empty.]]
+
   nSlot = nSlot or turtle.getSelectedSlot()
   if type(nSlot) ~= "number" then return nil, "isEmptySlot(Slot) - Slot is not a number." end
   return turtle.getItemDetail(nSlot) == nil
@@ -4382,6 +4407,7 @@ function isInventoryEmpty() --[[ Checks if inventory is empty.
                              false - if inventory is not empty.
   Sintax: isInventoryEmpty()
   ex: isInventoryEmpty() - Checks if inventory is empty.]]
+
   for nSlot = 1, 16 do
     if turtle.getItemDetail(nSlot) then return false end
   end
@@ -4390,13 +4416,14 @@ end
 
 function itemCount(nSlot) --[[ Counts items in inventory
   31/08/2021  Param: nSlot/"inventory"/item name - number slot/string "inventory"/string item name.
-              Returns: number of items counted.
-                      nil - if nSlot <0 or > 16.
-                          - if nSlot is neither a string nor a number.
-              sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
-              ex: itemCount() counts items in selected slot.
-                  itemCount("inventory") - counts items in inventory.
-                  itemCount("minecraft:cobblestone") - counts cobblestone in inventory.]]
+  Returns: number of items counted.
+           nil - if nSlot <0 or > 16.
+               - if nSlot is neither a string nor a number.
+  Sintax: itemCount([nSlot=turtle.getSelectedSlot() / "inventory" / item name])
+  ex: itemCount() counts items in selected slot.
+      itemCount("inventory") - counts items in inventory.
+      itemCount("minecraft:cobblestone") - counts cobblestone in inventory.]]
+
   nSlot = nSlot or turtle.getSelectedSlot()
   totItems = 0
 
@@ -4420,10 +4447,11 @@ end
 
 function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   05/09/2021 v0.3.0 Param: nSlot - number slot where to get the item name.
-              Returns: item name - if slot is not empty.
-                        "" - if slot is empty.
-              Sintax: getItemName([nSlot=selected slot])
-              ex: getItemName() - retuns the name of item in selected slot.]]
+  Returns: item name - if slot is not empty.
+           "" - if slot is empty.
+  Sintax: getItemName([nSlot=selected slot])
+  ex: getItemName() - retuns the name of item in selected slot.
+  Dependencies: isInRange]]
 
   if not nSlot then nSlot = nSlot or turtle.getSelectedSlot()
   elseif type(nSlot) ~= "number" then return nil, "getItemName([Slot=selected slot]) - Slot must be a number."
@@ -4443,7 +4471,8 @@ function selectItem(itemName) --[[ Selects slot [1..16] or first item with Item 
                 - if itemName/Slot is a number out of range [1..16].
   Note: if executed selectItem() is the same as turtle.getSelectedSlot()
   Sintax: selectItem([Slot/Item Name])
-  ex: selectItem("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"]]
+  ex: selectItem("minecraft:cobblestone") - Selects first slot with "minecraft:cobblestone"
+  Dependencies: isInRange, search]]
 
   local nSlot
   local tData
@@ -4470,7 +4499,8 @@ end
 function selectSlot(nSlot) --[[ Selects nSlot
   04-06-2023 v0.4.0 Param: nSlot - the slot number to be selected.
   Sintax: selectSlot(nSlot)
-  ex: selectSlot(1) - select slot 1.]]
+  ex: selectSlot(1) - select slot 1.
+  Alias for selectItem]]
 
   return selectItem(nSlot)
 end
@@ -4485,7 +4515,8 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
   Sintax: leaveItems([sItemName = Selected Slot Item Name][, nQuant=0][, bWrap=true])
   ex: leaveItems() - Removes items from selected slot.
       leaveItems("minecraft:cobblestone") - Removes items from selected slot.
-      leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot]]
+      leaveItems("minecraft:cobblestone", 6) - Leaves 6 items of cobllestone in selected slot
+  Dependencies: getParam, clearSlot, incSlot, searchSpace, getFreeSlot, search, tranferFrom]]
   
   sItemName, nQuant, bWrap = getParam("snb", {"", 0, true}, sItemName, nQuant, bWrap)
   local tData = turtle.getItemDetail()
@@ -4554,7 +4585,8 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
   Note: nStartSlot < 0 search backwards, nStartSlot > 0 searchs forward.
         if not supplied nStartSlot, default is the selected slot.
         if not supplied bWrap, it defaults to true.
-  Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true]) ]]
+  Sintax: Search(sItemName [, nStartSlot=turtle.getSelectedSlot()][, bWrap=true])
+  Dependencies: getParam, sign, ]]
 
 	sItemName, nStartSlot , bWrap= getParam("snb", {"", turtle.getSelectedSlot(), true}, sItemName, nStartSlot, bWrap)
   if sItemName == "" then return nil, "search(sItemName, nStartSlot, bWrap) - Item name must be supplied." end
@@ -4594,11 +4626,12 @@ function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot star
             false - if no free slot.
   Sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
   ex: selectFreeSlot(16, false) - Selects slot 16 if it is empty.
-      selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.]]
+      selectFreeSlot(15, true) - Checks all slots starting at 15, and selects first empty.
+  Dependencies: getFreeSlot]]
 
   local nSlot
 
-  nSlot=getFreeSlot(nStartSlot, bWrap) --get a free slot
+  nSlot = getFreeSlot(nStartSlot, bWrap) --get a free slot
   if not nSlot then return false end --not found
   if turtle.select(nSlot) then return nSlot end
   return false --couldn't select nSlot
@@ -4614,7 +4647,8 @@ function suckAt(x, y, z, nQuant) --[[ Sucks items at coords x, y, z.
                 - if x, y, z are not numbers.
             false - if the turtle could't get to coords.
   Sintax: suckAt(x, y, z, nQuant)
-  ex: suckAt(10, 10, 10, 10) - sucks 10 items at coords 10, 10, 10.]]
+  ex: suckAt(10, 10, 10, 10) - sucks 10 items at coords 10, 10, 10.
+  Dependencies: checkNil, isNumber, goToNeighbor, suckDir, getKey]]
 
 	if checkNil(3, x, y, z) then return nil, "suckAt(x,y,z) - invalid number of parameters." end
   if not isNumber(x,y,z) then return nil, "suckAt(x,y,z) - invalid parameter type." end
@@ -4632,7 +4666,8 @@ function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
   Note: if nItems < 0 it sucks nItems from oposite direction.
   ex: suckDir() - Turtle sucks all the items forward.
       suckDir(0) - suck all the items in 0, "z-", north direction.
-      suckDir(4) - suck 4 items in front of the turtle.]]
+      suckDir(4) - suck 4 items in front of the turtle.
+  Dependencies: strLower, dropDir, turnDir]]
 	
   sDir = sDir or "forward"
   sDir = strLower(sDir)
@@ -4672,6 +4707,7 @@ end
 function fsGetFreeSpace() --[[ Gets the total free space on disk.
   02/10/2021 v0.2.0 Returns:  Free space on disk.
   ex: fsGetFreeSpace() - Outputs free space on disk.]]
+
 	return fs.getFreeSpace("/")
 end
 
@@ -4692,7 +4728,8 @@ function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and
       dropDir(205, "up") - Drops 205 blocks from inventory like the one on selected slot, upwards.
       dropDir(-5, "down") - Suck 5 items from down.
       dropDir(0) - Drops all the items in selected slot to 0, "z-", "north" direction.
-      dropDir(4) - Drops 4 items forward.]]
+      dropDir(4) - Drops 4 items forward.
+  Dependencies: strLower, turnDir, suckDir]]
 
   sDir = sDir or "forward"
 	sDir = strLower(sDir)
@@ -4768,7 +4805,8 @@ function drop(...) --[[ Drops or sucks items.
       drop(205) - Drops 205 items from inventory like the one on selected slot, forward.
       drop("left", 5) - drops 5 items to the left from the selected slot.
       drop(0, 6) - drops 6 items from the selected slot to z-
-      drop{slot = 10, q = 8} - drops 8 items from slot 10, forward.]]
+      drop{slot = 10, q = 8} - drops 8 items from slot 10, forward.
+  Dependencies: getItemName, search, dropDir]]
 
   local snDir, nDir, nQ, sItem, nSlot
 
@@ -4811,7 +4849,9 @@ function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
   Sintax: dropUp([nBlocks])
   Note: if nBlocks not supplied, drops all items from selected slot.
   ex: dropUp() - Drops all blocks from selected slot, upwards.
-      dropUp(205) - Drops 205 blocks from inventory like the one on selected slot, upwards.]]
+      dropUp(205) - Drops 205 blocks from inventory like the one on selected slot, upwards.
+  Dependencies: dropDir]]
+
   return dropDir("up", nBlocks)
 end
 
@@ -4823,7 +4863,9 @@ function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
   Sintax: dropDown([nBlocks])
   Note: if nBlocks not supplied, drops all items from selected slot.
   ex: dropDown() - Drops all blocks from selected slot, downwards.
-  dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.]]
+  dropDown(205) - Drops 205 blocks from inventory like the one on selected slot, downwards.
+  Dependencies: dropDir]]
+
   return dropDir("down", nBlocks)
 end
 
@@ -4835,7 +4877,9 @@ function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
   Sintax: dropLeft([nBlocks])
   Note: if nBlocks not supplied, drops all items from selected slot.
   ex: dropLeft() - Rotate left and drops all blocks from selected slot forward.
-  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  dropLeft(205) - Rotate left and drops 205 blocks from inventory like the one on selected slot, forward.
+  Dependencies: dropDir]]
+
   return dropDir("left", nBlocks)
 end
 
@@ -4847,7 +4891,9 @@ function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward
   Sintax: dropRight([nBlocks])
   Note: if nBlocks not supplied, drops all items from selected slot.
   ex: dropRight() - Rotate right and drops all blocks from selected slot, forward.
-  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.]]
+  dropRight(205) - Rotate right and drops 205 blocks from inventory like the one on selected slot, forward.
+  Dependencies: dropDir]]
+
   return dropDir("right", nBlocks)
 end
 
@@ -4859,7 +4905,9 @@ function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
   Sintax: dropBack([nBlocks])
   Note: if nBlocks not supplied, drops all items from selected slot.
   ex: dropBack() - Rotate back and drops all blocks from selected slot, forward.
-      dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.]]
+      dropBack(205) - Rotate back and drops 205 blocks from inventory like the one on selected slot, forward.
+  Dependencies: dropDir]]
+
   return dropDir("back", nBlocks)
 end
 
@@ -4868,7 +4916,8 @@ end
 function getWorldPassableNeighbors(p, tIncludeEnt) --[[ Gets the neighbors of p passable.
   14-07-2018 Param: p - table central block {x, y, z}
                     tIncludeEnt - table entities passables.
-  sintax: getWorldPassableNeighbors(p[, tIncludeEnt)]]
+  sintax: getWorldPassableNeighbors(p[, tIncludeEnt)
+  Dependencies: getNeighbors, getWorldEnt]]
 
   if not p then return false end --p not supplied
   if not tIncludeEnt then --exclude block type
@@ -4896,7 +4945,8 @@ function getPath(...) --[[ Returns the path, a table of points.
   ex: getPath(0, 0, 0) - returns the path from 0, 0, 0 to the coords of the turtle.
       getPath(0, 0, 0, 10, 10, 10) - gets the path from 0, 0, 0 to 10, 10, 10.
       getPath({2, 3, 5}) - gets the path from coords 2, 3, 5 to the turtle coords.
-      getPath({3, 10, 5}, {10, 10, 10}) - gets the path from coords 3, 10, 5 to 10, 10, 10.]]
+      getPath({3, 10, 5}, {10, 10, 10}) - gets the path from coords 3, 10, 5 to 10, 10, 10.
+  Dependencies: getWorldEnt, ABSDistFromTo, distFromTo, getWorldPassableNeighbors]]
 
   local p1Index, p2Index = 1, 4 --if there is no table in the arg table
   local x1, y1, z1, x2, y2, z2
@@ -5011,7 +5061,6 @@ function getPath(...) --[[ Returns the path, a table of points.
     repeat --lets reverse the order
       if ip.parent then 
         if ip.parent.dir ~= ip.dir then i = i + 1 end --if point has parent and did turn count 1 point
-        --print("d:", "(", ip[1],",",ip[2],",",ip[3],")",ip.parent.dir, ip.dir)
       end
       ip = ip.parent
     until not ip
@@ -5037,7 +5086,7 @@ function getPath(...) --[[ Returns the path, a table of points.
   end
 
 
-  ---- main ----
+  ---- main getPath ----
   
   pAdd(pStart) --add start point
   local actPoint = pStart
@@ -5113,7 +5162,8 @@ function writeCenter(s, line) --[[ Writes a string or number centered in line.
   Returns:  true
   Sintax: writeCenter([s][, line])
   ex: writeCenter("hello world", 1) - writes "hello world" centered in line 1.
-      writeCenter() - places the cursor at the center of the current line.]]
+      writeCenter() - places the cursor at the center of the current line.
+  Dependencies: term.getWidth]]
 
   if type(s) == "number" then s = tostring(s) end
 	local col = term.getWidth()/2 - (s and (#s/2) or 0) + 1
@@ -5129,7 +5179,8 @@ function printCenter(s, line) --[[ Prints a string or number centered, and moves
   Returns:  true
   Sintax: printCenter([s][, line])
   ex: printCenter("hello world", 1) - prints "hello world" centered in line 1.
-      printCenter() - places the cursor at the center of the current line.]]
+      printCenter() - places the cursor at the center of the current line.
+  Dependencies: term.getWidth]]
 
 	if type(s) == "number" then s = tostring(s) end
 	local col = term.getWidth()/2 - (s and (#s/2) or 0) + 1
@@ -5152,7 +5203,8 @@ end
 function clearLineFrom(column) --[[ Clears the cursor line from column, to the last column.
   24-05-2023 v0.4.0 Param: column - number: the first column to be cleared.
   Sintax: clearLineFrom(column)
-  ex: clearLineFrom(10) - clears from column 10 to the last column.]]
+  ex: clearLineFrom(10) - clears from column 10 to the last column.
+  Dependencies: term.getWidth]]
 
   local _, line = term.getCursorPos()
   local width = term.getWidth() - column + 1
@@ -5163,7 +5215,8 @@ end
 function clearColumn(column) --[[ Clears the column.
   24-05-2023 v0.4.0 Param: column - number: the column to be cleared.
   Sintax: clearColumn(column)
-  ex: clearColumn(10) - clears column 10.]]
+  ex: clearColumn(10) - clears column 10.
+  Dependencies: term.getHeight]]
 
   local height = term.getHeight()
   for i = 1, height do
@@ -5187,7 +5240,8 @@ end
 function clearColumnFrom(line) --[[ Clears the cursor column from line to last line.
   24-05-2023 v0.4.0 Param: line - number: the last line to be cleared.
   Sintax: clearColumnFrom(line)
-  ex: clearColumnFrom(10) - clears the cursor column, from line 10 to last line.]]
+  ex: clearColumnFrom(10) - clears the cursor column, from line 10 to last line.
+  Dependencies: term.getHeight]]
 
   local column, _ = term.getCursorPos()
   for i = line, term.getHeight() do
@@ -5220,6 +5274,7 @@ function fillScr(sChar) --[[ Fills the screen with sChar.
   24-05-2023 v0.4.0 Param: sChar - string: the character to fill the screen.
   Sintax: fillScr(sChar)
   ex: fillScr("-") - fills the screen with -.]]
+
   local width, height = term.getSize()
   for col = 1, width do
     for lin = 1, height do
