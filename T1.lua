@@ -2458,7 +2458,7 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
   return true
 end
 
-function setCraftSlot(nSlot) --[[ Sets the craft resulting slot, in tRecipes CSlot
+function setCraftSlot(nSlot) --[[ Sets the craft resulting slot CSlot, in tRecipes.
   03/11/2021 v0.2.0 Param: nSlot - number slot where the product of the recipe is put.
   Returns:  nil - if nSlot is not in range[1..16].
            true - if was set tRecipes["CSlot"].]]
@@ -2471,7 +2471,8 @@ end
 
 function flattenInventory() --[[ Averages all the item stacks in inventory.
   26/01/2022 v0.2.0 Returns:  true
-  Sintax: flattenInventory()]]
+  Sintax: flattenInventory()
+  Dependencies: getInvItems, countItemSlots, getInventory]]
 
   local tTotIng = getInvItems()
   local tTotSlots = countItemSlots()
@@ -2529,7 +2530,8 @@ function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory 
             nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
           false - if sRecipe is not in tRecipes or recipe index not found.
   Sintax: itemsBelong([sRecipe=tRecipes.lastRecipe])
-  ex: itemsBelong("minecraft:wooden_shovel") - Returns false if there is items that don't belong to the recipe, otherwise returns true.]]
+  ex: itemsBelong("minecraft:wooden_shovel") - Returns false if there is items that don't belong to the recipe, otherwise returns true.
+  Dependencies: getParam]]
 
   sRecipe, nIndex = getParam("sn", {tRecipes.lastRecipe, -1}, sRecipe, nIndex)
   if not sRecipe then return nil, "itemsBelong([sRecipe=tRecipes.lastRecipe]) - Recipe name not supplied." end
@@ -2577,7 +2579,8 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
                            tRecipe - table with a recipe from inventory.
   Returns: number - index of the recipe in tRecipes.
   Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
-  ex:getRecipeIndex()]]
+  ex:getRecipeIndex()
+  Dependencies: getParam, getInvRecipe]]
 
   sRecipe, tRecipe = getParam("st", {tRecipes.lastRecipe,{}}, sRecipe, tRecipe)
   if not sRecipe then return false, "getRecipeIndex(sRecipe, tRecipe) - Recipe name not supplied."
@@ -2654,7 +2657,8 @@ function getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial n
   Returns: number the sum of items in sequencial slots.
   Sintax: getSecSumItems([nSlot=selected slot])
   Note: it stops if empty slot or end of inventory.
-  ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.) ]]
+  ex: getSecSumItems(14) - sums the items in slot 14, 15 and 16 if not empty.)
+  Dependencies: getParam, incSlot]]
   
   nSlot, bWrap = getParam("nb", {turtle.getSelectedSlot(), true}, nSlot, bWrap)
   if type(nSlot) ~= "number" then return nil, "getSecSumItems(Slot) - Slot must be a number." end
@@ -2672,9 +2676,11 @@ end
 
 function getProdQuant() --[[Gets quantity of products made with 1 recipe in inventory.
   31/03/2022 v0.3.0 Returns: number - quantity of products made with 1 inventory recipe.
-              sintax: getProdQuant()
-              Note: this function crafts the recipe in inventory.
-              ex: getProdQuant()]]
+  Sintax: getProdQuant()
+  Note: this function crafts the recipe in inventory.
+  ex: getProdQuant()
+  Dependencies: getMaxCraft, invLowerStack, flattenInventory, getSecSumItems]]
+  
   local nCount
   if not turtle.craft(0) then return false, "Inventory doesn't contain a recipe." end
 
@@ -2692,12 +2698,13 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
   31/03/2022 v0.3.0 Param:  sRecipe - name of recipe
                       tRecipe - recipe table, get if from getInvRecipe.
                       nCount - quantity of products made with this recipe.
-              Returns:  number - index of recipe (tRecipes[sRecipe][index])
-                        nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
-                            - if tRecipe is not supplied and there is no recipe in inventory.
-              Syntax: addRecipe(sRecipe[, tRecipe=recipe in inventory][, nCount])
-              Note: if no nCount is supplied this function crafts the recipe to obtain it.
-              ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"] ]]
+  Returns:  number - index of recipe (tRecipes[sRecipe][index])
+               nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
+                   - if tRecipe is not supplied and there is no recipe in inventory.
+  Syntax: addRecipe(sRecipe[, tRecipe=recipe in inventory][, nCount])
+  Note: if no nCount is supplied this function crafts the recipe to obtain it.
+  ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"]
+  Dependencies: getParam, getInvRecipe, getProdQuant, getItemName, getRecipeIndex]]
   
   sRecipe, tRecipe, nCount = getParam("stn",{"", {}, -1}, sRecipe, tRecipe, nCount )
 
@@ -2755,7 +2762,8 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
                  - if when crafting the recipe the resulting items vanishes
   Sintax: craftRecipe(sRecipe=inventory recipe/tRecipes.lastRecipe[, nLimit=64])
   ex: craftRecipe() - craft the recipe in invenrtory.
-      craftRecipe("minecraft:wooden_shovel", 1) - Craft one wooden shovel.]]
+      craftRecipe("minecraft:wooden_shovel", 1) - Craft one wooden shovel.
+  Dependencies: isInventoryEmpty, getParam, craftInv, getInvRecipe, getRecipeIndex, canCraftRecipe, arrageRecipe, invLowerStack, flattenInventory, setCraftSlot, isEmptySlot, getFreeSlot, getInventory, itemsBelong, cmpInvIncreased, getSecSumItems, addRecipe]]
               
   if isInventoryEmpty() then return false, "Inventory is empty." end
   sRecipe, nLimit = getParam("sn", {"", DEFSTACK}, sRecipe, nLimit)
