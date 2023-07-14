@@ -2835,6 +2835,7 @@ function getLowestKey(t) --[[ Gets the lowest key of the table t.
   Sintax: getLowestKey(t)
   Note: All the keys must have the same type.
   ex: getLowestKey({[1]="minecraft:cobblestone", [-1]="minecraft:stick"}) - returns -1.]]
+  
   local Lower
   for k, v in pairs(t) do
     if not Lower then Lower = k
@@ -2854,7 +2855,9 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
                  - if it craft something, but it didnt show up in inventory.
                  - if it couldn't add the recipe.
   Sintax: craftInv([nLimit=64])
-  ex: craftInv(12) - craft 12 products of the recipe in inventory.]]
+  ex: craftInv(12) - craft 12 products of the recipe in inventory.
+  Dependencies: getMaxCraft, getInvRecipe, getInventory, cmpInvIncreased, addRecipe]]
+  
 	nLimit = nLimit or DEFSTACK
 	if type(nLimit) ~= "number" then return nil, "craft([Limit="..tostring(DEFSTACK).."]) - Limit must be a number." end
 	if nLimit < 1 or nLimit > DEFSTACK then return nil, "craft([Limit="..tostring(DEFSTACK).."]) - Limit must be between 1 and "..tostring(DEFSTACK).."." end
@@ -2874,8 +2877,6 @@ function craftInv(nLimit) --[[ Crafts the recipe in inventory.
 	if not bInc then return false, "I don't know where the products went." end --no
 
 	local sRecipe = tInc[next(tInc)].name --get the product name.
-  print(sRecipe)
-
   local nSumCount = 0
   for k, v in pairs(tInc) do
     nSumCount = nSumCount + tInc[k].count
@@ -2933,7 +2934,8 @@ end
 function turnBack() --[[ Turtle turns back.
   11/09/2021 v0.1.0 Returns:  true.
   Sintax: turnBack()
-  ex: turnBack() - Turns the turtle back.]]
+  ex: turnBack() - Turns the turtle back.
+  Dependencies: turnRight]]
 
   return turnRight(2)
 end
@@ -2944,7 +2946,8 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
             false - if sDir is not a valid direction.
   Sintax: turnDir([sDir="back"])
   ex: turnDir("back") or turnDir() - Turns the turtle back.
-			turnDir("z-") or turnDir("north") or turnDir(0) - Turns the turtle to z-, north.]]
+			turnDir("z-") or turnDir("north") or turnDir(0) - Turns the turtle to z-, north.
+  Dependencies: strLower, turnTo, turnBack, turnLeft, turnRight]]
 			
   sDir = sDir or "back"
   sDir = strLower(sDir)
@@ -2968,7 +2971,8 @@ function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
          if SCAN if on stores the block in front of it, after the turn, in the tWorld table
   Sintax: turnLeft([nTurns=1])
   ex: turnLeft() - turns once to the left.
-      turnLeft(-1) - turns once to the right.]]
+      turnLeft(-1) - turns once to the right.
+  Dependencies: turnRight, decFacing, scan]]
   
   local i
   nTurns = nTurns or 1
@@ -2991,7 +2995,8 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
         if SCAN if on stores the block in front of it, after the turn, in the tWorld table
   Sintax: turnRight([nTurns=1])
   ex: turnRight() - turns once to the right.
-      turnRight(-1) - turns once to the left.]]
+      turnRight(-1) - turns once to the left.
+  Dependencies: turnLeft, incFacing, scan]]
   
   local i
   nTurns = nTurns or 1
@@ -3016,7 +3021,8 @@ function turnTo(...) --[[ Turtle turns to direction, block name, empty space, un
 			turnTo("z+") - turns to axis z, on the positive way.
 			turnTo("north") - turns to north (z-).
 			turnTo(0) - turns to z-, north.
-      turnTo() - turns to the nearest unscanned space.]]
+      turnTo() - turns to the nearest unscanned space.
+  Dependencies: turnToCoord, turnToBlock, turnTo, getNearestBlock, getAllFuelItems, turnLeft, turnRight]]
 
   if #arg >= 3 then return turnToCoord(arg[1], arg[2], arg[3]) end
   if #arg == 0 then return turnToBlock() end
@@ -3068,14 +3074,18 @@ function turnToBlock(sBlock) --[[ Turtle turns to the nearest block.
 					 false - if the block was not found in the world.
   sintax: turnToBlock([sBlock=unknown space])
 	ex: turnToBlock("minecraft:cobblestone") - turns to the nearest cobblestone.
-      turnToBlock() - turns to the nearest unscanned space.]]
+      turnToBlock() - turns to the nearest unscanned space.
+  Dependencies: getNearestBlock, turnToCoord]]
 
   local x, y, z = getNearestBlock(sBlock)
   if not x then return x, y end
 	return turnToCoord(x, y, z)
 end
 
-function turnToFuel()
+function turnToFuel() --[[ Turtle turns to the nearest fuel in the world.
+  14-07-2023 v0.4.0 Sintax: turnToFuel()
+  Alias for turnTo("fuel")]]
+  
   return turnTo("fuel")
 end
 
@@ -3085,7 +3095,8 @@ function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
            nil - if x or y or z aren't numbers.
 					 false - if it couldn't turn to that directions ex: up|down.
   sintax: turnToCoord(x, y, z)
-	ex: turnToCoord(1, 0, 0) - turns to block at 1,0,0.]]
+	ex: turnToCoord(1, 0, 0) - turns to block at 1,0,0.
+  Dependencies: checkType, distTo, getKey, turnTo]]
 
 	if not checkType("nnn", x, y, z) then return nil, "turnToCoord(x, y, z) - x,y,z must be numbers" end
 	local tLongerDist = {0, index = 0}
@@ -3117,7 +3128,8 @@ function buildWall(width, height, sBlock) --[[ Builds a wall in front of the tur
 	ex: buildWall() - places the selected block in front of the turtle.
       buildWall(2) - builds a wall with the selected slot block, having 2 blocks wide.
       buildWall("minecraft:cobblestone") - places a block of cobblestone.
-      buildWall(3,5,"minecraft:cobblestone") - builds a wall width 3, height 5, from cobblestone.]]
+      buildWall(3,5,"minecraft:cobblestone") - builds a wall width 3, height 5, from cobblestone.
+  Dependencies: getParam, getItemName, selectSlot, search, sign, place, up, strafeRight]]
 
   width, height, sBlock = getParam("nns", {1, 1, getItemName()}, width, height, sBlock)
 
@@ -3153,7 +3165,19 @@ function buildWall(width, height, sBlock) --[[ Builds a wall in front of the tur
   return true
 end
 
-function buildFloor(width, depth, sBlock)
+function buildFloor(width, depth, sBlock) --[[ Builds a plane of blocks in the axis x,z.
+  14-07-2023 v0.4.0 Param: width, depth - the dimentions of the floor.
+                           sBlock - string the name of the block to build the floor from.
+  Returns: true - if the floor was complete.
+           false - if no sBlock was supplied and selected slot is empty.
+                 - if name of block was not found in inventory.
+                 - if turtle can't go up/forward/right/back/left.
+                 - if there isn't enough blocks to build floor.
+                 - if it couldn't place block.
+  Sintax: buildFloor([width = 1][, depth = 1][, sBlock = selected slot block name]
+  ex: buildFloor() - builds the floor with 1 selected slot block.
+  Dependencies: getParam, getItemName, selectSlot, sign, placeDown, up, forward, strafeRight]]
+  
   width, depth, sBlock = getParam("nns", {1, 1, getItemName()}, width, depth, sBlock)
 
   if sBlock == "" then return false, "buildFloor(width, depth, blockName) - empty selected slot." end
