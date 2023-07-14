@@ -3213,7 +3213,19 @@ function buildFloor(width, depth, sBlock) --[[ Builds a plane of blocks in the a
   return true
 end
 
-function buildCube(nSide , sBlock)
+function buildCube(nSide , sBlock) --[[ Builds a cube.
+  14-07-2023 v0.4.0 Param: nSide - number: the cube side measurement.
+                           sBlock - the block name to build the cube.
+  Returns: true - if the cube was built.
+           false - if the name of the block was not supplied and the selected slot was empty.
+                 - if the block was not found in inventory.
+                 - if turtle couldn't go up/forward/right/back/left.
+                 - If blocks were insufficient.
+                 - if it couldn't place block.
+  Sintax: buildCube([nSide = 1][, sBlock = selected slot block name])
+  ex: buildCube() - builds a cube with 1 selected slot block.
+  Dependencies: getParam, getItemName, selectSlot, up, placeDown, search, forward, strafeRight]]
+  
   nSide, sBlock = getParam("ns", {1, getItemName()}, nSide, sBlock)
 
   if sBlock == "" then return false, "buildCube(size, blockName) - empty selected slot." end
@@ -3292,7 +3304,9 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
             false if blocked, or invalid parameter.
             nil - if nBlocks type is not a number.
   Note: nBlocks < 0 moves forward, nBlocks >= 0 turns back and advances nBlocks.
-  ex: goBack(3) - Turns back and moves 3 blocks forward.]]
+  ex: goBack(3) - Turns back and moves 3 blocks forward.
+  Dependencies: turnBack, forward]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "goBack(Blocks) - Blocks must be anumber." end
@@ -3308,7 +3322,9 @@ function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
   Sintax: go([sDir="forward"], [nBlocks=1])
   ex: go("left", 3) or go(3, "left") - Rotates left and moves 3 Blocks forward.
       go() - Moves 1 block forward.
-      go(-3, "up") - moves 3 blocks down.]]
+      go(-3, "up") - moves 3 blocks down.
+  Dependencies: getParam, turnTo, forward, goRight, goBack, goLeft, up, down]]
+  
   sDir, nBlocks = getParam("sn", {"forward", 1}, sDir, nBlocks)
   sDir = string.lower(sDir)
   
@@ -3329,7 +3345,8 @@ function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until bl
             false if bllocked, or invalid parameter.
             nil - if nBlocks is not a number.
   Note: nBlocks < 0 goes right, nBlocks > 0 goes left, nBlocks = 0 turns left.
-  ex: goLeft(3) - Moves 3 Blocks to the left.]]
+  ex: goLeft(3) - Moves 3 Blocks to the left.
+  Dependencies: sign, turnDir, forward]]
 
   nBlocks = nBlocks or 1
   if type(nBlocks) ~= "number" then return nil, "goLeft(Blocks) - Blocks must be a number." end
@@ -3347,7 +3364,8 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
             false if bllocked, or invalid parameter.
             nil - if nBlocks is not a number.
   Note: nBlocks < 0 goes left, nBlocks > 0 goes right, nBlocks = 0 turns right.
-  ex: goRight(3) - Moves 3 Blocks to the right.]]
+  ex: goRight(3) - Moves 3 Blocks to the right.
+  Dependencies: sign, turnDir, forward]]
 
   nBlocks = nBlocks or 1
   if type(nBlocks) ~= "number" then return nil, "goRight(Blocks) - Blocks must be a number." end
@@ -3384,7 +3402,8 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
             nil - if tP1 and or tPoints not supplied.
                 - if tP1 or tPoints are not tables.
   Sintax: orderByDistance(tP1, tPoints)
-  ex: orderByDistance({0,0,0}, getNeighbors(1,0,10)) - returns the ordered table of distance from point tP1 to neighbors of 1,0,10.]]
+  ex: orderByDistance({0,0,0}, getNeighbors(1,0,10)) - returns the ordered table of distance from point tP1 to neighbors of 1,0,10.
+  Dependencies: checkType]]
 
   if (not tPoints) or (not tP1) then return nil, "orderByDistance(tP1, tPoints) - point Tp1 and/or table of points tPoints, not supplied." end
   if not checkType("tt", tP1, tPoints) then return nil, "orderByDistance(tP1, tPoints) - tP1 and tPoints are tables of coords {x, y, z}." end
@@ -3408,7 +3427,8 @@ function goToNeighbor(x, y, z) --[[ Turtle goes to neighbor, and turns to point 
   Sintax: goToNeighbor(x,y,z)
   Return: true - if it get to one neighbor of x,y,z
           false - if it didn't
-  ex: goToNeighbor(1, 5, 10) - goes to neighbor of point (1,5,10)]]
+  ex: goToNeighbor(1, 5, 10) - goes to neighbor of point (1,5,10)
+  Dependencies: getNeighbors, orderByDistance, goTo, turnToCoord]]
   
 	local tNeighbors = getNeighbors(x, y, z)
 	local tDist = orderByDistance({tTurtle.x, tTurtle.y, tTurtle.z}, tNeighbors)
@@ -3424,7 +3444,8 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
   21-07-2022 v0.4.0 Param: x, y, z - numbers coords to go to.
   Returns: true - if it goes all the way.
            false - if it didn't go all the way.
-  ex: goTo(10, 4, 5) - goes to coords 10, 4, 5.]]
+  ex: goTo(10, 4, 5) - goes to coords 10, 4, 5.
+  Dependencies: checkNil, isFuelEnoughTo, distTo, goDir]]
 
   if checkNil(3, x, y, z) then return false, "goTo(x, y, z) - Must supply x, y, z" end
   if not isFuelEnoughTo(z,x,y) then return false,"goTo(x, y, z) - Not enough fuel." end --have fuel
@@ -3463,7 +3484,8 @@ end
 function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
 	09-02-2020	v0.4.0 Param: x, y, z - destination coords.
   Sintax: goToPath(x, y, z) 
-	ex: goToPath(10, 10, 10) - turtle goes to 10, 10, 10]]
+	ex: goToPath(10, 10, 10) - turtle goes to 10, 10, 10
+  Dependencies: isNumber, getPath, goTo]]
 
   if not isNumber(x, y, z) then return false end
 	
@@ -3478,7 +3500,8 @@ function left(nSteps) --[[ Turtle turns left and walks nSteps.
   31-05-2023 v0.4.0 Param: nSteps - number the quantity of steps to walk.
   Sintax: left(nSteps)
   ex: left() - turtle turns left.
-      left(10) - turtle turns left and walks 10 steps]]
+      left(10) - turtle turns left and walks 10 steps,
+  Dependencies: goLeft, turnDir]]
 
   if nSteps then return goLeft(nSteps)
   else return turnDir("left")
@@ -3489,7 +3512,8 @@ function right(nSteps) --[[ Turtle turns right and walks nSteps.
   31-05-2023 v0.4.0 Param: nSteps - number the quantity of steps to walk.
   Sintax: right(nSteps)
   ex: right() - turtle turns left.
-      right(10) - turtle turns left and walks 10 steps]]
+      right(10) - turtle turns left and walks 10 steps
+  Dependencies: goRight, turnDir]]
 
   if nSteps then return goRight(nSteps)
   else return turnDir("right")
@@ -3507,7 +3531,8 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   Sintax: digDir([sDir="forward"][, nBlocks=1])
   ex: digDir("left", 3) or digDir(3, "left") - Rotates left and digs 3 Blocks forward.
       digDir() - Digs 1 block forward.
-      digDir(-3, "up") - Digs 3 blocks down.]]
+      digDir(-3, "up") - Digs 3 blocks down.
+  Dependencies: strLower, turnDir, addSteps, setWorldEnt]]
 
   nBlocks = nBlocks or 1
   sDir = strLower(sDir)
@@ -3552,7 +3577,9 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
             false if blocked, empty space, or invalid parameter.
   Sintax: dig([nBlocks=1])
   Note: nBlocks < 0 turns back and digs forward, nBlocks > 0 digs forward.
-  ex: dig() or dig(1) - Dig 1 block forward.]]
+  ex: dig() or dig(1) - Dig 1 block forward.
+  Dependencies: turnBack, addSteps, setWorldEnt]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "dig(Blocks) - Blocks must be a number." end
@@ -3582,7 +3609,9 @@ function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must ha
             false if blocked, empty space, or invalid parameter.
   Sintax: digLeft([nBlocks=1])
   Note: nBlocks < 0 digs to the right, nBlocks > 0 digs to the left
-  ex: digLeft() or digLeft(1) - Dig 1 block left.]]
+  ex: digLeft() or digLeft(1) - Dig 1 block left.
+  Dependencies: turDir, dig]]
+  
   nBlocks = nBlocks or 1
   
 	if type(nBlocks) ~= "number" then return false, "digLeft(Blocks) - Blocks must be a number." end
@@ -3598,7 +3627,9 @@ function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must h
             false if blocked, empty space, or invalid parameter.
   Sintax: digRight([nBlocks=1])
   Note: nBlocks < 0 digs to the left, nBlocks > 0 digs to the Right.
-  ex: digRight() or digRight(1) - Dig 1 block right.]]
+  ex: digRight() or digRight(1) - Dig 1 block right.
+  Dependencies: turnDir, dig]]
+  
   nBlocks = nBlocks or 1
   
 	if type(nBlocks) ~= "number" then return false, "digRight(Blocks) - Blocks must be a number." end
@@ -3614,7 +3645,9 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
             false if blocked, empty space, or invalid parameter.
   Sintax: digUp([nBlocks=1])
   Note: nBlocks < 0 digs downwards, nBlocks > 0 digs upwards.
-  ex: digUp() or digUp(1) - Dig 1 block up.]]
+  ex: digUp() or digUp(1) - Dig 1 block up.
+  Dependencies: digDown, ]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digUp(Blocks) - Blocks must be anumber." end
@@ -3640,7 +3673,9 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
             false if bllocked, empty space, or invalid parameter.
   Sintax: digDown([nBlocks=1])
   Note: nBlocks < 0 digs upwards, nBlocks > 0 digs downwards.
-  ex: digDown() or digDown(1) - Dig 1 block down.]]
+  ex: digDown() or digDown(1) - Dig 1 block down.
+  Dependencies: digUp]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digDown(Blocks) - Blocks must be a number." end
@@ -3664,7 +3699,9 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
             false if blocked, empty space, or invalid parameter.
   Sintax: digAbove([nBlocks=1])
   Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-  ex: digAbove() or digAbove(1) - Dig 1 block up.]]
+  ex: digAbove() or digAbove(1) - Dig 1 block up.
+  Dependencies: sign, forward]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digAbove(Blocks) - Blocks must be a number." end
@@ -3688,7 +3725,9 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
             false if blocked, empty space, or invalid parameter.
   Sintax: digBelow([nBlocks=1])
   Note: nBlocks < 0 digs backwards, nBlocks > 0 digs forwards.
-  ex: digBelow() or digBelow(1) - Dig 1 block down.]]
+  ex: digBelow() or digBelow(1) - Dig 1 block down.
+  Dependencies: sign, forward]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digBelow(Blocks) - Blocks must be a number." end
@@ -3710,7 +3749,9 @@ function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must h
             false if bllocked, empty space, or invalid parameter.
   Sintax: digBack([nBlocks=1])
   Note: nBlocks < 0 digs forward, nBlocks > 0 digs backwards.
-  ex: digBack() or digBack(1) - Turns back and dig 1 block forward.]]
+  ex: digBack() or digBack(1) - Turns back and dig 1 block forward.
+  Dependencies: turnBack, dig]]
+  
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return false, "digBack(Blocks) - Blocks must be a number." end
@@ -3730,7 +3771,8 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 	Note: message is the text when placing a sign:
 				ex: placeDir("north", "Cobblestone/n-----------") - places a sign to the north that says Cobblestone and dashes in the next line.
   Sintax: placeDir([sDir="forward"][, message])
-  ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.]]
+  ex: placeDir("forward") or placeDir() - Places 1 block in front of the turtle.
+  Dependencies: strLower, getItemName, turnDir, inspectDir, entAdd, addSteps, setWorldEnt]]
 	
   sDir = sDir or "forward"
   sDir = strLower(sDir)
@@ -3773,7 +3815,8 @@ function placeAt(x, y, z, sMessage) --[[ Places a block/item at coords x, y, z.
                - if x, y, z are not numbers.
            false - if the turtle couldn't get to x, y, z.
   ex: placeAt(10, 10, 2) - places the selected slot block/item in the coords 10, 10, 2.
-      placeAt(10, 10, 2, "Wellcome") - if selected slot has a sign, places it at 10, 10, 2 with the word "Wellcome".]]
+      placeAt(10, 10, 2, "Wellcome") - if selected slot has a sign, places it at 10, 10, 2 with the word "Wellcome".
+  Dependencies: checkNil, isNumber, goToNeighbor, placeDir, getKey]]
 
   if checkNil(3, x, y, z) then return nil, "placeAt(x,y,z) - invalid number of parameters." end
   if not isNumber(x, y, z) then return nil, "placeAt(x,y,z) - invalid parameter type." end
