@@ -2991,8 +2991,12 @@ end
 function buildWall(width, height, sBlock) --[[ Builds a wall in front of the turtle.
   18-06-2023 v0.4.0 Param: width, height - numbers: the width and height of the wall.
                            sBlock - string: name of the block to build the wall.
-  Returns: false - if no block name was supplied and the selected slot is empty.
+  Returns: true - if all went well.
+           false - if no block name was not supplied and the selected slot is empty.
                  - if the block name was not found in inventory.
+                 - if there is no more blocks to place.
+                 - if it couldn't place a block.
+                 - if it couldn't go up/down.
   sintax: buildWall([width=1][, height=1][, sBlock=selected slot])
 	ex: buildWall() - places the selected block in front of the turtle.
       buildWall(2) - builds a wall with the selected slot block, having 2 blocks wide.
@@ -3033,7 +3037,22 @@ function buildWall(width, height, sBlock) --[[ Builds a wall in front of the tur
   return true
 end
 
-function buildFloor(width, depth, sBlock)
+function buildFloor(width, depth, sBlock) --[[ Builds a floor under the turtle.
+  21-06-2023 v0.4.0 Param: width, depth - numbers: the width and depth of the floor.
+                           sBlock - string: name of the block to build the floor from.
+  Returns: false - if no block name was not supplied and the selected slot is empty.
+                 - if the block name was not found in inventory.
+                 - if turtle couldn't go up.
+                 - if there is no more blocks to place.
+                 - if it couldn't place a block.
+                 - if it couldn't go forward/back.
+                 - if couldn't go right/left.
+  sintax: buildFloor([width=1][, depth=1][, sBlock=selected slot])
+	ex: buildFloor() - places the selected block in below the turtle.
+      buildFloor(2) - builds a floor with the selected slot block, having 2 blocks wide.
+      buildFloor("minecraft:cobblestone") - places a block of cobblestone.
+      buildFloor(3, 5, "minecraft:cobblestone") - builds a floor width 3, depth 5, from cobblestone.]]
+
   width, depth, sBlock = getParam("nns", {1, 1, getItemName()}, width, depth, sBlock)
 
   if sBlock == "" then return false, "buildFloor(width, depth, blockName) - empty selected slot." end
@@ -3069,7 +3088,22 @@ function buildFloor(width, depth, sBlock)
   return true
 end
 
-function buildCube(nSide , sBlock)
+function buildCube(nSide , sBlock) --[[ Builds a cube under the turtle.
+  21-06-2023 v0.4.0 Param: nSide - number: the width of the cube.
+                           sBlock - string: name of the block to build the cube from.
+  Returns: false - if no block name was not supplied and the selected slot is empty.
+                 - if the block name was not found in inventory.
+                 - if turtle couldn't go up.
+                 - if there is no more blocks to place.
+                 - if it couldn't place a block.
+                 - if it couldn't go forward/back.
+                 - if couldn't go right/left.
+  sintax: buildCube([nSide=1][, sBlock=selected slot])
+	ex: buildCube() - places the selected block in below the turtle.
+      buildCube(2) - builds a cube with the selected slot block, having 2 blocks wide.
+      buildCube("minecraft:cobblestone") - places a block of cobblestone.
+      buildCube(3, "minecraft:cobblestone") - builds a cube width 3, from cobblestone.]]
+
   nSide, sBlock = getParam("ns", {1, getItemName()}, nSide, sBlock)
 
   if sBlock == "" then return false, "buildFloor(width, depth, blockName) - empty selected slot." end
@@ -3110,6 +3144,7 @@ end
 
 --not tested
 function buildSquare(Side , sBlock)
+  
 end
 
 --not tested
@@ -4233,10 +4268,10 @@ end
 
 function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
   05/09/2021 v0.3.0 Param: nSlot - number slot where to get the item name.
-              Returns: item name - if slot is not empty.
-                        "" - if slot is empty.
-              Sintax: getItemName([nSlot=selected slot])
-              ex: getItemName() - retuns the name of item in selected slot.]]
+  Returns: item name - if slot is not empty.
+                  "" - if slot is empty.
+  Sintax: getItemName([nSlot=selected slot])
+  ex: getItemName() - retuns the name of item in selected slot.]]
 
   if not nSlot then nSlot = nSlot or turtle.getSelectedSlot()
   elseif type(nSlot) ~= "number" then return nil, "getItemName([Slot=selected slot]) - Slot must be a number."
