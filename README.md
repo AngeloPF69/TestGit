@@ -33,9 +33,9 @@
     
 ## Turtle facing
 
-   <a href="#decFacing">decFacing([nTurns=1][, nFacing = tTurtle.facing]) Decrements nFacing by nTurns.</a><br>
+   <a href="#decFacing">decFacing(nTurns, nFacing) Decrements nFacing by nTurns.</a><br>
    <a href="#getFacing">getFacing() Returns tTurtle.facing.</a><br>
-   <a href="#incFacing">incFacing([nTurns=1][, nFacing = tTurtle.facing]) Increments nFacing by nTurns.</a><br>
+   <a href="#incFacing">incFacing(nTurns, nFacing) Increments nFacing by nTurns.</a><br>
    <a href="#setFacing">setFacing(sFacing) Sets tTurtle.facing.</a>
     
 ## Turtle coords
@@ -46,12 +46,12 @@
 ## Equipment
   
    <a href="#equip">equip(Side) Equip tool from the selected slot.</a><br>
-   <a href="#getFreeHand">getFreeHand([sHand = PREFEREDHAND]) Gets turtle free hand: "left"|"right"|false.</a>
+   <a href="#getFreeHand">getFreeHand(Hand) Gets turtle free hand: "left"|"right"|false.</a>
     
 ## Fuel
 
-   <a href="#refuelItems">refuel([nCount=stack of items]) Refuels the turtle with nCount items in the selected slot.</a><br>
-   <a href="#checkFuel">checkFuel([nActions|x,y,z]) Checks if the fuel is enough for nActions/to get to x,y,z.</a>
+   <a href="#refuelItems">refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.</a><br>
+   <a href="#checkFuel">checkFuel(Actions|x,y,z]) Checks if the fuel is enough for nActions/to get to x,y,z.</a>
 
 ## General
 
@@ -67,18 +67,16 @@
   
 ## Stacks
    
-   <a href="#saveStacks">saveStacks() Saves tStacks in a file as "tStacks.txt".</a><br>
-   <a href="#loadStacks">loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
-   <a href="#getStack">getStack(\[nSlot=selected slot]) Returns how many items can stack.</a><br>
-   <a href="#setStack">setStack(sItemName, nStack) Sets the item stack value in tStacks..</a><br>
+   <a href="#getStack">getStack(Slot|Item Name) Returns how many items can stack.</a><br>
+   <a href="#setStack">setStack(Item Name, Stack) Sets the item stack value in tStacks.</a><br>
   
 ## Attack
 
-   <a href="#attackDir">attackDir([sDir="forward"]) Turtle attack in sDir direction "forward"|"right"|"back"|"left"|"up"|"down"</a>
+   <a href="#attackDir">attackDir(Dir) Turtle attack in sDir direction: "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3</a>
 
 ## Recipes
 
-   <a href="#addRecipe">addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount]) Returns index of recipe.</a><br>
+   <a href="#addRecipe">addRecipe([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory][, nCount]) Adds a recipe to tRecipes.</a><br>
    <a href="#arrangeRecipe">arrangeRecipe([sRecipe=tRecipes.lastRecipe][, nIndex=1]) Arranges items in inventory to craft a recipe.</a><br>
    <a href="#canCraft">canCraft() Retuns a table with recipe name and index that you can craft from inventory.</a><br>
    <a href="#colLinMatch">colLinMatch(tRecs, tRec) Compares recipes items position, returns true if is the same.</a><br>
@@ -353,11 +351,10 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
    <p id="decFacing"></p>
    
-- decFacing(nTurns) Decrements tTurtle.facing by nTurns.<br>
+- decFacing(nTurns, nFacing) Decrements nFacing/tTurtle.facing by nTurns.<br>
     <pre>Param: nTurns - number of 90 degrees turns to the left.
-  Sintax: decFacing([nTurns=1])
-  Returns: true
-  Note: This function only changes the value in tTurtle.facing.
+  Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])
+  Returns: number - the new value of nFacing
   ex: if turtle is facing "x+"=1
     decFacing() Decrements 1 of value tTurtle.facing, turtle turns to "z-"=0</pre>
     
@@ -370,14 +367,13 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
     
    <p id="incFacing"></p>
    
-- incFacing(nTurns) Increments tTurtle.facing by nTurns.<br>
+- incFacing(nTurns, nFacing) Increments nFacing by nTurns.<br>
     <pre>Param: nTurns - number of 90 degrees turns to the right.
-  Sintax: incFacing([nTurns=1])
-  Returns: true
-  Note: This function only changes the value in tTurtle.facing.
+  Sintax: incFacing([nTurns=1][, nFacing = tTurtle.facing)
+  Returns: number - the new value of nFacing
   ex: if turtle is facing "x+"=1
-  incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
-  if tTurtle.facing>3 then tTurtle.facing and 3 end</pre>
+      incFacing(1) - Increments tTurtle.facing, turtle turns to "z+"=2,
+      if tTurtle.facing>3 then tTurtle.facing and 3 end</pre>
     
    <p id="setFacing"></p>
    
@@ -386,7 +382,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Sintax: setFacing(sFacing)
   Returns:  tTurtle.facing
             false - if no parameter was supplied.
-                  - if sFacing is not in facingType.
+                  - if sFacing is not a valid direction.
                   - if sFacing is not a number neither a string.
   ex: setFacing("z+") - Sets tTurtle.facing = 2
       setFacing(1) - sets tTurtle.facing = 1</pre>
@@ -407,6 +403,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
     <pre>Param: number: x,y,z - new coords for tTurtle.x, tTurtle.y, tTurtle.z
   Sintax: setCoords(x, y, z)
   Returns: true
+	   false - if x, y, z are not numbers.
   ex: setCoords(1, 10, 14) Sets tTurtle.x = 1, tTurtle.y = 10, tTurtle.z = 14</pre>
    <a href="#top">↑</a>
 
@@ -415,7 +412,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    <p id="equip"></p>
      
 - equip(Side) Equip tool from the selected slot.<br>
-    <pre>Param: sSide - String: "left"|"right"
+    <pre>Param: Side - String: "left"|"right"
   Sintax:equip([Side=free hand = "left"|"right"])
   Returns: true - if it was equiped.
            false - "Invalid side."
@@ -429,9 +426,10 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - getFreeHand(Prefered hand) Gets turtle free hand: "left"|"right"|false.<br>
     <pre>Sintax: getFreeHand([prefered hand])
   Returns: "left" or "right" the first free hand found.
-           false - if no free hand found.
-  Note: you must use equip and not turtle.equip  for this function to work.
-  ex: getFreeHand()</pre>
+	    nil - if Prefered hand is not "left" or "right" or empty
+	    false - if no free hand found.
+  Note: you must use equip not turtle.equip  for this function to work.
+  ex: getFreeHand() - checks if PREFEREDHAND is empty, if not, checks the other hand.</pre>
    <a href="#top">↑</a>
 
 ## Fuel
@@ -441,7 +439,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 - refuelItems(sItemName, nCount) Refuels the turtle with nCount items or fuel from inventory.
     <pre>Param: nCount - number of items to refuel.
 	     sItemName - name of the item.
-  Sintax: refuelItems([sItemName = Selected slot item name][,nCount=nItems in selected slot])
+  Sintax: refuelItems([sItemName = Selected slot item name][, nCount = nItems in selected slot])
   Returns: number of items refueled, fuel level.
 	   false - "Turtle doesn't need fuel."
 		   - "Turtle is at maximum fuel."
@@ -474,6 +472,7 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
   Sintax: checkType(sType, ...)
   Returns: true - if all parameters have the type of sType.
            false - if #sType ~= #... (number of parameters are diferent from length of sType).
+	    	 - if there is at least one that doesn't match the type.
   ex: checkType("snt", "hello", number1, tTable) - Outputs: true.</pre>
   
   <p id="getLowestKey"></p>
@@ -501,9 +500,9 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    
 - isValue(value, t) Checks if value is in t table.</a><br>
     <pre>Sintax: isValue(value, t)
-  Returns: true - if value is in t.
+  Returns: true, key - if value is in t.
            false - if value is not in t.
-  ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true.</pre>
+  ex: isValue(2, {["hello"] = 2, ["hi"] = 4}) - Outputs: true, "hello".</pre>
   
    <p id="isNumber"></p>
    
@@ -559,31 +558,16 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 
 ## Stacks
    
-   <p id="saveStacks"></p>
-   
-- saveStacks() Saves tStacks in a file as "tStacks.txt".</a>
-    <pre>Sintax: saveStacks()
-  Returns: false - if it couldn't save file.
-           true - if it could save file.
-  ex: saveStacks()</pre>
-  
-   <p id="loadStacks"></p>
-  
-- loadStacks() Loads tStacks from file "tStacks.txt".</a><br>
-    <pre>Sintax: loadStacks()
-  Returns false - if it couldn't load file.
-          true - if it could load file.
-  ex: loadStacks()</pre>
-  
    <p id="getStack"></p>
   
- - getStack(\[nSlot=selected slot\]) Returns how many items can stack.</a><br>
+ - getStack(\[nSlot|sItemName=selected slot\]) Returns how many items can stack.</a><br>
     <pre>Param: nSlot - slot number 1..16, or the item name.
-   Sintax: getStack([nSlot=selected slot])
+   Sintax: getStack([nSlot|sItemName=selected slot])
    Return: quantity a item can stack.
-           nil - if slot is out of range[1..16].
+           nil - if nSlot is out of range[1..16].
+	       - if type nSlot is invalid.
            false - if slot is empty.
-                 - if item was not found in inventory.
+                 - if item was not found in inventory, or unknown stack.
    ex: getStack() - gets the stack of item in selected slot.</pre>
   
    <p id="setStack"></p>
@@ -594,15 +578,15 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
    Return: true - if it could set the stack for item.
             nil - if no item name supplied.
                 - if no stack number is supplied.
-   sintax: setStack(sItemName = selected slot)</pre>
+   sintax: setStack(sItemName = selected slot, nStack)</pre>
    <a href="#top">↑</a>
 
 ## Attack
 
    <p id="attackDir"></p>
 
-- attackDir([sDir="forward"]) Turtle attack in sDir direction.
-    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"
+- attackDir(sDir]) Turtle attack in sDir direction.
+    <pre>Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Sintax: attackDir([sDir="forward"])
   Returns: true if turtle attack something.
            false - if there is nothing to attack, or no weapon.
@@ -613,8 +597,18 @@ tSpots = {} --[sSpotName]={x, y, z, nFacing} : locations where the turtle can go
 ## Recipes
   
   <p id="addRecipe"></p>
-- addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Returns index of recipe.</a><br>
-  
+
+- addRecipe(\[sRecipe=tRecipes.lastRecipe]\[, tRecipe=recipe in inventory]\[, nCount]) Adds a recipe to tRecipes.</a><br>
+    <pre>Param: sRecipe - string: the name of the recipe.
+	    tRecipe - recipe table, get it from getInvRecipe.
+	    nCount - quantity of products made with this recipe.
+	 Returns:  number - index of recipe (tRecipes[sRecipe][index])
+                      nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
+                          - if tRecipe is not supplied and there is no recipe in inventory.
+         Syntax: addRecipe(sRecipe[, tRecipe=recipe in inventory][, nCount])
+         Note: if no nCount is supplied this function crafts the recipe to obtain it.
+         ex: addRecipe("minecraft:stick", getInvRecipe(), 4) - returns the index of the recipe stored in tRecipes["minecraft:stick"</pre>
+	 
   <p id="arrangeRecipe"></p>
   
 - arrangeRecipe([sRecipe=tRecipes.lastRecipe]\[, nIndex=1]) Arranges items in inventory to craft a recipe.
