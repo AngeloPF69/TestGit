@@ -1024,16 +1024,19 @@ function distTo(x, y, z) --[[ Gets the three components of the distance from the
 	return x-tTurtle.x, y-tTurtle.y, z-tTurtle.z
 end
 
---not tested
-function distFromTo(x1, y1, z1, x2, y2, z2) --return:number,number,number the distances betwen 2 points - CHECKED
-  --[[  05/07/2018	sintax: getDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})
-        complete name - GET DISTance ( Z1,X1,Y1, Z2,X2,Y2 ) ]]
+function distFromTo(x1, y1, z1, x2, y2, z2) --[[ Calculates the three componentes of the distance from x1,y1,z1 to x2, y2, z2.
+  05-07-2018 v0.4.0 Param: x1,y1,z1,x2,y2,z2 - numbers
+                    or x1, y1 - tables with {x1,y1,z1}, {x2,y2,z2}
+  Return: number,number,number the distances betwen 2 points
+  Sintax: distFromTo(x1,y1,z1,x2,y2,z2) or getDist(t1,t2)
+  ex: getDistFromTo(1,1,1,10,10,10) - returns 9,9,9
+      getDistFromTo({1,1,1},{10,10,10}) - returns 9,9,9]]
   
   if not x1 then return false end
   if type(x1) == "table" then
-    return x1[1] - y1[1], x1[2] - y1[2], x1[3] - y1[3]
+    return y1[1] - x1[1], y1[2] - x1[2], y1[3] - x1[3]
   end
-  return x1 - x2, y1 - y2, z1 - z2
+  return x2 - x1, y2 - y1, z2 - z1
 end
 
 function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
@@ -1044,16 +1047,15 @@ function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
   return math.abs(tTurtle.x - x) + math.abs(tTurtle.y - y) + math.abs(tTurtle.z - z)
 end
 
---not tested
 function ABSDistFromTo(x1, y1, z1, x2, y2, z2)
   --[[  05/07/2018	sintax: getSumDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})
         complete name - GET SUM of DISTance ( Z1,X1,Y1, Z2,X2,Y2 ) ]]
 
   if not x1 then return false end
   if type(x1) == "table" then
-    return math.abs(x1[1] - y1[1]) + math.abs(x1[2] - y1[2]) + math.abs(x1[3] - y1[3])
+    return math.abs(y1[1] - x1[1]) + math.abs(y1[2] - x1[2]) + math.abs(y1[3] - x1[3])
   end
-  return math.abs(x1 - x2) + math.abs(y1 - y2) + math.abs(z1 - z2)
+  return math.abs(x2 - x1) + math.abs(y2 - y1) + math.abs(z2 - z1)
 end
 
 ------ COMPARE FUNCTIONS ------
@@ -1545,8 +1547,13 @@ function lTrim(s) --[[ Removes the left spaces from a string.
 	return ""
 end
 
---not tested
-function trim(s)
+function trim(s) --[[ Removes spaces at the beginning and end of a string.
+17-07-2023 v0.4.0 Param: s - string
+Returns: string without trailing and leading spaces.
+Sintax: trim(s)
+ex: trim(" Hello World!    ") - returns "Hello World!"
+dependencies: lTrim, rTrim]]
+
 	s = lTrim(s)
 	return rTrim(s)
 end
@@ -3527,6 +3534,7 @@ end
 
 ------ DIG FUNCTIONS ------  
 
+--not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
   08-09-2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
                         nBlocks - number of blocks to walk in sDir direction. 
@@ -3554,6 +3562,7 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
       tTurtle.looking = dirType[sDir] 
     elseif (sDir == "y+") or (sDir == "y-") then
       sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
+      tTurtle.looking = dirType[sDir] 
     else return nil, "Invalid direction."
     end
   else sDir = "forward"
@@ -3829,19 +3838,46 @@ function placeAt(x, y, z, sMessage) --[[ Places a block/item at coords x, y, z.
   return placeDir(getKey(tTurtle.looking, lookingType), sMessage)
 end
 
---not tested
-function placeSign(sMessage) --[[ Places a sign in front of the turtle.
+function placeSign(sDir, sMessage) --[[ Places a sign in front of the turtle.
   14-05-2023 v0.4.0 Param: sMessage - the message printed in the sign.
   Returns:  false - if no sign was found in inventory.
             number - 1 (Quantity of items placed).
   ex: placeSign("Hello") - places a selected sign with the word "Hello".
   Dependencies: getItemName, selectItem, place]]
 
+  if not sMessage then
+    if sDir then
+      local sDirTemp = strLower(sDir)
+      if isDirType(sDirTemp) or isFacingType(sDirTemp) or isCarDirType(sDirTemp) then 
+        sDir = strLower(sDir)
+      else sMessage = sDir
+           sDir = getKey(tTurtle.looking, lookingType) 
+      end
+    else sDir = getKey(tTurtle.looking, lookingType)
+    end
+  end
+
   local sItem = getItemName()
   if (not sItem) or (not string.find(sItem, "sign")) then
     if not selectItem("sign") then return false, "sign not found" end
   end
-  return place(sMessage)
+
+  local success, message = turnDir(sDir)
+
+  if not success then
+    if (sDir == "up") or (sDir == "down") then
+      tTurtle.looking = dirType[sDir] 
+    elseif (sDir == "y+") or (sDir == "y-") then
+      sDir = (sDir == "y+" and "up" or "")..(sDir == "y-" and "down" or "")
+      tTurtle.looking = dirType[sDir] 
+    end
+  else sDir = "forward"
+  end
+
+  if plaF[sDir] then return plaF[sDir](sMessage)
+  else return nil, "Invalid direction."
+  end
+  return true
 end
 
 function place(...) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
@@ -4943,7 +4979,7 @@ function getWorldPassableNeighbors(p, tIncludeEnt) --[[ Gets the neighbors of p 
   return rTable
 end
 
-
+--not tested
 function getPath(...) --[[ Returns the path, a table of points.
   27-05-2023 v0.4.0 Param: {x1, y1, z1}, {x2, y2, z2}|x1, y1, z1, x2, y2, z2 - the start and ending point
   Sintax: getPath({x1, y1, z1}|x1, y1, z1[, {x2, y2, z2}|x2, y2, z2] = tTurtle coords)
@@ -5310,7 +5346,9 @@ function TEST()
   -- test code bellow this line
   -----------------------------
 
-
+  print(placeSign("down", "Hello\n-----"))
+  --down(2)
+  --turnRight(2)
   ---------------------------
   -- test code above this line
 	TERMINATE()
