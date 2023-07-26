@@ -3276,8 +3276,48 @@ function buildCube(nSide , sBlock) --[[ Builds a cube.
 end
 
 --not tested
-function buildSquare(Side , sBlock)
+function buildSquare(nSide , sBlock)
+	nSide, sBlock = getParam("ns", {1, getItemName()}, nSide, sBlock)
+	if sBlock == "" then return false, "buildSquare(size, blockName) - empty selected slot." end
+	if sBlock ~= getItemName() then
+    if not selectSlot(search(sBlock)) then
+      return false, "buildSquare(size, blockName) - block name not found."
+    end
+  end
+	if nSide < 0 then nSide = math.abs(nSide) end
+	local sw, sd = 1, 1
   
+	if not up() then return false, "buildSquare(size, sBlock) - couldn't go up." end
+	for sides = 1, 4 do
+		if placeBelow(nSide) == 0 then
+			if getItemName() == "" then
+				if not selectSlot(search(sBlock)) then
+					return false, "buildSquare(size, blockName) - no more blocks."
+				end
+				else return false, "buildSquare(size, blockName) - couldn't place block."
+				end
+		end
+		for w = 1, nSide do
+			if placeDown() == 0 then
+					if getItemName() == "" then
+						if not selectSlot(search(sBlock)) then
+							return false, "buildSquare(size, blockName) - no more blocks."
+						end
+					else return false, "buildSquare(size, blockName) - couldn't place block."
+					end
+				end
+			for d = 1, nSide do
+				
+				if d ~= nSide then
+					if not forward(sd) then return false, "buildSquare(size, sBlock) - couldn't go forward/back." end
+				end
+			end
+			sd = -sd
+			if w ~= nSide then
+				if not strafeRight(sw) then return false, "buildSquare(size, sBlock) - couldn't go right/left." end
+			end
+		end
+  return true
 end
 
 --not tested
