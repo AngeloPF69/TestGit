@@ -3321,7 +3321,56 @@ function buildSquare(nSide , sBlock)
 end
 
 --not tested
-function buildRect(width, depth , sBlock)
+function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
+	26-07-2023 v0.4.0 Param: width, depth - number: width of the rectangle.
+													 sBlock - string: name of the block to build the rectangle.
+	Returns: true - if the rectangle was built.
+					 false - if sBlock was not supplied and the selected slot is empty.
+								 - if the sBlock was not found in inventory.
+								 - if it couldn't go up/forward/right/left.
+								 - if there is insuficient blocks to build the rectangle.
+								 - if it couldn't place block.
+	Sintax: buildRectangle([nSide = 1][, sBlock = selected slot block name])
+	ex: buildRectangle() - builds a cube with 1 selected block.
+	dependencies: getParam, getItemName, selectSlot, placeDown, search, forward, strafeRight
+	]]
+	
+	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, nSide, sBlock)
+
+  if sBlock == "" then return false, "buildRect(size, blockName) - empty selected slot." end
+  
+  if sBlock ~= getItemName() then
+    if not selectSlot(search(sBlock)) then
+      return false, "buildRect(size, blockName) - block name not found."
+    end
+  end
+
+  if nSide < 0 then nSide = math.abs(nSide) end
+  local sw, sd = sign(width), sign(depth)
+  for nPlane = 1, nSide do
+    if not up() then return false, "buildRect(size, sBlock) - couldn't go up." end
+    for w = 1, nSide do
+      for d = 1, nSide do
+        if placeDown() == 0 then
+          if getItemName() == "" then
+            if not selectSlot(search(sBlock)) then
+              return false, "buildRect(size, blockName) - no more blocks."
+            end
+          else return false, "buildRect(size, blockName) - couldn't place block."
+          end
+        end
+        if d ~= nSide then
+          if not forward(sd) then return false, "buildRect(size, sBlock) - couldn't go forward/back." end
+        end
+      end
+      sd = -sd
+      if w ~= nSide then
+        if not strafeRight(sw) then return false, "buildRect(size, sBlock) - couldn't go right/left." end
+      end
+    end
+    sw = -sw
+  end
+  return true	
 end
 
 --not tested
