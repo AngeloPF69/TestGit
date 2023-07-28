@@ -4196,7 +4196,60 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
 	end
   return place(math.abs(nBlocks))
 end
+
+--not tested
+function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle.
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of placed blocks.
+						nil - if nBlocks is not a number.
+            false - if it couldn't go forward.
+  Sintax: placeBelow([Blocks=1])
+  ex: placeBelow(1) or placeBelow() - Places one Block below the turtle.]]
+
+  nBlocks = nBlocks or 1
   
+  if type(nBlocks) ~= "number" then return nil, "placeBelow(Blocks) - Blocks must be a number." end
+  if nBlocks < 0 then turnBack() end
+    
+  local placed = 0
+  for i = 1, nBlocks, sign(nBlocks) do
+    if turtle.placeDown() then placed = placed + 1
+		else return placed
+		end
+		if i ~= nBlocks then
+			if not forward() then return false, "placeBelow(Blocks) - couldn't go forward" end
+		end
+  end
+  return placed
+end
+
+--not tested
+function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle.
+  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  Returns:  number of placed blocks.
+						nil - if nBlocks is not a number.
+            false - if it couldn't go forward.
+  Sintax: placeAbove([Blocks=1])
+  ex: placeAbove(1) or placeAbove() - Places one Block above the turtle.]]
+
+  nBlocks = nBlocks or 1
+  
+  if type(nBlocks) ~= "number" then return nil, "placeAbove(Blocks) - Blocks must be a number." end
+  if nBlocks < 0 then turnBack() end
+    
+  local placed = 0
+  for i = 1, nBlocks, sign(nBlocks) do
+    if turtle.placeUp() then placed = placed + 1
+		else return placed
+		end
+		if i ~= nBlocks then
+			if not forward() then return false, "placeAbove(Blocks) - couldn't go forward" end
+		end
+  end
+  return placed
+end
+
+--not tested
 function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed
@@ -4243,6 +4296,7 @@ function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a str
     return placed
 end
 
+--not tested
 function placeBelowR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
