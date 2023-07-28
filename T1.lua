@@ -4197,19 +4197,19 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
   return place(math.abs(nBlocks))
 end
   
-function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
+function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed
             false - if turtle was blocked on the way back.
                   - couldn't place block.
                   - invalid parameter.
-  Sintax: placeAbove([nBlocks=1])
-  ex: placeAbove(1) or placeAbove() - Places one Block above turtle.
+  Sintax: placeAboveR([nBlocks=1])
+  ex: placeAboveR(1) or placeAboveR() - Places one Block above turtle.
   Dependencies: turnBack, forward, down, back]]
 
     nBlocks = nBlocks or 1
     
-    if type(nBlocks) ~= "number" then return false, "placeAbove(Blocks) - Blocks must be a number." end
+    if type(nBlocks) ~= "number" then return false, "placeAboveR(Blocks) - Blocks must be a number." end
     if nBlocks < 0 then
       nBlocks = math.abs(nBlocks)
       turnBack()
@@ -4243,19 +4243,19 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
     return placed
 end
 
-function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
+function placeBelowR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
             false - if turtle was blocked on the way back.
                   - couldn't place block.
                   - invalid parameter.
-  Sintax: placeBelow([Blocks=1])
-  ex: placeBelow(1) or placeBelow() - Places one Block below turtle.
+  Sintax: placeBelowR([Blocks=1])
+  ex: placeBelowR(1) or placeBelowR() - Places one Block below turtle.
   Dependencies: turnBackdown, forwardup, back]]
 
   nBlocks = nBlocks or 1
   
-  if type(nBlocks) ~= "number" then return false, "placeBelow(Blocks) - Blocks must be a number." end
+  if type(nBlocks) ~= "number" then return false, "placeBelowR(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then
     nBlocks = math.abs(nBlocks)
     turnBack()
