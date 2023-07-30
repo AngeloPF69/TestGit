@@ -2,8 +2,8 @@
   y = 0,
   x = 0,
   leftHand = "empty",
-  z = 0,
+  z = -2,
   rightHand = "empty",
-  looking = 8,
   facing = 0,
+  looking = 8,
 }

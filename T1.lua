@@ -5,7 +5,7 @@
 local PREFEREDHAND = "right" --default equip hand
 local DEFSTACK = 64 --default stack size
 local CSLOT = 13 --default crafting slot
-local SCAN = true --on walking turtle is storing up, down and forward blocks in tWorld.
+local SCAN = false --on walking turtle is storing up, down and forward blocks in tWorld.
 local DIG = false --on walking turtle digs it's way through
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
@@ -3294,20 +3294,19 @@ function buildSquare(nSide , sBlock)
 				if not selectSlot(search(sBlock)) then
 					return false, "buildSquare(size, blockName) - no more blocks."
 				end
-				else return false, "buildSquare(size, blockName) - couldn't place block."
-				end
+			else return false, "buildSquare(size, blockName) - couldn't place block."
+			end
 		end
 		for w = 1, nSide do
 			if placeDown() == 0 then
-					if getItemName() == "" then
-						if not selectSlot(search(sBlock)) then
-							return false, "buildSquare(size, blockName) - no more blocks."
-						end
-					else return false, "buildSquare(size, blockName) - couldn't place block."
-					end
-				end
+        if getItemName() == "" then
+          if not selectSlot(search(sBlock)) then
+            return false, "buildSquare(size, blockName) - no more blocks."
+          end
+        else return false, "buildSquare(size, blockName) - couldn't place block."
+        end
+			end
 			for d = 1, nSide do
-				
 				if d ~= nSide then
 					if not forward(sd) then return false, "buildSquare(size, sBlock) - couldn't go forward/back." end
 				end
@@ -3317,6 +3316,7 @@ function buildSquare(nSide , sBlock)
 				if not strafeRight(sw) then return false, "buildSquare(size, sBlock) - couldn't go right/left." end
 			end
 		end
+  end
   return true
 end
 
@@ -4197,7 +4197,6 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
   return place(math.abs(nBlocks))
 end
 
---not tested
 function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4211,9 +4210,11 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   if type(nBlocks) ~= "number" then return nil, "placeBelow(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turnBack() end
     
-  local placed = 0
+  local placed, nEnt = 0, entAdd(getItemName())
   for i = 1, nBlocks, sign(nBlocks) do
-    if turtle.placeDown() then placed = placed + 1
+    if turtle.placeDown() then
+      placed = placed + 1
+      setWorldEnt(tTurtle.x, tTurtle.y - 1, tTurtle.z, nEnt)
 		else return placed
 		end
 		if i ~= nBlocks then
@@ -4223,7 +4224,6 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   return placed
 end
 
---not tested
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4237,9 +4237,11 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   if type(nBlocks) ~= "number" then return nil, "placeAbove(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turnBack() end
     
-  local placed = 0
+  local placed, nEnt = 0, entAdd(getItemName())
   for i = 1, nBlocks, sign(nBlocks) do
-    if turtle.placeUp() then placed = placed + 1
+    if turtle.placeUp() then
+      placed = placed + 1
+      setWorldEnt(tTurtle.x, tTurtle.y + 1, tTurtle.z, nEnt)
 		else return placed
 		end
 		if i ~= nBlocks then
@@ -4249,7 +4251,6 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   return placed
 end
 
---not tested
 function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed
@@ -4281,13 +4282,21 @@ function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a str
     
     local placed = 0
     for i = 1, nBlocks do --place backwards
+      local ent = entAdd(getItemName())
       if i == nBlocks then
         if i ~= 1 then
           if not down() then return false, "Can't move down." end
         end
-        if turtle.placeUp() then placed = placed + 1 end
+        if turtle.placeUp() then
+          placed = placed + 1
+          setWorldEnt(tTurtle.x, tTurtle.y + 1, tTurtle.z, ent)
+        end
       else
-        if turtle.place() then placed = placed + 1 end
+        if turtle.place() then
+          placed = placed + 1
+          local x, y, z = addSteps(1, tTurtle.facing)
+          setWorldEnt(x, y, z, ent)
+        end
         if (i ~= (nBlocks-1)) then
           if not back() then return placed end
         end
@@ -4296,7 +4305,6 @@ function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a str
     return placed
 end
 
---not tested
 function placeBelowR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4328,13 +4336,21 @@ function placeBelowR(nBlocks) --[[ Places nBlocks forwards or backwards in a str
   
   local placed = 0
   for i = 1, nBlocks do
+    local ent = entAdd(getItemName())
     if i == nBlocks then
       if i ~= 1 then
         if not up() then return false, "Can't go up." end
       end
-      if turtle.placeDown() then placed = placed + 1 end
+      if turtle.placeDown() then
+        placed = placed + 1
+        setWorldEnt(tTurtle.x, tTurtle.y - 1, tTurtle.z, ent)
+      end
     else
-      if turtle.place() then placed = placed + 1 end
+      if turtle.place() then
+        placed = placed + 1
+        local x, y, z = addSteps(1, tTurtle.facing)
+        setWorldEnt(x, y, z, ent)
+      end
       if (i ~= (nBlocks-1)) then
         if not back() then return placed end
       end
@@ -5488,10 +5504,8 @@ function TEST()
 
   -- test code bellow this line
   -----------------------------
+  
 
-  print(placeSign("down", "Hello\n-----"))
-  --down(2)
-  --turnRight(2)
   ---------------------------
   -- test code above this line
 	TERMINATE()
