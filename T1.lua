@@ -3275,8 +3275,19 @@ function buildCube(nSide , sBlock) --[[ Builds a cube.
   return true
 end
 
---not tested
-function buildSquare(nSide , sBlock)
+function buildSquare(nSide , sBlock) --[[ Builds a square.
+  31-07-2023 v0.4.0 Param: nSide - number: the square side measurement.
+                           sBlock - the block name to build the square.
+  Returns: true - if the cube was built.
+           false - if no block name was supplied and the selected block is empty.
+                 - if the block name was not found in inventory.
+                 - if turtle couldn't go forward.
+                 - If blocks were insufficient.
+                 - if it couldn't place block.
+  Sintax: buildSquare([nSide = 1][, sBlock = selected slot block name])
+  ex: buildSquare() - builds a cube with 1 block, from selected slot.
+  Dependencies: getParam, getItemName, selectSlot, up, placeBelow, search, forward, turnDir]]
+  
 	nSide, sBlock = getParam("ns", {1, getItemName()}, nSide, sBlock)
 	if sBlock == "" then return false, "buildSquare(size, blockName) - empty selected slot." end
 	if sBlock ~= getItemName() then
@@ -3284,12 +3295,15 @@ function buildSquare(nSide , sBlock)
       return false, "buildSquare(size, blockName) - block name not found."
     end
   end
-	if nSide < 0 then nSide = math.abs(nSide) end
-	local sw, sd = 1, 1
   
 	if not up() then return false, "buildSquare(size, sBlock) - couldn't go up." end
+  if nSide == 0 then return true end
+  local sTurn = (nSide < 0) and "left" or "right"
+  nSide = (nSide < 0) and math.abs(nSide) or nSide
+  if nSide == 1 then return placeBelow() == 1 end
+
 	for sides = 1, 4 do
-		if placeBelow(nSide) == 0 then
+		if placeBelow( nSide - 1 ) ~= ( nSide - 1 ) then
 			if getItemName() == "" then
 				if not selectSlot(search(sBlock)) then
 					return false, "buildSquare(size, blockName) - no more blocks."
@@ -3297,25 +3311,8 @@ function buildSquare(nSide , sBlock)
 			else return false, "buildSquare(size, blockName) - couldn't place block."
 			end
 		end
-		for w = 1, nSide do
-			if placeDown() == 0 then
-        if getItemName() == "" then
-          if not selectSlot(search(sBlock)) then
-            return false, "buildSquare(size, blockName) - no more blocks."
-          end
-        else return false, "buildSquare(size, blockName) - couldn't place block."
-        end
-			end
-			for d = 1, nSide do
-				if d ~= nSide then
-					if not forward(sd) then return false, "buildSquare(size, sBlock) - couldn't go forward/back." end
-				end
-			end
-			sd = -sd
-			if w ~= nSide then
-				if not strafeRight(sw) then return false, "buildSquare(size, sBlock) - couldn't go right/left." end
-			end
-		end
+    if not forward() then return false, "buildSquare(size, blockName) - couldn't go forward." end
+    turnDir(sTurn)
   end
   return true
 end
@@ -5505,6 +5502,10 @@ function TEST()
   -- test code bellow this line
   -----------------------------
   
+  --back()
+  down()
+  --up()
+  print(buildSquare(-3))
 
   ---------------------------
   -- test code above this line
