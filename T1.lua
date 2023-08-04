@@ -3353,39 +3353,33 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
 	
 	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, nSide, sBlock)
 
-  if sBlock == "" then return false, "buildRect(size, blockName) - empty selected slot." end
+  if sBlock == "" then return false, "buildRect(width, depth, blockName) - empty selected slot." end
   
   if sBlock ~= getItemName() then
     if not selectSlot(search(sBlock)) then
-      return false, "buildRect(size, blockName) - block name not found."
+      return false, "buildRect(width, depth, blockName) - block name not found."
     end
   end
 
-  if nSide < 0 then nSide = math.abs(nSide) end
-  local sw, sd = sign(width), sign(depth)
-  for nPlane = 1, nSide do
-    if not up() then return false, "buildRect(size, sBlock) - couldn't go up." end
-    for w = 1, nSide do
-      for d = 1, nSide do
-        if placeDown() == 0 then
-          if getItemName() == "" then
-            if not selectSlot(search(sBlock)) then
-              return false, "buildRect(size, blockName) - no more blocks."
-            end
-          else return false, "buildRect(size, blockName) - couldn't place block."
-          end
-        end
-        if d ~= nSide then
-          if not forward(sd) then return false, "buildRect(size, sBlock) - couldn't go forward/back." end
-        end
-      end
-      sd = -sd
-      if w ~= nSide then
-        if not strafeRight(sw) then return false, "buildRect(size, sBlock) - couldn't go right/left." end
-      end
-    end
-    sw = -sw
-  end
+	local nSides = {depth, width, depth, width}
+	if not up() then return false, "buildRect(width, depth, sBlock) - couldn't go up." end
+	if isAny(0, depth, width) then return true end
+	if
+	
+	for side = 0, 3 do
+		local nToPlace = math.abs(nSides[side+1])
+		local nPlaced = placeDown(nToPlace - 1)
+		while (nPlaced ~= nToPlace - 1) do
+			if getItemName() == "" then
+				if not selectSlot(search(sBlock)) then
+					return false, "buildRect(size, blockName) - no more blocks."
+				else nPlaced = nPlaced + placeDown(nToPlace - 1)
+				end
+			else return false, "buildRect(size, blockName) - couldn't place block."
+			end
+		end
+		if not forward() then return false, "buildRect(size, blockName) - couldn't advance." end
+		turnRight(sign(nSide[bit32.band(side, 3)]))
   return true	
 end
 
