@@ -1512,6 +1512,25 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+--not tested
+function isAny(value, ...) --[[ Compares value with all the arguments.
+  04-07-2023 v0.4.0 Param: value - the value to compare.
+                           ... - the arguments to compare with value.
+  Returns: true - if there was at least one argument with the value.
+  Sintax: isAny(value, ...)
+  ex: isAny(12, ) - builds a cube with 1 block, from selected slot.
+  Dependencies: getParam, getItemName, selectSlot, up, placeBelow, search, forward, turnDir]]
+	
+	for i = 1, #args do
+		if type(args[i]) == "table" then
+			local index = isAny(value, args[i])
+			if index then return index end
+		else if value == args[i] then return i
+		end
+	end
+	return false
+end
+  
 function fillStr(sChar, nChars) --[[ Returns a filled string with sChar having a width of nChars
   31-05-2023 v0.4.0 Param: sChar - the char to fill the string.
                            nChar - the number of chars to fill the string.
