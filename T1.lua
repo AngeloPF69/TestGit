@@ -3332,40 +3332,32 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
 	dependencies: getParam, getItemName, selectSlot, placeDown, search, forward, strafeRight
 	]]
 	
-	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, nSide, sBlock)
-
-  if sBlock == "" then return false, "buildRect(size, blockName) - empty selected slot." end
-  
-  if sBlock ~= getItemName() then
+	width, depth, sBlock = getParam("nns", {1, 1, getItemName()}, width, depth, sBlock)
+	if sBlock == "" then return false, "buildRect(width, depth, blockName) - empty selected slot." end
+	if sBlock ~= getItemName() then
     if not selectSlot(search(sBlock)) then
-      return false, "buildRect(size, blockName) - block name not found."
+      return false, "buildRect(width, depth, blockName) - block name not found."
     end
   end
+  
+	if not up() then return false, "buildRect(width, depth, blockName) - couldn't go up." end
+  if (width == 0) or (depth == 0) then return true end
+  if (width == 1) and (depth == 1) then return placeBelow() == 1 end
+  local sTurn = (nSide < 0) and "left" or "right"
+  nSide = (nSide < 0) and math.abs(nSide) or nSide
+  
 
-  if nSide < 0 then nSide = math.abs(nSide) end
-  local sw, sd = sign(width), sign(depth)
-  for nPlane = 1, nSide do
-    if not up() then return false, "buildRect(size, sBlock) - couldn't go up." end
-    for w = 1, nSide do
-      for d = 1, nSide do
-        if placeDown() == 0 then
-          if getItemName() == "" then
-            if not selectSlot(search(sBlock)) then
-              return false, "buildRect(size, blockName) - no more blocks."
-            end
-          else return false, "buildRect(size, blockName) - couldn't place block."
-          end
-        end
-        if d ~= nSide then
-          if not forward(sd) then return false, "buildRect(size, sBlock) - couldn't go forward/back." end
-        end
-      end
-      sd = -sd
-      if w ~= nSide then
-        if not strafeRight(sw) then return false, "buildRect(size, sBlock) - couldn't go right/left." end
-      end
-    end
-    sw = -sw
+	for sides = 1, 4 do
+		if placeBelow( nSide - 1 ) ~= ( nSide - 1 ) then
+			if getItemName() == "" then
+				if not selectSlot(search(sBlock)) then
+					return false, "buildSquare(size, blockName) - no more blocks."
+				end
+			else return false, "buildSquare(size, blockName) - couldn't place block."
+			end
+		end
+    if not forward() then return false, "buildSquare(size, blockName) - couldn't go forward." end
+    turnDir(sTurn)
   end
   return true	
 end
