@@ -1512,6 +1512,25 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
+--not tested
+function isAny(value, ...) --[[ Compares value with all the arguments.
+  04-07-2023 v0.4.0 Param: value - the value to compare.
+                           ... - the arguments to compare with value.
+  Returns: true - if there was at least one argument with the value.
+  Sintax: isAny(value, ...)
+  ex: isAny(12, ) - builds a cube with 1 block, from selected slot.
+  Dependencies: getParam, getItemName, selectSlot, up, placeBelow, search, forward, turnDir]]
+	
+	for i = 1, #args do
+		if type(args[i]) == "table" then
+			local index = isAny(value, args[i])
+			if index then return index end
+		else if value == args[i] then return i
+		end
+	end
+	return false
+end
+  
 function fillStr(sChar, nChars) --[[ Returns a filled string with sChar having a width of nChars
   31-05-2023 v0.4.0 Param: sChar - the char to fill the string.
                            nChar - the number of chars to fill the string.
@@ -3332,9 +3351,11 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
 	dependencies: getParam, getItemName, selectSlot, placeDown, search, forward, strafeRight
 	]]
 	
-	width, depth, sBlock = getParam("nns", {1, 1, getItemName()}, width, depth, sBlock)
-	if sBlock == "" then return false, "buildRect(width, depth, blockName) - empty selected slot." end
-	if sBlock ~= getItemName() then
+	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, nSide, sBlock)
+
+  if sBlock == "" then return false, "buildRect(width, depth, blockName) - empty selected slot." end
+  
+  if sBlock ~= getItemName() then
     if not selectSlot(search(sBlock)) then
       return false, "buildRect(width, depth, blockName) - block name not found."
     end
@@ -3347,18 +3368,25 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
   nSide = (nSide < 0) and math.abs(nSide) or nSide
   
 
-	for sides = 1, 4 do
-		if placeBelow( nSide - 1 ) ~= ( nSide - 1 ) then
+	local nSides = {depth, width, depth, width}
+	if not up() then return false, "buildRect(width, depth, sBlock) - couldn't go up." end
+	if isAny(0, depth, width) then return true end
+	if
+	
+	for side = 0, 3 do
+		local nToPlace = math.abs(nSides[side+1])
+		local nPlaced = placeDown(nToPlace - 1)
+		while (nPlaced ~= nToPlace - 1) do
 			if getItemName() == "" then
 				if not selectSlot(search(sBlock)) then
-					return false, "buildSquare(size, blockName) - no more blocks."
+					return false, "buildRect(size, blockName) - no more blocks."
+				else nPlaced = nPlaced + placeDown(nToPlace - 1)
 				end
-			else return false, "buildSquare(size, blockName) - couldn't place block."
+			else return false, "buildRect(size, blockName) - couldn't place block."
 			end
 		end
-    if not forward() then return false, "buildSquare(size, blockName) - couldn't go forward." end
-    turnDir(sTurn)
-  end
+		if not forward() then return false, "buildRect(size, blockName) - couldn't advance." end
+		turnRight(sign(nSide[bit32.band(side, 3)]))
   return true	
 end
 
