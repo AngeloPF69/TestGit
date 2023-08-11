@@ -4214,6 +4214,7 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
   return place(math.abs(nBlocks))
 end
 
+--not tested
 function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4227,12 +4228,20 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   if type(nBlocks) ~= "number" then return nil, "placeBelow(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turnBack() end
     
-  local placed, nEnt = 0, entAdd(getItemName())
-  for i = 1, nBlocks, sign(nBlocks) do
+  local sItemName = getItemName()
+	if sItemName == "" then return 0, "placeBelow(nBlocks) - empty selected slot." end
+	
+	local placed, nEnt = 0, entAdd(sItemName)
+	for i = 1, nBlocks, sign(nBlocks) do
     if turtle.placeDown() then
       placed = placed + 1
       setWorldEnt(tTurtle.x, tTurtle.y - 1, tTurtle.z, nEnt)
-		else return placed
+		else	if getItemName() == "" then
+						if not select(search(sItemName)) then return placed, "placeBelow(nBlocks) - no more items to place." end
+					end
+					return placed, "placeBelow(nBlocks) - couldn't place item below."
+		end
+		return placed
 		end
 		if i ~= nBlocks then
 			if not forward() then return false, "placeBelow(Blocks) - couldn't go forward" end
@@ -4241,6 +4250,7 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   return placed
 end
 
+--not tested
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4253,13 +4263,17 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   
   if type(nBlocks) ~= "number" then return nil, "placeAbove(Blocks) - Blocks must be a number." end
   if nBlocks < 0 then turnBack() end
-    
-  local placed, nEnt = 0, entAdd(getItemName())
+  
+	local sItemName = getItemName()
+  local placed, nEnt = 0, entAdd(sItemName())
   for i = 1, nBlocks, sign(nBlocks) do
     if turtle.placeUp() then
       placed = placed + 1
       setWorldEnt(tTurtle.x, tTurtle.y + 1, tTurtle.z, nEnt)
-		else return placed
+		else	if getItemName() == "" then
+						if not select(search(sItemName)) then return placed, "placeAbove(nBlocks) - no more items to place." end
+					end
+					return placed, "placeAbove(nBlocks) - couldn't place item below."
 		end
 		if i ~= nBlocks then
 			if not forward() then return false, "placeAbove(Blocks) - couldn't go forward" end
