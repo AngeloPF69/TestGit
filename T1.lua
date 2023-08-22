@@ -4236,12 +4236,11 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
     if turtle.placeDown() then
       placed = placed + 1
       setWorldEnt(tTurtle.x, tTurtle.y - 1, tTurtle.z, nEnt)
+			if not getItemName() then select(search(sItemName)) end
 		else	if getItemName() == "" then
 						if not select(search(sItemName)) then return placed, "placeBelow(nBlocks) - no more items to place." end
 					end
 					return placed, "placeBelow(nBlocks) - couldn't place item below."
-		end
-		return placed
 		end
 		if i ~= nBlocks then
 			if not forward() then return false, "placeBelow(Blocks) - couldn't go forward" end
