@@ -4,6 +4,6 @@
   leftHand = "empty",
   z = -2,
   rightHand = "empty",
-  facing = 0,
   looking = 8,
+  facing = 0,
 }

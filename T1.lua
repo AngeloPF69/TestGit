@@ -1512,20 +1512,19 @@ end
 
 ------ GENERAL FUNCTIONS ------
 
---not tested
 function isAny(value, ...) --[[ Compares value with all the arguments.
   04-07-2023 v0.4.0 Param: value - the value to compare.
                            ... - the arguments to compare with value.
   Returns: true - if there was at least one argument with the value.
   Sintax: isAny(value, ...)
-  ex: isAny(12, ) - builds a cube with 1 block, from selected slot.
-  Dependencies: getParam, getItemName, selectSlot, up, placeBelow, search, forward, turnDir]]
+  ex: isAny(12, "hi", {12},  ) - returns true.
+  Dependencies: isAny]]
 	
-	for i = 1, #args do
-		if type(args[i]) == "table" then
-			local index = isAny(value, args[i])
-			if index then return index end
-		else if value == args[i] then return i
+	for i = 1, #arg do
+		if type(arg[i]) == "table" then
+			local index = isAny(value, table.unpack(arg[i]))
+			if index then return true end
+		else if value == arg[i] then return true end
 		end
 	end
 	return false
@@ -3337,7 +3336,7 @@ function buildSquare(nSide , sBlock) --[[ Builds a square.
 end
 
 --not tested
-function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
+function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor, starting at turtle position.
 	26-07-2023 v0.4.0 Param: width, depth - number: width of the rectangle.
 													 sBlock - string: name of the block to build the rectangle.
 	Returns: true - if the rectangle was built.
@@ -3351,8 +3350,8 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
 	dependencies: getParam, getItemName, selectSlot, placeDown, search, forward, strafeRight
 	]]
 	
-	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, nSide, sBlock)
-
+	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, width, depth, sBlock)
+  print(width, depth, sBlock)
   if sBlock == "" then return false, "buildRect(width, depth, blockName) - empty selected slot." end
   
   if sBlock ~= getItemName() then
@@ -3364,14 +3363,10 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
 	if not up() then return false, "buildRect(width, depth, blockName) - couldn't go up." end
   if (width == 0) or (depth == 0) then return true end
   if (width == 1) and (depth == 1) then return placeBelow() == 1 end
-  local sTurn = (nSide < 0) and "left" or "right"
-  nSide = (nSide < 0) and math.abs(nSide) or nSide
-  
 
 	local nSides = {depth, width, depth, width}
 	if not up() then return false, "buildRect(width, depth, sBlock) - couldn't go up." end
 	if isAny(0, depth, width) then return true end
-	if
 	
 	for side = 0, 3 do
 		local nToPlace = math.abs(nSides[side+1])
@@ -3387,6 +3382,7 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor.
 		end
 		if not forward() then return false, "buildRect(size, blockName) - couldn't advance." end
 		turnRight(sign(nSide[bit32.band(side, 3)]))
+  end
   return true	
 end
 
@@ -5538,8 +5534,8 @@ function TEST()
   --back()
   down()
   --up()
-  print(buildSquare(-3))
-
+  print(buildRect(2))
+  
   ---------------------------
   -- test code above this line
 	TERMINATE()
