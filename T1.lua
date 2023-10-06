@@ -3350,8 +3350,8 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor,
 	dependencies: getParam, getItemName, selectSlot, placeDown, search, forward, strafeRight
 	]]
 	
-	width, depth, sBlock = getParam("ns", {1, 1, getItemName()}, width, depth, sBlock)
-  print(width, depth, sBlock)
+  if width and (not depth) then depth = width end
+  width, depth, sBlock = getParam("nns", {1, 1, getItemName()}, width, depth, sBlock)
   if sBlock == "" then return false, "buildRect(width, depth, blockName) - empty selected slot." end
   
   if sBlock ~= getItemName() then
@@ -3381,7 +3381,7 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor,
 			end
 		end
 		if not forward() then return false, "buildRect(size, blockName) - couldn't advance." end
-		turnRight(sign(nSide[bit32.band(side, 3)]))
+		turnRight(sign(nSides[bit32.band(side, 3)]))
   end
   return true	
 end
@@ -5532,7 +5532,7 @@ function TEST()
   -----------------------------
   
   --back()
-  down()
+  down(3)
   --up()
   print(buildRect(2))
   
