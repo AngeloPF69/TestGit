@@ -3360,28 +3360,33 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor,
     end
   end
   
-	if not up() then return false, "buildRect(width, depth, blockName) - couldn't go up." end
   if (width == 0) or (depth == 0) then return true end
+  if not up() then return false, "buildRect(width, depth, blockName) - couldn't go up." end
   if (width == 1) and (depth == 1) then return placeBelow() == 1 end
 
 	local nSides = {depth, width, depth, width}
-	if not up() then return false, "buildRect(width, depth, sBlock) - couldn't go up." end
+  if sign(depth) == -1 then turnBack() end
 	if isAny(0, depth, width) then return true end
 	
-	for side = 0, 3 do
-		local nToPlace = math.abs(nSides[side+1])
-		local nPlaced = placeDown(nToPlace - 1)
+	for side = 1, 4 do
+		local nToPlace = math.abs(nSides[side])
+		local nPlaced = placeBelow(nToPlace - 1)
 		while (nPlaced ~= nToPlace - 1) do
 			if getItemName() == "" then
 				if not selectSlot(search(sBlock)) then
 					return false, "buildRect(size, blockName) - no more blocks."
-				else nPlaced = nPlaced + placeDown(nToPlace - 1)
+				else nPlaced = nPlaced + placeBelow(nToPlace - 1)
 				end
 			else return false, "buildRect(size, blockName) - couldn't place block."
 			end
 		end
-		if not forward() then return false, "buildRect(size, blockName) - couldn't advance." end
-		turnRight(sign(nSides[bit32.band(side, 3)]))
+		if (nPlaced ~= 0) and (not forward()) then return false, "buildRect(size, blockName) - couldn't advance." end
+    print("sign:", sign(nSides[bit32.band(side, 3)+1]))
+		if side ~= 4 then turnRight(sign(nSides[bit32.band(side, 3)+1]))
+    else
+      forward(depth)
+      turnRight(sign(nSides[bit32.band(side, 3)+1]))
+    end
   end
   return true	
 end
@@ -4222,6 +4227,7 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "placeBelow(Blocks) - Blocks must be a number." end
+  if nBlocks == 0 then return 0 end
   if nBlocks < 0 then turnBack() end
     
   local sItemName = getItemName()
@@ -5531,10 +5537,15 @@ function TEST()
   -- test code bellow this line
   -----------------------------
   
-  --back()
-  down(3)
+  --back(7)
+  --right(3)
+  down()
+  --strafeRight(4)
   --up()
-  print(buildRect(2))
+  --turnLeft()
+  --turnBack()
+  print(buildRect(-2,1))
+  --print(placeBelow(0))
   
   ---------------------------
   -- test code above this line
