@@ -3360,29 +3360,28 @@ function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor,
     end
   end
   
-  if (width == 0) or (depth == 0) then return true end
   if not up() then return false, "buildRect(width, depth, blockName) - couldn't go up." end
   if (width == 1) and (depth == 1) then return placeBelow() == 1 end
 
 	local nSides = {depth, width, depth, width}
-  if sign(depth) == -1 then turnBack() end
+  local nAlreadyPlaced = {0, 1, 1, 2}
 	if isAny(0, depth, width) then return true end
 	
 	for side = 1, 4 do
-		local nToPlace = math.abs(nSides[side])
-		local nPlaced = placeBelow(nToPlace - 1)
-		while (nPlaced ~= nToPlace - 1) do
+		local nToPlace = math.abs(nSides[side]) - nAlreadyPlaced[side]
+		local nPlaced = placeBelow(nToPlace)
+		while (nPlaced ~= nToPlace) do
 			if getItemName() == "" then
 				if not selectSlot(search(sBlock)) then
 					return false, "buildRect(size, blockName) - no more blocks."
-				else nPlaced = nPlaced + placeBelow(nToPlace - 1)
+				else nPlaced = nPlaced + placeBelow(nToPlace - nPlaced)
 				end
 			else return false, "buildRect(size, blockName) - couldn't place block."
 			end
 		end
-		if (nPlaced ~= 0) and (not forward()) then return false, "buildRect(size, blockName) - couldn't advance." end
-    print("sign:", sign(nSides[bit32.band(side, 3)+1]))
-		if side ~= 4 then turnRight(sign(nSides[bit32.band(side, 3)+1]))
+		if side ~= 4 then
+      turnRight(sign(nSides[side + 1]))
+      if (nPlaced ~= 0) and (not forward()) then return false, "buildRect(size, blockName) - couldn't advance." end
     else
       forward(depth)
       turnRight(sign(nSides[bit32.band(side, 3)+1]))
@@ -4215,7 +4214,6 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
   return place(math.abs(nBlocks))
 end
 
---not tested
 function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4228,13 +4226,12 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   
   if type(nBlocks) ~= "number" then return nil, "placeBelow(Blocks) - Blocks must be a number." end
   if nBlocks == 0 then return 0 end
-  if nBlocks < 0 then turnBack() end
-    
+
   local sItemName = getItemName()
 	if sItemName == "" then return 0, "placeBelow(nBlocks) - empty selected slot." end
-	
-	local placed, nEnt = 0, entAdd(sItemName)
-	for i = 1, nBlocks, sign(nBlocks) do
+
+  local placed, nEnt = 0, entAdd(sItemName)
+	for i = 1, math.abs(nBlocks) do
     if turtle.placeDown() then
       placed = placed + 1
       setWorldEnt(tTurtle.x, tTurtle.y - 1, tTurtle.z, nEnt)
@@ -4244,14 +4241,13 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
 					end
 					return placed, "placeBelow(nBlocks) - couldn't place item below."
 		end
-		if i ~= nBlocks then
-			if not forward() then return false, "placeBelow(Blocks) - couldn't go forward" end
+		if i ~= math.abs(nBlocks) then
+			if not forward(sign(nBlocks)) then return false, "placeBelow(Blocks) - couldn't go forward" end
 		end
   end
   return placed
 end
 
---not tested
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle.
   27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
@@ -4263,11 +4259,12 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   nBlocks = nBlocks or 1
   
   if type(nBlocks) ~= "number" then return nil, "placeAbove(Blocks) - Blocks must be a number." end
-  if nBlocks < 0 then turnBack() end
   
 	local sItemName = getItemName()
-  local placed, nEnt = 0, entAdd(sItemName())
-  for i = 1, nBlocks, sign(nBlocks) do
+  if sItemName == "" then return 0, "placeAbove(nBlocks) - empty selected slot." end
+
+  local placed, nEnt = 0, entAdd(sItemName)
+  for i = 1, math.abs(nBlocks) do
     if turtle.placeUp() then
       placed = placed + 1
       setWorldEnt(tTurtle.x, tTurtle.y + 1, tTurtle.z, nEnt)
@@ -4276,8 +4273,8 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
 					end
 					return placed, "placeAbove(nBlocks) - couldn't place item below."
 		end
-		if i ~= nBlocks then
-			if not forward() then return false, "placeAbove(Blocks) - couldn't go forward" end
+		if i ~= math.abs(nBlocks) then
+			if not forward(sign(nBlocks)) then return false, "placeAbove(Blocks) - couldn't go forward" end
 		end
   end
   return placed
@@ -5539,14 +5536,13 @@ function TEST()
   
   --back(7)
   --right(3)
-  down()
+  --down()
   --strafeRight(4)
   --up()
   --turnLeft()
   --turnBack()
   print(buildRect(-2,1))
-  --print(placeBelow(0))
-  
+    
   ---------------------------
   -- test code above this line
 	TERMINATE()

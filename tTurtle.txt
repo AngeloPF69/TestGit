@@ -1,9 +1,9 @@
 {
   y = -2,
-  x = 7,
+  x = 6,
   leftHand = "empty",
   z = -14,
   rightHand = "empty",
+  facing = 1,
   looking = 8,
-  facing = 3,
 }
