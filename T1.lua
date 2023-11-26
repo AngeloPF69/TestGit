@@ -1047,9 +1047,12 @@ function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
   return math.abs(tTurtle.x - x) + math.abs(tTurtle.y - y) + math.abs(tTurtle.z - z)
 end
 
-function ABSDistFromTo(x1, y1, z1, x2, y2, z2)
-  --[[  05/07/2018	sintax: getSumDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})
-        complete name - GET SUM of DISTance ( Z1,X1,Y1, Z2,X2,Y2 ) ]]
+function ABSDistFromTo(x1, y1, z1, x2, y2, z2) --[[Gets the distance from a point to another point.
+  05/07/2018 v0.4.0 Param:x1, y1, z1 - point origin (1st point)
+                          x2, y2, z2 - point destination (2nd point)
+  Returns: number - distance >= 0, between two sets of coords.
+                      false - if no paremeters are supplied.
+  sintax: getSumDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})]]
 
   if not x1 then return false end
   if type(x1) == "table" then
@@ -1566,11 +1569,11 @@ function lTrim(s) --[[ Removes the left spaces from a string.
 end
 
 function trim(s) --[[ Removes spaces at the beginning and end of a string.
-17-07-2023 v0.4.0 Param: s - string
-Returns: string without trailing and leading spaces.
-Sintax: trim(s)
-ex: trim(" Hello World!    ") - returns "Hello World!"
-dependencies: lTrim, rTrim]]
+  17-07-2023 v0.4.0 Param: s - string
+  Returns: string without trailing and leading spaces.
+  Sintax: trim(s)
+  ex: trim(" Hello World!    ") - returns "Hello World!"
+  dependencies: lTrim, rTrim]]
 
 	s = lTrim(s)
 	return rTrim(s)
@@ -1587,10 +1590,10 @@ function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
 end
 
 function strLeft(s, sep) --[[ Returns the left part of a string.
-14-05-2023 v0.4.0 Param: s - the complete string.
+  14-05-2023 v0.4.0 Param: s - the complete string.
                          sep - the character separator or the length of the string to return.
-Returns:  nil - if the string is not supplied.
-ex: strLeft("Hello", 2) - returns He.
+  Returns:  nil - if the string is not supplied.
+  ex: strLeft("Hello", 2) - returns He.
     strLeft("Hello", "l") - returns He.]]
 
   if not s then return nil, "strLeft(string, separator/length) - string not supplied" end
