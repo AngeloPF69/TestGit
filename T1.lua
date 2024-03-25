@@ -1384,8 +1384,9 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
   if nBlocks < 0 then return back(math.abs(nBlocks)) end
   if SCAN then scanAll() end
   for i = 1, nBlocks do
-    if not turtle.forward() then
-			if not DIG then return false, "Can't advance forward."
+    local success, message = turtle.forward()
+    if not success then
+			if not DIG then return false, message
 			elseif not dig() then return false, "Can't dig/advance forward."
 			end
 		end
@@ -1410,7 +1411,8 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
   if nBlocks < 0 then return forward(math.abs(nBlocks)) end
   if SCAN then scanAll() end
   for i = 1, nBlocks do
-    if not turtle.back() then return false, "Can't go backward."
+    local success, message = turtle.back()
+    if not success then return false, message
     else
       tTurtle.x, tTurtle.y, tTurtle.z = addSteps(1, "back")
       if SCAN then scanAll() end
@@ -1434,8 +1436,9 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
   if nBlocks < 0 then return down(math.abs(nBlocks)) end
   if SCAN then scanAll() end
   for i = 1, nBlocks do
-    if not turtle.up() then
-			if not DIG then return false, "Can't advance up."
+    local success, message = turtle.up()
+    if not success then
+			if not DIG then return false, message
 			elseif not digUp() then return false, "Can't dig/advance up."
 			end
 		end
@@ -1460,8 +1463,9 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
   if nBlocks < 0 then return up(math.abs(nBlocks)) end
   if SCAN then scanAll() end
   for i = 1, nBlocks do
-		if not turtle.down() then
-			if not DIG then return false, "Can't advance down."
+    local success, message = turtle.down()
+		if not success then
+			if not DIG then return false, message
 			elseif not digDown() then return false, "Can't dig/advance down."
 			end
 		end
@@ -5537,14 +5541,7 @@ function TEST()
   -- test code bellow this line
   -----------------------------
   
-  --back(7)
-  --right(3)
-  --down()
-  --strafeRight(4)
-  --up()
-  --turnLeft()
-  --turnBack()
-  print(buildRect(-2,1))
+  print(buildRect())
     
   ---------------------------
   -- test code above this line
