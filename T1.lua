@@ -69,7 +69,8 @@ local tInv = {
 }
 
 function tInv.init() --[[ Initializes the handlind of the event turtle_inventory.
-  20-05-2023 v0.4.0 Returns: true
+  20-05-2023 v0.4.0
+  Returns: true
   Sintax: tInv.init()
   Dependencies: getInventory]]
 
@@ -81,7 +82,8 @@ function tInv.init() --[[ Initializes the handlind of the event turtle_inventory
 end
 
 function tInv.terminate() --[[ Terminates the handlind of the event turtle_inventory.
-  20-05-2023 v0.4.0 Returns: true
+  20-05-2023 v0.4.0
+  Returns: true
   Sintax: tInv.terminate()]]
 
     tInv.bTerminate = true
@@ -90,7 +92,8 @@ function tInv.terminate() --[[ Terminates the handlind of the event turtle_inven
 end
 
 function HandleInvChange() --[[ Function to handle the event turtle_inventory.
-  20-05-2023 v0.4.0 Returns: true
+  20-05-2023 v0.4.0
+  Returns: true
   Sintax: HandleInvChange()
   Dependencies: getInventory, cmpInventory]]
 
@@ -128,9 +131,10 @@ function loadSpots() --[[ Loads from file tSpots.txt to table tSpots
 end
 
 function setSpot(sSpotName, x, y, z, nFacing) --[[ Sets a spot in tSpots table.
-  05-08-2022 v0.4.0 Param: sSpotName - string the name of the spot.
-                           x, y, z - coords of spot.
-                           nFacing - the direction in that spot.
+  05-08-2022 v0.4.0
+  Param: sSpotName - string the name of the spot.
+           x, y, z - coords of spot.
+           nFacing - the direction in that spot.
   Returns: true - if spot was set with success.
   Sintax: setSpot(sSpotName[, x, y, z, nFacing]=tTurtle)
   ex: setSpot("minecraft:cobblestone", 10,3,5, 0) - cobblestone at coords (10,3,5) facing z- ]]
@@ -146,7 +150,8 @@ function setSpot(sSpotName, x, y, z, nFacing) --[[ Sets a spot in tSpots table.
 end
 
 function getSpot(sSpotName) --[[ Gets the spot.
-  06-082022 v0.4.0 Param: sSpotName - string the name of the spot to get the data from.
+  06-082022 v0.4.0
+  Param: sSpotName - string the name of the spot to get the data from.
   Returns: table with spot - {x,y,z,facing}
   Sintax: getSpot(sSpotName)]]
   
@@ -154,7 +159,8 @@ function getSpot(sSpotName) --[[ Gets the spot.
 end
 
 function goToSpot(sSpotName) --[[ Turtle walks to the spot coords, and turns to spot facing.
-  22-09-2022 v04.0 Param: sSpotName - string the name of the spot.
+  22-09-2022 v04.0
+  Param: sSpotName - string the name of the spot.
   Returns: true - if it goes all the way to the spot.
            false - if it couldn't get there.
            nil - if the spotname was not found.
@@ -172,8 +178,9 @@ end
 ------ World ------
 
 function setWorldEnt(x, y, z, nEnt) --[[ Set world coords containing nEnt.
-  24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
-                           nEnt - id of the entity from entGetId(sBlockName).
+  24-07-2022 v0.4.0
+  Param: x, y, z - numbers world coords.
+            nEnt - id of the entity from entGetId(sBlockName).
   Returns: true
   Sintax: setWorldEnt(x, y, z, nEnt)]]
 
@@ -184,7 +191,8 @@ function setWorldEnt(x, y, z, nEnt) --[[ Set world coords containing nEnt.
 end
 
 function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
-  24-07-2022 v0.4.0 Param: x, y, z - numbers world coords.
+  24-07-2022 v0.4.0
+  Param: x, y, z - numbers world coords.
   Returns: number the id of the block in that coords.]]
 
   if not tWorld[x] then return nil end
@@ -193,15 +201,17 @@ function getWorldEnt(x, y, z) --[[ Gets the entity at coords x,y,z.
 end
 
 function saveWorld() --[[ Saves tWorldinto tWorld.txt
-  24-07-2022 v0.4.0 Returns: the same as the saveTable function.
+  24-07-2022 v0.4.0
+  Returns: the same as the saveTable function.
   Dependencies: saveTable]]
   
   return saveTable(tWorld,"tworld.txt")
 end
 
 function loadWorld() --[[ Loads tWorld.txt into tWorld table.
-  24-07-2022 v0.4.0 Returns: true - if success.
-                             false - if it couldn't load file "tworld.txt".
+  24-07-2022 v0.4.0
+  Returns: true - if success.
+          false - if it couldn't load file "tworld.txt".
   Dependencies: loadTable, isDicEmpty]]
   
   local t = loadTable("tWorld.txt")
@@ -213,8 +223,9 @@ function loadWorld() --[[ Loads tWorld.txt into tWorld table.
 end
 
 function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block.
-  15-09-2022 Param: sBlock - string, number or table name of block.
-                    nAmp = radius of scan.
+  15-09-2022
+  Param: sBlock - string, number or table name of block.
+           nAmp - radius of scan.
   Sintax: getNearestBlock([sBlock="unknown"][, nAmp = 10])
   Return: x,y,z, nID - coords of nearest block and its id.
           false - If then block name was not found in tWorld.
@@ -264,7 +275,8 @@ function getNearestBlock(sBlock, nAmp) --[[ Gets the coords of the nearest block
 end
 
 function worldFindBlock(sBlock) --[[ Gets the coords for sBlock in tWorld.
-  19-01-2023 v0.4.0 Param: sBlock - string name of block to search
+  19-01-2023 v0.4.0
+  Param: sBlock - string name of block to search
   Return: table with coords (x,y,z)
   Sintax: worldFindBlock(sBlock)
   Ex: worldFindBlock("minecraft:cobblestone") - find coords of "minecraft:cobblestone" in tWorld]]
@@ -286,7 +298,8 @@ end
 ------ Entity ------
 
 function entAdd(sEntName) --[[ Adds a entity name to table ent.
-  21-07-2022 v0.4.0 Param: sEntName - string name of entity.
+  21-07-2022 v0.4.0
+  Param: sEntName - string name of entity.
   Returns: number - entity id
            nil - if not sEntName not supplied.
                - if sEntName is not a number.
@@ -305,8 +318,9 @@ function entAdd(sEntName) --[[ Adds a entity name to table ent.
 end
 
 function entAddInv() --[[ Adds all the inventory items to tEnts.
-  24-07-2022 v0.4.0 Returns: true, number quantity of entities added.
-                             false, if no entities added.
+  24-07-2022 v0.4.0
+  Returns: true, number quantity of entities added.
+          false, if no entities added.
   Dependencies: entGetId, entAdd]]
 
   local nTotAdded = 0
@@ -325,7 +339,8 @@ function entAddInv() --[[ Adds all the inventory items to tEnts.
 end
 
 function entAddSlot(nSlot) --[[ Adds item in nSlot to tEnts.
-  24-07-2022 v0.4.0 Param: nSlot - number of slot where is the item to add.
+  24-07-2022 v0.4.0
+  Param: nSlot - number of slot where is the item to add.
   Return: number the id of the item in nSlot.
           nil - if nSlot is not a number.
               - if nSlot is not in range[1..16] 
@@ -343,7 +358,8 @@ function entAddSlot(nSlot) --[[ Adds item in nSlot to tEnts.
 end
 
 function entGetSlotId(nSlot) --[[ Gets or adds the nSlot item tEnts.
-  24-07-2022 v0.4.0 Alias for entAddSlot()
+  24-07-2022 v0.4.0
+  Alias for entAddSlot()
   Dependencies: entAddSlot]]
   
   return entAddSlot(nSlot)
@@ -354,7 +370,8 @@ function isEnt(sEntName) --[[ Alias for entGetId()]]
 end
 
 function entGetId(sEntName) --[[ Gets the entity id.
-  21-07-2022 v0.4.0 Param: sEntName - string the entity name.
+  21-07-2022 v0.4.0
+  Param: sEntName - string the entity name.
   Returns: number - the entity id.
            false - the entity name was not found.
            nil - the entity name was not supplied.
@@ -369,7 +386,8 @@ function entGetId(sEntName) --[[ Gets the entity id.
 end
 
 function entGetName(nId) --[[ Gets the entity name.
-  21-07-2022 v0.4.0 Param: nId - number the id of the entity to get the name.
+  21-07-2022 v0.4.0
+  Param: nId - number the id of the entity to get the name.
   Returns: string - the name of the entity.
            false - if nId was not found.
            nil - if nId was not supplied.
@@ -384,7 +402,8 @@ function entGetName(nId) --[[ Gets the entity name.
 end
 
 function saveEnt() --[[ Saves table tEnts into tEnts.txt file.
-  21-07-2022 v0.4.0 Returns: the same as saveTable
+  21-07-2022 v0.4.0
+  Returns: the same as saveTable
   Sintax: saveEnt()
   ex: saveEnt()
   Dependencies: saveTable]]
@@ -393,8 +412,9 @@ function saveEnt() --[[ Saves table tEnts into tEnts.txt file.
 end
 
 function loadEnt() --[[ Loads tEnts.txt into table tEnts.
-  21-07-2022 v0.4.0 Returns: true - if it loaded the file.
-                             false - if it couldn't load the file.
+  21-07-2022 v0.4.0
+  Returns: true - if it loaded the file.
+          false - if it couldn't load the file.
   Sintax: loadEnt()
   ex: loadEnt()
   Dependencies: loadTable, isDicEmpty]]
@@ -408,7 +428,8 @@ function loadEnt() --[[ Loads tEnts.txt into table tEnts.
 end
 
 function saveRevEnt() --[[ Saves tRevEnts into tRevEnts.txt file.
-  21-07-2022 v0.4.0 Returns: same as saveTable
+  21-07-2022 v0.4.0
+  Returns: same as saveTable
   Sintax: saveRevEnt()
   ex: saveRevEnt()
   Dependencies: saveTable]]
@@ -417,8 +438,9 @@ function saveRevEnt() --[[ Saves tRevEnts into tRevEnts.txt file.
 end
 
 function loadRevEnt() --[[ Loads tRevEnts.txt into tRevEnts table.
-  21-07-2022 v0.4.0 Returns: true - if could load tRevEnts.txt
-                             false - if couldn't load file tRevEnts.txt
+  21-07-2022 v0.4.0
+  Returns: true - if could load tRevEnts.txt
+          false - if couldn't load file tRevEnts.txt
   Sintax: loadRevEnt()
   ex: loadRevEnt()
   Dependencies: loadTable, isDicEmpty]]
@@ -435,7 +457,8 @@ end
 ------ FUEL FUNCTIONS ------
 
 function getAllFuelItems()  --[[ Gets a table with all fuel items.
-16-11-2022 v0.4.0 Returns: tItems[sItemName] = quantity of fuel. ]]
+16-11-2022 v0.4.0
+Returns: tItems[sItemName] = quantity of fuel. ]]
 
   local tItems = {}
   for k, v in pairs(tEnts) do
@@ -447,7 +470,8 @@ function getAllFuelItems()  --[[ Gets a table with all fuel items.
 end
 
 function getFuel(sItem) --[[ Get the fuel for sItem.
-  30-10-2022 v0.4.0 Param: sItem - string name of item to get fuel quantity.
+  30-10-2022 v0.4.0
+  Param: sItem - string name of item to get fuel quantity.
   Sintax: getFuel([sItem = selected slot item name])
   Return: number - quantity of fuel from sItem.
           false - if item was not tested
@@ -462,8 +486,9 @@ function getFuel(sItem) --[[ Get the fuel for sItem.
 end
 
 function setFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
-  04/11/2022 v0.4.0 Param: sItem - item name.
-                           nQFuel - quantity of fuel given by item.
+  04/11/2022 v0.4.0
+  Param: sItem - item name.
+        nQFuel - quantity of fuel given by item.
   Return: nil - if sItem or nQFuel not supplied.
           true
   Sintax: setFuel(sItem, nQFuel)
@@ -479,8 +504,9 @@ function setFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
 end
 
 function addFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
-  21-11-2022 v0.4.0 Param: sItem - name of item to set fuel.
-                           nQFuel - quantity of fuel sItem have.
+  21-11-2022 v0.4.0
+  Param: sItem - name of item to set fuel.
+        nQFuel - quantity of fuel sItem have.
   Sintax: addFuel(sItem, nQFuel)
   Note: if sItem is not in tEnts, adds it.
   Returns: true
@@ -495,7 +521,8 @@ function addFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
 end
 
 function getFuelSlot(nSlot) --[[ Gets the quantity of fuel given by item in nSlot.
-  30-10-2022 v0.4.0 Param: nSlot - number of slot where is the item to get the fuel from.
+  30-10-2022 v0.4.0
+  Param: nSlot - number of slot where is the item to get the fuel from.
   Return: number - quantity of fuel given by item.
           nil - if nSlot is not a number.
               - if nSlot is not in range [1..16]
@@ -515,7 +542,8 @@ function getFuelSlot(nSlot) --[[ Gets the quantity of fuel given by item in nSlo
 end
 
 function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
-  30-10-2022 v0.4.0 Param: nSlot - number of slot to test.
+  30-10-2022 v0.4.0
+  Param: nSlot - number of slot to test.
   Return: nFuel - the fuel that this item gives.
           nil - if the nSlot is out of range [1..16]
           false - if the turtle doesn't need fuel.
@@ -551,7 +579,8 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
 end
 
 function getInvFuel() --[[ Gets the total fuel in inventory.
-  31-10-2022 v0.4.0 Return: number - the total fuel in inventory.
+  31-10-2022 v0.4.0
+  Return: number - the total fuel in inventory.
   Note: it consumes 1 item if it is fuel and have not been tested.
   Sintax: getInvFuel()
   Dependencies: getFuel, fuelTestSlot]]
@@ -573,8 +602,9 @@ function getInvFuel() --[[ Gets the total fuel in inventory.
 end
 
 function checkFuel(...) --[[ Checks if the fuel is enough.
-  29/06/2022 v0.4.1 Param: ... - number of turtle moves.
-                               - coords where to go (x, y, z).
+  29/06/2022 v0.4.1
+  Param: ... - number of turtle moves.
+             - coords where to go (x, y, z).
   Returns:	true, number remaining fuel - if the fuel is enough.
 					 false, negative number missing fuel - if the fuel is not enough.
            nil - if parameters are not numbers.
@@ -613,7 +643,8 @@ function checkFuel(...) --[[ Checks if the fuel is enough.
 end
 
 function isFuelEnoughTo(x, y, z) --[[ Checks if the fuel is enough to go to x,y,z
-  21-07-2022 v0.4.0 Param: x, y, z (numbers) - coords of the point where to go.
+  21-07-2022 v0.4.0
+  Param: x, y, z (numbers) - coords of the point where to go.
   Returns: checkFuel(...)
   Sintax: isFuelEnoughTo(x, y, z) alias for checkFuel(x,y,z)
   ex: isFuelEnoughTo(10, 20, 50) - checks if there is enough fuel to go to (10, 20, 50)
@@ -693,8 +724,9 @@ function getInvFuelItems() --[[ Gets the inventory slots and items that are fuel
 end
 
 function refuelItems(sItemName, nCount) --[[ Refuels the turtle with nCount items or fuel from inventory.
-  23/09/2021 v0.4.0 Param: sItemName - name of the item.
-                           nCount - number of items.
+  23/09/2021 v0.4.0
+  Param: sItemName - name of the item.
+            nCount - number of items.
   Returns:	number of items refueled, fuel level.
 						false	- "Turtle doesn't need fuel."
 									- "Turtle is at maximum fuel."
@@ -738,9 +770,10 @@ end
 ------ EQUIP ------
 
 function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
-  23/09/2021 v0.4.0 Returns:	"right" or "left" the first free hand found.
-										          false - if no free hand found.
-                              nil - if invalid hand.
+  23/09/2021 v0.4.0
+  Returns:	"right" or "left" the first free hand found.
+	          false - if no free hand found.
+              nil - if invalid hand.
   Sintax: getFreeHand([sHand=PREFEREDHAND])
   ex: getFreeHand() - Return the first free hand referenced from PREFEREDHAND and then the other hand, or false.
   Dependencies: getKey]] 
@@ -759,7 +792,8 @@ function getFreeHand(sHand) --[[ Gets turtle free hand: "right"|"left"|false.
 end
 
 function equip(sSide) --[[ Equip tool from the selected slot.
-  23/09/2021 v0.4.0 Param: sSide - String: "left"|"right"
+  23/09/2021 v0.4.0
+  Param: sSide - String: "left"|"right"
   Returns:	true - if it was equiped.
 	  				false - "Invalid side."
 									- "Empty selected slot."
@@ -783,7 +817,8 @@ function equip(sSide) --[[ Equip tool from the selected slot.
 end
 
 function unequip(sHand) --[[ Equips a tool in sHand.
-  13-07-2023 v0.4.0 Param: sHand - string: "left"|"right"
+  13-07-2023 v0.4.0
+  Param: sHand - string: "left"|"right"
   Returns: true - if tool was equiped.
            false - if sHand is invalid.
                  - if turtle doesn't have a empty slot to unequip tool.
@@ -813,8 +848,9 @@ end
 ------ TURTLE ------
 
 function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
-  23/09/2021 v0.2.0 Returns:	true - if it could save the file.
-											        false - if it couldn't save file.
+  23/09/2021 v0.2.0
+  Returns:	true - if it could save the file.
+	         false - if it couldn't save file.
   ex: saveTurtle()
   Dependencies: saveTable]] 
   
@@ -824,8 +860,9 @@ function saveTurtle() --[[ Saves tTurtle to file tTurtle.txt.
 end
 
 function loadTurtle() --[[ Loads tTurtle from file tTurtle.txt.
-  23/09/2021 v0.2.0 Returns:	true - if it could load the file to tTurtle.
-										      		false - if it couldn't load file.
+  23/09/2021 v0.2.0
+  Returns:	true - if it could load the file to tTurtle.
+	      		false - if it couldn't load file.
   ex: turtleLoad()
   Dependencies: loadTable, isDicEmpty]] 
   
@@ -841,7 +878,8 @@ end
 ------ INIT ------
 
 function INIT() --[[ Loads files to tables, so that the turtle won't forget what it has learned.
-  02/11/2021 v0.4.0 Returns:	true
+  02/11/2021 v0.4.0
+  Returns:	true
   Dependencies: loadEnt, loadRevEnt, loadWorld, loadTurtle, loadRecipes, loadSpots, tInv.init]]
   
   loadEnt()
@@ -857,7 +895,8 @@ end
 ------ TERMINATE ------
 
 function TERMINATE() --[[ Saves tTurtle, tRecipes to text files.
-  02/11/2021 v0.4.0 Returns:	true
+  02/11/2021 v0.4.0
+  Returns:	true
   Dependencies: tInv.terminate, saveEnt, saveRevEnt, saveWorld, saveTurtle, saveRecipes, saveSpots]]
   tInv.terminate()
   saveEnt()
@@ -873,7 +912,8 @@ end
 ------ TURTLE STATUS FUNCTIONS ----
 
 function setFacing(sFacing) --[[ Sets tTurtle.facing.
-  02/10/2021 v0.2.0 Param: sFacing - "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
+  02/10/2021 v0.2.0
+  Param: sFacing - "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3
   Sintax: setFacing(sFacing)
   Returns:  number - tTurtle.facing
              false - if no parameter was supplied.
@@ -897,7 +937,8 @@ function setFacing(sFacing) --[[ Sets tTurtle.facing.
 end
 
 function getFacing() --[[ Returns tTurtle.facing.
-  02/10/2021 v0.2.0 Sintax: getFacing()
+  02/10/2021 v0.2.0
+  Sintax: getFacing()
   Returns:  tTurtle.facing.
   ex: getFacing() - Outputs whatever is in tTurtle.facing [0..3].]]
   
@@ -905,7 +946,8 @@ function getFacing() --[[ Returns tTurtle.facing.
 end
 
 function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
-  03/09/2021 v0.2.0 Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
+  03/09/2021 v0.2.0
+  Param: z,y,z - numbers: new coords for tTurtle.x, tTurtle.y, tTurtle.z
   Sintax: setCoords(x, y, z)
   Returns:  true.
   ex: setCoords(10, 23, 45) - Sets coords x to 10, y to 23 and z to 45.
@@ -917,7 +959,8 @@ function setCoords(x, y, z) --[[ Set coords x, y, z for turtle.
 end
 
 function getCoords() --[[ Gets coords from turtle.
-  03/09/2021 v0.2.0 Returns: the turtle coords x, y, z.
+  03/09/2021 v0.2.0
+  Returns: the turtle coords x, y, z.
   Sintax: getCoords()
   ex: getCoords() - Returns coords of turtle, 3 values, x, y, z.]] 
 
@@ -928,7 +971,8 @@ end
 ------ ATTACK FUCTIONS ------
 
 function attackDir(sDir) --[[ Turtle attack in sDir direction.
-  05/09/2021 v0.4.0 Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+  05/09/2021 v0.4.0
+  Param: sDir -  "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle attack something.
             false - if there is nothing to attack, or no weapon.
                nil- if invalid parameter.
@@ -950,8 +994,9 @@ end
 ------ MEASUREMENTS FUNCTIONS ------
 
 function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
-  24/09/2021 v0.4.0 Param: nSteps - number of waking steps for turtle.
-                           nFacing - number or string "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3 direction of turtle.
+  24/09/2021 v0.4.0
+  Param: nSteps - number of waking steps for turtle.
+        nFacing - number or string "north"|"east"|"south"|"west"|"z+"|"z-"|"x+"|"x-"|"y+"|"y-"|"z+"|"z-"|0..3 direction of turtle.
   Sintax: addSteps([nSteps=1][, facing = tTurtle.facing])
   Returns:  x,y,z adding nSteps in direction turtle is facing.
             false - if nSteps is not a number.
@@ -995,7 +1040,8 @@ function addSteps(nSteps, facing) --[[ Returns nSteps added to turtle coords.
 end
 
 function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
-  01-10-2022 Param: p1, p2 - points in space 3d.
+  01-10-2022
+  Param: p1, p2 - points in space 3d.
   Sintax: getDist3D([p1=tTurtle coords, ]p2)   ___________________________
   Return: number - the distance from p1 to p2 √(x1-x2)²+(y1-y2)²+(z1-z2)²)
           nil - If no parameter is supplied.
@@ -1013,7 +1059,8 @@ function getDist3D(p1, p2) --[[ Gets the coords of the nearest block.
 end
 
 function distTo(x, y, z) --[[ Gets the three components of the distance from the turtle to point.
-  03/09/2021 v0.2.0 Param: x, y, z - coords of point to calculate distance to turtle.
+  03/09/2021 v0.2.0
+  Param: x, y, z - coords of point to calculate distance to turtle.
   Sintax: distTo(x, y, z)
   Returns:  the x,y,z distance from turtle to coords x, y, z.
   Note: returns a negative value if turtle is further away than the point x, y, z.
@@ -1025,8 +1072,9 @@ function distTo(x, y, z) --[[ Gets the three components of the distance from the
 end
 
 function distFromTo(x1, y1, z1, x2, y2, z2) --[[ Calculates the three componentes of the distance from x1,y1,z1 to x2, y2, z2.
-  05-07-2018 v0.4.0 Param: x1,y1,z1,x2,y2,z2 - numbers
-                    or x1, y1 - tables with {x1,y1,z1}, {x2,y2,z2}
+  05-07-2018 v0.4.0
+  Param: x1,y1,z1,x2,y2,z2 - numbers
+         or x1, y1 - tables with {x1,y1,z1}, {x2,y2,z2}
   Return: number,number,number the distances betwen 2 points
   Sintax: distFromTo(x1,y1,z1,x2,y2,z2) or getDist(t1,t2)
   ex: getDistFromTo(1,1,1,10,10,10) - returns 9,9,9
@@ -1040,7 +1088,8 @@ function distFromTo(x1, y1, z1, x2, y2, z2) --[[ Calculates the three componente
 end
 
 function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
-  15-08-2022 v0.4.0 Param: x, y, z - numbers the destination coords.
+  15-08-2022 v0.4.0
+  Param: x, y, z - numbers the destination coords.
   Sintax: ABSDistTo(x, y, z)
   Returns: number - the distance from turtle to point x, y, z.]]
 
@@ -1048,8 +1097,9 @@ function ABSDistTo(x, y, z) --[[ Computes the distance from turtle to x, y, z.
 end
 
 function ABSDistFromTo(x1, y1, z1, x2, y2, z2) --[[Gets the distance from a point to another point.
-  05/07/2018 v0.4.0 Param:x1, y1, z1 - point origin (1st point)
-                          x2, y2, z2 - point destination (2nd point)
+  05/07/2018 v0.4.0
+  Param:x1, y1, z1 - point origin (1st point)
+        x2, y2, z2 - point destination (2nd point)
   Returns: number - distance >= 0, between two sets of coords.
                       false - if no paremeters are supplied.
   sintax: getSumDist(nZ1,nX1,nY1,nZ2,nX2,nY2 or p1={z,x,y},p2={z,x,y})]]
@@ -1064,8 +1114,9 @@ end
 ------ COMPARE FUNCTIONS ------
 
 function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir direction.
-  21/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
-                           nSlot - number 1..16
+  21/09/2021 v0.4.0
+  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+        nSlot - number 1..16
   Returns: true - if the item in slot and in the world is the same.
            false, "empty" - if there is no block in sDir.
            false, "diferent" - if the block in the world is diferent.
@@ -1105,7 +1156,8 @@ function compareDir(sDir, nSlot) --[[ Compares item in slot with block in sDir d
 end
 
 function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strait line with selected slot block.
-  04/09/2021 v0.1.0 Param: nBlocks - number of blocks to compare.
+  04/09/2021 v0.1.0
+  Param: nBlocks - number of blocks to compare.
   Returns:  true - if all the blocks are the same.
             false, "blocked" - if it can't advance.
             false, "empty" - if it found a empty space.
@@ -1140,7 +1192,8 @@ function compareAbove(nBlocks) --[[ Compares nBlocks above the turtle in a strai
 end
 
 function compareBelow(nBlocks) --[[ Compares nBlocks below the turtle in a strait line with selected slot block.
-  04/09/2021 v0.1.0 Param: nBlocks - number of blocks to compare.
+  04/09/2021 v0.1.0
+  Param: nBlocks - number of blocks to compare.
   Returns:  true - if all the blocks are the same.
             false, "blocked" - if blocked.
             false, "empty" - if it found a empty space.
@@ -1178,7 +1231,8 @@ end
 ------ DETECT FUNCTIONS ------
 
 function detectAt(x, y, z) --[[ Detect if block at x,y,z exists.
-  26-01-2023 v0.4.0 Param: x,y,z - numbers coords of block to detectCoord.
+  26-01-2023 v0.4.0
+  Param: x,y,z - numbers coords of block to detectCoord.
   Returns: true - if block exists.
            0 - if block doesn't exist (code for empty space).
            false - if it couldn't get to neighbor.
@@ -1196,7 +1250,8 @@ function detectAt(x, y, z) --[[ Detect if block at x,y,z exists.
 end
 
 function detectDir(sDir) --[[ Detects if is a block in sDir direction.
-  03/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+  03/09/2021 v0.4.0
+  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - If turtle detects a block.
            false - if turtle didn't detect a block.
              nil - invalid parameter.
@@ -1216,7 +1271,8 @@ function detectDir(sDir) --[[ Detects if is a block in sDir direction.
 end
 
 function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block above the turtle.
-  03/09/2021 v0.1.0 Param: nBlocks - number of blocks to detect.
+  03/09/2021 v0.1.0
+  Param: nBlocks - number of blocks to detect.
   Returns:  true - if turtle detects a line of nBlocks above it.
            false - if blocked, empty space.
 	  				nil - if invalid parameter.
@@ -1240,7 +1296,8 @@ function detectAbove(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 bloc
 end
 
 function detectBelow(nBlocks) --[[ Detects nBlocks forwards or backwards, 1 block below the turtle.
-  03/09/2021 v0.1.0 Param: nBlocks - number of blocks to detect.
+  03/09/2021 v0.1.0
+  Param: nBlocks - number of blocks to detect.
   Returns:  true - if turtle detects a line of nBlocks below.
            false - if blocked, empty space.
              nil - if invalid parameter
@@ -1267,7 +1324,8 @@ end
 ------ INSPECT FUNCTIONS ------
 
 function inspectAt(x, y, z) --[[ Inspects the block at coord x,y,z.
-  13-07-2023 v0.4.0 Param: x,y,z - numbers: coord of block to inspect.
+  13-07-2023 v0.4.0
+  Param: x,y,z - numbers: coord of block to inspect.
   Returns: true, table - boolean, data from block.
            false, 0 - if there is no block to inspect.
            false - if turtle couldn't get to x,y,z.
@@ -1284,8 +1342,9 @@ function inspectAt(x, y, z) --[[ Inspects the block at coord x,y,z.
 end
 
 function inspect(...) --[[ Returns the information for block.
-  27-01-2023 v0.4.0 Param: x,y,z - nmbers coords of block to inspect.
-													 sDir - inspects a block in sDir.
+  27-01-2023 v0.4.0
+  Param: x,y,z - nmbers coords of block to inspect.
+	        sDir - inspects a block in sDir.
   Returns: true, table - if block exists.
            true, 0 - if there is no block (empty space).
            false - if it couldn't go to the neighbor of x,y,z.
@@ -1306,7 +1365,8 @@ function inspect(...) --[[ Returns the information for block.
 end
 
 function inspectDir(sDir) --[[ Inspect a block in sDir direction.
-  05/09/2021 v0.4.0 Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+  05/09/2021 v0.4.0
+  Param: sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true, table with data - If turtle detects a block.
             false, message - if turtle didn't detect a block.
             nil - if invalid parameter sDir.
@@ -1328,7 +1388,8 @@ end
 ------ SCANNING ------
 
 function scan(sDir) --[[ Inspects the block in sDir, and sets tWorld.
-  02-11-2022 v0.4.0 Param: sDir - direction to inspect "forward"|"up"|"down"
+  02-11-2022 v0.4.0
+  Param: sDir - direction to inspect "forward"|"up"|"down"
   Return: true - if could set tWorld with tEnt code.
           nil - if sDir is not a string.
               - if sDir is not "forward"|"up"|"down"
@@ -1355,7 +1416,8 @@ function scan(sDir) --[[ Inspects the block in sDir, and sets tWorld.
 end
 
 function scanAll() --[[ Inspects up, down and forward, puts the result in tWorld.
-  02-11-2022 v0.4.0 Return: true
+  02-11-2022 v0.4.0
+  Return: true
   Dependencies: scan]]
   
   local tDir = {"up", "forward", "down"}
@@ -1369,7 +1431,8 @@ end
 ------ MOVING FUNCTIONS ------
 
 function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked.
-  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk.
+  27/08/2021 v0.4.0
+  Param: nBlocks - number of blocks to walk.
   Returns:  true - if turtle goes all way.
            false - "Can't advance forward."
              nil - invalid nBlocks type.
@@ -1397,7 +1460,8 @@ function forward(nBlocks) --[[ Moves nBlocks forward or backwards, until blocked
 end
 
 function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
-  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk backwards. 
+  27/08/2021 v0.4.0
+  Param: nBlocks - number of blocks to walk backwards. 
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -1422,7 +1486,8 @@ function back(nBlocks) --[[ Moves nBlocks back or forward, until blocked.
 end
 
 function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
-  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk up.
+  27/08/2021 v0.4.0
+  Param: nBlocks - number of blocks to walk up.
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -1449,7 +1514,8 @@ function up(nBlocks) --[[ Moves nBlocks up or down, until blocked.
 end
 
 function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
-  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to walk down.
+  27/08/2021 v0.4.0
+  Param: nBlocks - number of blocks to walk down.
   Returns:  true - if turtle goes all way.
            false - if turtle was blocked.
              nil - if nBlocks is not a number.
@@ -1476,7 +1542,8 @@ function down(nBlocks) --[[ Moves nBlocks down or up, until blocked.
 end
 
 function strafeLeft(nSteps) --[[ Turns left or right and walks nSteps, turns to the initial direction.
-  03-06-2023 v0.4.0 Param: nSteps - number: steps to walk.
+  03-06-2023 v0.4.0
+  Param: nSteps - number: steps to walk.
   Return: true - all went well.
           false - if it couldn't walk left/right.
           nil - if nSteps has invalid type.
@@ -1497,7 +1564,8 @@ function strafeLeft(nSteps) --[[ Turns left or right and walks nSteps, turns to 
 end
 
 function strafeRight(nSteps) --[[ Turns right or left and walks nSteps, turns to the initial direction.
-  03-06-2023 v0.4.0 Param: nSteps - number: steps to walk.
+  03-06-2023 v0.4.0
+  Param: nSteps - number: steps to walk.
   Return: true - all went well.
           false - if it couldn't walk right/left.
           nil - if nSteps has invalid type.
@@ -1520,8 +1588,9 @@ end
 ------ GENERAL FUNCTIONS ------
 
 function isAny(value, ...) --[[ Compares value with all the arguments.
-  04-07-2023 v0.4.0 Param: value - the value to compare.
-                           ... - the arguments to compare with value.
+  04-07-2023 v0.4.0
+  Param: value - the value to compare.
+           ... - the arguments to compare with value.
   Returns: true - if there was at least one argument with the value.
   Sintax: isAny(value, ...)
   ex: isAny(12, "hi", {12},  ) - returns true.
@@ -1538,8 +1607,9 @@ function isAny(value, ...) --[[ Compares value with all the arguments.
 end
   
 function fillStr(sChar, nChars) --[[ Returns a filled string with sChar having a width of nChars
-  31-05-2023 v0.4.0 Param: sChar - the char to fill the string.
-                           nChar - the number of chars to fill the string.
+  31-05-2023 v0.4.0
+  Param: sChar - the char to fill the string.
+         nChar - the number of chars to fill the string.
   Sintax: fillStr(sChar, nChar)
   ex: fillStr("-", 10) - returns a string with 10 "-" (minus).]]
 
@@ -1551,7 +1621,8 @@ function fillStr(sChar, nChars) --[[ Returns a filled string with sChar having a
 end
 
 function rTrim(s) --[[ Removes the right spaces from a string.
-  31-05-2023 Param: s - the string from where to remove spaces.
+  31-05-2023
+  Param: s - the string from where to remove spaces.
   Sintax: rTrim(s)
   ex: rTrim("Hello world      ") - returns "Hello world"]]
 
@@ -1562,7 +1633,8 @@ function rTrim(s) --[[ Removes the right spaces from a string.
 end
 
 function lTrim(s) --[[ Removes the left spaces from a string.
-  31-05-2023 Param: s - the string from where to remove spaces.
+  31-05-2023
+  Param: s - the string from where to remove spaces.
   Sintax: lTrim(s)
   ex: lTrim("   Hello world") - returns "Hello world"]]
 
@@ -1573,7 +1645,8 @@ function lTrim(s) --[[ Removes the left spaces from a string.
 end
 
 function trim(s) --[[ Removes spaces at the beginning and end of a string.
-  17-07-2023 v0.4.0 Param: s - string
+  17-07-2023 v0.4.0
+  Param: s - string
   Returns: string without trailing and leading spaces.
   Sintax: trim(s)
   ex: trim(" Hello World!    ") - returns "Hello World!"
@@ -1584,7 +1657,8 @@ function trim(s) --[[ Removes spaces at the beginning and end of a string.
 end
 
 function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
-  24-05-2023 v0.4.0 Param: nSpaces - number: the length of the string to return.
+  24-05-2023 v0.4.0
+  Param: nSpaces - number: the length of the string to return.
   Returns:  string - filled with spaces with length nSpaces.
   ex: spc(6) - returns a string with 6 spaces.]]
 
@@ -1594,8 +1668,9 @@ function spc(nSpaces) --[[ Returns nSpaces length filled string with spaces.
 end
 
 function strLeft(s, sep) --[[ Returns the left part of a string.
-  14-05-2023 v0.4.0 Param: s - the complete string.
-                         sep - the character separator or the length of the string to return.
+  14-05-2023 v0.4.0
+  Param: s - the complete string.
+       sep - the character separator or the length of the string to return.
   Returns:  nil - if the string is not supplied.
   ex: strLeft("Hello", 2) - returns He.
     strLeft("Hello", "l") - returns He.]]
@@ -1608,8 +1683,9 @@ function strLeft(s, sep) --[[ Returns the left part of a string.
 end
 
 function strRight(s, sep) --[[ Returns the right part of a string.
-  14-05-2023 v0.4.0 Param: s - the complete string.
-                           sep - the character separator or the length of the string to return.
+  14-05-2023 v0.4.0
+  Param: s - the complete string.
+       sep - the character separator or the length of the string to return.
   Returns:  nil - if the string is not supplied.
   ex: strRight("Hello", 2) - returns lo.
       strRight("Hello", "l") - returns o.]]
@@ -1622,8 +1698,9 @@ function strRight(s, sep) --[[ Returns the right part of a string.
 end
 
 function strLR(s, sep) --[[ Returns the left and right part of a string.
-  14-05-2023 v0.4.0 Param: s - the complete string.
-                           sep - the character separator or the length of the string to return.
+  14-05-2023 v0.4.0
+  Param: s - the complete string.
+       sep - the character separator or the length of the string to return.
   Returns:  nil - if the string is not supplied.
   ex: strLR("Hello", 2) - returns He, lo.
       strLR("Hello", "l") - returns He, o.
@@ -1633,22 +1710,25 @@ function strLR(s, sep) --[[ Returns the left and right part of a string.
 end
 
 function b2N(value) --[[ Converts boolean value to number (true - 1, false - 0)
-  01-01-2023 v0.4.0 Param: value - boolean (true/false)
+  01-01-2023 v0.4.0
+  Param: value - boolean (true/false)
   Returns: number 1 or 0]]
 
 	return value and 1 or 0
 end
 
 function n2B(value) --[[ Converts number value to boolean (~= 0 - true, 0 - false)
-  01-01-2023 v0.4.0 Param: value - number
+  01-01-2023 v0.4.0
+  Param: value - number
   Returns: boolean (true/false)]]
 
   return not (value == 0)
 end
 
 function checkNil(nArg, ...) --[[ Checks for nil parameters.
-	21-07-2022 v0.4.0 Param: nArg - number of parameters
-                           ... - parameters to test
+	21-07-2022 v0.4.0
+  Param: nArg - number of parameters
+          ... - parameters to test
   Returns: true, number of parameters that are nil.
            false - there is no nil parameters
            nil - if nArg not supplied.
@@ -1666,8 +1746,9 @@ function checkNil(nArg, ...) --[[ Checks for nil parameters.
 end
 
 function dirType2Facing(sDir, nFacing) --[[ Adjusts the facing after a turn.
-  15-01-2022 v0.4.0 Param: sDir - "forward"|"back"|"up"|"down"|"left"|"right"
-                           nFacing - 0..3
+  15-01-2022 v0.4.0
+  Param: sDir - "forward"|"back"|"up"|"down"|"left"|"right"
+      nFacing - 0..3
   Return: facing - adjusted after a turn.
   Sintax: dirType2Facing([sDir = "forward"][, nFacing = turtle.facing])
   Ex: dirType2Facing("left", 2) - returns 1
@@ -1689,8 +1770,9 @@ function dirType2Facing(sDir, nFacing) --[[ Adjusts the facing after a turn.
 end
 
 function isInRange(nValue, ...) --[[ Checks if nValue is in ... range
-  30-10/2022 v0.4.0 Param: nValue - value to test.
-                           ... - is a table with a lower limit and higher limit, or a number.
+  30-10/2022 v0.4.0
+  Param: nValue - value to test.
+            ... - is a table with a lower limit and higher limit, or a number.
   Sintax: isInRange(nValue, ...)
   Return: true  - if nValue is in range.
           false - if value is not in range.
@@ -1716,7 +1798,8 @@ function isInRange(nValue, ...) --[[ Checks if nValue is in ... range
 end
 
 function loadTable(sFileName) --[[ Loads a text file into a table.
-  27/09/2021 v0.2.0 Param: sFileName - string the file name.
+  27/09/2021 v0.2.0
+  Param: sFileName - string the file name.
   Sintax: loadTable(sFileName)
   Returns: table - if could read a text file into a table.
            false - if sFileName is not supplied,
@@ -1737,8 +1820,9 @@ function loadTable(sFileName) --[[ Loads a text file into a table.
 end
 
 function saveTable(t, sFileName) --[[ Saves a table into a text file.
-  27/09/2021 v0.2.0 Param: t - table to save.
-                   sFileName - string filename.
+  27/09/2021 v0.2.0
+  Param: t - table to save.
+         sFileName - string filename.
   Sintax: saveTable(t, sFileName)
   Returns:  true - if saving file was a success.
            false - if t or sFileName not supplied,
@@ -1762,8 +1846,9 @@ function saveTable(t, sFileName) --[[ Saves a table into a text file.
 end
 
 function checkType(sType, ...) --[[ Checks if parameters are from sType.
-  03/09/2021 v0.1.0 Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
-                           ... - the paremeters to check.
+  03/09/2021 v0.1.0
+  Param: sType - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+           ... - the paremeters to check.
   Returns: true - if all parameters match the sType.
   ex: checkType("snt", "hello", number1, tTable) - Outputs: true.]]
   
@@ -1777,7 +1862,8 @@ function checkType(sType, ...) --[[ Checks if parameters are from sType.
 end
 
 function dicCount(tDic) --[[ Counts number of items in a dictionary.
-  17-12-2022 v0.4.0 Param: tDic - dictionary to count items.
+  17-12-2022 v0.4.0
+  Param: tDic - dictionary to count items.
   Return: number - total items in dictionary.
           nil - if tDic is not a table.
   Sintax: dicCount(tDic)
@@ -1790,7 +1876,8 @@ function dicCount(tDic) --[[ Counts number of items in a dictionary.
 end
 
 function isDicEmpty(tDic) --[[ Checks if dictionary is empty.
-  05-11-2022  v0.4.0 Param: tDic - dictionary to check.
+  05-11-2022  v0.4.0
+  Param: tDic - dictionary to check.
   Sintax: isDicEmpty(tDic)
   ex: isDicEmpty({}) - returns true.]]
 
@@ -1802,8 +1889,9 @@ function isDicEmpty(tDic) --[[ Checks if dictionary is empty.
 end
 
 function getKey(value, t) --[[ Gets the first key from table t where the key is the index of value.
-  09-08-2022 v0.4.0 Param: value - the value in table t.
-                           t - the table that has the value.
+  09-08-2022 v0.4.0
+  Param: value - the value in table t.
+             t - the table that has the value.
   Sintax: getKey(value, t)
   Return: the key corresponding to value in table t.
           false - if value is not found
@@ -1819,9 +1907,10 @@ function getKey(value, t) --[[ Gets the first key from table t where the key is 
 end
 
 function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
-  27/08/2021 v0.1.0 Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
-                           tDefault - table with default values.
-                           ... - parameters to order.
+  27/08/2021 v0.1.0
+  Param: sParamOrder - string where "s" stands for string, "t" for table, "n" for number, "b" for boolean.
+            tDefault - table with default values.
+                 ... - parameters to order.
   Returns:  Parameters sorted by type,
             nil - if no parameters.
   sintax: getParam(sParamOrder, tDefault[, ...])
@@ -1857,8 +1946,9 @@ function getParam(sParamOrder, tDefault, ...) --[[ Sorts parameters by type.
 end
 
 function isValue(value, t) --[[ Checks if value is in t table.
-  21/09/2021 v0.2.0 Param:  value - any type of value.
-                            t - table with values to compare.
+  21/09/2021 v0.2.0
+  Param:  value - any type of value.
+              t - table with values to compare.
   Sintax: isValue(value, t)
   Returns:  true, key - if value is in t, key corresponding to value.
             false - if value is not in t.
@@ -1871,7 +1961,8 @@ function isValue(value, t) --[[ Checks if value is in t table.
 end
 
 function isNumber(...) --[[ Checks if all parameters are numbers.
-  20/04/2022 v0.3.0 Param:  ... - parameters to check
+  20/04/2022 v0.3.0
+  Param:  ... - parameters to check
   Returns:  true - if all parameters are numbers.
            false - if at least one parameter is not a number.
   sintax: isNumber(...)
@@ -1886,8 +1977,9 @@ function isNumber(...) --[[ Checks if all parameters are numbers.
 end
 
 function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in table t.
-  27/08/2021 v0.1.0 Param: tSearch - table contains values to search in table t.
-                           t - table to search.
+  27/08/2021 v0.1.0
+  Param: tSearch - table contains values to search in table t.
+               t - table to search.
   Returns:  true - tSearch is in t.
            false - at the least one element of tSearch is not in table t.
   Sintax: tableInTable(tSearch, t)
@@ -1911,7 +2003,8 @@ function tableInTable(tSearch, t) --[[ Verifies if al elements of tSearch is in 
 end
 
 function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value > 0
-  28/08/2021 v0.1.0 Param: value - number to evaluate.
+  28/08/2021 v0.1.0
+  Param: value - number to evaluate.
   Sintax: sign(value)
   Returns false if value is not a number, or not supplied.]]
   
@@ -1922,7 +2015,8 @@ function sign(value) --[[ Returns: -1 if value < 0, 0 if value == 0, 1 if value 
 end
 
 function strLower(...) --[[ Converts only strings to lowercase.
-  14/10/2022 v0.4.0 Param: ... - strings
+  14/10/2022 v0.4.0
+  Param: ... - strings
   Sintax: strLower([string][, ...])
   Returns: nil - if empty arguments.
            strings - converted to lower case.
@@ -1942,7 +2036,8 @@ end
 ------ STACK FUNCTIONS ------
 
 function getStack(nSlot) --[[ Returns how many items can stack in slot.
-  10-11-2021 v0.4.0 Param: nSlot - slot number 1..16, or the item name.
+  10-11-2021 v0.4.0
+  Param: nSlot - slot number 1..16, or the item name.
   Sintax: getStack()
   Return: number - quantity a item can stack.
              nil - if slot is out of range[1..16].
@@ -1976,7 +2071,8 @@ function getStack(nSlot) --[[ Returns how many items can stack in slot.
 end
 
 function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory, the slot and the name of item.
-  17/12/2021 v0.2.0 Param: sItem - string - item name.
+  17/12/2021 v0.2.0
+  Param: sItem - string - item name.
   Return: number, number, string - the lowerstack of items in inventory, the Slot, the name of item.
           false - if item not found.
   sintax: invLowerStack([sItem = all the inventory]).
@@ -2011,7 +2107,8 @@ function invLowerStack(sItem) --[[ Returns the lower stack of items in inventory
 end
 
 function setStackSlot(nSlot) --[[ Sets stack for item in nSlot.
-  24-07-2022 v0.4.0 Param: nSlot - number 1..16, the slot where is the item to set stack.
+  24-07-2022 v0.4.0
+  Param: nSlot - number 1..16, the slot where is the item to set stack.
   Returns: number - how many the item can stack.
            false - if slot is empty
            nil - if nSlot is not a number.
@@ -2034,8 +2131,9 @@ function setStackSlot(nSlot) --[[ Sets stack for item in nSlot.
 end
 
 function setStack(sItemName, nStack) --[[ Sets the item stack value in tEnts[item name].stack
-  10-11-2021 v0.4.0 Param: sItemName - string item name.
-                           nStack - number how much item can stack.
+  10-11-2021 v0.4.0
+  Param: sItemName - string item name.
+            nStack - number how much item can stack.
   Return: true - if it could set the stack for item.
            nil - if no item name supplied.
                - if no stack number is supplied.
@@ -2057,7 +2155,8 @@ end
 ------ RECIPES FUNCTIONS ------
 
 function getInvItems() --[[ Builds a table with the items and quantities in inventory.
-  20/11/2021 v0.3.0 Return: table - with ingredient name and quantity.]]
+  20/11/2021 v0.3.0
+  Return: table - with ingredient name and quantity.]]
   
   local tQuant = {}
   for nSlot = 1, 16 do
@@ -2072,8 +2171,9 @@ function getInvItems() --[[ Builds a table with the items and quantities in inve
 end
 
 function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quantities in a recipe.
-  20/11/2021 v0.3.0 Param:  sRecipe - recipe name.
-                            nIndex - recipe index
+  20/11/2021 v0.3.0
+  Param:  sRecipe - recipe name.
+           nIndex - recipe index
   Return: table - with recipe ingredient name and quantity.
           false - if no recipe name was supplied and there isn't tRecipes.lastRecipe
                 - if tRecipes[sRecipe] dosn't exist, (never was made).
@@ -2100,7 +2200,8 @@ function getRecipeItems(sRecipe, nIndex) --[[ Builds a table with items and quan
 end
 
 function canCraftRecipe(sRecipe) --[[ Checks if you can craft sRecipe with inventory items.
-  09/07/2022 v0.3.0 Param: sRecipe - string the recipe name.
+  09/07/2022 v0.3.0
+  Param: sRecipe - string the recipe name.
   returns: true, number index of recipe.
            false
   sintax: canCraftRecipe(sRecipe)
@@ -2118,8 +2219,9 @@ function canCraftRecipe(sRecipe) --[[ Checks if you can craft sRecipe with inven
 end
 
 function canCraft() --[[ Retuns a table with recipe name and index that you can craft from inventory.
-  20/11/2021 v0.3.0 Return: true, table - with recipe name and index.
-                            false - if no recipe can be crafted.
+  20/11/2021 v0.3.0
+  Return: true, table - with recipe name and index.
+                false - if no recipe can be crafted.
   Sintax: canCraft()
   Note: table={[name]=recipe index}
   ex: canCraft()
@@ -2153,8 +2255,9 @@ function canCraft() --[[ Retuns a table with recipe name and index that you can 
 end
 
 function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference between the recipe and the inventory.
-  23/11/2021 v0.3.0 Param: sRecipe - string recipe name.
-                           nIndex - number index of the recipe
+  23/11/2021 v0.3.0
+  Param: sRecipe - string recipe name.
+          nIndex - number index of the recipe
   Return: false/true, table - with ingredients name and the diference between the recipe and inventory.
           nil - if no recipe name was supplied and there isn't tRecipes.lastRecipe and there is not a recipe in inventory.
               - if sRecipe dosn't exist, (never was made).
@@ -2189,8 +2292,9 @@ function haveItems(sRecipe, nIndex) --[[ Builds a table with the diference betwe
 end
 
 function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
-  19/10/2021 v0.2.0 Returns false - if it couldn't save file.
-                            true - if it could save file.
+  19/10/2021 v0.2.0
+  Returns false - if it couldn't save file.
+           true - if it could save file.
   sintax: saveRecipes()
   Dependencies: saveTable]]
   
@@ -2198,8 +2302,9 @@ function saveRecipes() --[[ Saves tRecipes in a file as "tRecipes.txt"
 end
 
 function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
-  19/10/2021 v0.2.0 Returns false - if it couldn't load file.
-                            true - if it could load file.
+  19/10/2021 v0.2.0
+  Returns false - if it couldn't load file.
+           true - if it could load file.
   sintax: loadRecipes()
   Dependencies: loadTable, isDicEmpty]]
   
@@ -2212,8 +2317,9 @@ function loadRecipes() --[[ Loads tRecipes from file "tRecipes.txt"
 end
 
 function getRecipe(sRecipe, nIndex) --[[ Gets the recipe from tRecipes.
-  14/4/2022 v0.3.0 Param:  sRecipe - recipe name.
-                           nIndex - recipe index.
+  14/4/2022 v0.3.0
+  Param:  sRecipe - recipe name.
+           nIndex - recipe index.
   Returns: table - the recipe.
            false - if recipe name is not supplied and doesn't exist last recipe.
                  - if recipe name doesn't exist.
@@ -2230,8 +2336,9 @@ function getRecipe(sRecipe, nIndex) --[[ Gets the recipe from tRecipes.
 end
 
 function getInvRecipe() --[[ Builds a table with items and their position from inventory (the recipe).
-  19/10/2021 v0.3.0 Returns false - if it is not a recipe in the inventory.
-                            tRecipe - the recipe with items and positions.
+  19/10/2021 v0.3.0
+  Returns false - if it is not a recipe in the inventory.
+        tRecipe - the recipe with items and positions.
   Sintax: getInvRecipe()
   Note: Trecipe[item number].name = item name
         (the first item in table only have the item name)
@@ -2271,8 +2378,9 @@ function getInvRecipe() --[[ Builds a table with items and their position from i
 end
 
 function getMaxCraft() --[[ Returns maximum limit to craft the recipe on inventory.
-  19/10/2021 v0.2.0 Returns false - if it is not a recipe in the inventory.
-                            tRecipe - the recipe with items and positions.
+  19/10/2021 v0.2.0
+  Returns false - if it is not a recipe in the inventory.
+        tRecipe - the recipe with items and positions.
   sintax: getMaxCraft()
   Dependencies: getInvItems, countItemSlot]]
   
@@ -2295,8 +2403,9 @@ function getMaxCraft() --[[ Returns maximum limit to craft the recipe on invento
 end
 
 function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 of the first item in the recipe.
-  19/10/2021 v0.2.0 Param: sRecipe - stringh recipe name.
-                           nIndex - number index of the recipe tRecipes[sRecipe][nIndex].
+  19/10/2021 v0.2.0
+  Param: sRecipe - stringh recipe name.
+          nIndex - number index of the recipe tRecipes[sRecipe][nIndex].
   Returns:  col, lin - the column and line of first item.
                false - if the recipe name was not supplied and doesn't exist in tRecipes.lastRecipe.
                      - if this recipe does not exist.
@@ -2319,9 +2428,10 @@ function getFirstItemCoords(sRecipe, nIndex) --[[ Returns the column and line=0 
 end
 
 function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a slot that has sItemName.
-  19/10/2021 v0.2.0 Param: sItemName - string item name.
-                           nStartSlot - number starting slot.
-                           bWrap - boolean if search wraps around the inventory.
+  19/10/2021 v0.2.0
+  Param: sItemName - string item name.
+        nStartSlot - number starting slot.
+             bWrap - boolean if search wraps around the inventory.
   Returns:  nSlot, nSpace - Slot where is this item, and number of space.
                     false - if it didn't find a slot with sItemName and some space.
   sintax: searchSpace(sItemName [, nStartSlot = Selected slot][, bWrap = true]).
@@ -2343,8 +2453,9 @@ function searchSpace(sItemName, nStartSlot, bWrap) --[[ Search for space in a sl
 end
 
 function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to another slot.
-  19/10/2021 v0.2.0 Param: nSlot - number slot to clear.
-                           bWrap - slot where to put excess items can be lower than nSlot(wrap around inventory).
+  19/10/2021 v0.2.0
+  Param: nSlot - number slot to clear.
+         bWrap - slot where to put excess items can be lower than nSlot(wrap around inventory).
   Returns:  false - if there is no space to tranfer items.
              true - if the slot is empty.
               nil - if nSlot is out of range [1..16].
@@ -2359,8 +2470,9 @@ function clearSlot(nSlot, bWrap) --[[ Clears content of slot, moving items to an
 end  
     
 function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected slot.
-  02/11/2021 v0.2.1 Param: nSlot - number slot where to transfer from.
-                          nItems - number items to transfer from.
+  02/11/2021 v0.2.1
+  Param: nSlot - number slot where to transfer from.
+        nItems - number items to transfer from.
   Returns:  number of items in selected slot.
             nil - if nSlot not supplied.
                 - if nItems is not a number
@@ -2392,8 +2504,9 @@ function transferFrom(nSlot, nItems) --[[ Transfer nItems from nSlot to selected
 end
 
 function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity of slots ocupied by the item.
-  21/01/2022 v0.2.0 Param:  SRecipe - string recipe name.
-                            nIndex - number recipe index.
+  21/01/2022 v0.2.0
+  Param:  SRecipe - string recipe name.
+           nIndex - number recipe index.
   Returns:  table with item name and quantity of slots ocupied by it.
             false - if sRecipe is not supplied and tRecipes.lastRecipe doesn't exist.
                   - if tRecipes[sRecipe] doesn't exist.
@@ -2418,8 +2531,9 @@ function recipeSlots(sRecipe, nIndex) --[[ Builds a table with item and quantity
 end
 
 function calcAverage(tSlots, tIng) --[[ Builds a table with item and average between items and slots.
-  21/01/2022 v0.2.0 Param:  tSlots - table with item name and quantity of slots ocupied in the recipe.
-                            tIng - table with item name and quantity in the inventory.
+  21/01/2022 v0.2.0
+  Param:  tSlots - table with item name and quantity of slots ocupied in the recipe.
+            tIng - table with item name and quantity in the inventory.
   Returns: table with item and average between items and slots.
            false - if tSlots not supplied.
                  - if tIng not supplied.
@@ -2441,8 +2555,9 @@ function calcAverage(tSlots, tIng) --[[ Builds a table with item and average bet
 end
 
 function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craft a recipe.
-  21/01/2022 v0.2.0 Param: sRecipe - recipe name.
-                           nIndex - recipe index (tRecipes[recipeName][index])
+  21/01/2022 v0.2.0
+  Param: sRecipe - recipe name.
+          nIndex - recipe index (tRecipes[recipeName][index])
   Returns:  true - if items from the recipe was arranged.
             false - if no recipe name was supplied and there isn't tRecipes.lastRecipe.
                   - if the recipe is not registered.
@@ -2491,7 +2606,8 @@ function arrangeRecipe(sRecipe, nIndex) --[[ Arranges items in inventory to craf
 end
 
 function setCraftSlot(nSlot) --[[ Sets the craft resulting slot CSlot, in tRecipes.
-  03/11/2021 v0.2.0 Param: nSlot - number slot where the product of the recipe is put.
+  03/11/2021 v0.2.0
+  Param: nSlot - number slot where the product of the recipe is put.
   Returns:  nil - if nSlot is not in range[1..16].
            true - if was set tRecipes["CSlot"].]]
 
@@ -2502,7 +2618,8 @@ function setCraftSlot(nSlot) --[[ Sets the craft resulting slot CSlot, in tRecip
 end
 
 function flattenInventory() --[[ Averages all the item stacks in inventory.
-  26/01/2022 v0.2.0 Returns:  true
+  26/01/2022 v0.2.0
+  Returns:  true
   Sintax: flattenInventory()
   Dependencies: getInvItems, countItemSlots, getInventory]]
 
@@ -2556,8 +2673,9 @@ function flattenInventory() --[[ Averages all the item stacks in inventory.
 end
 
 function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory belong to a recipe.
-  26/01/2022 v0.2.0 Param:  sRecipe - string recipe name.
-                            nIndex - index of tReecipes[sRecipe][nIndex].
+  26/01/2022 v0.2.0
+  Param:  sRecipe - string recipe name.
+           nIndex - index of tReecipes[sRecipe][nIndex].
   Returns:  false, table of items that dont belong to recipe {itemname=quantity,...}.
             nil - if sRecipe name is not supplied and tRecipes.lastRecipe is empty.
           false - if sRecipe is not in tRecipes or recipe index not found.
@@ -2607,8 +2725,9 @@ function itemsBelong(sRecipe, nIndex) --[[ Checks if all the items in inventory 
 end
 
 function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the recipe in tRecipes.
-  01/02/2022 v0.3.0 Param: sRecipe - string recipe name.
-                           tRecipe - table with a recipe from inventory.
+  01/02/2022 v0.3.0
+  Param: sRecipe - string recipe name.
+         tRecipe - table with a recipe from inventory.
   Returns: number - index of the recipe in tRecipes.
   Sintax: getRecipeIndex([sRecipe=tRecipes.lastRecipe][, tRecipe=recipe in inventory])
   ex:getRecipeIndex()
@@ -2658,8 +2777,9 @@ function getRecipeIndex(sRecipe, tRecipe) --[[ Returns a number (index) of the r
 end
 
 function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns true if is the same.
-  21/04/2022 v0.3.0 Param: tRecs - recipe from tRecipes.
-                            tRec - recipe to compare.
+  21/04/2022 v0.3.0
+  Param: tRecs - recipe from tRecipes.
+          tRec - recipe to compare.
   Returns: true - if items in recipes have the same position.
           false - if items in recipes have the diferent position or diferent number of items.
             nil - if invalid parameter type.
@@ -2684,8 +2804,9 @@ function colLinMatch(tRecs, tRec) --[[ Compares recipes items position, returns 
 end
 
 function getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial not empty slots.
-  25/06/2022 v0.3.0 Param: nSlot - number first slot to sum.
-                           bWrap - boolean if the sum wraps around the inventory.
+  25/06/2022 v0.3.0
+  Param: nSlot - number first slot to sum.
+         bWrap - boolean if the sum wraps around the inventory.
   Returns: number the sum of items in sequencial slots.
   Sintax: getSecSumItems([nSlot=selected slot])
   Note: it stops if empty slot or end of inventory.
@@ -2707,7 +2828,8 @@ function getSecSumItems(nSlot, bWrap) --[[ Gets the sum of items in sequencial n
 end
 
 function getProdQuant() --[[Gets quantity of products made with 1 recipe in inventory.
-  31/03/2022 v0.3.0 Returns: number - quantity of products made with 1 inventory recipe.
+  31/03/2022 v0.3.0
+  Returns: number - quantity of products made with 1 inventory recipe.
   Sintax: getProdQuant()
   Note: this function crafts the recipe in inventory.
   ex: getProdQuant()
@@ -2727,9 +2849,10 @@ function getProdQuant() --[[Gets quantity of products made with 1 recipe in inve
 end
 
 function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
-  31/03/2022 v0.3.0 Param:  sRecipe - name of recipe
-                      tRecipe - recipe table, get if from getInvRecipe.
-                      nCount - quantity of products made with this recipe.
+  31/03/2022 v0.3.0
+  Param:  sRecipe - name of recipe
+          tRecipe - recipe table, get if from getInvRecipe.
+           nCount - quantity of products made with this recipe.
   Returns:  number - index of recipe (tRecipes[sRecipe][index])
                nil - if sRecipe not supplied and doesn't exits tRecipes.lastRecipe.
                    - if tRecipe is not supplied and there is no recipe in inventory.
@@ -2779,8 +2902,9 @@ function addRecipe(sRecipe, tRecipe, nCount) --[[Returns index of recipe.
 end
 
 function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
-  26/01/2022 v0.3.0 Param: sRecipe - string recipe name.
-                     nLimit - number recipes to craft.
+  26/01/2022 v0.3.0
+  Param: sRecipe - string recipe name.
+          nLimit - number recipes to craft.
   Returns: true, string product name, number index of recipe, number quantity crafted.
            true - if nLimit == 0 and could craft a recipe.
            nil - if nLimit out of range [0..64]
@@ -2862,7 +2986,8 @@ function craftRecipe(sRecipe, nLimit) --[[ Craft a recipe.
 end
 
 function getLowestKey(t) --[[ Gets the lowest key of the table t.
-  04/07/2022 v0.3.0 Param: t - table to look for the lowest key.
+  04/07/2022 v0.3.0
+  Param: t - table to look for the lowest key.
   Return: key type - the lowest key.
   Sintax: getLowestKey(t)
   Note: All the keys must have the same type.
@@ -2878,7 +3003,8 @@ function getLowestKey(t) --[[ Gets the lowest key of the table t.
 end
 
 function craftInv(nLimit) --[[ Crafts the recipe in inventory.
-  20/05/2022 v0.3.0 Param: nLimit - number products to craft.
+  20/05/2022 v0.3.0
+  Param: nLimit - number products to craft.
   Returns: true, string product name, number index of recipe, number quantity crafted.
            nil - if nLimit is not a number.
                - if nLimit is out of range [1..64].
@@ -2924,8 +3050,9 @@ end
 ------ ROTATING FUNCTIONS ------  
 
 function incFacing(nTurns, nFacing) --[[ Increments nFacing/tTurtle.facing by nTurns
-  02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the right.
-                           nFacing - where is the turtle facing 0..3
+  02/10/2021 v0.2.0
+  Param: nTurns - number of 90 degrees turns to the right.
+        nFacing - where is the turtle facing 0..3
   Returns: the new direction 0..3
   ex: if turtle is facing "x+"=1
       incFacing(1) - Increments nFacing, nFacing turns to "z+"=2
@@ -2945,8 +3072,9 @@ function incFacing(nTurns, nFacing) --[[ Increments nFacing/tTurtle.facing by nT
 end
 
 function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
-  02/10/2021 v0.2.0 Param: nTurns - number of 90 degrees turns to the left.
-                           nFacing - where is the turtle facing 0..3
+  02/10/2021 v0.2.0
+  Param: nTurns - number of 90 degrees turns to the left.
+        nFacing - where is the turtle facing 0..3
   Returns: the new direction 0..3
   Sintax: decFacing([nTurns=1][, nFacing = tTurtle.facing])
   ex: decFacing() - increments tTurtle.facing]]
@@ -2964,7 +3092,8 @@ function decFacing(nTurns, nFacing) --[[ Decrements nFacing by nTurns
 end
 
 function turnBack() --[[ Turtle turns back.
-  11/09/2021 v0.1.0 Returns:  true.
+  11/09/2021 v0.1.0
+  Returns:  true.
   Sintax: turnBack()
   ex: turnBack() - Turns the turtle back.
   Dependencies: turnRight]]
@@ -2973,7 +3102,8 @@ function turnBack() --[[ Turtle turns back.
 end
 
 function turnDir(sDir) --[[ Turtle turns to sDir direction.
-  27/08/2021 v0.4.0 Param: sDir - string diretion "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+  27/08/2021 v0.4.0
+  Param: sDir - string diretion "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if sDir is a valid direction.
             false - if sDir is not a valid direction.
   Sintax: turnDir([sDir="back"])
@@ -2996,7 +3126,8 @@ function turnDir(sDir) --[[ Turtle turns to sDir direction.
 end
 
 function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
-  22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the left.
+  22-07-2022 v0.4.0
+  Param: nTurns - number of 90 degrees turns to the left.
   Returns: true
            nil - if nTurns is not a number.
   Note: if nTurns < 0 it turns to the right.
@@ -3020,7 +3151,8 @@ function turnLeft(nTurns) --[[ Turns the turtle left nTurns * 90 degrees.
 end
 
 function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
-  22-07-2022 v0.4.0 Param: nTurns - number of 90 degrees turns to the right.
+  22-07-2022 v0.4.0
+  Param: nTurns - number of 90 degrees turns to the right.
   Returns: true
            nil - if nTurns is not a number.
   Note: if nTurns < 0 it turns to the left.
@@ -3044,7 +3176,8 @@ function turnRight(nTurns) --[[ Turns the turtle right nTurns * 90 degrees.
 end
 
 function turnTo(...) --[[ Turtle turns to direction, block name, empty space, unscanned space.
-  21-07-2022 v0.4.0 Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space
+  21-07-2022 v0.4.0
+  Param: nsFacing - "z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3|block name|"any"|"empty"|unscanned space
   Returns: true - if it turn to specified direction, or block.
            nil - if the function has 2 arguments
 					 false - if it couldn't turn to that directions ex: up|down.
@@ -3100,7 +3233,8 @@ function turnTo(...) --[[ Turtle turns to direction, block name, empty space, un
 end
 
 function turnToBlock(sBlock) --[[ Turtle turns to the nearest block.
-  15-10-2022 v0.4.0 Param: sBlock - name of the block to turn to.
+  15-10-2022 v0.4.0
+  Param: sBlock - name of the block to turn to.
   Returns: true - if it turn to sBlock.
            nil - if sBlock is not known.
 					 false - if the block was not found in the world.
@@ -3115,14 +3249,16 @@ function turnToBlock(sBlock) --[[ Turtle turns to the nearest block.
 end
 
 function turnToFuel() --[[ Turtle turns to the nearest fuel in the world.
-  14-07-2023 v0.4.0 Sintax: turnToFuel()
+  14-07-2023 v0.4.0
+  Sintax: turnToFuel()
   Alias for turnTo("fuel")]]
   
   return turnTo("fuel")
 end
 
 function turnToCoord(x, y, z) --[[ Turtle turns to point x,y,z.
-  15-09-2022 v0.4.0 Param: x, y, z - numbers coords of point.
+  15-09-2022 v0.4.0
+  Param: x, y, z - numbers coords of point.
   Returns: true - if it turn to specified direction
            nil - if x or y or z aren't numbers.
 					 false - if it couldn't turn to that directions ex: up|down.
@@ -3152,8 +3288,9 @@ end
 ------ BUILD FUNCTIONS ------
 
 function buildWall(width, height, sBlock) --[[ Builds a wall in front of the turtle.
-  18-06-2023 v0.4.0 Param: width, height - numbers: the width and height of the wall.
-                           sBlock - string: name of the block to build the wall.
+  18-06-2023 v0.4.0
+  Param: width, height - numbers: the width and height of the wall.
+                sBlock - string: name of the block to build the wall.
   Returns: true - if all went well.
            false - if no block name was not supplied and the selected slot is empty.
                  - if the block name was not found in inventory.
@@ -3202,8 +3339,9 @@ function buildWall(width, height, sBlock) --[[ Builds a wall in front of the tur
 end
 
 function buildFloor(width, depth, sBlock) --[[ Builds a plane of blocks in the axis x,z.
-  14-07-2023 v0.4.0 Param: width, depth - the dimentions of the floor.
-                           sBlock - string the name of the block to build the floor from.
+  14-07-2023 v0.4.0
+  Param: width, depth - the dimentions of the floor.
+               sBlock - string the name of the block to build the floor from.
   Returns: true - if the floor was complete.
            false - if no sBlock was supplied and selected slot is empty.
                  - if name of block was not found in inventory.
@@ -3250,8 +3388,9 @@ function buildFloor(width, depth, sBlock) --[[ Builds a plane of blocks in the a
 end
 
 function buildCube(nSide , sBlock) --[[ Builds a cube.
-  14-07-2023 v0.4.0 Param: nSide - number: the cube side measurement.
-                           sBlock - the block name to build the cube.
+  14-07-2023 v0.4.0
+  Param: nSide - number: the cube side measurement.
+        sBlock - the block name to build the cube.
   Returns: true - if the cube was built.
            false - if the name of the block was not supplied and the selected slot was empty.
                  - if the block was not found in inventory.
@@ -3301,8 +3440,9 @@ function buildCube(nSide , sBlock) --[[ Builds a cube.
 end
 
 function buildSquare(nSide , sBlock) --[[ Builds a square.
-  31-07-2023 v0.4.0 Param: nSide - number: the square side measurement.
-                           sBlock - the block name to build the square.
+  31-07-2023 v0.4.0
+  Param: nSide - number: the square side measurement.
+        sBlock - the block name to build the square.
   Returns: true - if the cube was built.
            false - if no block name was supplied and the selected block is empty.
                  - if the block name was not found in inventory.
@@ -3344,8 +3484,9 @@ end
 
 --not tested
 function buildRect(width, depth , sBlock) --[[ Builds a reactangle on the floor, starting at turtle position.
-	26-07-2023 v0.4.0 Param: width, depth - number: width of the rectangle.
-													 sBlock - string: name of the block to build the rectangle.
+	26-07-2023 v0.4.0
+  Param: width, depth - number: width of the rectangle.
+	             sBlock - string: name of the block to build the rectangle.
 	Returns: true - if the rectangle was built.
 					 false - if sBlock was not supplied and the selected slot is empty.
 								 - if the sBlock was not found in inventory.
@@ -3424,7 +3565,8 @@ end
 ------ MOVING AND ROTATING FUNCTIONS ------
 
 function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk back.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to walk back.
   Returns:  true if turtle goes all way.
             false if blocked, or invalid parameter.
             nil - if nBlocks type is not a number.
@@ -3440,8 +3582,9 @@ function goBack(nBlocks) --[[ Turns back or not and advances nBlocks until block
 end
 
 function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
-  27/08/2021 v04.0 Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"|"z+"|"x+"|"z-"|"x-"|"y+"|"y-"|"north"|"south"|"west"|"east"
-                       nBlocks - number of blocks to walk.
+  27/08/2021 v04.0
+  Param: sDir - string "forward"|"right"|"back"|"left"|"up"|"down"|"z+"|"x+"|"z-"|"x-"|"y+"|"y-"|"north"|"south"|"west"|"east"
+      nBlocks - number of blocks to walk.
   Returns:  true if turtle goes all way.
             false if blocked.
   Sintax: go([sDir="forward"], [nBlocks=1])
@@ -3465,7 +3608,8 @@ function goDir(sDir, nBlocks) --[[ Turtle goes in sDir nBlocks until blocked.
 end
 
 function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk left.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to walk left.
   Returns:  true if turtle goes all way.
             false if bllocked, or invalid parameter.
             nil - if nBlocks is not a number.
@@ -3484,7 +3628,8 @@ function goLeft(nBlocks) --[[ Turns left or  right and advances nBlocks until bl
 end
 
 function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until blocked.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to walk right.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to walk right.
   Returns:  true if turtle goes all way.
             false if bllocked, or invalid parameter.
             nil - if nBlocks is not a number.
@@ -3503,7 +3648,8 @@ function goRight(nBlocks) --[[ Turns right or left and advances nBlocks until bl
 end
 
 function getNeighbors(x, y, z) --[[ Gets the neighbor's coords of x, y, z, or of the turtle.
-  12/09/2022 v0.4.0 Param: x, y, z - numbers coords of block.
+  12/09/2022 v0.4.0
+  Param: x, y, z - numbers coords of block.
   Returns:  table with coords of 6 neighbors.
   Sintax: getNeighbors([x,y,z] = turtle coords)
   ex: getNeighbors() - gets the neighbor's coords, of turtle.]]
@@ -3521,8 +3667,9 @@ function getNeighbors(x, y, z) --[[ Gets the neighbor's coords of x, y, z, or of
 end
 
 function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances from a point to a table of points.
-  12/09/2022 v0.4.0 Param: tP1 - a point in space.
-                           tPoints - several points in space {x, y, z}.
+  12/09/2022 v0.4.0
+  Param: tP1 - a point in space.
+     tPoints - several points in space {x, y, z}.
   Returns:  ordered table with pairs {distance from tP1 to tPoints[n], n index of tPoints}
             nil - if tP1 and or tPoints not supplied.
                 - if tP1 or tPoints are not tables.
@@ -3548,7 +3695,8 @@ function orderByDistance(tP1, tPoints) --[[ Gets the ordered table of distances 
 end
 
 function goToNeighbor(x, y, z) --[[ Turtle goes to neighbor, and turns to point x,y,z.
-  05-11-2022 v0.4.0 Param: x, y, z - numbers coords of center point of neighbors to go to.
+  05-11-2022 v0.4.0
+  Param: x, y, z - numbers coords of center point of neighbors to go to.
   Sintax: goToNeighbor(x,y,z)
   Return: true - if it get to one neighbor of x,y,z
           false - if it didn't
@@ -3566,7 +3714,8 @@ function goToNeighbor(x, y, z) --[[ Turtle goes to neighbor, and turns to point 
 end
 
 function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
-  21-07-2022 v0.4.0 Param: x, y, z - numbers coords to go to.
+  21-07-2022 v0.4.0
+  Param: x, y, z - numbers coords to go to.
   Returns: true - if it goes all the way.
            false - if it didn't go all the way.
   ex: goTo(10, 4, 5) - goes to coords 10, 4, 5.
@@ -3607,7 +3756,8 @@ function goTo(x, y, z) --[[ Goes to position x,y,z (no path finding).
 end
 
 function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
-	09-02-2020	v0.4.0 Param: x, y, z - destination coords.
+	09-02-2020	v0.4.0
+  Param: x, y, z - destination coords.
   Sintax: goToPath(x, y, z) 
 	ex: goToPath(10, 10, 10) - turtle goes to 10, 10, 10
   Dependencies: isNumber, getPath, goTo]]
@@ -3622,7 +3772,8 @@ function goToPath(x, y, z) --[[ Turtle goes to x, y, z using path finding.
 end
 
 function left(nSteps) --[[ Turtle turns left and walks nSteps.
-  31-05-2023 v0.4.0 Param: nSteps - number the quantity of steps to walk.
+  31-05-2023 v0.4.0
+  Param: nSteps - number the quantity of steps to walk.
   Sintax: left(nSteps)
   ex: left() - turtle turns left.
       left(10) - turtle turns left and walks 10 steps,
@@ -3634,7 +3785,8 @@ function left(nSteps) --[[ Turtle turns left and walks nSteps.
 end
 
 function right(nSteps) --[[ Turtle turns right and walks nSteps.
-  31-05-2023 v0.4.0 Param: nSteps - number the quantity of steps to walk.
+  31-05-2023 v0.4.0
+  Param: nSteps - number the quantity of steps to walk.
   Sintax: right(nSteps)
   ex: right() - turtle turns left.
       right(10) - turtle turns left and walks 10 steps
@@ -3649,8 +3801,9 @@ end
 
 --not tested
 function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
-  08-09-2021 v0.4.0 Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
-                        nBlocks - number of blocks to walk in sDir direction. 
+  08-09-2021 v0.4.0
+  Param: sDir - string direction to walk "forward"|"right"|"back"|"left"|"up"|"down"|"north"|"east"|"south"|"west"|"z-"|"x+"|"z+"|"x-"|0..3
+      nBlocks - number of blocks to walk in sDir direction. 
   Returns:  true if turtle digs all the way.
             false if blocked, empty space, can't turn that way.
             nil if invalid parameter
@@ -3699,7 +3852,8 @@ function digDir(sDir, nBlocks) --[[ Turtle digs in sDir direction nBlocks.
 end
 
 function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nBlocks, must have a tool equiped.
-  27/08/2021 v0.4.0 Param: nBlocks - number of blocks to dig.
+  27/08/2021 v0.4.0
+  Param: nBlocks - number of blocks to dig.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: dig([nBlocks=1])
@@ -3731,7 +3885,8 @@ function dig(nBlocks) --[[ Turtle digs nBlocks forward or turns back and digs nB
 end
 
 function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig left.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig left.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: digLeft([nBlocks=1])
@@ -3749,7 +3904,8 @@ function digLeft(nBlocks) --[[ Turtle digs nBlocks to the left or right, must ha
 end
 
 function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig right.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig right.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: digRight([nBlocks=1])
@@ -3767,7 +3923,8 @@ function digRight(nBlocks) --[[ Turtle digs nBlocks to the right or left, must h
 end
 
 function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig up.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig up.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: digUp([nBlocks=1])
@@ -3795,7 +3952,8 @@ function digUp(nBlocks) --[[ Turtle digs nBlocks upwards or downwards, must have
 end
 
 function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig down.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig down.
   Returns:  true if turtle digs all way.
             false if bllocked, empty space, or invalid parameter.
   Sintax: digDown([nBlocks=1])
@@ -3821,7 +3979,8 @@ function digDown(nBlocks) --[[ Turtle digs nBlocks downwards or upwards, must ha
 end
 
 function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block above the turtle, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig forward 1 block above turtle.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig forward 1 block above turtle.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: digAbove([nBlocks=1])
@@ -3847,7 +4006,8 @@ function digAbove(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block abov
 end
 
 function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block below the turtle, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig forward and below turtle.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig forward and below turtle.
   Returns:  true if turtle digs all way.
             false if blocked, empty space, or invalid parameter.
   Sintax: digBelow([nBlocks=1])
@@ -3871,7 +4031,8 @@ function digBelow(nBlocks) --[[ Digs nBlocks forwards or backwards, 1 block belo
 end
 
 function digBack(nBlocks) --[[ Turns back or not and digs Blocks forward, must have a tool equiped.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to dig.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to dig.
   Returns:  true if turtle digs all way.
             false if bllocked, empty space, or invalid parameter.
   Sintax: digBack([nBlocks=1])
@@ -3890,7 +4051,8 @@ end
 ------ PLACE FUNCTIONS ------  
 
 function placeDir(sDir, message) --[[ Places one selected block in sDir direction.
-  27/08/2021 v0.4.0 Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
+  27/08/2021 v0.4.0
+  Param: sDir - string direction "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"north"|"east"|"south"|"west"|0..3.
   Returns:  true - if turtle places the selected block.
             false - if turtle doesn't place the selected block
                   - if the selected slot is empty.
@@ -3936,8 +4098,9 @@ function placeDir(sDir, message) --[[ Places one selected block in sDir directio
 end
 
 function placeAt(x, y, z, sMessage) --[[ Places a block/item at coords x, y, z.
-  14/05/2023 v0.4.0 Param: x, y, z - coords of spot to place block/item.
-                           sMessage - if placing a sign, this is the message on the sign.
+  14/05/2023 v0.4.0
+  Param: x, y, z - coords of spot to place block/item.
+        sMessage - if placing a sign, this is the message on the sign.
   Returns: nil - if x, y, z is not supplied
                - if x, y, z are not numbers.
            false - if the turtle couldn't get to x, y, z.
@@ -3952,7 +4115,8 @@ function placeAt(x, y, z, sMessage) --[[ Places a block/item at coords x, y, z.
 end
 
 function placeSign(sDir, sMessage) --[[ Places a sign in front of the turtle.
-  14-05-2023 v0.4.0 Param: sMessage - the message printed in the sign.
+  14-05-2023 v0.4.0
+  Param: sMessage - the message printed in the sign.
   Returns:  false - if no sign was found in inventory.
             number - 1 (Quantity of items placed).
   ex: placeSign("Hello") - places a selected sign with the word "Hello".
@@ -3994,7 +4158,8 @@ function placeSign(sDir, sMessage) --[[ Places a sign in front of the turtle.
 end
 
 function place(...) --[[ Turtle places nBlocks in a strait line forward or backwards, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
             false - invalid parameter.
   Sintax: place([nBlocks=1])
@@ -4083,7 +4248,8 @@ end
 
 --not tested
 function placeBack(nBlocks) --[[ Turtle turns back and places nBlocks in a strait line forward or backwards, and returns to starting point.
-  27/08/2021 v0.3.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.3.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
             nil - invalid parameter.
   Sintax: placeBack([nBlocks=1])
@@ -4118,7 +4284,8 @@ Dependencies: back, sign, turnBack, forward]]
 end
 
 function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number os blocks placed.
             false - if turtle was blocked on the way back.
                   - invalid parameter.
@@ -4150,7 +4317,8 @@ function placeUp(nBlocks) --[[ Places nBlocks upwards or downwards, and returns 
 end
 
 function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed.
             false - if turtle was blocked on the way back.
                   - invalid parameter.
@@ -4182,7 +4350,8 @@ function placeDown(nBlocks) --[[ Places nBlocks downwards or upwards, and return
 end
   
 function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
             false - if turtle was blocked on the way back.
                   - invalid parameter.
@@ -4202,7 +4371,8 @@ function placeLeft(nBlocks) --[[ Places Blocks to the left or right, and returns
 end
   
 function placeRight(nBlocks) --[[ Places Blocks to the right or left, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  true if turtle places all blocks all the way.
             false - if turtle was blocked on the way back.
                   - invalid parameter.
@@ -4222,7 +4392,8 @@ function placeRight(nBlocks) --[[ Places Blocks to the right or left, and return
 end
 
 function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
 						nil - if nBlocks is not a number.
             false - if it couldn't go forward.
@@ -4256,7 +4427,8 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
 end
 
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
 						nil - if nBlocks is not a number.
             false - if it couldn't go forward.
@@ -4288,7 +4460,8 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
 end
 
 function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of blocks placed
             false - if turtle was blocked on the way back.
                   - couldn't place block.
@@ -4342,7 +4515,8 @@ function placeAboveR(nBlocks) --[[ Places nBlocks forwards or backwards in a str
 end
 
 function placeBelowR(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block below the turtle, and returns to starting point.
-  27/08/2021 v0.1.0 Param: nBlocks - number of blocks to place.
+  27/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to place.
   Returns:  number of placed blocks.
             false - if turtle was blocked on the way back.
                   - couldn't place block.
@@ -4399,7 +4573,8 @@ end
 ------ INVENTORY FUNCTIONS ------
 
 function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
-  11/05/2022 v0.3.0 Param: tInv1, tInv2 - snapshots from inventory (getInventory).
+  11/05/2022 v0.3.0
+  Param: tInv1, tInv2 - snapshots from inventory (getInventory).
   Returns: nil - if tInv1 or tInv2 not supplied.
               true - if snapshots are equals.
               table - if snapshots are diferent.
@@ -4436,7 +4611,8 @@ function cmpInventory(tInv1, tInv2) --[[ Compares 2 snapshots of inventory.
 end
 
 function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities have increased.
-  03/07/2022 v0.3.0 Param: tInv1, tInv2 - snapshot of inventory from getInventory()
+  03/07/2022 v0.3.0
+  Param: tInv1, tInv2 - snapshot of inventory from getInventory()
   Returns: true, t - if items have increased, table with slot, name, quantity.
            false - if items haven't increased.
   Sintax: cmpInvIncreased(tInv1, tInv2)
@@ -4459,7 +4635,8 @@ function cmpInvIncreased(tInv1, tInv2) --[[ Verifies if inventory quantities hav
 end
 
 function countItemSlots() --[[ Counts how many slots is ocupied with each item.
-  04/12/2021 v0.2.0 Returns: table[itemName]=Slots ocupied by item.
+  04/12/2021 v0.2.0
+  Returns: table[itemName]=Slots ocupied by item.
   Sintax: countItemSlots()]]
 
   local tItemSlots = {}
@@ -4475,8 +4652,9 @@ function countItemSlots() --[[ Counts how many slots is ocupied with each item.
 end
 
 function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
-  02/11/2021 v0.2.0 Param: nSlot - number slot to decrease.
-                           bWrap - boolean if slot wraps around inventory.
+  02/11/2021 v0.2.0
+  Param: nSlot - number slot to decrease.
+         bWrap - boolean if slot wraps around inventory.
   Returns:  the number of slot decreased by 1.
             nil - if nSlot if not a number.
             false - if bWrap and nSlot = 1.
@@ -4494,7 +4672,8 @@ function decSlot(nSlot, bWrap) --[[ Decreases nSlot in range [1..16].
 end
 
 function freeCount() --[[ Get number of free slots in turtle's inventory.
-  07/10/2021 v0.2.0 Returns:  number of free slots.
+  07/10/2021 v0.2.0
+  Returns:  number of free slots.
   Sintax: freeCount()]]
 
   local nFree,i=0
@@ -4505,8 +4684,9 @@ function freeCount() --[[ Get number of free slots in turtle's inventory.
 end
 
 function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the search or not.
-  07/10/2021 v0.2.0 Param:  nStartSlot - number slot where to start the search.
-                            bWrap - boolean if the search wraps around the inventory.
+  07/10/2021 v0.2.0
+  Param:  nStartSlot - number slot where to start the search.
+               bWrap - boolean if the search wraps around the inventory.
   Returns:  number - first free slot number.
             false - if no free slot.
   Sintax: getFreeSlot([nStartSlot=1][, bWrap=true])
@@ -4537,7 +4717,8 @@ function getFreeSlot(nStartSlot, bWrap) --[[ Get the first free slot, wrapig the
 end
 
 function getInventory() --[[ Builds a table with the slot, the name and quantity of items in inventory.
-  04/12/2021 v0.2.0 Returns:  table[slot][itemName]=Quantity.
+  04/12/2021 v0.2.0
+  Returns:  table[slot][itemName]=Quantity.
   Sintax: getInventory()]]
 
   local tInv = {}
@@ -4552,7 +4733,8 @@ function getInventory() --[[ Builds a table with the slot, the name and quantity
 end
 
 function groupItems() --[[ Groups the same type of items in one slot in inventory.
-  07/10/2021 v0.2.0 Returns:  true.
+  07/10/2021 v0.2.0
+  Returns:  true.
   Sintax: groupItems()]]
 
   local destSlot,orgSlot,tmpSlot
@@ -4573,8 +4755,9 @@ function groupItems() --[[ Groups the same type of items in one slot in inventor
 end
 
 function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
-  02/11/2021 v0.2.0 Param: nSlot - number slot to be increased.
-                           bWrap - boolean true if the slot number wraps around inventory.
+  02/11/2021 v0.2.0
+  Param: nSlot - number slot to be increased.
+         bWrap - boolean true if the slot number wraps around inventory.
   Returns:  the number of slot increased by 1.
             false - if it couldn't increase slot.
   Sintax: incSlot([Slot.selecetd slot][, Wrap=true])
@@ -4589,7 +4772,8 @@ function incSlot(nSlot, bWrap) --[[ Increases nSlot in range [1..16].
 end
 
 function itemSpace(nSlot) --[[ Get how many items more you can store in inventory.
-  23/09/2021 v0.1.0 Param: nSlot/sItemName - number of slot/string item name.
+  23/09/2021 v0.1.0
+  Param: nSlot/sItemName - number of slot/string item name.
   Returns: number of items you can store more in inventory/slot.
            false - if item is not in inventory.
                  - 1 - if slot is empty.
@@ -4626,7 +4810,8 @@ function itemSpace(nSlot) --[[ Get how many items more you can store in inventor
 end
 
 function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
-  23/09/2021 v0.2.0 Param: nSlot - number slot to check.
+  23/09/2021 v0.2.0
+  Param: nSlot - number slot to check.
   Returns: true - if nSlot is empty.
            false - if nSlot is not empty.
   Sintax: isEmptySlot([nSlot=selected slot])
@@ -4639,8 +4824,9 @@ function isEmptySlot(nSlot) --[[ Checks if nSlot is empty.
 end
 
 function isInventoryEmpty() --[[ Checks if inventory is empty.
-  30/04/2022 v0.1.0 Returns: true - if inventory is empty.
-                             false - if inventory is not empty.
+  30/04/2022 v0.1.0
+  Returns: true - if inventory is empty.
+          false - if inventory is not empty.
   Sintax: isInventoryEmpty()
   ex: isInventoryEmpty() - Checks if inventory is empty.]]
 
@@ -4651,7 +4837,8 @@ function isInventoryEmpty() --[[ Checks if inventory is empty.
 end
 
 function itemCount(nSlot) --[[ Counts items in inventory
-  31/08/2021  Param: nSlot/"inventory"/item name - number slot/string "inventory"/string item name.
+  31/08/2021
+  Param: nSlot/"inventory"/item name - number slot/string "inventory"/string item name.
   Returns: number of items counted.
            nil - if nSlot <0 or > 16.
                - if nSlot is neither a string nor a number.
@@ -4682,7 +4869,8 @@ function itemCount(nSlot) --[[ Counts items in inventory
 end
 
 function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
-  05/09/2021 v0.3.0 Param: nSlot - number slot where to get the item name.
+  05/09/2021 v0.3.0
+  Param: nSlot - number slot where to get the item name.
   Returns: item name - if slot is not empty.
            "" - if slot is empty.
   Sintax: getItemName([nSlot=selected slot])
@@ -4700,7 +4888,8 @@ function getItemName(nSlot) --[[ Gets the item name from Slot/selected slot.
 end
 
 function selectItem(itemName) --[[ Selects slot [1..16] or first item with Item Name, or the turtle selected slot.
-  29/08/2021 v0.1.0 Param: slot/itemName - number slot/string name of the item to select.
+  29/08/2021 v0.1.0
+  Param: slot/itemName - number slot/string name of the item to select.
   Returns:  number, number - The selected slot, and number of items in that slot.
             False - if it didn't find the item name.
             nil - if type of itemName/Slot is not a number or string.
@@ -4733,7 +4922,8 @@ function selectItem(itemName) --[[ Selects slot [1..16] or first item with Item 
 end
 
 function selectSlot(nSlot) --[[ Selects nSlot
-  04-06-2023 v0.4.0 Param: nSlot - the slot number to be selected.
+  04-06-2023 v0.4.0
+  Param: nSlot - the slot number to be selected.
   Sintax: selectSlot(nSlot)
   ex: selectSlot(1) - select slot 1.
   Alias for selectItem]]
@@ -4742,9 +4932,10 @@ function selectSlot(nSlot) --[[ Selects nSlot
 end
 
 function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Selected Slot, moving item from or to another slot.
-  19/10/2021 v0.2.0 Param: sItemName - string name of the item.
-                              nQuant - number quantity of items to leave in selected slot.
-                               bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
+  19/10/2021 v0.2.0
+  Param: sItemName - string name of the item.
+            nQuant - number quantity of items to leave in selected slot.
+             bWrap - boolean if it cam put excess items in lower slots (wrap around inventory).
   Returns:  true - if there is nQuant of items in selected slot.
            false - if sItemName not supplied.
            false - if there is no items to tranfer to selected slot or no space to tranfer items to.
@@ -4811,9 +5002,10 @@ function leaveItems(sItemName, nQuant, bWrap) --[[ Leaves nQuant of item in Sele
 end
 
 function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName, starting at startSlot, and if search wrap. 
-  28/08/2021 v0.1.0 Param: sItemName - string the item name.
-                           nStartSlot - number slot where to start the search.
-                           bWrap - boolean true if the search wraps around inventory.
+  28/08/2021 v0.1.0
+  Param: sItemName - string the item name.
+        nStartSlot - number slot where to start the search.
+             bWrap - boolean true if the search wraps around inventory.
   Returns:  number, number - first slot where the item was found, and the quantity.
             nil - if sItemName not supplied.
                 - if nStartSlot is not a number.
@@ -4856,8 +5048,9 @@ function search(sItemName, nStartSlot, bWrap) --[[ Search inventory for ItemName
 end
 
 function selectFreeSlot(nStartSlot, bWrap) --[[ Selects the first free slot starting at nStartSlot, and if the search wraps or not.
-  07/10/2021 v0.2.0 Param: nStartSlot - number slot where to start search for free slot.
-                           bWrap - boolean true if the search wraps around inventory.
+  07/10/2021 v0.2.0
+  Param: nStartSlot - number slot where to start search for free slot.
+              bWrap - boolean true if the search wraps around inventory.
   Returns:  free slot number.
             false - if no free slot.
   Sintax: selectFreeSlot([StartSlot=1][, Wrap=true])
@@ -4877,8 +5070,9 @@ end
 ------ SUCK FUNCTIONS ------
 
 function suckAt(x, y, z, nQuant) --[[ Sucks items at coords x, y, z.
-  14-05-2024 v0.4.0 Param: x, y, z - numbers the coords where are the items to suck.
-                           nQuant - number of items to suck
+  14-05-2024 v0.4.0
+  Param: x, y, z - numbers the coords where are the items to suck.
+          nQuant - number of items to suck
   Returns:  nil - if x,y,z not supplied.
                 - if x, y, z are not numbers.
             false - if the turtle could't get to coords.
@@ -4893,8 +5087,9 @@ function suckAt(x, y, z, nQuant) --[[ Sucks items at coords x, y, z.
 end
 
 function suckDir(sDir, nItems) --[[ Sucks or drops nItems into sDir direction.
-  05/09/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
-                            nItems - number of items to suck.
+  05/09/2021 v0.4.0
+  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
+        nItems - number of items to suck.
   Returns:  true - if turtle collects some items.
             false - if there are no items to take.
 						nil - if invalid parameter.
@@ -4941,7 +5136,8 @@ end
 ------ FILE SYSTEM FUNCTIONS ------
 
 function fsGetFreeSpace() --[[ Gets the total free space on disk.
-  02/10/2021 v0.2.0 Returns:  Free space on disk.
+  02/10/2021 v0.2.0
+  Returns:  Free space on disk.
   ex: fsGetFreeSpace() - Outputs free space on disk.]]
 
 	return fs.getFreeSpace("/")
@@ -4951,8 +5147,9 @@ end
 ------ DROP FUNCTIONS ------  
 
 function dropDir(sDir, nItems) --[[ Drops or sucks nItems from selected slot and inventory into the world to sDir direction.
-  29/08/2021 v0.4.0 Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
-                            nItems - number of items to drop/suck
+  29/08/2021 v0.4.0
+  Param:  sDir - "forward"|"right"|"back"|"left"|"up"|"down"|"z-"|"x+"|"z+"|"x-"|"y+"|"y-"|"north"|"east"|"south"|"west"|0..3.
+        nItems - number of items to drop/suck
   Returns:  number of dropped itemsm, name of item.
             false - empty selected slot.
             nil - if invalid direction.
@@ -5078,7 +5275,8 @@ function drop(...) --[[ Drops or sucks items.
 end
 
 function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
-  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop up.
+  29/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to drop up.
   Returns:  number of dropped items.
             false - empty selected slot.
             true - if suck some items.
@@ -5092,7 +5290,8 @@ function dropUp(nBlocks) --[[ Drops or sucks nBlocks upwards.
 end
 
 function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
-  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop down.
+  29/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to drop down.
   Returns:  number of dropped items.
             false - empty selected slot.
             true - if suck some items.          
@@ -5106,7 +5305,8 @@ function dropDown(nBlocks) --[[ Drops or sucks nBlocks downwards.
 end
 
 function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
-  11/09/2021 v0.1.0 Param: nBlocks - number of blocks to drop left.
+  11/09/2021 v0.1.0
+  Param: nBlocks - number of blocks to drop left.
   Returns:  number of dropped items.
             false - empty selected slot.
             true - if suck some items.
@@ -5120,7 +5320,8 @@ function dropLeft(nBlocks) --[[ Rotate left and drops or sucks nBlocks forward.
 end
 
 function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward.
-  11/09/2021 v0.1.0 Param: nBlocks - number of blocks to drop right.
+  11/09/2021 v0.1.0
+  Param: nBlocks - number of blocks to drop right.
   Returns:  number of dropped items.
             false - empty selected slot.
             true - if suck some items.
@@ -5134,7 +5335,8 @@ function dropRight(nBlocks) --[[ Rotate right and drops or sucks nBlocks forward
 end
 
 function dropBack(nBlocks) --[[ Rotate back and drops or sucks nBlocks forward.
-  29/08/2021 v0.1.0 Param: nBlocks - number of blocks to drop back.
+  29/08/2021 v0.1.0
+  Param: nBlocks - number of blocks to drop back.
   Returns:  number of dropped items.
             false - empty selected slot.
             true - if suck some items.
@@ -5150,8 +5352,9 @@ end
 ------ PATHFINDING ------
 
 function getWorldPassableNeighbors(p, tIncludeEnt) --[[ Gets the neighbors of p passable.
-  14-07-2018 Param: p - table central block {x, y, z}
-                    tIncludeEnt - table entities passables.
+  14-07-2018
+  Param: p - table central block {x, y, z}
+         tIncludeEnt - table entities passables.
   sintax: getWorldPassableNeighbors(p[, tIncludeEnt)
   Dependencies: getNeighbors, getWorldEnt]]
 
@@ -5347,7 +5550,8 @@ end
 ------ TERMINAL FUNCTIONS ------
 
 function printAt(nCol, nLin, ...) --[[ Prints at col, lin args separated by spaces (tab).
-  20-05-2023 v0.4.0 Param: nCol, nLin - numbers, column and line where to print.
+  20-05-2023 v0.4.0
+  Param: nCol, nLin - numbers, column and line where to print.
   Returns:  true.
   Sintax: printAt(nColumn, nLine[, ...])
   Note: if no args to print it only sets the cursor at nCol, nLine.
@@ -5360,8 +5564,31 @@ function printAt(nCol, nLin, ...) --[[ Prints at col, lin args separated by spac
   return true
 end
 
+--not tested
+function getCursorCol() --[[ Returns the column of the cursor.
+  25-03-2024 v0.4.0
+  Returns:  number - the column of the cursor
+  Sintax: getCursorCol()
+  ex: getCursorCol]]
+
+    local x, _ = term.getCursorPos()
+    return x
+end
+
+--not tested
+function getCursorLin() --[[ Returns the line of the cursor.
+  25-03-2024 v0.4.0
+  Returns:  number - the line of the cursor.
+  Sintax: getCursorLin
+  ex: getCursorLin()]]
+
+  local _, y = term.getCursorPos()
+  return y
+end
+
 function writeAt(nCol, nLin, ...) --[[ Writes at col, lin args.
-  20-05-2023 v0.4.0 Param: nCol, nLin - numbers, column and line where to write.
+  20-05-2023 v0.4.0
+  Param: nCol, nLin - numbers, column and line where to write.
   Returns:  true.
   Sintax: writeAt(nColumn, nLine[, ...])
   Note: if no args to write it only sets the cursor at nCol, nLine.
@@ -5375,7 +5602,8 @@ function writeAt(nCol, nLin, ...) --[[ Writes at col, lin args.
 end
 
 function term.getWidth() --[[ Returns the width of the terminal.
-  20-05-2023 v0.4.0 Returns:  number - the width of the terminal
+  20-05-2023 v0.4.0
+  Returns:  number - the width of the terminal
   Sintax: term.getWidth()
   ex: term.getWidth() - returns the width of the terminal.]]
 
@@ -5384,7 +5612,8 @@ function term.getWidth() --[[ Returns the width of the terminal.
 end
 
 function term.getHeight() --[[ Returns the height of the terminal.
-  20-05-2023 v0.4.0 Returns:  number - the height of the terminal
+  20-05-2023 v0.4.0
+  Returns:  number - the height of the terminal
   Sintax: term.geHeight()
   ex: term.getHeight() - returns the height of the terminal.]]
 
@@ -5393,8 +5622,9 @@ function term.getHeight() --[[ Returns the height of the terminal.
 end
 
 function writeCenter(s, line) --[[ Writes a string or number centered in line.
-  20-05-2023 v0.4.0 Param: s - the string or number to write.
-                           line - the number of the line where to write.
+  20-05-2023 v0.4.0
+  Param: s - the string or number to write.
+      line - the number of the line where to write.
   Returns:  true
   Sintax: writeCenter([s][, line])
   ex: writeCenter("hello world", 1) - writes "hello world" centered in line 1.
@@ -5410,8 +5640,9 @@ function writeCenter(s, line) --[[ Writes a string or number centered in line.
 end
 
 function printCenter(s, line) --[[ Prints a string or number centered, and moves the cursor to the beginning of the next line.
-  20-05-2023 v0.4.0 Param: s - the string or number to print.
-                           line - the number of the line where to print.
+  20-05-2023 v0.4.0
+  Param: s - the string or number to print.
+      line - the number of the line where to print.
   Returns:  true
   Sintax: printCenter([s][, line])
   ex: printCenter("hello world", 1) - prints "hello world" centered in line 1.
@@ -5427,7 +5658,8 @@ function printCenter(s, line) --[[ Prints a string or number centered, and moves
 end
 
 function clearLineTo(column) --[[ Clears the cursor line from column 1 to column.
-  24-05-2023 v0.4.0 Param: column - number: the last column to be cleared.
+  24-05-2023 v0.4.0
+  Param: column - number: the last column to be cleared.
   Sintax: clearLineTo(column)
   ex: clearLineTo(10) - clears from column 1 to column 10.]]
 
@@ -5437,7 +5669,8 @@ function clearLineTo(column) --[[ Clears the cursor line from column 1 to column
 end
 
 function clearLineFrom(column) --[[ Clears the cursor line from column, to the last column.
-  24-05-2023 v0.4.0 Param: column - number: the first column to be cleared.
+  24-05-2023 v0.4.0
+  Param: column - number: the first column to be cleared.
   Sintax: clearLineFrom(column)
   ex: clearLineFrom(10) - clears from column 10 to the last column.
   Dependencies: term.getWidth]]
@@ -5449,7 +5682,8 @@ function clearLineFrom(column) --[[ Clears the cursor line from column, to the l
 end
 
 function clearColumn(column) --[[ Clears the column.
-  24-05-2023 v0.4.0 Param: column - number: the column to be cleared.
+  24-05-2023 v0.4.0
+  Param: column - number: the column to be cleared.
   Sintax: clearColumn(column)
   ex: clearColumn(10) - clears column 10.
   Dependencies: term.getHeight]]
@@ -5462,7 +5696,8 @@ function clearColumn(column) --[[ Clears the column.
 end
 
 function clearColumnTo(line) --[[ Clears the cursor column from line 1 to line.
-  24-05-2023 v0.4.0 Param: line - number: the last line to be cleared.
+  24-05-2023 v0.4.0
+  Param: line - number: the last line to be cleared.
   Sintax: clearColumnTo(line)
   ex: clearColumnTo(10) - clears the cursor column, from line 1 to  10.]]
 
@@ -5474,7 +5709,8 @@ function clearColumnTo(line) --[[ Clears the cursor column from line 1 to line.
 end
 
 function clearColumnFrom(line) --[[ Clears the cursor column from line to last line.
-  24-05-2023 v0.4.0 Param: line - number: the last line to be cleared.
+  24-05-2023 v0.4.0
+  Param: line - number: the last line to be cleared.
   Sintax: clearColumnFrom(line)
   ex: clearColumnFrom(10) - clears the cursor column, from line 10 to last line.
   Dependencies: term.getHeight]]
@@ -5487,7 +5723,8 @@ function clearColumnFrom(line) --[[ Clears the cursor column from line to last l
 end
 
 function paper(color) --[[ Sets the background color.
-  24-05-2023 v0.4.0 Param: color - number/string: the color code or name.
+  24-05-2023 v0.4.0
+  Param: color - number/string: the color code or name.
   Sintax: paper(color)
   ex: paper("white") - sets the background color to white.
       paper(32768) - sets the background color to black.]]
@@ -5497,7 +5734,8 @@ function paper(color) --[[ Sets the background color.
 end
 
 function ink(color) --[[ Sets the text color.
-  24-05-2023 v0.4.0 Param: color - number/string: the color code or name.
+  24-05-2023 v0.4.0
+  Param: color - number/string: the color code or name.
   Sintax: ink(color)
   ex: ink("white") - sets the text color to white.
       ink(32768) - sets the text color to black.]]
@@ -5507,7 +5745,8 @@ function ink(color) --[[ Sets the text color.
 end
 
 function fillScr(sChar) --[[ Fills the screen with sChar.
-  24-05-2023 v0.4.0 Param: sChar - string: the character to fill the screen.
+  24-05-2023 v0.4.0
+  Param: sChar - string: the character to fill the screen.
   Sintax: fillScr(sChar)
   ex: fillScr("-") - fills the screen with -.]]
 
@@ -5521,8 +5760,9 @@ function fillScr(sChar) --[[ Fills the screen with sChar.
 end
 
 function cls(backColor, textColor) --[[ Sets the background and text colors, the cursor pos to 1,1, and clears the screen.
-  24-05-2023 v0.4.0 Param: backColor - string/number: the background color.
-                           textColor - string/number: the text color.
+  24-05-2023 v0.4.0
+  Param: backColor - string/number: the background color.
+         textColor - string/number: the text color.
   Sintax: cls(backColor, textColor)
   ex: cls("white", 32768) - sets the background color to white, and the text color to black.]]
 
