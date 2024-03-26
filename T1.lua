@@ -2,11 +2,12 @@
 ---- Version 0.4.0
 --
 
-local PREFEREDHAND = "right" --default equip hand
-local DEFSTACK = 64 --default stack size
-local CSLOT = 13 --default crafting slot
+local PREFEREDHAND = "right" --default equip hand.
+local DEFSTACK = 64 --default stack size.
+local CSLOT = 13 --default crafting slot.
 local SCAN = false --on walking turtle is storing up, down and forward blocks in tWorld.
-local DIG = false --on walking turtle digs it's way through
+local DIG = false --on walking turtle digs it's way through.
+local TESTFUELLIMIT = 0.90 --the limit of fuel level when testing a item for fuel.
 
 digF = {["up"] = turtle.digUp, ["forward"] = turtle.dig, ["down"] = turtle.digDown} --original dig functions
 movF = {["up"] = turtle.up, ["forward"] = turtle.forward, ["down"] = turtle.down} --original move functions
@@ -115,6 +116,7 @@ end
 
 function saveSpots() --[[ Saves table tSpots in text file tSpots.txt
   05-08-2022 v0.4.0]]
+
   return saveTable(tSpots,"tSpots.txt")
 end
 
@@ -365,7 +367,10 @@ function entGetSlotId(nSlot) --[[ Gets or adds the nSlot item tEnts.
   return entAddSlot(nSlot)
 end
 
-function isEnt(sEntName) --[[ Alias for entGetId()]]
+function isEnt(sEntName) --[[ Alias for entGetId()
+  26-03-2024 V0.4.0
+  Alias for entGetId(sEntName)]]
+
   return entGetId(sEntName)
 end
 
@@ -377,7 +382,7 @@ function entGetId(sEntName) --[[ Gets the entity id.
            nil - the entity name was not supplied.
                - the entity name was not a string.
   Sintax: entGetId(sEntName)
-  ex: entGetId("minecraft:stick") - it returns a number the id.]]
+  ex: entGetId("minecraft:stick") - it returns a number, the id.]]
 
   if not sEntName then return nil, "entGetId(EntName) - Entity name must be supplied." end
 	if type(sEntName) ~= "string" then return nil, "entGetId(EntName) - Ent name must be a string." end
@@ -389,9 +394,9 @@ function entGetName(nId) --[[ Gets the entity name.
   21-07-2022 v0.4.0
   Param: nId - number the id of the entity to get the name.
   Returns: string - the name of the entity.
-           false - if nId was not found.
-           nil - if nId was not supplied.
-               - if nId is not a number
+            false - if nId was not found.
+              nil - if nId was not supplied.
+                  - if nId is not a number
   Sintax: entGetName(nId)
   ex: entGetName(1) - gets the intity name witch has 1 for id.]]
 
@@ -458,7 +463,7 @@ end
 
 function getAllFuelItems()  --[[ Gets a table with all fuel items.
 16-11-2022 v0.4.0
-Returns: tItems[sItemName] = quantity of fuel. ]]
+Returns: tItems[sItemName] - quantity of fuel. ]]
 
   local tItems = {}
   for k, v in pairs(tEnts) do
@@ -489,8 +494,8 @@ function setFuel(sItem, nQFuel) --[[ Sets tEnts[sItem].fuel to nQFuel.
   04/11/2022 v0.4.0
   Param: sItem - item name.
         nQFuel - quantity of fuel given by item.
-  Return: nil - if sItem or nQFuel not supplied.
-          true
+  Return: true - if tEnts was set
+           nil - if sItem or nQFuel not supplied.
   Sintax: setFuel(sItem, nQFuel)
   ex: setFuel("minecraft:cobblestone", 0) - sets cobblestone to give 0 fuel.
   Dependencies: checkNil, addFuel]]
@@ -524,10 +529,10 @@ function getFuelSlot(nSlot) --[[ Gets the quantity of fuel given by item in nSlo
   30-10-2022 v0.4.0
   Param: nSlot - number of slot where is the item to get the fuel from.
   Return: number - quantity of fuel given by item.
-          nil - if nSlot is not a number.
-              - if nSlot is not in range [1..16]
-          false - if nSlot is empty.
-                - if item was never tested for fuel.
+             nil - if nSlot is not a number.
+                 - if nSlot is not in range [1..16]
+           false - if nSlot is empty.
+                 - if item was never tested for fuel.
   Sintax: getFuelSlot([nSlot = selected slot])
   ex: getFuelSlot() - gets quantity of fuel given by item in selected slot.
   Dependencies: isInRange]]
@@ -545,7 +550,7 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
   30-10-2022 v0.4.0
   Param: nSlot - number of slot to test.
   Return: nFuel - the fuel that this item gives.
-          nil - if the nSlot is out of range [1..16]
+            nil - if the nSlot is out of range [1..16]
           false - if the turtle doesn't need fuel.
                 - if the fuel level is above 90% in the turtle.
                 - if the slot is empty.
@@ -565,7 +570,7 @@ function fuelTestSlot(nSlot) --[[ Test the item in nSlot for fuel.
   if not tData then return false, "fuelTestSlot(nSlot) - Empty slot." end
   if tEnts[tData.name] and tEnts[tData.name].fuel then return tEnts[tData.name].fuel end
 
-	if turtle.getFuelLevel() > turtle.getFuelLimit()*0.90 then
+	if turtle.getFuelLevel() > turtle.getFuelLimit()*TESTFUELLIMIT then
     return false, "Fuel is near the maximum, couldn't test item."
   end --fuel is near maximum, can't test for fuel
 	
