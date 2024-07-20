@@ -4420,7 +4420,7 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
       setWorldEnt(tTurtle.x, tTurtle.y - 1, tTurtle.z, nEnt)
 			if not getItemName() then select(search(sItemName)) end
 		else	if getItemName() == "" then
-						if not select(search(sItemName)) then return placed, "placeBelow(nBlocks) - no more items to place." end
+						if not selectItem(sItemName) then return placed, "placeBelow(nBlocks) - no more items to place." end
 					end
 					return placed, "placeBelow(nBlocks) - couldn't place item below."
 		end
@@ -4431,6 +4431,7 @@ function placeBelow(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
   return placed
 end
 
+--not tested
 function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a strait line, 1 block above the turtle.
   27/08/2021 v0.1.0
   Param: nBlocks - number of blocks to place.
@@ -4453,7 +4454,7 @@ function placeAbove(nBlocks) --[[ Places nBlocks forwards or backwards in a stra
       placed = placed + 1
       setWorldEnt(tTurtle.x, tTurtle.y + 1, tTurtle.z, nEnt)
 		else	if getItemName() == "" then
-						if not select(search(sItemName)) then return placed, "placeAbove(nBlocks) - no more items to place." end
+						if not selectItem(sItemName) then return placed, "placeAbove(nBlocks) - no more items to place." end
 					end
 					return placed, "placeAbove(nBlocks) - couldn't place item below."
 		end
@@ -5786,7 +5787,11 @@ function TEST()
   -- test code bellow this line
   -----------------------------
   
-  print(buildRect())
+  --print(placeAbove(2))
+  --print(buildRect(1, 2))
+  down()
+  --left()
+  back()
     
   ---------------------------
   -- test code above this line
